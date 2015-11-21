@@ -25,3 +25,7 @@ proguard/
 
 # Log Files
 *.log
+
+# Other files
+Description.md~
+
