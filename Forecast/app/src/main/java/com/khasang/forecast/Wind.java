@@ -5,32 +5,47 @@ package com.khasang.forecast;
  */
 public class Wind {
 
-    public static enum WIND_POWER { CALM, LIGHT_AIR, LIGHT_BREEZE, GENTLE_BREEZE, MODERATE_BREEZE,
-        FRESH_BREEZE, STRONG_BREEZE, MODERATE_GALE, FRESH_GALE, STRONG_GALE, WHOLE_GALE, STORM, HURRICANE }
+    public static enum Power {
+        // Шкала Бофорта
+        CALM,           //  0 штиль
+        LIGHT_AIR,      //  1 тихий
+        LIGHT_BREEZE,   //  2 легкий
+        GENTLE_BREEZE,  //  3 слабый
+        MODERATE_BREEZE,//  4 умеренный
+        FRESH_BREEZE,   //  5 свежий
+        STRONG_BREEZE,  //  6 сильный
+        HIGH_WIND,     //   7 крепкий
+        GALE,           //  8 очень крепкий
+        STRONG_GALE,    //  9 шторм
+        STORM,          // 10 сильный шторм
+        VIOLENT_STORM,  // 11 жестокий шторм
+        HURRICANE_FORCE,// 12 ураган
+        ;
+    }
 
-    public static enum WIND_DIRECTION { NORTH, NORTHEAST, EAST, SOUTHEAST, SOUTH, SOUTHWEST, WEST, NORTHWEST }
+    public static enum Direction { NORTH, NORTHEAST, EAST, SOUTHEAST, SOUTH, SOUTHWEST, WEST, NORTHWEST }
 
-    private WIND_DIRECTION direction;
-    private WIND_POWER power;
+    private Direction direction;
+    private Power power;
 
-    public Wind(WIND_DIRECTION direction, WIND_POWER power) {
+    public Wind(Direction direction, Power power) {
         this.direction = direction;
         this.power = power;
     }
 
-    public WIND_DIRECTION getDirection() {
+    public Direction getDirection() {
         return direction;
     }
 
-    public void setDirection(WIND_DIRECTION direction) {
+    public void setDirection(Direction direction) {
         this.direction = direction;
     }
 
-    public WIND_POWER getPower() {
+    public Power getPower() {
         return power;
     }
 
-    public void setPower(WIND_POWER power) {
+    public void setPower(Power power) {
         this.power = power;
     }
 }
