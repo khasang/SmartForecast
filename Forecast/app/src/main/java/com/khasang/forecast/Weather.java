@@ -4,7 +4,6 @@ package com.khasang.forecast;
  * Created by Veda on 24.11.15.
  */
 public class Weather {
-
     private int temperature;
     private int temperatureFeeling;
     private int pressure;
@@ -14,6 +13,15 @@ public class Weather {
 
     public Weather(int temperature) {
         this.temperature = temperature;
+    }
+
+    public Weather(int temperature, int temperatureFeeling, int pressure, int humidity, Wind wind, Precipitation precipitation) {
+        this.temperature = temperature;
+        this.temperatureFeeling = temperatureFeeling;
+        this.pressure = pressure;
+        this.humidity = humidity;
+        this.wind = wind;
+        this.precipitation = precipitation;
     }
 
     public int getTemperature() {
@@ -48,6 +56,10 @@ public class Weather {
         this.humidity = humidity;
     }
 
+    public void setWind(Wind wind) {
+        this.wind = wind;
+    }
+
     public void setWind(Wind.Direction wd, Wind.Power wp) {
         if (this.wind == null) {
             this.wind = new Wind(wd, wp);
@@ -63,6 +75,10 @@ public class Weather {
 
     public Wind.Power getWindPower() {
         return wind.getPower();
+    }
+
+    public void setPrecipitation(Precipitation precipitation) {
+        this.precipitation = precipitation;
     }
 
     public void setPrecipitation(Precipitation.Type type, int probability) {
