@@ -41,9 +41,9 @@ public class Coordinate {
         int result = 1;
         int prime = 31;
         long temp = Double.doubleToLongBits(latitude);
-        result = result * prime + (int)(temp - (temp >>> 32));
+        result = result * prime + (int) (temp - (temp >>> 32));
         temp = Double.doubleToLongBits(longitude);
-        result = result * prime + (int)(temp - (temp >>> 32));
+        result = result * prime + (int) (temp - (temp >>> 32));
         return result;
     }
 }
