@@ -14,6 +14,7 @@ import android.widget.Button;
 
 import com.khasang.forecast.location.*;
 
+
 public class SplashScreenActivity
         extends AppCompatActivity
         implements LocationProvider.LocationCallback {
@@ -42,7 +43,10 @@ public class SplashScreenActivity
             @Override
             public void onClick(View v) {
                 if (mAndroidLocationManager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)) {
-                    com.khasang.forecast.location.Location currentLocation = mLocationFactory.getLocation(mCurrentLatitude, mCurrentLongitude);
+                    GPSLocation currentGPSLocation = (GPSLocation) LocationFactory.getLocation(GPSLocation.factory);
+                    currentGPSLocation.setLatitude(mCurrentLatitude);
+                    currentGPSLocation.setLongitude(mCurrentLongitude);
+                    Log.i(TAG, "Created gps location " + mCurrentLongitude + ", " + mCurrentLatitude);
                 } else {
                     buildAlertMessageNoGps();
                 }

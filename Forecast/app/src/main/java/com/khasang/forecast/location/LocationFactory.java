@@ -1,50 +1,53 @@
 package com.khasang.forecast.location;
 
-import android.content.Context;
 import android.util.Log;
 
 /**
  * Created by novoselov on 24.11.2015.
  */
-public class LocationFactory {
-    private Location mLocation;
-    private Coordinate mCurrentCoordinate;
+public class LocationFactory{
 
-    private static final String TAG = LocationFactory.class.getSimpleName();
-
-    public LocationFactory() {
-
+    public static iLocation getLocation(iLocationFactory factory) {
+        iLocation location = factory.getLocation();
+        return location;
     }
 
 
-    public Location createLocation() {
-        return createLocation(Location.LOCATION_TYPE.GPS_LOCATION, new Coordinate());
-    }
-
-    public Location getLocation(double latitude, double longitude){
-        mCurrentCoordinate = LocationManager.getGPSCoordinate(latitude, longitude);
-        mLocation = new Location();
-        mLocation.setCoordinate(mCurrentCoordinate);
-        Log.i(TAG, "Location created, latitude: " + latitude + ", longitude: " + longitude);
-        return mLocation;
-    }
-
-    public Location createLocation(Location.LOCATION_TYPE lType, Coordinate coordinate) {
-        mLocation = new Location();
-        mLocation.setLocationType(lType);
-        switch (lType) {
-            case GPS_LOCATION:
-                mLocation.setCoordinate(coordinate);
-
-                break;
-            case STATIC_LOCATION:
-                mLocation.setCoordinate(coordinate);
-                break;
-            default:
-                break;
-        }
-        return mLocation;
-    }
+//    private static final String TAG = LocationFactory.class.getSimpleName();
+//
+//    public LocationFactory() {
+//
+//    }
+//
+//
+//    public GPSLocation createLocation() {
+//        return new iLocation();
+//    }
+//
+//    public GPSLocation getLocation(double latitude, double longitude){
+//        mCurrentCoordinate = LocationManager.getGPSCoordinate(latitude, longitude);
+//        mGPSLocation = new GPSLocation();
+//        mGPSLocation.setCoordinate(mCurrentCoordinate);
+//        Log.i(TAG, "Location created, latitude: " + latitude + ", longitude: " + longitude);
+//        return mGPSLocation;
+//    }
+//
+//    public GPSLocation createLocation(GPSLocation.LOCATION_TYPE lType, Coordinate coordinate) {
+//        mGPSLocation = new GPSLocation();
+//        mGPSLocation.setLocationType(lType);
+//        switch (lType) {
+//            case GPS_LOCATION:
+//                mGPSLocation.setCoordinate(coordinate);
+//
+//                break;
+//            case STATIC_LOCATION:
+//                mGPSLocation.setCoordinate(coordinate);
+//                break;
+//            default:
+//                break;
+//        }
+//        return mGPSLocation;
+//    }
 
 }
 

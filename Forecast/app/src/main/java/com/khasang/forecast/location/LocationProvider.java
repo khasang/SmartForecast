@@ -24,11 +24,9 @@ public class LocationProvider implements
     public static final int FASTEST_INTERVAL = 1000;
 
     private LocationCallback mLocationCallback;
-    private Context mContext;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private Location mLocation;
-    private LocationFactory mLocationFactory;
 
     public interface LocationCallback{
         void handleNewLocation(Location location);
@@ -48,7 +46,6 @@ public class LocationProvider implements
                 .setInterval(REQUEST_INTERVAL)
                 .setFastestInterval(FASTEST_INTERVAL);
 
-        mContext = context;
     }
 
     public void connect(){
