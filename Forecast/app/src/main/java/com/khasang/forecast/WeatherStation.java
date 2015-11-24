@@ -8,10 +8,7 @@ import java.util.Date;
  */
 public abstract class WeatherStation implements Observable {
     private ArrayList<Observer> locations;      // Создавать в конструкторе
-    WEATHER_STATION stationName;
-
-    // Сейчас  толко OpenWeatherMap, при добавдении новых сервисов расширять enum
-    public enum WEATHER_STATION {OPEN_WEATHER_MAP;}
+    Builder.WEATHER_STATION stationName;
 
     @Override
     public void registerObserver(Observer observer) {
@@ -29,18 +26,27 @@ public abstract class WeatherStation implements Observable {
     }
 
     //Обновить данные на текущую дату
-    abstract public void updateWeatherInfo ();
-    abstract public void updateWeatherInfo (Date date);
+    abstract public void updateWeatherInfo();
+
+    abstract public void updateWeatherInfo(Date date);
 
     abstract void requestDateFromStation(Date dt, Coordinate coordinate);
-    abstract void sendDataToLocation ();
+
+    abstract void sendDataToLocation();
 
     public static class Builder {
-        private ArrayList <WeatherStation> stations;
-        public Builder () {
+        private ArrayList<WeatherStation> stations;
+
+        // Сейчас  толко OpenWeatherMap, при добавдении новых сервисов расширять enum
+        public enum WEATHER_STATION {
+            OPEN_WEATHER_MAP;
+        }
+
+        public Builder() {
             stations = new ArrayList<WeatherStation>();
         }
-        public Builder addOpenWeatherMap (ArrayList <Observer> locations) {
+
+        public Builder addOpenWeatherMap(ArrayList<Observer> locations) {
             WeatherStation ws = new OpenWeatherMap();
             ws.locations = locations;
             ws.stationName = WEATHER_STATION.OPEN_WEATHER_MAP;
@@ -53,7 +59,7 @@ public abstract class WeatherStation implements Observable {
         public Builder addOpenWeatherMap (ArrayList <Observer> locations)
         */
 
-        public ArrayList<WeatherStation> build () {
+        public ArrayList<WeatherStation> build() {
             return stations;
         }
     }
