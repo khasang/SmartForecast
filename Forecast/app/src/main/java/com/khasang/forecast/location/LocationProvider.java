@@ -87,6 +87,6 @@ public class LocationProvider implements
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-
+        Log.e(TAG, connectionResult.toString());
     }
 }

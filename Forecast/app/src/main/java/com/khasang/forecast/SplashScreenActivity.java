@@ -16,13 +16,13 @@ import com.khasang.forecast.location.*;
 
 public class SplashScreenActivity
         extends AppCompatActivity
-        implements com.khasang.forecast.location.LocationProvider.LocationCallback {
+        implements LocationProvider.LocationCallback {
 
     private final static String TAG = SplashScreenActivity.class.getSimpleName();
 
     private Button chkButton;
     private LocationManager mAndroidLocationManager;
-    private com.khasang.forecast.location.LocationProvider mLocationProvider;
+    private LocationProvider mLocationProvider;
 
     private double mCurrentLatitude;
     private double mCurrentLongitude;
@@ -32,7 +32,7 @@ public class SplashScreenActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
-        mLocationProvider = new com.khasang.forecast.location.LocationProvider(this, this);
+        mLocationProvider = new LocationProvider(this, this);
         mAndroidLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
 
