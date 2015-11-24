@@ -23,6 +23,7 @@ public class SplashScreenActivity
     private Button chkButton;
     private LocationManager mAndroidLocationManager;
     private LocationProvider mLocationProvider;
+    private LocationFactory mLocationFactory;
 
     private double mCurrentLatitude;
     private double mCurrentLongitude;
@@ -34,15 +35,14 @@ public class SplashScreenActivity
 
         mLocationProvider = new LocationProvider(this, this);
         mAndroidLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-
+        mLocationFactory = new LocationFactory();
 
         chkButton = (Button) findViewById(R.id.chkLocatioBtn);
         chkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mAndroidLocationManager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)) {
-                    LocationFactory locationFactory = new LocationFactory(mCurrentLatitude, mCurrentLongitude);
-                    locationFactory.createLocation();
+                    com.khasang.forecast.location.Location currentLocation = mLocationFactory.getLocation(mCurrentLatitude, mCurrentLongitude);
                 } else {
                     buildAlertMessageNoGps();
                 }

@@ -20,12 +20,15 @@ public class LocationProvider implements
         LocationListener{
 
     public static final String TAG = LocationProvider.class.getSimpleName();
+    public static final int REQUEST_INTERVAL = 10 * 1000;
+    public static final int FASTEST_INTERVAL = 1000;
 
     private LocationCallback mLocationCallback;
     private Context mContext;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private Location mLocation;
+    private LocationFactory mLocationFactory;
 
     public interface LocationCallback{
         void handleNewLocation(Location location);
@@ -42,11 +45,10 @@ public class LocationProvider implements
 
         mLocationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY) // реализовать чтобы можно было менять в настройках
-                .setInterval(10 * 1000)
-                .setFastestInterval(1000);
+                .setInterval(REQUEST_INTERVAL)
+                .setFastestInterval(FASTEST_INTERVAL);
 
         mContext = context;
-
     }
 
     public void connect(){

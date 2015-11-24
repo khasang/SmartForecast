@@ -1,5 +1,6 @@
 package com.khasang.forecast.location;
 
+import android.content.Context;
 import android.util.Log;
 
 /**
@@ -7,8 +8,7 @@ import android.util.Log;
  */
 public class LocationFactory {
     private Location mLocation;
-    private double mLatitude;
-    private double mLongitude;
+    private Coordinate mCurrentCoordinate;
 
     private static final String TAG = LocationFactory.class.getSimpleName();
 
@@ -16,14 +16,17 @@ public class LocationFactory {
 
     }
 
-    public LocationFactory(double latitude, double longitude){
-        mLatitude = latitude;
-        mLongitude = longitude;
-    }
-
 
     public Location createLocation() {
         return createLocation(Location.LOCATION_TYPE.GPS_LOCATION, new Coordinate());
+    }
+
+    public Location getLocation(double latitude, double longitude){
+        mCurrentCoordinate = LocationManager.getGPSCoordinate(latitude, longitude);
+        mLocation = new Location();
+        mLocation.setCoordinate(mCurrentCoordinate);
+        Log.i(TAG, "Location created, latitude: " + latitude + ", longitude: " + longitude);
+        return mLocation;
     }
 
     public Location createLocation(Location.LOCATION_TYPE lType, Coordinate coordinate) {
@@ -31,10 +34,8 @@ public class LocationFactory {
         mLocation.setLocationType(lType);
         switch (lType) {
             case GPS_LOCATION:
-                coordinate.setLatitude(mLatitude);
-                coordinate.setLongitude(mLongitude);
                 mLocation.setCoordinate(coordinate);
-                Log.i(TAG, "Location created, latitude: " + mLatitude + ", longitude: " + mLongitude);
+
                 break;
             case STATIC_LOCATION:
                 mLocation.setCoordinate(coordinate);

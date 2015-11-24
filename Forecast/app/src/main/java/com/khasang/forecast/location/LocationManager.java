@@ -9,8 +9,10 @@ public class LocationManager{
 
 
     //получение координат через GPS
-    public static Coordinate getGPSCoordinate () {
+    public static Coordinate getGPSCoordinate (double latitude, double longitude) {
         Coordinate coordinate = new Coordinate();
+        coordinate.setLatitude(latitude);
+        coordinate.setLongitude(longitude);
         return coordinate;
     }
 
