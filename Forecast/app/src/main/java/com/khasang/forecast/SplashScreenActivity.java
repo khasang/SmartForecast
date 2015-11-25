@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.khasang.forecast.location.*;
+import com.khasang.forecast.location.LocationFactory;
 
 
 public class SplashScreenActivity
@@ -43,9 +44,8 @@ public class SplashScreenActivity
             @Override
             public void onClick(View v) {
                 if (mAndroidLocationManager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)) {
-                    GPSLocation currentGPSLocation = (GPSLocation) LocationFactory.getLocation(GPSLocation.factory);
-                    currentGPSLocation.setLatitude(mCurrentLatitude);
-                    currentGPSLocation.setLongitude(mCurrentLongitude);
+                    CoordinateLocation currentCoordinateLocation = (CoordinateLocation) LocationFactory.getLocation(CoordinateLocation.factory);
+                    currentCoordinateLocation.setLatLng(mCurrentLatitude, mCurrentLongitude);
                     Log.i(TAG, "Created gps location " + mCurrentLongitude + ", " + mCurrentLatitude);
                 } else {
                     buildAlertMessageNoGps();
