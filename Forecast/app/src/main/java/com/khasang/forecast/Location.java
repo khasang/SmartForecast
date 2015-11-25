@@ -13,8 +13,8 @@ public class Location implements Observer {
     private Coordinate coordinate;
     private Map<WeatherStation.Builder.WEATHER_STATION, Map<Date, Weather>> weather;
 
-//    private Date chooseNearestForecastDate(WeatherStation.WEATHER_STATION ws, Date date) {
-//
+    //fixme: класс Date считается устаревшим, не лучше ли использовать класс Calender ?
+//    private Date chooseNearestForecastDate(WeatherStation.Builder.WEATHER_STATION ws, Date date) {
 //    }
 
     public void setLocationName(String name) {
@@ -35,7 +35,9 @@ public class Location implements Observer {
 
     @Override
     public void setWeather(WeatherStation.Builder.WEATHER_STATION ws, Date dt, Weather weather) {
-
+        Map<Date, Weather> map = this.weather.get(ws);
+        map.put(dt, weather);
+        this.weather.put(ws,map);
     }
 
     public Coordinate getCoordinate() {
@@ -47,13 +49,12 @@ public class Location implements Observer {
     }
 
     public Weather getWeather(WeatherStation.Builder.WEATHER_STATION ws, Date date) {
-        Weather weatherOfDate = null;
-        for (Map.Entry<WeatherStation.Builder.WEATHER_STATION, Map<Date, Weather>> entry : weather.entrySet()) {
-            if (entry.getKey() == ws) {
-                weatherOfDate = entry.getValue().get(date);
-            }
-        }
-        return weatherOfDate;
+        return weather.get(ws).get(date);
+    }
+
+    // если новые коррдинаты выходят за рамки локации, то возвращает true
+    public boolean isChanged(Coordinate coordinate) {
+        return (this.coordinate.compareTo(coordinate) != 0);
     }
 }
 
