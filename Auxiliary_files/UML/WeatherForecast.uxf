@@ -1,0 +1,120 @@
+<diagram program="umletino" version="14.0"><zoom_level>10</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>1328</x><y>632</y><w>270</w><h>150</h></coordinates><panel_attributes>Precipitation
+--
+- pecipitation: PRECIPITATION
+- probability: int
+--
++ getPrecipitation(): PRECIPITATION
++ setPrecipitation (PRECIPITATION): void
++ getProbability (): int
++ setProbability (int): void
+--
++ enum PRECIPITATION</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1068</x><y>662</y><w>210</w><h>340</h></coordinates><panel_attributes>Weather
+--
+- temperature: int
+- temperatureFeeling: int
+- pressure: int
+- humidity: int
+- wind: Wind
+- precipitation: Precipitation
+--
++ setTemperature (int): void
++ getTemperature (): int
++ setTemperatureFeeling (int): void
++ getTemperatureFeeling (): int
++ setPressure (int): void
++ getPressure (): int
++ setHumidity (int): void
++ getHumidity (): int
++ setWind (WIND_DIRECTION, WIND_POWER): void
++ getWindDirection (): WIND_DIRECTION
++ getWindPower (): WIND_POWER
++ setPrecipitation (PRECIPITATION, int): void
++ getPrecipitation (): PRECIPITATION
++ getPrecipitationProbability (): int</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1338</x><y>832</y><w>250</w><h>160</h></coordinates><panel_attributes>Wind
+--
+- direction: WIND_DIRECTION
+- power: WIND_POWER
+--
++ getDirection(): WIND_DIRECTION
++ setDirection (WIND_DIRECTION): void
++ getPower (): WIND_POWER
++ setPower (WIND_POWER): void
+--
++ enum WIND_DIRECTION
++ enum WIND_POWER
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1270</x><y>693</y><w>80</w><h>80</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;60;60;10</additional_attributes></element><element><id>Relation</id><coordinates><x>1270</x><y>873</y><w>90</w><h>60</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;70;40</additional_attributes></element><element><id>UMLClass</id><coordinates><x>750</x><y>433</y><w>360</w><h>180</h></coordinates><panel_attributes>Location
+--
+-name: String
+- cityID: int
+-coordinate Coordinate
+-Map&lt;WEATHER_STATION, Map&lt;Date, Weather&gt;&gt; weather
+--
+-chooseNearestForecastDate (WEATHER_STATION, Date):  Date
++setLocationName(String):void
++getLocationName():String
++getWeater (WEATHER_STATION, Date): Weather
++setWeather(WEATHER_STATION,Date, Weather):void
+
++update ();</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1150</x><y>353</y><w>380</w><h>130</h></coordinates><panel_attributes>LocationFactory
+--
+-location: Location
+-locationNumber: short
+--
+- getCurrentLocation (): 
++ createLocation (): Location
++ createLocation (LOCATION_TYPE): Location
++ createLocation (LOCATION_TYPE, Coordinate): Location
+--
++ enum LOCATION_TYPE</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>930</x><y>603</y><w>160</w><h>120</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;140;100</additional_attributes></element><element><id>UMLClass</id><coordinates><x>800</x><y>793</y><w>210</w><h>150</h></coordinates><panel_attributes>Coordinate
+--
+-latitude: double
+-longitude:double
+--
++getLat (): double
++getLon(): double
++setLat (double):void
++setLon (double):void
++equals (Object): boolean
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>910</x><y>603</y><w>30</w><h>210</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;190</additional_attributes></element><element><id>UMLClass</id><coordinates><x>760</x><y>260</y><w>350</w><h>70</h></coordinates><panel_attributes>&lt;&lt;interface&gt;&gt;
+Observer
+--
++setWeather (WEATHER_STATION, Date, Weather): void</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>920</x><y>320</y><w>30</w><h>130</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;10;10;110</additional_attributes></element><element><id>Relation</id><coordinates><x>1100</x><y>470</y><w>270</w><h>100</h></coordinates><panel_attributes>lt=&lt;.</panel_attributes><additional_attributes>10;80;250;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>120</x><y>70</y><w>210</w><h>100</h></coordinates><panel_attributes>&lt;&lt;interface&gt;&gt;
+Observable
+--
++registerObserver (Observer)
++removeObserver (Observer)
++notifyObserver ()</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>120</x><y>270</y><w>210</w><h>180</h></coordinates><panel_attributes>WeatherStation
+{abstract}
+--
+- observers: Observer[]
+- currentWeather: Weather
+- weaterStation: WEATHER_STATION
+--
++registerObserver (Observer)
++removeObserver (Observer)
++notifyObserver ()
++ abstract getDataFromMeteo
++ abstract parceIncoming (): Weather</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>210</x><y>160</y><w>30</w><h>130</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;10;10;110</additional_attributes></element><element><id>UMLClass</id><coordinates><x>360</x><y>70</y><w>400</w><h>90</h></coordinates><panel_attributes>WeatherStationFactory
+--
+- weatherSattion: WeatherStation
+--
++ createWeaterStation (WEATHER_STATION): WeatherStation
+--
++enum WEATHER_STATION</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>320</x><y>150</y><w>220</w><h>180</h></coordinates><panel_attributes>lt=&lt;.</panel_attributes><additional_attributes>10;160;200;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>0</x><y>530</y><w>210</w><h>90</h></coordinates><panel_attributes>OpenWeatherMap
+--
+- weatherSattion: WeatherStation
+--
++ getDataFromMeteo
++ parceIncoming (): Weather</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>90</x><y>440</y><w>130</w><h>110</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>110;10;10;90</additional_attributes></element><element><id>UMLClass</id><coordinates><x>230</x><y>530</y><w>210</w><h>90</h></coordinates><panel_attributes>GisMeteo
+--
+- weatherSattion: WeatherStation
+--
++ getDataFromMeteo
++ parceIncoming (): Weather</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>240</x><y>440</y><w>110</w><h>110</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;90;90</additional_attributes></element><element><id>UMLClass</id><coordinates><x>480</x><y>430</y><w>210</w><h>190</h></coordinates><panel_attributes>WeaterActivity
+--
+- stations: WeatherStation[]
+- locations: Location
+--
++ 
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>680</x><y>510</y><w>90</w><h>40</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;20;70;10</additional_attributes></element><element><id>Relation</id><coordinates><x>320</x><y>330</y><w>180</w><h>220</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>160;200;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>320</x><y>290</y><w>460</w><h>60</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;40;440;10</additional_attributes></element><element><id>Relation</id><coordinates><x>320</x><y>290</y><w>460</w><h>60</h></coordinates><panel_attributes>lt=&lt;-
+m1=0..n</panel_attributes><additional_attributes>440;10;10;40</additional_attributes></element></diagram>
