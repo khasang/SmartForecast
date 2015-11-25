@@ -3,8 +3,8 @@ package com.khasang.forecast;
 /**
  * Created by Veda on 24.11.15.
  */
-public class Weather {
 
+public class Weather {
     private int temperature;
     private int temperatureFeeling;
     private int pressure;

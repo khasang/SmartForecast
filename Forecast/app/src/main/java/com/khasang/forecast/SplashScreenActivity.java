@@ -29,6 +29,8 @@ public class SplashScreenActivity
     private double mCurrentLatitude;
     private double mCurrentLongitude;
 
+    PositionManager manager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
