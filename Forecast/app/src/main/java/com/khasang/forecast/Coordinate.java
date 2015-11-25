@@ -3,8 +3,9 @@ package com.khasang.forecast;
 /**
  * Created by Veda on 24.11.15.
  */
-public class Coordinate {
+public class Coordinate implements Comparable<Coordinate>{
 
+    private double MIN_DISTANCE = 1;
     private double latitude;
     private double longitude;
 
@@ -25,26 +26,12 @@ public class Coordinate {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Coordinate that = (Coordinate) o;
-
-        if (Double.compare(that.latitude, latitude) != 0) return false;
-        return Double.compare(that.longitude, longitude) == 0;
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = 1;
-        int prime = 31;
-        long temp = Double.doubleToLongBits(latitude);
-        result = result * prime + (int)(temp - (temp >>> 32));
-        temp = Double.doubleToLongBits(longitude);
-        result = result * prime + (int)(temp - (temp >>> 32));
-        return result;
+    public int compareTo(Coordinate another) {
+        if ((Math.abs(latitude - another.latitude) < MIN_DISTANCE) &&
+                (Math.abs(longitude - another.longitude) < MIN_DISTANCE)) {
+            return 0;
+        }
+        return 1;
     }
 }
 
