@@ -1,4 +1,4 @@
-<diagram program="umletino" version="14.0"><zoom_level>10</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>1497</x><y>646</y><w>270</w><h>150</h></coordinates><panel_attributes>Precipitation
+<diagram program="umletino" version="14.0"><zoom_level>10</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>1488</x><y>702</y><w>270</w><h>150</h></coordinates><panel_attributes>Precipitation
 --
 - pecipitation: PRECIPITATION
 - probability: int
@@ -8,7 +8,7 @@
 + getProbability (): int
 + setProbability (int): void
 --
-+ enum PRECIPITATION</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1197</x><y>666</y><w>210</w><h>340</h></coordinates><panel_attributes>Weather
++ enum PRECIPITATION</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1078</x><y>722</y><w>320</w><h>350</h></coordinates><panel_attributes>Weather
 --
 - temperature: int
 - temperatureFeeling: int
@@ -30,7 +30,7 @@
 + getWindPower (): WIND_POWER
 + setPrecipitation (PRECIPITATION, int): void
 + getPrecipitation (): PRECIPITATION
-+ getPrecipitationProbability (): int</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1507</x><y>856</y><w>250</w><h>160</h></coordinates><panel_attributes>Wind
++ getPrecipitationProbability (): int</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1498</x><y>912</y><w>250</w><h>160</h></coordinates><panel_attributes>Wind
 --
 - direction: WIND_DIRECTION
 - power: WIND_POWER
@@ -42,8 +42,7 @@
 --
 + enum WIND_DIRECTION
 + enum WIND_POWER
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1399</x><y>707</y><w>120</w><h>100</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;79;100;10</additional_attributes></element><element><id>Relation</id><coordinates><x>1399</x><y>847</y><w>130</w><h>110</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;19;110;90</additional_attributes></element><element><id>UMLClass</id><coordinates><x>909</x><y>277</y><w>500</w><h>310</h></coordinates><panel_attributes>&lt;&lt;Comparable&gt;&gt;
-FavouritePositions
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1390</x><y>763</y><w>120</w><h>70</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;49;100;10</additional_attributes></element><element><id>Relation</id><coordinates><x>1390</x><y>933</y><w>130</w><h>80</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;19;110;60</additional_attributes></element><element><id>UMLClass</id><coordinates><x>900</x><y>333</y><w>500</w><h>250</h></coordinates><panel_attributes>Position
 --
 -name: String
 - cityID: int
@@ -60,17 +59,13 @@ FavouritePositions
 + getCoordinate (): Coordinate
 - setCoordinate (Coordinate): void
 + getPositionCoordinates (): void
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1439</x><y>87</y><w>380</w><h>160</h></coordinates><panel_attributes>LocationFactory
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1420</x><y>133</y><w>380</w><h>110</h></coordinates><panel_attributes>PositionFactory
 --
--location: Location
--locationNumber: short
+-positions: ArrayList&lt;Position&gt;
 --
-- getCurrentLocation (): 
-+ createLocation (): Location
-+ createLocation (LOCATION_TYPE): Location
-+ createLocation (LOCATION_TYPE, Coordinate): Location
---
-+ enum LOCATION_TYPE</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1159</x><y>577</y><w>160</w><h>110</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;140;89</additional_attributes></element><element><id>UMLClass</id><coordinates><x>959</x><y>677</y><w>210</w><h>150</h></coordinates><panel_attributes>Coordinate
++ addCurrentPosition (): PositionCreator
++ addFavouritePosition(String name): PositionCreator
++ create (): ArrayList&lt;Position&gt;</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1150</x><y>573</y><w>160</w><h>170</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;140;149</additional_attributes></element><element><id>UMLClass</id><coordinates><x>840</x><y>723</y><w>210</w><h>150</h></coordinates><panel_attributes>Coordinate
 --
 -latitude: double
 -longitude:double
@@ -79,47 +74,46 @@ FavouritePositions
 +getLongitude(): double
 +setLatitude (double):void
 +setLongitude (double):void
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1069</x><y>577</y><w>30</w><h>120</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;100</additional_attributes></element><element><id>UMLClass</id><coordinates><x>979</x><y>114</y><w>350</w><h>70</h></coordinates><panel_attributes>&lt;&lt;interface&gt;&gt;
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>950</x><y>573</y><w>140</w><h>170</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>120;10;10;150</additional_attributes></element><element><id>UMLClass</id><coordinates><x>880</x><y>170</y><w>520</w><h>70</h></coordinates><panel_attributes>&lt;&lt;interface&gt;&gt;
 iLocation
 --
-+setWeather (WEATHER_STATION, Date, Weather): void
-+getCoordinate(): Coordinate</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1139</x><y>174</y><w>30</w><h>130</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;10;10;103</additional_attributes></element><element><id>Relation</id><coordinates><x>1399</x><y>234</y><w>260</w><h>180</h></coordinates><panel_attributes>lt=&lt;.</panel_attributes><additional_attributes>10;160;240;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>79</x><y>334</y><w>270</w><h>140</h></coordinates><panel_attributes>WeatherStation
++setWeather (WeatherStation.Builder.WEATHER_SERVICE_TYPE, Calendar, Weather): void
++getCoordinate(): Coordinate</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1130</x><y>230</y><w>30</w><h>130</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;10;10;103</additional_attributes></element><element><id>UMLClass</id><coordinates><x>50</x><y>380</y><w>310</w><h>140</h></coordinates><panel_attributes>WeatherStation
 {abstract}
 --
-- weaterStation: Builder.WEATHER_STATION
+- weatherStationName: String
+- stationType: Builder.WEATHER_SERVICE_TYPE
 --
-+abstract updateWeather (Observer o)
-+abstract updateHourlyWeather (Observer o)
-+abstract updateWeeklyWeather (Observer o)
++ abstract updateWeather (iLocation loc): void
++ abstract updateHourlyWeather (iLocation loc): void
++ abstract updateWeeklyWeather (iLocation loc): void
 --
-+ static class Builder
-
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>9</x><y>94</y><w>400</w><h>150</h></coordinates><panel_attributes>WeatherStationsFactory
-{static}
++ static class Builder</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>0</x><y>150</y><w>400</w><h>150</h></coordinates><panel_attributes>WeatherStationFactory
 --
 - stattions: ArrayList&lt;WeatherStation&gt;
 --
 + addOpenWeatherMapService (): Builder
 + addGismeteoService (): Builder
-+ createWeaterStation (): ArrayList&lt;WeatherStation&gt;
++ create (): ArrayList&lt;WeatherStation&gt;
 --
-+enum WEATHER_STATION</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>49</x><y>614</y><w>210</w><h>90</h></coordinates><panel_attributes>OpenWeatherMap
++enum WEATHER_SERVICE_TYPE</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>20</x><y>610</y><w>260</w><h>90</h></coordinates><panel_attributes>OpenWeatherMap
+--
+
+--
++ updateWeather (iLocation loc): void
++ updateHourlyWeather (iLocation loc): void
++ updateWeeklyWeather (iLocation loc): void</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>110</x><y>510</y><w>30</w><h>120</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;100</additional_attributes></element><element><id>UMLClass</id><coordinates><x>310</x><y>610</y><w>210</w><h>90</h></coordinates><panel_attributes>GisMeteo
 --
 - weatherSattion: WeatherStation
 --
 + getDataFromMeteo
-+ parceIncoming (): Weather</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>139</x><y>464</y><w>30</w><h>170</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;150</additional_attributes></element><element><id>UMLClass</id><coordinates><x>289</x><y>614</y><w>210</w><h>90</h></coordinates><panel_attributes>GisMeteo
++ parceIncoming (): Weather</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>230</x><y>510</y><w>200</w><h>120</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;180;100</additional_attributes></element><element><id>UMLClass</id><coordinates><x>460</x><y>100</y><w>350</w><h>190</h></coordinates><panel_attributes>WeaterActivity
 --
-- weatherSattion: WeatherStation
---
-+ getDataFromMeteo
-+ parceIncoming (): Weather</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>259</x><y>464</y><w>150</w><h>170</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;130;150</additional_attributes></element><element><id>UMLClass</id><coordinates><x>469</x><y>44</y><w>350</w><h>190</h></coordinates><panel_attributes>WeaterActivity
---
-- manager: PositionManaget</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>339</x><y>364</y><w>140</w><h>50</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>120;10;10;30</additional_attributes></element><element><id>Relation</id><coordinates><x>200</x><y>234</y><w>30</w><h>120</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;100;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>460</x><y>300</y><w>380</w><h>190</h></coordinates><panel_attributes>PositionManager
+- manager: PositionManaget</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>350</x><y>420</y><w>120</w><h>40</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>100;10;10;20</additional_attributes></element><element><id>Relation</id><coordinates><x>171</x><y>290</y><w>30</w><h>110</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;90;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>451</x><y>356</y><w>380</w><h>120</h></coordinates><panel_attributes>PositionManager
 --
 - currentStation: WeatherStation.Builder.WEATHER_STATION
 - stations: WeatherStation[]
 - locations: Location []
 --
 - getCurrentStation (): WeatherStation 
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>630</x><y>230</y><w>30</w><h>90</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;70</additional_attributes></element><element><id>Relation</id><coordinates><x>830</x><y>380</y><w>100</w><h>100</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;80;80</additional_attributes></element></diagram>
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>621</x><y>286</y><w>30</w><h>90</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;70</additional_attributes></element><element><id>Relation</id><coordinates><x>821</x><y>436</y><w>100</w><h>100</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;80;80</additional_attributes></element><element><id>Relation</id><coordinates><x>1390</x><y>240</y><w>270</w><h>220</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;200;250;10</additional_attributes></element></diagram>
