@@ -1,5 +1,6 @@
 package com.khasang.forecast;
 
+<<<<<<< HEAD
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
@@ -81,5 +82,24 @@ public class OpenWeatherMap {
                 //TODO handle execution success.
             }
         });
+=======
+/**
+ * Created by Роман on 25.11.2015.
+ */
+public class OpenWeatherMap extends WeatherStation {
+    @Override
+    public void updateWeather(iLocation loc) {
+
+    }
+
+    @Override
+    public void updateHourlyWeather(iLocation loc) {
+
+    }
+
+    @Override
+    void updateWeeklyWeather(iLocation loc) {
+
+>>>>>>> efb9d9556c0978868abda03f28eef736a6eddedc
     }
 }

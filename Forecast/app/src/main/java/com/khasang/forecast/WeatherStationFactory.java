@@ -1,10 +1,36 @@
 package com.khasang.forecast;
 
+import java.util.ArrayList;
+
 /**
- * Created by Veda on 24.11.15.
+ * Created by Роман on 26.11.2015.
  */
 public class WeatherStationFactory {
-    public static enum WEATHER_STATION{}
+    public enum WEATHER_SERVICE_TYPE {OPEN_WEATHER_MAP}
 
+    private ArrayList<WeatherStation> stations;
+
+    public WeatherStationFactory() {
+        stations = new ArrayList<WeatherStation>();
+    }
+
+    public WeatherStationFactory addOpenWeatherMap() {
+        WeatherStation ws = new OpenWeatherMap();
+        ws.weatherStationName = String.valueOf(R.string.service_name_open_weather_map);
+        ws.serviceType = WEATHER_SERVICE_TYPE.OPEN_WEATHER_MAP;
+        stations.add(ws);
+        return this;
+    }
+
+    /*
+
+    При добадении новых сервисов добавить в билдер строитель для каждого сервиса по типу
+    public Builder addOpenWeatherMap
+
+    */
+
+    public ArrayList<WeatherStation> create() {
+        return stations;
+    }
 
 }

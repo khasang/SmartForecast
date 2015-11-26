@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Forecast</string>
+    <string name="service_name_open_weather_map">OpenWeatherMap</string>
 </resources>

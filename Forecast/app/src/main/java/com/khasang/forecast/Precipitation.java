@@ -5,11 +5,10 @@ package com.khasang.forecast;
  */
 
 public class Precipitation {
-
-    public static enum PRECIPITATION {}
-
     private PRECIPITATION precipitation;
     private int probability;
+
+    public static enum PRECIPITATION {}
 
     public Precipitation(PRECIPITATION precipitation, int probability) {
         this.precipitation = precipitation;
