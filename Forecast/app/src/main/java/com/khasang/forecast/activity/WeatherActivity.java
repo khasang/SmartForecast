@@ -1,9 +1,10 @@
-package com.khasang.forecast;
+package com.khasang.forecast.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 
+import com.khasang.forecast.R;
 import com.khasang.forecast.adapter.DailyForecastPageAdapter;
 
 public class WeatherActivity extends FragmentActivity {
