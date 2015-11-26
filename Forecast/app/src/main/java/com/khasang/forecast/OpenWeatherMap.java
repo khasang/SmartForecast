@@ -5,17 +5,17 @@ package com.khasang.forecast;
  */
 public class OpenWeatherMap extends WeatherStation {
     @Override
-    public void updateWeather(iLocation loc) {
+    public void updateWeather(ILocation loc) {
 
     }
 
     @Override
-    public void updateHourlyWeather(iLocation loc) {
+    public void updateHourlyWeather(ILocation loc) {
 
     }
 
     @Override
-    void updateWeeklyWeather(iLocation loc) {
+    void updateWeeklyWeather(ILocation loc) {
 
     }
 }

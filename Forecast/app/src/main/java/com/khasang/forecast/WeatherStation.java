@@ -1,7 +1,5 @@
 package com.khasang.forecast;
 
-import java.util.ArrayList;
-
 /**
  * Created by novoselov on 24.11.2015.
  */
@@ -19,9 +17,9 @@ public abstract class WeatherStation {
         return weatherStationName;
     }
 
-    abstract void updateWeather(iLocation loc);
+    abstract void updateWeather(ILocation loc);
 
-    abstract void updateHourlyWeather(iLocation loc);
+    abstract void updateHourlyWeather(ILocation loc);
 
-    abstract void updateWeeklyWeather(iLocation loc);
+    abstract void updateWeeklyWeather(ILocation loc);
 }

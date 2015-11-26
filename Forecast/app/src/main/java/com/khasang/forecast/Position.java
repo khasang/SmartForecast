@@ -1,6 +1,5 @@
 package com.khasang.forecast;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Map;
 
@@ -8,7 +7,7 @@ import java.util.Map;
  * Created by Veda on 24.11.15.
  */
 
-public class Position implements iLocation {
+public class Position implements ILocation {
     private String name;
     private int cityID;     // Надо подумать нужно ли ....
     private Coordinate coordinate;
