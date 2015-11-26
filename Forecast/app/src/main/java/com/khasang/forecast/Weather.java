@@ -1,13 +1,13 @@
 package com.khasang.forecast;
 
-/**
- * Created by Veda on 24.11.15.
- */
+import com.google.gson.annotations.SerializedName;
 
 public class Weather {
-    private int temperature;
-    private int temperatureFeeling;
-    private int pressure;
+    @SerializedName("temp")
+    private double temperature;
+    private double temp_min;
+    private double temp_max;
+    private double pressure;
     private int humidity;
     private Wind wind;
     private Precipitation precipitation;
@@ -16,7 +16,7 @@ public class Weather {
         this.temperature = temperature;
     }
 
-    public int getTemperature() {
+    public double getTemperature() {
         return temperature;
     }
 
@@ -24,15 +24,7 @@ public class Weather {
         this.temperature = temperature;
     }
 
-    public int getTemperatureFeeling() {
-        return temperatureFeeling;
-    }
-
-    public void setTemperatureFeeling(int temperatureFeeling) {
-        this.temperatureFeeling = temperatureFeeling;
-    }
-
-    public int getPressure() {
+    public double getPressure() {
         return pressure;
     }
 
