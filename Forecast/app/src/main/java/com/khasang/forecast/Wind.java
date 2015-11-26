@@ -1,11 +1,15 @@
 package com.khasang.forecast;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by Veda on 24.11.15.
  */
 
 public class Wind {
+    @SerializedName("def")
     private WIND_DIRECTION direction;
+    @SerializedName("speed")
     private WIND_POWER power;
 
     public static enum WIND_POWER {
