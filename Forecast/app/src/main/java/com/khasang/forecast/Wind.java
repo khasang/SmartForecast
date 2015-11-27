@@ -5,7 +5,7 @@ package com.khasang.forecast;
  */
 
 public class Wind {
-    private WIND_DIRECTION direction;
+    private Direction direction;
     private double speed;
 /*
     public static enum WIND_POWER {
@@ -13,18 +13,18 @@ public class Wind {
         FRESH_BREEZE, STRONG_BREEZE, MODERATE_GALE, FRESH_GALE, STRONG_GALE, WHOLE_GALE, STORM, HURRICANE
     }
 */
-    public static enum WIND_DIRECTION {NORTH, NORTHEAST, EAST, SOUTHEAST, SOUTH, SOUTHWEST, WEST, NORTHWEST}
+    public static enum Direction {NORTH, NORTHEAST, EAST, SOUTHEAST, SOUTH, SOUTHWEST, WEST, NORTHWEST}
 
-    public Wind(WIND_DIRECTION direction, double speed) {
+    public Wind(Direction direction, double speed) {
         this.direction = direction;
         this.speed = speed;
     }
 
-    public WIND_DIRECTION getDirection() {
+    public Direction getDirection() {
         return direction;
     }
 
-    public void setDirection(WIND_DIRECTION direction) {
+    public void setDirection(Direction direction) {
         this.direction = direction;
     }
 

@@ -52,7 +52,7 @@ public class Weather {
         this.humidity = humidity;
     }
 
-    public void setWind(Wind.WIND_DIRECTION wd, double wp) {
+    public void setWind(Wind.Direction wd, double wp) {
         if (this.wind == null) {
             this.wind = new Wind(wd, wp);
         } else {
@@ -61,7 +61,7 @@ public class Weather {
         }
     }
 
-    public Wind.WIND_DIRECTION getWindDirection() {
+    public Wind.Direction getWindDirection() {
         return wind.getDirection();
     }
 
