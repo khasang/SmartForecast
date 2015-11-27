@@ -1,4 +1,4 @@
-package com.khasang.forecast;
+package com.khasang.forecast.activity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.khasang.forecast.PositionManager;
+import com.khasang.forecast.R;
 import com.khasang.forecast.location.*;
 
 

@@ -5,22 +5,22 @@ package com.khasang.forecast;
  */
 
 public class Precipitation {
-    private PRECIPITATION precipitation;
+    private Type type;
     private int probability;
 
-    public static enum PRECIPITATION {}
+    public static enum Type {}
 
-    public Precipitation(PRECIPITATION precipitation, int probability) {
-        this.precipitation = precipitation;
+    public Precipitation(Type type, int probability) {
+        this.type = type;
         this.probability = probability;
     }
 
-    public PRECIPITATION getPrecipitation() {
-        return precipitation;
+    public Type getType() {
+        return type;
     }
 
-    public void setPrecipitation(PRECIPITATION precipitation) {
-        this.precipitation = precipitation;
+    public void setType(Type type) {
+        this.type = type;
     }
 
     public int getProbability() {

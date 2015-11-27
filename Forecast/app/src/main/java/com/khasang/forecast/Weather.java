@@ -11,6 +11,11 @@ public class Weather {
     private int humidity;
     private Wind wind;
     private Precipitation precipitation;
+    private String description;
+
+    public Weather () {
+
+    }
 
     public Weather(int temperature) {
         this.temperature = temperature;
@@ -40,37 +45,45 @@ public class Weather {
         this.humidity = humidity;
     }
 
-    public void setWind(Wind.WIND_DIRECTION wd, Wind.WIND_POWER wp) {
+    public void setWind(Wind.Direction wd, double wp) {
         if (this.wind == null) {
             this.wind = new Wind(wd, wp);
         } else {
             wind.setDirection(wd);
-            wind.setPower(wp);
+            wind.setSpeed(wp);
         }
     }
 
-    public Wind.WIND_DIRECTION getWindDirection() {
+    public Wind.Direction getWindDirection() {
         return wind.getDirection();
     }
 
-    public Wind.WIND_POWER getWindPower() {
-        return wind.getPower();
+    public double getWindPower() {
+        return wind.getSpeed();
     }
 
-    public void setPrecipitation(Precipitation.PRECIPITATION precipitation, int probability) {
+    public void setPrecipitation(Precipitation.Type type, int probability) {
         if (this.precipitation == null) {
-            this.precipitation = new Precipitation(precipitation, probability);
+            this.precipitation = new Precipitation(type, probability);
         } else {
-            this.precipitation.setPrecipitation(precipitation);
+            this.precipitation.setType(type);
             this.precipitation.setProbability(probability);
         }
     }
 
-    public Precipitation.PRECIPITATION getPrecipitation() {
-        return precipitation.getPrecipitation();
+    public Precipitation.Type getPrecipitation() {
+        return precipitation.getType();
     }
 
     public int getPrecipitationProbability() {
         return precipitation.getProbability();
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

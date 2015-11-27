@@ -7,9 +7,9 @@ package com.khasang.forecast;
 public abstract class WeatherStation {
     String weatherStationName;
 
-    WeatherStationFactory.WEATHER_SERVICE_TYPE serviceType;
+    WeatherStationFactory.ServiceType serviceType;
 
-    public WeatherStationFactory.WEATHER_SERVICE_TYPE getServiceType() {
+    public WeatherStationFactory.ServiceType getServiceType() {
         return serviceType;
     }
 
@@ -17,9 +17,9 @@ public abstract class WeatherStation {
         return weatherStationName;
     }
 
-    abstract void updateWeather(ILocation loc);
+    abstract void updateWeather(Coordinate coordinate, PositionManager manager);
 
-    abstract void updateHourlyWeather(ILocation loc);
+    abstract void updateHourlyWeather(Coordinate coordinate, PositionManager manager);
 
-    abstract void updateWeeklyWeather(ILocation loc);
+    abstract void updateWeeklyWeather(Coordinate coordinate, PositionManager manager);
 }
