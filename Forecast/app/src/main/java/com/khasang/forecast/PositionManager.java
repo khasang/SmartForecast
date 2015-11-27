@@ -1,6 +1,8 @@
 package com.khasang.forecast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
@@ -30,4 +32,62 @@ public class PositionManager {
         }
         positions = positionFactory.create();
     }
+
+    public Weather getWeather() {
+        return getWeather(currStation.getServiceType());
+    }
+
+    public Weather getWeather(WeatherStationFactory.WEATHER_SERVICE_TYPE stationType) {
+        return getWeather(stationType, GregorianCalendar.getInstance());
+    }
+
+    public Weather getWeather(WeatherStationFactory.WEATHER_SERVICE_TYPE stationType, Calendar с) {
+        // TODO Видирать погоду по ближайшей дате из Position и возвращать ее
+        return new Weather();
+    }
+
+    public Weather[] getHourlyWeather() {
+        final int HOUR_PERIOD = 4;
+        Calendar calendar = GregorianCalendar.getInstance();
+        calendar.add(Calendar.HOUR_OF_DAY, HOUR_PERIOD);
+        calendar.set(Calendar.MINUTE, 0);
+        Weather[] weather = new Weather[7];
+        for (int i = 0; i < 7; i++) {
+            weather[i] = getWeather(currStation.getServiceType(), calendar);
+            calendar.add(Calendar.HOUR_OF_DAY, HOUR_PERIOD);
+        }
+        return weather;
+    }
+
+    public Weather[] getWeeklyWeather() {
+        Weather[] weather = new Weather[7];
+        Calendar calendar = GregorianCalendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 12);
+        calendar.set(Calendar.MINUTE, 0);
+        for (int i = 0; i < 7; i++) {
+            weather[i] = getWeather(currStation.getServiceType(), calendar);
+            calendar.add(Calendar.DAY_OF_YEAR, 1);
+        }
+        return weather;
+    }
+
+    public void updateCurrent() {
+        currStation.updateWeather(currPosition.getCoordinate(), this);
+    }
+
+    public void updateHourly() {
+        currStation.updateHourlyWeather(currPosition.getCoordinate(), this);
+    }
+
+    public void updateWeekly() {
+        currStation.updateWeeklyWeather(currPosition.getCoordinate(), this);
+    }
+
+    public void onResponseReceived(Coordinate coordinate, Weather weather) {
+        //TODO Положить данные в Position
+        //TODO Сообщить активити что бы она обновила свои данные
+    }
+
+    // TODO Добавить функции пеобразования температуры и других параметров
+
 }
