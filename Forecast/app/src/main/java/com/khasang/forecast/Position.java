@@ -11,7 +11,7 @@ public class Position implements ILocation {
     private String name;
     private int cityID;     // Надо подумать нужно ли ....
     private Coordinate coordinate;
-    private Map<WeatherStationFactory.WEATHER_SERVICE_TYPE, Map<Calendar, Weather>> weather;
+    private Map<WeatherStationFactory.ServiceType, Map<Calendar, Weather>> weather;
 
     public void setLocationName(String name) {
         this.name = name;
@@ -37,9 +37,9 @@ public class Position implements ILocation {
         this.coordinate = coordinate;
     }
 
-    public Weather getWeather(WeatherStationFactory.WEATHER_SERVICE_TYPE ws, Calendar date) {
+    public Weather getWeather(WeatherStationFactory.ServiceType ws, Calendar date) {
         Weather weatherOfDate = null;
-        for (Map.Entry<WeatherStationFactory.WEATHER_SERVICE_TYPE, Map<Calendar, Weather>> entry : weather.entrySet()) {
+        for (Map.Entry<WeatherStationFactory.ServiceType, Map<Calendar, Weather>> entry : weather.entrySet()) {
             if (entry.getKey() == ws) {
                 weatherOfDate = entry.getValue().get(date);
             }
@@ -48,8 +48,8 @@ public class Position implements ILocation {
     }
 
     @Override
-    public void setWeather(WeatherStationFactory.WEATHER_SERVICE_TYPE ws, Calendar date, Weather weather) {
-        for (Map.Entry<WeatherStationFactory.WEATHER_SERVICE_TYPE, Map<Calendar, Weather>> entry : this.weather.entrySet()) {
+    public void setWeather(WeatherStationFactory.ServiceType ws, Calendar date, Weather weather) {
+        for (Map.Entry<WeatherStationFactory.ServiceType, Map<Calendar, Weather>> entry : this.weather.entrySet()) {
             if (entry.getKey() == ws) {
                 entry.getValue().put(date, weather);
             }

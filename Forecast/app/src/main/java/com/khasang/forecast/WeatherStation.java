@@ -7,9 +7,9 @@ package com.khasang.forecast;
 public abstract class WeatherStation {
     String weatherStationName;
 
-    WeatherStationFactory.WEATHER_SERVICE_TYPE serviceType;
+    WeatherStationFactory.ServiceType serviceType;
 
-    public WeatherStationFactory.WEATHER_SERVICE_TYPE getServiceType() {
+    public WeatherStationFactory.ServiceType getServiceType() {
         return serviceType;
     }
 
