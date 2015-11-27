@@ -12,11 +12,7 @@ import com.squareup.okhttp.logging.HttpLoggingInterceptor;
 import com.squareup.okhttp.logging.HttpLoggingInterceptor.Level;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Locale;
-import java.util.Map;
 
 import retrofit.Call;
 import retrofit.Callback;
@@ -30,7 +26,7 @@ import retrofit.Retrofit;
  * to the UI thread via the onResponse or onFailure method. *
  */
 
-public class OpenWeatherMap { // extends WeatherStation {
+public class OpenWeatherMap  extends WeatherStation {
 
     //TAG for debugging
     private static final String TAG = OpenWeatherMap.class.getSimpleName();
@@ -78,12 +74,12 @@ public class OpenWeatherMap { // extends WeatherStation {
                 return chain.proceed(request);
             }
         });
-        client.interceptors().add(logging);
+        //client.interceptors().add(logging);
     }
 
     //Get current weather data asynchronously.
-    //@Override
-    public void updateWeather() {
+    @Override
+    public void updateWeather(Coordinate coordinate, PositionManager manager) {
         addInterceptors();
 
         Call<OpenWeatherMapResponse> call = service.getCurrent(55.7796551, 37.7125017);
@@ -92,9 +88,9 @@ public class OpenWeatherMap { // extends WeatherStation {
             @Override
             public void onResponse(Response<OpenWeatherMapResponse> response, Retrofit retrofit) {
                 //TODO handle execution success.
-                //Log.d(TAG, "onResponse: " + response.body().toString());
-                //Weather weather = AppUtils.convertToWeather(response.body());
-                //Log.d(TAG, "Weather: " + weather.toString());
+                /*Log.d(TAG, "updateWeather, onResponse: " + response.body().toString());
+                Weather weather = AppUtils.convertToWeather(response.body());
+                Log.d(TAG, "updateWeather: " + weather.toString());*/
 
 
             }
@@ -102,26 +98,26 @@ public class OpenWeatherMap { // extends WeatherStation {
             @Override
             public void onFailure(Throwable t) {
                 //TODO handle execution failure.
-                Log.e(TAG, "onFailure: ", t);
+                Log.e(TAG, "updateWeather, onFailure: ", t);
             }
         });
     }
 
     //Get 24-hour forecast asynchronously.
-    //@Override
-    public void updateHourlyWeather() {
+    @Override
+    public void updateHourlyWeather(Coordinate coordinate, PositionManager manager) {
         addInterceptors();
         Call<OpenWeatherMapResponse> call = service.getHourly(55.7796551, 37.7125017, TIME_PERIOD);
         call.enqueue(new Callback<OpenWeatherMapResponse>() {
             @Override
             public void onResponse(Response<OpenWeatherMapResponse> response, Retrofit retrofit) {
                 //TODO handle execution success.
-                /*Log.d(TAG, "onResponse: " + response.body().toString());
+                /*Log.d(TAG, "updateHourlyWeather, onResponse: " + response.body().toString());
                 Map<Calendar, Weather> map = AppUtils.convertToHourlyWeather(response.body());
                 DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
                 for (Map.Entry<Calendar, Weather> m : map.entrySet()) {
-                    Log.d(TAG, "Hourly: " + dateFormat.format(m.getKey().getTime()) + " Weather: " + m.getValue());
+                    Log.d(TAG, "updateHourlyWeather: " + dateFormat.format(m.getKey().getTime()) + " Weather: " + m.getValue());
                 }*/
 
             }
@@ -129,33 +125,33 @@ public class OpenWeatherMap { // extends WeatherStation {
             @Override
             public void onFailure(Throwable t) {
                 //TODO handle execution failure.
-                Log.e(TAG, "onFailure: ", t);
+                Log.e(TAG, "updateHourlyWeather, onFailure: ", t);
             }
         });
     }
 
     //Get 7 day forecast asynchronously.
-    //@Override
-    public void updateWeeklyWeather() {
+    @Override
+    public void updateWeeklyWeather(Coordinate coordinate, PositionManager manager) {
         addInterceptors();
         Call<DailyResponse> call = service.getDaily(55.7796551, 37.7125017, DAYS_PERIOD);
         call.enqueue(new Callback<DailyResponse>() {
             @Override
             public void onResponse(Response<DailyResponse> response, Retrofit retrofit) {
                 //TODO handle execution success.
-                Log.d(TAG, "onResponse: " + response.body().toString());
+                /*Log.d(TAG, "updateWeeklyWeather, onResponse: " + response.body().toString());
                 Map<Calendar, Weather> map = AppUtils.convertToDailyWeather(response.body());
                 DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
                 for (Map.Entry<Calendar, Weather> m : map.entrySet()) {
-                    Log.d(TAG, "Daily: " + dateFormat.format(m.getKey().getTime()) + " Weather: " + m.getValue());
-                }
+                    Log.d(TAG, "updateWeeklyWeather: " + dateFormat.format(m.getKey().getTime()) + " Weather: " + m.getValue());
+                }*/
             }
 
             @Override
             public void onFailure(Throwable t) {
                 //TODO handle execution failure.
-                Log.e(TAG, "onFailure: ", t);
+                Log.e(TAG, "updateWeeklyWeather, onFailure: ", t);
             }
         });
     }

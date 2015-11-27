@@ -1,9 +1,7 @@
 package com.khasang.forecast;
 
-import com.google.gson.annotations.SerializedName;
-
 public class Weather {
-    @SerializedName("temp")
+
     private double temperature;
     private double temp_min;
     private double temp_max;
@@ -25,7 +23,7 @@ public class Weather {
         return temperature;
     }
 
-    public void setTemperature(int temperature) {
+    public void setTemperature(double temperature) {
         this.temperature = temperature;
     }
 
@@ -33,7 +31,7 @@ public class Weather {
         return pressure;
     }
 
-    public void setPressure(int pressure) {
+    public void setPressure(double pressure) {
         this.pressure = pressure;
     }
 

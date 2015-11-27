@@ -71,23 +71,23 @@ public class AppUtils {
 
     private static void setWindDirectionAndSpeed(Weather weather, double speed, double deg) {
         if (deg >= 0 && deg <= 22.5) {
-            weather.setWind(Wind.WIND_DIRECTION.NORTH, speed);
+            weather.setWind(Wind.Direction.NORTH, speed);
         } else if (deg > 22.5 && deg <= 67.5) {
-            weather.setWind(Wind.WIND_DIRECTION.NORTHEAST, speed);
+            weather.setWind(Wind.Direction.NORTHEAST, speed);
         } else if (deg > 67.5 && deg <= 112.5) {
-            weather.setWind(Wind.WIND_DIRECTION.EAST, speed);
+            weather.setWind(Wind.Direction.EAST, speed);
         } else if (deg > 112.5 && deg <= 157.5) {
-            weather.setWind(Wind.WIND_DIRECTION.SOUTHEAST, speed);
+            weather.setWind(Wind.Direction.SOUTHEAST, speed);
         } else if (deg > 157.5 && deg <= 202.5) {
-            weather.setWind(Wind.WIND_DIRECTION.SOUTH, speed);
+            weather.setWind(Wind.Direction.SOUTH, speed);
         } else if (deg > 202.5 && deg <= 247.5) {
-            weather.setWind(Wind.WIND_DIRECTION.SOUTHWEST, speed);
+            weather.setWind(Wind.Direction.SOUTHWEST, speed);
         } else if (deg > 247.5 && deg <= 292.5) {
-            weather.setWind(Wind.WIND_DIRECTION.WEST, speed);
+            weather.setWind(Wind.Direction.WEST, speed);
         } else if (deg > 292.5 && deg <= 337.5) {
-            weather.setWind(Wind.WIND_DIRECTION.NORTHWEST, speed);
+            weather.setWind(Wind.Direction.NORTHWEST, speed);
         } else if (deg > 337.5 && deg <= 360) {
-            weather.setWind(Wind.WIND_DIRECTION.NORTH, speed);
+            weather.setWind(Wind.Direction.NORTH, speed);
         }
     }
 
