@@ -1,13 +1,11 @@
 package com.khasang.forecast;
 
-/**
- * Created by Veda on 24.11.15.
- */
-
 public class Weather {
-    private int temperature;
-    private int temperatureFeeling;
-    private int pressure;
+
+    private double temperature;
+    private double temp_min;
+    private double temp_max;
+    private double pressure;
     private int humidity;
     private Wind wind;
     private Precipitation precipitation;
@@ -21,27 +19,19 @@ public class Weather {
         this.temperature = temperature;
     }
 
-    public int getTemperature() {
+    public double getTemperature() {
         return temperature;
     }
 
-    public void setTemperature(int temperature) {
+    public void setTemperature(double temperature) {
         this.temperature = temperature;
     }
 
-    public int getTemperatureFeeling() {
-        return temperatureFeeling;
-    }
-
-    public void setTemperatureFeeling(int temperatureFeeling) {
-        this.temperatureFeeling = temperatureFeeling;
-    }
-
-    public int getPressure() {
+    public double getPressure() {
         return pressure;
     }
 
-    public void setPressure(int pressure) {
+    public void setPressure(double pressure) {
         this.pressure = pressure;
     }
 
