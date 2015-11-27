@@ -13,4 +13,16 @@ public class Sys {
                 ", sunrise=" + sunrise +
                 '}';
     }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public long getSunset() {
+        return sunset;
+    }
+
+    public long getSunrise() {
+        return sunrise;
+    }
 }

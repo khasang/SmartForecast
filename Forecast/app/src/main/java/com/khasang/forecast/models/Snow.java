@@ -1,7 +1,20 @@
 package com.khasang.forecast.models;
 
-/**
- * Created by Myrig on 27.11.2015.
- */
+import com.google.gson.annotations.SerializedName;
+
 public class Snow {
+
+    @SerializedName("3h")
+    private double snowVolume;
+
+    public double getSnowVolume() {
+        return snowVolume;
+    }
+
+    @Override
+    public String toString() {
+        return "Snow{" +
+                "snowVolume=" + snowVolume +
+                '}';
+    }
 }

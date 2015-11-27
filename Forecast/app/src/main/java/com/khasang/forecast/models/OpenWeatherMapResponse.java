@@ -1,13 +1,8 @@
 package com.khasang.forecast.models;
 
-import com.khasang.forecast.models.Clouds;
-import com.khasang.forecast.models.Forecast;
-import com.khasang.forecast.models.Rain;
-import com.khasang.forecast.models.Sys;
-import com.khasang.forecast.models.Weather;
-import com.khasang.forecast.models.Wind;
-
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Model class to show how weather representation should look like.
@@ -15,14 +10,55 @@ import java.util.Arrays;
 
 public class OpenWeatherMapResponse {
     private Weather[] weather;
-    private Forecast main;
+    private Main main;
     private Wind wind;
     private Clouds clouds;
     private Rain rain;
     private long dt;
     private Sys sys;
-    private String id;
+    private long id;
     private String name;
+    private List<HourlyForecastList> list = new ArrayList<>();
+
+    public Weather[] getWeather() {
+        return weather;
+    }
+
+    public Main getMain() {
+        return main;
+    }
+
+    public Wind getWind() {
+        return wind;
+    }
+
+    public Clouds getClouds() {
+        return clouds;
+    }
+
+    public Rain getRain() {
+        return rain;
+    }
+
+    public long getDt() {
+        return dt;
+    }
+
+    public Sys getSys() {
+        return sys;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public List<HourlyForecastList> getList() {
+        return list;
+    }
 
     @Override
     public String toString() {
@@ -34,8 +70,9 @@ public class OpenWeatherMapResponse {
                 ", rain=" + rain +
                 ", dt=" + dt +
                 ", sys=" + sys +
-                ", id='" + id + '\'' +
+                ", id=" + id +
                 ", name='" + name + '\'' +
+                ", list=" + list +
                 '}';
     }
 }

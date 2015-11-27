@@ -1,6 +1,7 @@
 package com.khasang.forecast;
 
-import java.util.List;
+import com.khasang.forecast.models.DailyResponse;
+import com.khasang.forecast.models.OpenWeatherMapResponse;
 
 import retrofit.Call;
 import retrofit.http.GET;
@@ -15,16 +16,15 @@ public interface OpenWeatherMapService {
 
     //Current weather data by geographic coordinates.
     @GET("/data/2.5/weather")
-    Call<OpenWeatherMapResponse> getCurrent(@Query("appid") String appid, @Query("lat") double latitude,
-                             @Query("lon") double longitude);
+    Call<OpenWeatherMapResponse> getCurrent(@Query("lat") double latitude, @Query("lon") double longitude);
 
     //3 hour forecast data by geographic coordinates.
     @GET("/data/2.5/forecast")
-    Call<List<Weather>> getHourly(@Query("appid") String appid, @Query("lat") double latitude,
-                                  @Query("lon") double longitude, @Query("cnt") int timePeriod);
+    Call<OpenWeatherMapResponse> getHourly(@Query("lat") double latitude, @Query("lon") double longitude,
+                                   @Query("cnt") int timePeriod);
 
     //Weekly forecast data by geographic coordinates.
     @GET("/data/2.5/forecast/daily")
-    Call<List<Weather>> getWeekly(@Query("appid") String appid, @Query("lat") double latitude,
-                                  @Query("lon") double longitude, @Query("cnt") int daysPeriod);
+    Call<DailyResponse> getDaily(@Query("lat") double latitude, @Query("lon") double longitude,
+                                          @Query("cnt") int daysPeriod);
 }

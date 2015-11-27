@@ -1,7 +1,22 @@
 package com.khasang.forecast.models;
 
-/**
- * Created by Myrig on 27.11.2015.
- */
-public class WInd {
+public class Wind {
+    private double speed;
+    private double deg;
+
+    @Override
+    public String toString() {
+        return "Wind{" +
+                "speed=" + speed +
+                ", deg=" + deg +
+                '}';
+    }
+
+    public double getSpeed() {
+        return speed;
+    }
+
+    public double getDeg() {
+        return deg;
+    }
 }
