@@ -11,6 +11,7 @@ public class Weather {
     private int humidity;
     private Wind wind;
     private Precipitation precipitation;
+    private String description;
 
     public Weather () {
 
@@ -84,5 +85,13 @@ public class Weather {
 
     public int getPrecipitationProbability() {
         return precipitation.getProbability();
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
