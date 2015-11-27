@@ -9,7 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.khasang.forecast.R;
-import com.khasang.forecast.adapter.DailyForecastPageAdapter;
+import com.khasang.forecast.adapter.ForecastPageAdapter;
 
 import java.awt.font.TextAttribute;
 
@@ -61,7 +61,7 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
          * Код для фрагментов
          */
         pager = (ViewPager) findViewById(R.id.pager);
-        DailyForecastPageAdapter adapter = new DailyForecastPageAdapter(getSupportFragmentManager());
+        ForecastPageAdapter adapter = new ForecastPageAdapter(getSupportFragmentManager());
         pager.setAdapter(adapter);
     }
 
