@@ -17,9 +17,9 @@ public abstract class WeatherStation {
         return weatherStationName;
     }
 
-    abstract void updateWeather(ILocation loc);
+    abstract void updateWeather(Coordinate coordinate, PositionManager manager);
 
-    abstract void updateHourlyWeather(ILocation loc);
+    abstract void updateHourlyWeather(Coordinate coordinate, PositionManager manager);
 
-    abstract void updateWeeklyWeather(ILocation loc);
+    abstract void updateWeeklyWeather(Coordinate coordinate, PositionManager manager);
 }

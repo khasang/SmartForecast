@@ -12,6 +12,10 @@ public class Weather {
     private Wind wind;
     private Precipitation precipitation;
 
+    public Weather () {
+
+    }
+
     public Weather(int temperature) {
         this.temperature = temperature;
     }
