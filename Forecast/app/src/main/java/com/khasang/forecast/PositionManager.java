@@ -10,6 +10,7 @@ import java.util.List;
  */
 
 public class PositionManager {
+    public static final int KELVIN_CELSIUS_DELTA = 273;
     private WeatherStation currStation;
     private Position currPosition;
     private ArrayList<WeatherStation> stations;
@@ -89,5 +90,15 @@ public class PositionManager {
     }
 
     // TODO Добавить функции пеобразования температуры и других параметров
+    // Преобразование из Кельвина в Цельсий
+    public int kelvinToCelsius(int temperature) {
+        int celsiusTemperature = temperature - KELVIN_CELSIUS_DELTA;
+        return celsiusTemperature;
+    }
+    // Преобразование из Кельвина в Фаренгейт
+    public int kelvinToFahrenheit(int temperature) {
+        int fahrenheitTemperature = (kelvinToCelsius(temperature) * 9 / 5) + 32;
+        return fahrenheitTemperature;
+    }
 
 }
