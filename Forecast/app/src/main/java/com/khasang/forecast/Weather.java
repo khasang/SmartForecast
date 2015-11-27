@@ -69,17 +69,17 @@ public class Weather {
         return wind.getSpeed();
     }
 
-    public void setPrecipitation(Precipitation.PRECIPITATION precipitation, int probability) {
+    public void setPrecipitation(Precipitation.Type type, int probability) {
         if (this.precipitation == null) {
-            this.precipitation = new Precipitation(precipitation, probability);
+            this.precipitation = new Precipitation(type, probability);
         } else {
-            this.precipitation.setPrecipitation(precipitation);
+            this.precipitation.setType(type);
             this.precipitation.setProbability(probability);
         }
     }
 
-    public Precipitation.PRECIPITATION getPrecipitation() {
-        return precipitation.getPrecipitation();
+    public Precipitation.Type getPrecipitation() {
+        return precipitation.getType();
     }
 
     public int getPrecipitationProbability() {
