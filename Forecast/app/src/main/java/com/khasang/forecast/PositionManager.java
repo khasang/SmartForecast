@@ -2,6 +2,7 @@ package com.khasang.forecast;
 
 import android.content.Context;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -36,6 +37,10 @@ public class PositionManager {
 
     public PositionManager(Context context) {
         mContext = context;
+        ArrayList <String> pos = new ArrayList<>();
+        pos.add("Нижний Новгород");
+        initStations();         //  Пока тут
+        initPositions(pos);     //  Пока тут
     }
 
     public void initStations() {
@@ -45,11 +50,11 @@ public class PositionManager {
                 .create();
     }
 
-    public void initPositions(List<String> favorites) {
+    public void initPositions(ArrayList<String> favorites) {
         PositionFactory positionFactory = new PositionFactory(mContext);
-        positionFactory = positionFactory.addCurrentPosition();
+        positionFactory.addCurrentPosition();
         for (String pos : favorites) {
-            positionFactory = positionFactory.addFavouritePosition(pos);
+            positionFactory.addFavouritePosition(pos);
         }
         mPositions = positionFactory.getPositions();
     }
