@@ -49,11 +49,11 @@ public class PositionManager {
         return getWeather(currStation.getServiceType());
     }
 
-    public Weather getWeather(WeatherStationFactory.WEATHER_SERVICE_TYPE stationType) {
+    public Weather getWeather(WeatherStationFactory.ServiceType stationType) {
         return getWeather(stationType, GregorianCalendar.getInstance());
     }
 
-    public Weather getWeather(WeatherStationFactory.WEATHER_SERVICE_TYPE stationType, Calendar с) {
+    public Weather getWeather(WeatherStationFactory.ServiceType stationType, Calendar с) {
         // TODO Видирать погоду по ближайшей дате из Position и возвращать ее
         return new Weather();
     }

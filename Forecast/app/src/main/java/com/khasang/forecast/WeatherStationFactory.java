@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * Created by Роман on 26.11.2015.
  */
 public class WeatherStationFactory {
-    public enum WEATHER_SERVICE_TYPE {OPEN_WEATHER_MAP}
+    public enum ServiceType {OPEN_WEATHER_MAP}
 
     private ArrayList<WeatherStation> stations;
 
@@ -17,7 +17,7 @@ public class WeatherStationFactory {
     public WeatherStationFactory addOpenWeatherMap() {
         WeatherStation ws = new OpenWeatherMap();
         ws.weatherStationName = String.valueOf(R.string.service_name_open_weather_map);
-        ws.serviceType = WEATHER_SERVICE_TYPE.OPEN_WEATHER_MAP;
+        ws.serviceType = ServiceType.OPEN_WEATHER_MAP;
         stations.add(ws);
         return this;
     }
