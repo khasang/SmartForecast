@@ -3,11 +3,13 @@ package com.khasang.forecast;
 import android.content.Context;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.Set;
 
 /**
  * Created by Роман on 26.11.2015.
@@ -38,7 +40,7 @@ public class PositionManager {
     public PositionManager(Context context) {
         mContext = context;
         ArrayList <String> pos = new ArrayList<>();
-        pos.add("Нижний Новгород");
+        pos.add("Moscow");
         initStations();         //  Пока тут
         initPositions(pos);     //  Пока тут
     }
@@ -50,7 +52,7 @@ public class PositionManager {
                 .create();
     }
 
-    public void initPositions(ArrayList<String> favorites) {
+    public void initPositions(List<String> favorites) {
         PositionFactory positionFactory = new PositionFactory(mContext);
         positionFactory.addCurrentPosition();
         for (String pos : favorites) {
@@ -71,9 +73,37 @@ public class PositionManager {
         return getWeather(stationType, GregorianCalendar.getInstance());
     }
 
-    public Weather getWeather(WeatherStationFactory.ServiceType stationType, Calendar с) {
-        // TODO Видирать погоду по ближайшей дате из Position и возвращать ее
-        return new Weather();
+    public Weather getWeather(WeatherStationFactory.ServiceType stationType, Calendar necessaryDate) {
+        final Set<Calendar> dates = currPosition.getAllDates(stationType);
+        if (dates.size() == 0) {
+            return null;
+        }
+        final List<Calendar> sortedDates = new ArrayList<Calendar>(dates);
+        Collections.sort(sortedDates);
+        Calendar baseDate;
+        Calendar dateAtList = null;
+        for (int i = 0; i < sortedDates.size(); i++) {
+            baseDate = sortedDates.get(i);
+            if (necessaryDate.before(baseDate)) {
+                if (i == 0) {
+                    dateAtList = baseDate;
+                } else {
+                    Calendar prevDate = sortedDates.get(i-1);
+                    long diff1 = baseDate.getTimeInMillis() - necessaryDate.getTimeInMillis();
+                    long diff2 = necessaryDate.getTimeInMillis() - prevDate.getTimeInMillis();
+                    if (diff1 < diff2) {
+                        dateAtList = baseDate;
+                    } else {
+                        dateAtList = prevDate;
+                    }
+                }
+                break;
+            }
+        }
+        if (dateAtList == null) {
+            dateAtList = sortedDates.get(sortedDates.size() - 1);
+        }
+        return currPosition.getWeather(stationType, dateAtList);
     }
 
     public Weather[] getHourlyWeather() {
@@ -113,8 +143,20 @@ public class PositionManager {
         currStation.updateWeeklyWeather(currPosition.getCoordinate(), this);
     }
 
+    private Position getPositionByCoordinate (Coordinate coordinate) {
+        for (Position pos : mPositions.values()) {
+            if (pos.getCoordinate().getLatitude() == coordinate.getLatitude() && pos.getCoordinate().getLongitude() == coordinate.getLongitude()) {
+                return pos;
+            }
+        }
+        return null;
+    }
+
     public void onResponseReceived(Coordinate coordinate, Weather weather) {
         //TODO Положить данные в Position
+        Position position = getPositionByCoordinate(coordinate);
+        // position.setWeather();
+
         //TODO Сообщить активити что бы она обновила свои данные
     }
 
