@@ -2,6 +2,8 @@ package com.khasang.forecast;
 
 import java.util.Calendar;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Created by Veda on 24.11.15.
@@ -37,14 +39,21 @@ public class Position implements ILocation {
         this.coordinate = coordinate;
     }
 
+    public Set<Calendar> getAllDates (WeatherStationFactory.ServiceType ws) {
+        return weather.get(ws).keySet();
+    }
+
     public Weather getWeather(WeatherStationFactory.ServiceType ws, Calendar date) {
-        Weather weatherOfDate = null;
+  //      Weather weatherOfDate = null;
+        return weather.get(ws).get(date);
+/*
         for (Map.Entry<WeatherStationFactory.ServiceType, Map<Calendar, Weather>> entry : weather.entrySet()) {
             if (entry.getKey() == ws) {
                 weatherOfDate = entry.getValue().get(date);
             }
         }
         return weatherOfDate;
+        */
     }
 
     @Override
