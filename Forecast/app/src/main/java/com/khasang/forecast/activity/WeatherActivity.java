@@ -83,7 +83,7 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
     public void onClick(View view) {
         updateInterface(current_city, current_temperature, current_precipitation,
                 current_pressure, current_wind, current_humidity, current_timeStamp);
-        manager.updateCurrent();
+        //manager.updateCurrent();
     }
 
     /**
@@ -93,15 +93,21 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
                                 String current_precipitation, int current_presure,
                                 int current_wind, int current_humidity, String current_timeStamp) {
         city.setText(String.valueOf(current_city));
-        temperature.setText(String.valueOf(current_temperature) + "°C");
+        temperature.setText(String.format("%s°C", String.valueOf(current_temperature)));
         precipitation.setText(String.valueOf(current_precipitation));
-//        pressure.setText(getString(R.string.pressure) + " " + String.valueOf(current_presure) + getString(R.string.pressure_measure));
         pressure.setText(String.format("%s %d %s",
                 getString(R.string.pressure),
                 current_presure,
                 getString(R.string.pressure_measure)));
-        wind.setText(getString(R.string.wind) + " " + String.valueOf(current_wind) + getString(R.string.wind_measure));
-        humidity.setText(getString(R.string.humidity) + " " + String.valueOf(current_humidity) + "%");
-        timeStamp.setText(getString(R.string.timeStamp) + " " +String.valueOf(current_timeStamp));
+        wind.setText(String.format("%s %s%s",
+                getString(R.string.wind),
+                String.valueOf(current_wind),
+                getString(R.string.wind_measure)));
+        humidity.setText(String.format("%s %s%%",
+                getString(R.string.humidity),
+                String.valueOf(current_humidity)));
+        timeStamp.setText(String.format("%s %s",
+                getString(R.string.timeStamp),
+                String.valueOf(current_timeStamp)));
     }
 }
