@@ -133,8 +133,10 @@ public class PositionManager {
         return weather;
     }
 
-    public void updateCurrent() {
-        currStation.updateWeather(currPosition.getCoordinate(), this);
+    public Weather updateCurrent() {
+        //currStation.updateWeather(currPosition.getCoordinate(), this);
+        //return new Weather(5, new Precipitation(Precipitation.Type.CLOUDS, 3), 35.0, 4.0, 4);
+        return new Weather(5, 35.0, 90, new Wind(Wind.Direction.EAST, 11.0),new Precipitation(Precipitation.Type.CLOUDS, 3), "");
     }
 
     public void updateHourly() {
