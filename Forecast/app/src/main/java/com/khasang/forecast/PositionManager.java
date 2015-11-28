@@ -196,7 +196,7 @@ public class PositionManager {
      */
     private Position getPosition (Coordinate coordinate) {
         for (Position pos : positions.values()) {
-            if (pos.getCoordinate().getLatitude() == coordinate.getLatitude() && pos.getCoordinate().getLongitude() == coordinate.getLongitude()) {
+            if (pos.getCoordinate().equals(coordinate)) {
                 return pos;
             }
         }
