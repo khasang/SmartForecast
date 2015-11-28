@@ -2,6 +2,10 @@
     <string name="app_name">Forecast</string>
     <string name="service_name_open_weather_map">OpenWeatherMap</string>
 
+    <string name="pressure">Давление</string>
     <string name="wind">Ветер</string>
+    <string name="humidity">Влажность</string>
+    <string name="timeStamp">Обновлено</string>
+    <string name="pressure_measure">мм рт/ст</string>
     <string name="wind_measure">м/c</string>
 </resources>
