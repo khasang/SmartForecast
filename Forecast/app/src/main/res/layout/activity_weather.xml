@@ -11,7 +11,6 @@
     tools:context=".MainActivity">
 
     <LinearLayout
-        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical">
@@ -60,13 +59,14 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/cloudiness"
+            android:id="@+id/precipitation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|center_vertical"
             android:text="Облачно" />
 
         <TextView
+            android:id="@+id/pressure"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|center_vertical"
@@ -77,25 +77,32 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="70dp">
+        android:layout_marginTop="70dp"
+        android:layout_weight="1">
 
-
-        <ImageButton
-            android:id="@+id/syncBtn"
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/sync"
-            android:background="@null"
-            android:contentDescription="test"
-            android:layout_gravity="center" />
+            android:layout_gravity="bottom">
 
-        <TextView
-            android:id="@+id/timeStamp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Дата"
-            android:layout_gravity="center" />
+            <ImageButton
+                android:id="@+id/syncBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/sync"
+                android:background="@null"
+                android:contentDescription="test"
+                android:layout_gravity="center" />
+
+            <TextView
+                android:id="@+id/timeStamp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_gravity="center" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:orientation="vertical"
@@ -119,10 +126,12 @@
 
     </LinearLayout>
 
+    <!-- Скрыто до реализации фрагментов-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"

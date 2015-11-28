@@ -1,5 +1,9 @@
 package com.khasang.forecast;
 
+/**
+ *
+ */
+
 public class Weather {
 
     private double temperature;

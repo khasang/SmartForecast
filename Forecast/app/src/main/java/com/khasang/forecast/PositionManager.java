@@ -1,6 +1,8 @@
 package com.khasang.forecast;
 
-import android.content.Context;
+import android.app.Activity;
+
+import com.khasang.forecast.activity.WeatherActivity;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,10 +37,10 @@ public class PositionManager {
     private Position currPosition;
     private HashMap<String, WeatherStation> stations;
     private Map<String, Position> mPositions;
-    private Context mContext;
+    private WeatherActivity mActivity;
 
-    public PositionManager(Context context) {
-        mContext = context;
+    public PositionManager(WeatherActivity activity) {
+        mActivity = activity;
         ArrayList <String> pos = new ArrayList<>();
         pos.add("Moscow");
         initStations();         //  Пока тут
@@ -53,7 +55,7 @@ public class PositionManager {
     }
 
     public void initPositions(List<String> favorites) {
-        PositionFactory positionFactory = new PositionFactory(mContext);
+        PositionFactory positionFactory = new PositionFactory(mActivity);
         positionFactory.addCurrentPosition();
         for (String pos : favorites) {
             positionFactory.addFavouritePosition(pos);
@@ -158,6 +160,8 @@ public class PositionManager {
         // position.setWeather();
 
         //TODO Сообщить активити что бы она обновила свои данные
+//        mActivity.updateInterface(position.getLocationName(), weather.getTemperature(), weather.getPrecipitation(),
+//                weather.getPressure(), weather.getWindPower(), weather.getHumidity(), "");
     }
 
     // Установка режима отображения температуры
