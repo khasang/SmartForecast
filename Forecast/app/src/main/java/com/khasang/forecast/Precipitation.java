@@ -8,7 +8,7 @@ public class Precipitation {
     private Type type;
     private int probability;
 
-    public static enum Type {}
+    public static enum Type {SUNNY, CLOUDS, RAIN, STORM}
 
     public Precipitation(Type type, int probability) {
         this.type = type;
