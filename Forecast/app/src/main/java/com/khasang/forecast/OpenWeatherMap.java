@@ -21,41 +21,31 @@ import retrofit.Response;
 import retrofit.Retrofit;
 
 /**
- * Этот класс скачивает и парсит данные с API в фоновом потоке, после чего отправляет их на UI поток
- * через методы onResponse или onFailure.
+ * Этот класс скачивает и парсит данные с API в фоновом потоке, после чего отправляет их
+ * на UI поток через методы onResponse или onFailure.
  */
 
 public class OpenWeatherMap  extends WeatherStation {
 
-    /**
-     * Тэг для дебаггинга.
-     */
+    /** Тэг для дебаггинга. */
     private static final String TAG = OpenWeatherMap.class.getSimpleName();
 
-    /**
-     * API URL.
-     */
+    /** API URL. */
     private static final String API_BASE_URL = "http://api.openweathermap.org";
 
-    /**
-     * API ключ.
-     */
+    /** API ключ. */
     private static final String APP_ID = "96dd81a807540894eb4c96c05f17ed01";
 
     /**
-     * Выбранные пользователем языковые настройки устройства для того, чтобы получить локализованный
-     * ответ от API.
+     * Выбранные пользователем языковые настройки устройства для того, чтобы получить
+     * локализованный ответ от API.
      */
     public static final String SYSTEM_LANGUAGE = Locale.getDefault().getLanguage();
 
-    /**
-     * Количество 3-х часовых интервалов для запроса к API.
-     */
+    /** Количество 3-х часовых интервалов для запроса к API. */
     private static final int TIME_PERIOD = 8;
 
-    /**
-     * Количество дней для запроса к API.
-     */
+    /** Количество дней для запроса к API. */
     private static final int DAYS_PERIOD = 7;
 
     /**
@@ -73,7 +63,8 @@ public class OpenWeatherMap  extends WeatherStation {
             .addConverterFactory(GsonConverterFactory.create()).client(client).build();
 
     /**
-     * Создаем сервис из интерфейса с заданными конечными точками для запроса.
+     * Создаем сервис из интерфейса {@link OpenWeatherMapService} с заданными конечными точками
+     * для запроса.
      */
     OpenWeatherMapService service = retrofit.create(OpenWeatherMapService.class);
 
@@ -100,7 +91,8 @@ public class OpenWeatherMap  extends WeatherStation {
 
     /**
      * Метод для асинхронного получения текущего прогноза погоды.
-     * @param coordinate объект типа Coordinate, содержащий географические координаты для запроса.
+     * @param coordinate объект типа {@link Coordinate}, содержащий географические координаты
+     *                   для запроса.
      * @param manager //TODO
      */
     @Override
@@ -125,8 +117,10 @@ public class OpenWeatherMap  extends WeatherStation {
     }
 
     /**
-     * Метод для асинхронного получения прогноза погоды с заданым количеством 3-х часовых интервалов.
-     * @param coordinate объект типа Coordinate, содержащий географические координаты для запроса.
+     * Метод для асинхронного получения прогноза погоды с заданым количеством 3-х часовых
+     * интервалов.
+     * @param coordinate объект типа {@link Coordinate}, содержащий географические координаты
+     *                   для запроса.
      * @param manager //TODO
      */
     @Override
@@ -141,7 +135,8 @@ public class OpenWeatherMap  extends WeatherStation {
                 Map<Calendar, Weather> map = AppUtils.convertToHourlyWeather(response.body());
                 DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
                 for (Map.Entry<Calendar, Weather> m : map.entrySet()) {
-                    Log.d(TAG, "updateHourlyWeather: " + dateFormat.format(m.getKey().getTime()) + " Weather: " + m.getValue());
+                    Log.d(TAG, "updateHourlyWeather: " + dateFormat.format(m.getKey().getTime())
+                    + " Weather: " + m.getValue());
                 }*/
             }
 
@@ -155,7 +150,8 @@ public class OpenWeatherMap  extends WeatherStation {
 
     /**
      * Метод для асинхронного получения прогноза погоды с заданным количеством дней.
-     * @param coordinate объект типа Coordinate, содержащий географические координаты для запроса.
+     * @param coordinate объект типа {@link Coordinate}, содержащий географические координаты
+     *                   для запроса.
      * @param manager //TODO
      */
     @Override
