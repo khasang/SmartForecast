@@ -2,12 +2,11 @@ package com.khasang.forecast;
 
 import android.content.Context;
 
-import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 /**
  * Created by Роман on 26.11.2015.
@@ -104,8 +103,57 @@ public class PositionManager {
     }
 
     // TODO Добавить функции пеобразования температуры и других параметров
-    public enum WETHER_PARAMETRS {KELVIN, CELSIUS, FAHRENHEIT,
-        METER_PER_SECOND, FOOT_PER_SECOND, KM_PER_HOURS, MILES_PER_HOURS, HPA, MM_HG}
+    public enum TEMPERATURE {KELVIN, CELSIUS, FAHRENHEIT}
+    public enum SPEED {METER_PER_SECOND, FOOT_PER_SECOND, KM_PER_HOURS, MILES_PER_HOURS}
+    public enum PRESSURE {HPA, MM_HG}
+
+    // Установка режима отображения температуры
+    TEMPERATURE settingsTemperature = TEMPERATURE.KELVIN;
+    double formatTemperature(double temperature) {
+        switch (settingsTemperature) {
+            case KELVIN:
+                break;
+            case CELSIUS:
+                kelvinToCelsius(temperature);
+                break;
+            case FAHRENHEIT:
+                kelvinToFahrenheit(temperature);
+                break;
+        }
+        return temperature;
+    }
+    // Установка режима отображения скорости
+    SPEED formatSpeed = SPEED.METER_PER_SECOND;
+    double formatSpeed(double speed) {
+        switch (formatSpeed) {
+            case METER_PER_SECOND:
+                break;
+            case FOOT_PER_SECOND:
+                meterInSecondToFootInSecond(speed);
+                break;
+            case KM_PER_HOURS:
+                meterInSecondToKmInHours(speed);
+                break;
+            case MILES_PER_HOURS:
+                meterInSecondToMilesInHour(speed);
+                break;
+        }
+        return speed;
+    }
+    // Установка режима отображения давления
+    PRESSURE formatPressure = PRESSURE.HPA;
+    double formatPressure(double pressure) {
+        switch (formatPressure) {
+            case HPA:
+                break;
+            case MM_HG:
+                kpaToMmHg(pressure);
+                break;
+        }
+        return pressure;
+    }
+
+    // Непосредственно методы преобразований
     // Преобразование из Кельвина в Цельсий
     public double kelvinToCelsius(double temperature) {
         double celsiusTemperature = temperature - KELVIN_CELSIUS_DELTA;
