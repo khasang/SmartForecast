@@ -13,7 +13,10 @@ import java.util.GregorianCalendar;
  */
 
 public class PositionManager {
-    public static final int KELVIN_CELSIUS_DELTA = 273;
+    public static final double KELVIN_CELSIUS_DELTA = 273.15;
+    public static final double KPA_TO_MM_HG = 1.33322;
+    public static final double KM_TO_MILES = 0.62137;
+    public static final double METER_TO_FOOT = 3.28083;
     private WeatherStation currStation;
     private Position currPosition;
     private ArrayList<WeatherStation> stations;
@@ -98,15 +101,37 @@ public class PositionManager {
     }
 
     // TODO Добавить функции пеобразования температуры и других параметров
+    public enum WETHER_PARAMETRS {KELVIN, CELSIUS, FAHRENHEIT,
+        METER_PER_SECOND, FOOT_PER_SECOND, KM_PER_HOURS, MILES_PER_HOURS, HPA, MM_HG}
     // Преобразование из Кельвина в Цельсий
-    public int kelvinToCelsius(int temperature) {
-        int celsiusTemperature = temperature - KELVIN_CELSIUS_DELTA;
+    public double kelvinToCelsius(double temperature) {
+        double celsiusTemperature = temperature - KELVIN_CELSIUS_DELTA;
         return celsiusTemperature;
     }
     // Преобразование из Кельвина в Фаренгейт
-    public int kelvinToFahrenheit(int temperature) {
-        int fahrenheitTemperature = (kelvinToCelsius(temperature) * 9 / 5) + 32;
+    public double kelvinToFahrenheit(double temperature) {
+        double fahrenheitTemperature = (kelvinToCelsius(temperature) * 9 / 5) + 32;
         return fahrenheitTemperature;
+    }
+    // Преобразование из метров в секунду в футы в секунду
+    public double meterInSecondToFootInSecond(double speed) {
+        double footInSecond = speed * METER_TO_FOOT;
+        return footInSecond;
+    }
+    // Преобразование из метров в секунду в километры в час
+    public double meterInSecondToKmInHours(double speed) {
+        double kmInHours = speed * 3.6;
+        return kmInHours;
+    }
+    // Преобразование из метров в секунду в мили в час
+    public double meterInSecondToMilesInHour(double speed) {
+        double milesInHours = meterInSecondToKmInHours(speed) * KM_TO_MILES;
+        return milesInHours;
+    }
+    // Преобразование из килопаскалей в мм.рт.ст.
+    public  double kpaToMmHg (double pressure) {
+        double mmHg = pressure / KPA_TO_MM_HG;
+        return mmHg;
     }
 
 }
