@@ -9,16 +9,14 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Вспомогательный класс, служащий для преобразования получаемых данных.
- */
+/** Вспомогательный класс, служащий для преобразования получаемых данных. */
 
 public class AppUtils {
 
     /**
-     * Метод для конвертирования ответа от API в объект типа Weather для запроса текущего прогноза
-     * погоды.
-     * @param response объект типа OpenWeatherMapResponse, содержащий ответ от API.
+     * Метод для конвертирования ответа от API в объект типа {@link Weather} для запроса
+     * текущего прогноза погоды.
+     * @param response объект типа {@link OpenWeatherMapResponse}, содержащий ответ от API.
      */
     public static Weather convertToWeather(OpenWeatherMapResponse response) {
         Weather weather = new Weather();
@@ -37,9 +35,9 @@ public class AppUtils {
     }
 
     /**
-     * Метод для конвертирования ответа от API в коллекцию типа Map с объектами типа Calendar и
-     * Weather для запроса почасового прогноза погоды.
-     * @param response объект типа OpenWeatherMapResponse, содержащий ответ от API.
+     * Метод для конвертирования ответа от API в коллекцию типа Map с объектами типа
+     * {@link Calendar} и {@link Weather} для запроса почасового прогноза погоды.
+     * @param response объект типа {@link OpenWeatherMapResponse}, содержащий ответ от API.
      */
     public static Map<Calendar, Weather> convertToHourlyWeather(OpenWeatherMapResponse response) {
         Map<Calendar, Weather> map = new HashMap<>();
@@ -63,9 +61,9 @@ public class AppUtils {
     }
 
     /**
-     * Метод для конвертирования ответа от API в коллекцию типа Map с объектами типа Calendar и
-     * Weather для запроса прогноза погоды по дням.
-     * @param response объект типа DailyResponse, содержащий ответ от API.
+     * Метод для конвертирования ответа от API в коллекцию типа Map с объектами типа
+     * {@link Calendar} и {@link Weather для запроса прогноза погоды по дням.
+     * @param response объект типа {@link DailyResponse}, содержащий ответ от API.
      */
     public static Map<Calendar, Weather> convertToDailyWeather(DailyResponse response) {
         Map<Calendar, Weather> map = new HashMap<>();
@@ -89,9 +87,9 @@ public class AppUtils {
     }
 
     /**
-     * Метод преобразует градусы направления ветра в перечисление типа Wind.Direction, а так же
-     * устанавливает свойства для класса Weather.
-     * @param weather объект типа Weather.
+     * Метод преобразует градусы направления ветра в перечисление типа Wind.Direction,
+     * а так же устанавливает свойства для класса {@link Weather}.
+     * @param weather объект типа {@link Weather}.
      * @param speed скорость ветра в м/с.
      * @param deg направление ветра в градусах.
      */
@@ -116,7 +114,7 @@ public class AppUtils {
     }
 
     /**
-     * Метод, преобразующий UNIX-время в объект типа Calendar.
+     * Метод, преобразующий UNIX-время в объект типа {@link Calendar}.
      * @param unixTime UNIX-время.
      */
     private static Calendar unixToCalendar(long unixTime) {
