@@ -20,46 +20,67 @@ import retrofit.GsonConverterFactory;
 import retrofit.Response;
 import retrofit.Retrofit;
 
-
 /**
- * This class downloads and parses API data on a background thread and deliver the results
- * to the UI thread via the onResponse or onFailure method. *
+ * Этот класс скачивает и парсит данные с API в фоновом потоке, после чего отправляет их на UI поток
+ * через методы onResponse или onFailure.
  */
 
 public class OpenWeatherMap  extends WeatherStation {
 
-    //TAG for debugging
+    /**
+     * Тэг для дебаггинга.
+     */
     private static final String TAG = OpenWeatherMap.class.getSimpleName();
 
-    //API URL.
+    /**
+     * API URL.
+     */
     private static final String API_BASE_URL = "http://api.openweathermap.org";
 
-    //API key.
+    /**
+     * API ключ.
+     */
     private static final String APP_ID = "96dd81a807540894eb4c96c05f17ed01";
 
-    //Current language
+    /**
+     * Выбранные пользователем языковые настройки устройства для того, чтобы получить локализованный
+     * ответ от API.
+     */
     public static final String SYSTEM_LANGUAGE = Locale.getDefault().getLanguage();
 
-    //24 hours in 3-hour interval.
+    /**
+     * Количество 3-х часовых интервалов для запроса к API.
+     */
     private static final int TIME_PERIOD = 8;
 
-    //1 week in days interval.
+    /**
+     * Количество дней для запроса к API.
+     */
     private static final int DAYS_PERIOD = 7;
 
     /**
-     * We need to manually define logging interceptor because Retrofit 2.0.0-beta2 still uses
-     * OkHttp 2.5.0, which doesn't have it.
+     * Нам необходимо вручную создать экземпляр объекта HttpLoggingInterceptor и OkHttpClient,
+     * потому что Retrofit версии 2.0.0-beta2 использует их старые версии, в которых еще нет
+     * некоторых нужных нам возможностей. Например, получения полного тела запроса.
      */
     HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
     OkHttpClient client = new OkHttpClient();
 
-    //Creating the Retrofit instance.
+    /**
+     * Создаем экземпляр объекта Retrofit, подключая конвертер GSON и созданный нами OkHttpClient.
+     */
     Retrofit retrofit = new Retrofit.Builder().baseUrl(API_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create()).client(client).build();
 
-    //Creating a service from interface with defined endpoints.
+    /**
+     * Создаем сервис из интерфейса с заданными конечными точками для запроса.
+     */
     OpenWeatherMapService service = retrofit.create(OpenWeatherMapService.class);
 
+    /**
+     * Метод, который добавляет постоянно-используемые параметры к нашему запросу, а так же
+     * устанавливает уровень логирования.
+     */
     private void addInterceptors() {
         logging.setLevel(Level.BODY);
         client.interceptors().add(new Interceptor() {
@@ -77,13 +98,15 @@ public class OpenWeatherMap  extends WeatherStation {
         //client.interceptors().add(logging);
     }
 
-    //Get current weather data asynchronously.
+    /**
+     * Метод для асинхронного получения текущего прогноза погоды.
+     * @param coordinate объект типа Coordinate, содержащий географические координаты для запроса.
+     * @param manager //TODO
+     */
     @Override
     public void updateWeather(Coordinate coordinate, PositionManager manager) {
         addInterceptors();
-
         Call<OpenWeatherMapResponse> call = service.getCurrent(55.7796551, 37.7125017);
-
         call.enqueue(new Callback<OpenWeatherMapResponse>() {
             @Override
             public void onResponse(Response<OpenWeatherMapResponse> response, Retrofit retrofit) {
@@ -91,8 +114,6 @@ public class OpenWeatherMap  extends WeatherStation {
                 /*Log.d(TAG, "updateWeather, onResponse: " + response.body().toString());
                 Weather weather = AppUtils.convertToWeather(response.body());
                 Log.d(TAG, "updateWeather: " + weather.toString());*/
-
-
             }
 
             @Override
@@ -103,7 +124,11 @@ public class OpenWeatherMap  extends WeatherStation {
         });
     }
 
-    //Get 24-hour forecast asynchronously.
+    /**
+     * Метод для асинхронного получения прогноза погоды с заданым количеством 3-х часовых интервалов.
+     * @param coordinate объект типа Coordinate, содержащий географические координаты для запроса.
+     * @param manager //TODO
+     */
     @Override
     public void updateHourlyWeather(Coordinate coordinate, PositionManager manager) {
         addInterceptors();
@@ -115,11 +140,9 @@ public class OpenWeatherMap  extends WeatherStation {
                 /*Log.d(TAG, "updateHourlyWeather, onResponse: " + response.body().toString());
                 Map<Calendar, Weather> map = AppUtils.convertToHourlyWeather(response.body());
                 DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-
                 for (Map.Entry<Calendar, Weather> m : map.entrySet()) {
                     Log.d(TAG, "updateHourlyWeather: " + dateFormat.format(m.getKey().getTime()) + " Weather: " + m.getValue());
                 }*/
-
             }
 
             @Override
@@ -130,7 +153,11 @@ public class OpenWeatherMap  extends WeatherStation {
         });
     }
 
-    //Get 7 day forecast asynchronously.
+    /**
+     * Метод для асинхронного получения прогноза погоды с заданным количеством дней.
+     * @param coordinate объект типа Coordinate, содержащий географические координаты для запроса.
+     * @param manager //TODO
+     */
     @Override
     public void updateWeeklyWeather(Coordinate coordinate, PositionManager manager) {
         addInterceptors();
@@ -142,7 +169,6 @@ public class OpenWeatherMap  extends WeatherStation {
                 /*Log.d(TAG, "updateWeeklyWeather, onResponse: " + response.body().toString());
                 Map<Calendar, Weather> map = AppUtils.convertToDailyWeather(response.body());
                 DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-
                 for (Map.Entry<Calendar, Weather> m : map.entrySet()) {
                     Log.d(TAG, "updateWeeklyWeather: " + dateFormat.format(m.getKey().getTime()) + " Weather: " + m.getValue());
                 }*/
