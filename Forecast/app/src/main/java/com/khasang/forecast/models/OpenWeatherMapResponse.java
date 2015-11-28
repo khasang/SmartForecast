@@ -4,10 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Model class to show how weather representation should look like.
- */
-
 public class OpenWeatherMapResponse {
     private Weather[] weather;
     private Main main;
