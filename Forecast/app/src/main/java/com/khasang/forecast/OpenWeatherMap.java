@@ -96,9 +96,9 @@ public class OpenWeatherMap  extends WeatherStation {
      * @param manager //TODO
      */
     @Override
-    public void updateWeather(Coordinate coordinate, PositionManager manager) {
+    public void updateWeather(final Coordinate coordinate, final PositionManager manager) {
         addInterceptors();
-        Call<OpenWeatherMapResponse> call = service.getCurrent(55.7796551, 37.7125017);
+        Call<OpenWeatherMapResponse> call = service.getCurrent(coordinate.getLatitude(), coordinate.getLongitude());
         call.enqueue(new Callback<OpenWeatherMapResponse>() {
             @Override
             public void onResponse(Response<OpenWeatherMapResponse> response, Retrofit retrofit) {
@@ -106,6 +106,7 @@ public class OpenWeatherMap  extends WeatherStation {
                 /*Log.d(TAG, "updateWeather, onResponse: " + response.body().toString());
                 Weather weather = AppUtils.convertToWeather(response.body());
                 Log.d(TAG, "updateWeather: " + weather.toString());*/
+                manager.onResponseReceived(coordinate, AppUtils.convertToWeather(response.body()));
             }
 
             @Override
