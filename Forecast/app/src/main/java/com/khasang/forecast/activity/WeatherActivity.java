@@ -8,6 +8,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.khasang.forecast.PositionManager;
 import com.khasang.forecast.Precipitation;
 import com.khasang.forecast.R;
 import com.khasang.forecast.adapter.ForecastPageAdapter;
@@ -34,6 +35,8 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
     private TextView timeStamp;
     private ImageButton syncBtn;
 
+    private PositionManager manager;
+
     // Для тестирования
     private String current_city = "Berlin";
     private int current_temperature = 1;
@@ -50,6 +53,8 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
+
+        manager = new PositionManager(this);
 
         city = (TextView) findViewById(R.id.city);
         temperature = (TextView) findViewById(R.id.temperature);
@@ -78,6 +83,7 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
     public void onClick(View view) {
         updateInterface(current_city, current_temperature, current_precipitation,
                 current_pressure, current_wind, current_humidity, current_timeStamp);
+        manager.updateCurrent();
     }
 
     /**
@@ -89,7 +95,11 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
         city.setText(String.valueOf(current_city));
         temperature.setText(String.valueOf(current_temperature) + "°C");
         precipitation.setText(String.valueOf(current_precipitation));
-        pressure.setText(getString(R.string.pressure) + " " + String.valueOf(current_presure) + getString(R.string.pressure_measure));
+//        pressure.setText(getString(R.string.pressure) + " " + String.valueOf(current_presure) + getString(R.string.pressure_measure));
+        pressure.setText(String.format("%s %d %s",
+                getString(R.string.pressure),
+                current_presure,
+                getString(R.string.pressure_measure)));
         wind.setText(getString(R.string.wind) + " " + String.valueOf(current_wind) + getString(R.string.wind_measure));
         humidity.setText(getString(R.string.humidity) + " " + String.valueOf(current_humidity) + "%");
         timeStamp.setText(getString(R.string.timeStamp) + " " +String.valueOf(current_timeStamp));
