@@ -17,6 +17,17 @@ public class PositionManager {
     public static final double KPA_TO_MM_HG = 1.33322;
     public static final double KM_TO_MILES = 0.62137;
     public static final double METER_TO_FOOT = 3.28083;
+
+    public enum TemperatureMetrics {KELVIN, CELSIUS, FAHRENHEIT}
+
+    public enum SpeedMetrics {METER_PER_SECOND, FOOT_PER_SECOND, KM_PER_HOURS, MILES_PER_HOURS}
+
+    public enum PressureMetrics {HPA, MM_HG}
+
+    TemperatureMetrics settingsTemperatureMetrics = TemperatureMetrics.KELVIN;
+    SpeedMetrics formatSpeedMetrics = SpeedMetrics.METER_PER_SECOND;
+    PressureMetrics formatPressureMetrics = PressureMetrics.HPA;
+
     private WeatherStation currStation;
     private Position currPosition;
     private HashMap<String, WeatherStation> stations;
@@ -34,7 +45,7 @@ public class PositionManager {
                 .create();
     }
 
-    public void initPositions(List<String> favorites) throws NullPointerException{
+    public void initPositions(List<String> favorites) {
         PositionFactory positionFactory = new PositionFactory(mContext);
         positionFactory = positionFactory.addCurrentPosition();
         for (String pos : favorites) {
@@ -43,10 +54,10 @@ public class PositionManager {
         mPositions = positionFactory.getPositions();
     }
 
-    public Position getFavoritePosition(String name){
+    public Position getFavoritePosition(String name) {
         return mPositions.get(name);
     }
-    
+
     public Weather getWeather() {
         return getWeather(currStation.getServiceType());
     }
@@ -102,15 +113,10 @@ public class PositionManager {
         //TODO Сообщить активити что бы она обновила свои данные
     }
 
-    // TODO Добавить функции пеобразования температуры и других параметров
-    public enum TEMPERATURE {KELVIN, CELSIUS, FAHRENHEIT}
-    public enum SPEED {METER_PER_SECOND, FOOT_PER_SECOND, KM_PER_HOURS, MILES_PER_HOURS}
-    public enum PRESSURE {HPA, MM_HG}
-
     // Установка режима отображения температуры
-    TEMPERATURE settingsTemperature = TEMPERATURE.KELVIN;
     double formatTemperature(double temperature) {
-        switch (settingsTemperature) {
+
+        switch (settingsTemperatureMetrics) {
             case KELVIN:
                 break;
             case CELSIUS:
@@ -122,10 +128,10 @@ public class PositionManager {
         }
         return temperature;
     }
+
     // Установка режима отображения скорости
-    SPEED formatSpeed = SPEED.METER_PER_SECOND;
     double formatSpeed(double speed) {
-        switch (formatSpeed) {
+        switch (formatSpeedMetrics) {
             case METER_PER_SECOND:
                 break;
             case FOOT_PER_SECOND:
@@ -140,10 +146,10 @@ public class PositionManager {
         }
         return speed;
     }
+
     // Установка режима отображения давления
-    PRESSURE formatPressure = PRESSURE.HPA;
     double formatPressure(double pressure) {
-        switch (formatPressure) {
+        switch (formatPressureMetrics) {
             case HPA:
                 break;
             case MM_HG:
@@ -159,28 +165,33 @@ public class PositionManager {
         double celsiusTemperature = temperature - KELVIN_CELSIUS_DELTA;
         return celsiusTemperature;
     }
+
     // Преобразование из Кельвина в Фаренгейт
     public double kelvinToFahrenheit(double temperature) {
         double fahrenheitTemperature = (kelvinToCelsius(temperature) * 9 / 5) + 32;
         return fahrenheitTemperature;
     }
+
     // Преобразование из метров в секунду в футы в секунду
     public double meterInSecondToFootInSecond(double speed) {
         double footInSecond = speed * METER_TO_FOOT;
         return footInSecond;
     }
+
     // Преобразование из метров в секунду в километры в час
     public double meterInSecondToKmInHours(double speed) {
         double kmInHours = speed * 3.6;
         return kmInHours;
     }
+
     // Преобразование из метров в секунду в мили в час
     public double meterInSecondToMilesInHour(double speed) {
         double milesInHours = meterInSecondToKmInHours(speed) * KM_TO_MILES;
         return milesInHours;
     }
+
     // Преобразование из килопаскалей в мм.рт.ст.
-    public  double kpaToMmHg (double pressure) {
+    public double kpaToMmHg(double pressure) {
         double mmHg = pressure / KPA_TO_MM_HG;
         return mmHg;
     }
