@@ -9,7 +9,15 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-/** Вспомогательный класс, служащий для преобразования получаемых данных. */
+/** Вспомогательный класс, служащий для преобразования получаемых данных.
+ * <p>Реализованы методы
+ * <ul>
+ *     <li>{@link #convertToWeather(OpenWeatherMapResponse)}</li>
+ *     <li>{@link #convertToHourlyWeather(OpenWeatherMapResponse)}</li>
+ *     <li>{@link #convertToDailyWeather(DailyResponse)}</li>
+ * </ul>
+ *
+ */
 
 public class AppUtils {
 
@@ -35,8 +43,8 @@ public class AppUtils {
     }
 
     /**
-     * Метод для конвертирования ответа от API в коллекцию типа Map с объектами типа
-     * {@link Calendar} и {@link Weather} для запроса почасового прогноза погоды.
+     * Метод для конвертирования ответа от API в коллекцию типа {@link Map}<{@link Calendar}, {@link Weather}>
+     * для запроса почасового прогноза погоды.
      * @param response объект типа {@link OpenWeatherMapResponse}, содержащий ответ от API.
      */
     public static Map<Calendar, Weather> convertToHourlyWeather(OpenWeatherMapResponse response) {
@@ -61,8 +69,8 @@ public class AppUtils {
     }
 
     /**
-     * Метод для конвертирования ответа от API в коллекцию типа Map с объектами типа
-     * {@link Calendar} и {@link Weather для запроса прогноза погоды по дням.
+     * Метод для конвертирования ответа от API в коллекцию типа {@link Map}<{@link Calendar}, {@link Weather}>
+     * для запроса прогноза погоды по дням.
      * @param response объект типа {@link DailyResponse}, содержащий ответ от API.
      */
     public static Map<Calendar, Weather> convertToDailyWeather(DailyResponse response) {
