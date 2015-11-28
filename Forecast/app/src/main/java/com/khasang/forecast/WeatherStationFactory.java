@@ -1,6 +1,7 @@
 package com.khasang.forecast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Роман on 26.11.2015.
@@ -8,17 +9,17 @@ import java.util.ArrayList;
 public class WeatherStationFactory {
     public enum ServiceType {OPEN_WEATHER_MAP}
 
-    private ArrayList<WeatherStation> stations;
+    private HashMap<String, WeatherStation> stations;
 
     public WeatherStationFactory() {
-        stations = new ArrayList<WeatherStation>();
+        stations = new HashMap<String, WeatherStation>();
     }
 
     public WeatherStationFactory addOpenWeatherMap() {
         WeatherStation ws = new OpenWeatherMap();
-        ws.weatherStationName = String.valueOf(R.string.service_name_open_weather_map);
+        String name = String.valueOf(R.string.service_name_open_weather_map);
         ws.serviceType = ServiceType.OPEN_WEATHER_MAP;
-        stations.add(ws);
+        stations.put(name, ws);
         return this;
     }
 
@@ -29,7 +30,7 @@ public class WeatherStationFactory {
 
     */
 
-    public ArrayList<WeatherStation> create() {
+    public HashMap<String, WeatherStation> create() {
         return stations;
     }
 

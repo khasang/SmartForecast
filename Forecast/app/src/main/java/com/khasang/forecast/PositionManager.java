@@ -3,6 +3,7 @@ package com.khasang.forecast;
 import android.content.Context;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Calendar;
@@ -19,7 +20,7 @@ public class PositionManager {
     public static final double METER_TO_FOOT = 3.28083;
     private WeatherStation currStation;
     private Position currPosition;
-    private ArrayList<WeatherStation> stations;
+    private HashMap<String, WeatherStation> stations;
     private Map<String, Position> mPositions;
     private Context mContext;
 
@@ -29,7 +30,9 @@ public class PositionManager {
 
     public void initStations() {
         WeatherStationFactory wsf = new WeatherStationFactory();
-        stations = wsf.addOpenWeatherMap().create();
+        stations = wsf
+                .addOpenWeatherMap()
+                .create();
     }
 
     public void initPositions(List<String> favorites) throws NullPointerException{
