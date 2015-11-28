@@ -1,0 +1,480 @@
+@startuml
+namespace main.java.com.khasang.forecast {
+namespace main.java.com.khasang.forecast.activity {
+class SplashScreenActivity <<LocationCallback>> {
+ -{static}String TAG
+ -Button chkButton
+ -LocationManager mAndroidLocationManager
+ -LocationProvider mLocationProvider
+ -LocationFactory mLocationFactory
+ -double mCurrentLatitude
+ -double mCurrentLongitude
+PositionManager manager
+ #void onCreate(Bundle savedInstanceState)
+ -void buildAlertMessageNoGps()
+ #void onResume()
+ #void onPause()
+ +void handleNewLocation(Location location)
+}
+class WeatherActivity <<OnClickListener>> {
+ -ViewPager pager
+ -TextView city
+ -TextView temperature
+ -TextView presure
+ -TextView wind
+ -TextView humidity
+ -TextView timeStamp
+ -ImageButton syncBtn
+ -String current_city
+ -int current_temperature
+ -int current_presure
+ -int current_wind
+ -int current_humidity
+ -String current_timeStamp
+ #void onCreate(Bundle savedInstanceState)
+ +void onClick(View view)
+}
+}
+namespace main.java.com.khasang.forecast.adapter {
+class ForecastPageAdapter{
+ -{static}int NUM_ITEMS
+ +int getCount()
+ +Fragment getItem(int position)
+}
+}
+class AppUtils{
+ +{static}Weather convertToWeather(OpenWeatherMapResponse response)
+ +{static}Map<Calendar, Weather> convertToHourlyWeather(OpenWeatherMapResponse response)
+ +{static}Map<Calendar, Weather> convertToDailyWeather(DailyResponse response)
+ -{static}void setWindDirectionAndSpeed(Weather weather, double speed, double deg)
+ -{static}Calendar unixToCalendar(long unixTime)
+}
+class Coordinate{
+ -double latitude
+ -double longitude
+ +double getLatitude()
+ +void setLatitude(double latitude)
+ +double getLongitude()
+ +void setLongitude(double longitude)
+}
+namespace main.java.com.khasang.forecast.fragment {
+class DayForecastFragment{
+ -String title
+ -int page
+ +{static}DayForecastFragment newInstance(int page, String title)
+ +void onCreate(Bundle savedInstanceState)
+ +View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+}
+}
+interface ILocation{
+ +void setWeather(WeatherStationFactory.ServiceType ws, Calendar date, Weather weather)
+Coordinate getPosition()
+}
+namespace main.java.com.khasang.forecast.location {
+class Coordinate{
+ -double latitude
+ -double longitude
+ +double getLatitude()
+ +void setLatitude(double latitude)
+ +double getLongitude()
+ +void setLongitude(double longitude)
+}
+class GPSLocation{
+ -String mName
+ -int mCityID
+ -Coordinate mCoordinate
+ -double mLatitude
+ -double mLongitude
+ +{static}iLocationFactory factory
+ +double getLatitude()
+ +void setLatitude(double latitude)
+ +double getLongitude()
+ +void setLongitude(double longitude)
+ +String getName()
+ +void setName(String name)
+ +int getCityID()
+ +void setCityID(int cityID)
+ +Coordinate getCoordinate()
+ +void setCoordinate(Coordinate coordinate)
+ +iLocation getLocation()
+}
+interface iLocation{
+String getName()
+void setName(String name)
+int getCityID()
+void setCityID(int ID)
+Coordinate getCoordinate()
+void setCoordinate(Coordinate coordinate)
+}
+interface iLocationFactory{
+iLocation getLocation()
+}
+class LocationFactory{
+ +{static}iLocation getLocation(iLocationFactory factory)
+}
+class LocationManager{
+ -{static}String TAG
+ +{static}Coordinate getGPSCoordinate(double latitude, double longitude)
+ +{static}Coordinate getLocationCoordinate(String location)
+}
+class LocationProvider <<ConnectionCallbacks>>  <<OnConnectionFailedListener>>  <<LocationListener>> {
+ +{static}String TAG
+ +{static}int REQUEST_INTERVAL
+ +{static}int FASTEST_INTERVAL
+ -LocationCallback mLocationCallback
+ -GoogleApiClient mGoogleApiClient
+ -LocationRequest mLocationRequest
+ -Location mLocation
+void handleNewLocation(Location location)
+ +void connect()
+ +void disconnect()
+ +void onConnected(Bundle bundle)
+ +void onConnectionSuspended(int i)
+ +void onLocationChanged(Location location)
+ +void onConnectionFailed(ConnectionResult connectionResult)
+}
+}
+namespace main.java.com.khasang.forecast.models {
+class City{
+ -long id
+ -String name
+ -String country
+ -int population
+ -Sys sys
+ +String toString()
+ +long getId()
+ +String getName()
+ +String getCountry()
+ +int getPopulation()
+ +Sys getSys()
+}
+class Clouds{
+ -String all
+ +String toString()
+ +String getAll()
+}
+class DailyForecastList{
+ +int dt
+ +Temp temp
+ +double pressure
+ +int humidity
+ +List<Weather> weather
+ +double speed
+ +int deg
+ +int clouds
+ +double snow
+ +double rain
+ +int getDt()
+ +Temp getTemp()
+ +double getPressure()
+ +int getHumidity()
+ +List<Weather> getWeather()
+ +double getSpeed()
+ +int getDeg()
+ +int getClouds()
+ +double getSnow()
+ +double getRain()
+ +String toString()
+}
+class DailyResponse{
+ -City city
+ -String cod
+ -Double message
+ -Integer cnt
+ -List<DailyForecastList> list
+ +City getCity()
+ +String getCod()
+ +Double getMessage()
+ +Integer getCnt()
+ +List<DailyForecastList> getList()
+ +String toString()
+}
+class HourlyForecastList{
+ -int dt
+ -Main main
+ -ArrayList<Weather> weather
+ -Wind wind
+ -String dtTxt
+ -Snow snow
+ -Rain rain
+ -Clouds clouds
+ +int getDt()
+ +Main getMain()
+ +ArrayList<Weather> getWeather()
+ +Wind getWind()
+ +String getDtTxt()
+ +Snow getSnow()
+ +Rain getRain()
+ +Clouds getClouds()
+ +String toString()
+}
+class Main{
+ -double temp
+ -double pressure
+ -int humidity
+ -double temp_min
+ -double temp_max
+ -double sea_level
+ -double grnd_level
+ +String toString()
+ +double getTemp()
+ +double getPressure()
+ +int getHumidity()
+ +double getTemp_min()
+ +double getTemp_max()
+ +double getSea_level()
+ +double getGrnd_level()
+}
+class OpenWeatherMapResponse{
+ -Weather[] weather
+ -Main main
+ -Wind wind
+ -Clouds clouds
+ -Rain rain
+ -long dt
+ -Sys sys
+ -long id
+ -String name
+ -List<HourlyForecastList> list
+ +Weather[] getWeather()
+ +Main getMain()
+ +Wind getWind()
+ +Clouds getClouds()
+ +Rain getRain()
+ +long getDt()
+ +Sys getSys()
+ +long getId()
+ +String getName()
+ +List<HourlyForecastList> getList()
+ +String toString()
+}
+class Rain{
+ -double rainVolume
+ +String toString()
+ +double getRainVolume()
+}
+class Snow{
+ -double snowVolume
+ +double getSnowVolume()
+ +String toString()
+}
+class Sys{
+ -String country
+ -long sunset
+ -long sunrise
+ +String toString()
+ +String getCountry()
+ +long getSunset()
+ +long getSunrise()
+}
+class Temp{
+ -double day
+ -double min
+ -double max
+ -double night
+ -double eve
+ -double morn
+ +String toString()
+ +double getDay()
+ +double getMin()
+ +double getMax()
+ +double getNight()
+ +double getEve()
+ +double getMorn()
+}
+class Weather{
+ -int id
+ -String main
+ -String description
+ -String icon
+ +String toString()
+ +int getId()
+ +String getMain()
+ +String getDescription()
+ +String getIcon()
+}
+class Wind{
+ -double speed
+ -double deg
+ +String toString()
+ +double getSpeed()
+ +double getDeg()
+}
+}
+class OpenWeatherMap{
+ -{static}String TAG
+ -{static}String API_BASE_URL
+ -{static}String APP_ID
+ +{static}String SYSTEM_LANGUAGE
+ -{static}int TIME_PERIOD
+ -{static}int DAYS_PERIOD
+HttpLoggingInterceptor logging
+OkHttpClient client
+Retrofit retrofit
+OpenWeatherMapService service
+ -void addInterceptors()
+ +void updateWeather(Coordinate coordinate, PositionManager manager)
+ +void updateHourlyWeather(Coordinate coordinate, PositionManager manager)
+ +void updateWeeklyWeather(Coordinate coordinate, PositionManager manager)
+}
+interface OpenWeatherMapService{
+Call<OpenWeatherMapResponse> getCurrent(double latitude, double longitude)
+Call<OpenWeatherMapResponse> getHourly(double latitude, double longitude, int timePeriod)
+Call<DailyResponse> getDaily(double latitude, double longitude, int daysPeriod)
+}
+class Position{
+ -String name
+ -int cityID
+ -Coordinate coordinate
+ -Map<WeatherStationFactory.ServiceType, Map<Calendar, Weather>> weather
+ +void setLocationName(String name)
+ +String getLocationName()
+ +int getCityID()
+ +void setCityID(int cityID)
+ +Coordinate getCoordinate()
+ +void setCoordinate(Coordinate coordinate)
+ +Weather getWeather(WeatherStationFactory.ServiceType ws, Calendar date)
+ +void setWeather(WeatherStationFactory.ServiceType ws, Calendar date, Weather weather)
+ +Coordinate getPosition()
+}
+class PositionFactory{
+ -{static}String TAG
+ -HashMap<String, Position> mPositions
+ -Context mContext
+ +PositionFactory addCurrentPosition()
+ +PositionFactory addFavouritePosition(String name)
+ +Map<String, Position> getPositions()
+}
+class PositionManager{
+ +{static}int KELVIN_CELSIUS_DELTA
+ -WeatherStation currStation
+ -Position currPosition
+ -ArrayList<WeatherStation> stations
+ -Map<String, Position> mPositions
+ -Context mContext
+ +void initStations()
+ +void initPositions(List<String> favorites)
+ +Position getFavoritePosition(String name)
+ +Weather getWeather()
+ +Weather getWeather(WeatherStationFactory.ServiceType stationType)
+ +Weather getWeather(WeatherStationFactory.ServiceType stationType, Calendar с)
+ +Weather[] getHourlyWeather()
+ +Weather[] getWeeklyWeather()
+ +void updateCurrent()
+ +void updateHourly()
+ +void updateWeekly()
+ +void onResponseReceived(Coordinate coordinate, Weather weather)
+ +int kelvinToCelsius(int temperature)
+ +int kelvinToFahrenheit(int temperature)
+}
+class Precipitation{
+ -Type type
+ -int probability
+ +Type getType()
+ +void setType(Type type)
+ +int getProbability()
+ +void setProbability(int probability)
+}
+enum Precipitation_Type{
+}
+class Weather{
+ -double temperature
+ -double temp_min
+ -double temp_max
+ -double pressure
+ -int humidity
+ -Wind wind
+ -Precipitation precipitation
+ -String description
+ +double getTemperature()
+ +void setTemperature(double temperature)
+ +double getPressure()
+ +void setPressure(double pressure)
+ +int getHumidity()
+ +void setHumidity(int humidity)
+ +void setWind(Wind.Direction wd, double wp)
+ +Wind.Direction getWindDirection()
+ +double getWindPower()
+ +void setPrecipitation(Precipitation.Type type, int probability)
+ +Precipitation.Type getPrecipitation()
+ +int getPrecipitationProbability()
+ +String getDescription()
+ +void setDescription(String description)
+}
+class WeatherStation{
+String weatherStationName
+WeatherStationFactory.ServiceType serviceType
+ +WeatherStationFactory.ServiceType getServiceType()
+ +String getWeatherStationName()
+ {abstract}void updateWeather(Coordinate coordinate, PositionManager manager)
+ {abstract}void updateHourlyWeather(Coordinate coordinate, PositionManager manager)
+ {abstract}void updateWeeklyWeather(Coordinate coordinate, PositionManager manager)
+}
+class WeatherStationFactory{
+ -ArrayList<WeatherStation> stations
+ +WeatherStationFactory addOpenWeatherMap()
+ +ArrayList<WeatherStation> create()
+}
+enum WeatherStationFactory_ServiceType{
+OPEN_WEATHER_MAP
+}
+class Wind{
+ -Direction direction
+ -double speed
+ +Direction getDirection()
+ +void setDirection(Direction direction)
+ +double getSpeed()
+ +void setSpeed(double speed)
+}
+enum Wind_Direction{
+NORTH
+NORTHEAST
+EAST
+SOUTHEAST
+SOUTH
+SOUTHWEST
+WEST
+NORTHWEST
+}
+}
+AppCompatActivity ()- com.khasang.forecast.activity.SplashScreenActivity
+FragmentActivity ()- com.khasang.forecast.activity.WeatherActivity
+FragmentPagerAdapter ()- com.khasang.forecast.adapter.ForecastPageAdapter
+Fragment ()- com.khasang.forecast.fragment.DayForecastFragment
+com.khasang.forecast.location.iLocation <|.. com.khasang.forecast.location.GPSLocation
+com.khasang.forecast.WeatherStation <|- com.khasang.forecast.OpenWeatherMap
+com.khasang.forecast.ILocation <|.. com.khasang.forecast.Position
+com.khasang.forecast.activity.SplashScreenActivity " 1"  o--  "0..1" android.location.LocationManager
+com.khasang.forecast.activity.SplashScreenActivity " 1"  o--  "0..1" com.khasang.forecast.activity.LocationProvider
+com.khasang.forecast.activity.SplashScreenActivity " 1"  o--  "0..1" com.khasang.forecast.activity.LocationFactory
+com.khasang.forecast.activity.SplashScreenActivity " 1"  o--  "0..1" com.khasang.forecast.PositionManager
+com.khasang.forecast.location.GPSLocation " 1"  o--  "0..1" com.khasang.forecast.location.Coordinate
+com.khasang.forecast.models.City " 1"  o--  "0..1" com.khasang.forecast.models.Sys
+com.khasang.forecast.models.DailyForecastList " 1"  o--  "0..1" com.khasang.forecast.models.Temp
+com.khasang.forecast.models.DailyForecastList " 1"  o--  "0..*" com.khasang.forecast.models.Weather
+com.khasang.forecast.models.DailyResponse " 1"  o--  "0..1" com.khasang.forecast.models.City
+com.khasang.forecast.models.DailyResponse " 1"  o--  "0..*" com.khasang.forecast.models.DailyForecastList
+com.khasang.forecast.models.HourlyForecastList " 1"  o--  "0..1" com.khasang.forecast.models.Main
+com.khasang.forecast.models.HourlyForecastList " 1"  o--  "0..*" com.khasang.forecast.models.Weather
+com.khasang.forecast.models.HourlyForecastList " 1"  o--  "0..1" com.khasang.forecast.models.Wind
+com.khasang.forecast.models.HourlyForecastList " 1"  o--  "0..1" com.khasang.forecast.models.Snow
+com.khasang.forecast.models.HourlyForecastList " 1"  o--  "0..1" com.khasang.forecast.models.Rain
+com.khasang.forecast.models.HourlyForecastList " 1"  o--  "0..1" com.khasang.forecast.models.Clouds
+com.khasang.forecast.models.OpenWeatherMapResponse " 1"  o--  "0..*" com.khasang.forecast.models.Weather
+com.khasang.forecast.models.OpenWeatherMapResponse " 1"  o--  "0..1" com.khasang.forecast.models.Main
+com.khasang.forecast.models.OpenWeatherMapResponse " 1"  o--  "0..1" com.khasang.forecast.models.Wind
+com.khasang.forecast.models.OpenWeatherMapResponse " 1"  o--  "0..1" com.khasang.forecast.models.Clouds
+com.khasang.forecast.models.OpenWeatherMapResponse " 1"  o--  "0..1" com.khasang.forecast.models.Rain
+com.khasang.forecast.models.OpenWeatherMapResponse " 1"  o--  "0..1" com.khasang.forecast.models.Sys
+com.khasang.forecast.models.OpenWeatherMapResponse " 1"  o--  "0..*" com.khasang.forecast.models.HourlyForecastList
+com.khasang.forecast.OpenWeatherMap " 1"  o--  "0..1" com.khasang.forecast.OpenWeatherMapService
+com.khasang.forecast.Position " 1"  o--  "0..1" com.khasang.forecast.Coordinate
+com.khasang.forecast.PositionManager " 1"  o--  "0..1" com.khasang.forecast.WeatherStation
+com.khasang.forecast.PositionManager " 1"  o--  "0..1" com.khasang.forecast.Position
+com.khasang.forecast.Weather " 1"  o--  "0..1" com.khasang.forecast.Wind
+com.khasang.forecast.Weather " 1"  o--  "0..1" com.khasang.forecast.Precipitation
+com.khasang.forecast.WeatherStationFactory " 1"  o--  "0..*" com.khasang.forecast.WeatherStation
+com.khasang.forecast.Precipitation *- com.khasang.forecast.Precipitation_Type
+com.khasang.forecast.WeatherStationFactory *- com.khasang.forecast.WeatherStationFactory_ServiceType
+com.khasang.forecast.Wind *- com.khasang.forecast.Wind_Direction
+@enduml

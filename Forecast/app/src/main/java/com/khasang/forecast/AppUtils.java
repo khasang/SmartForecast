@@ -9,8 +9,23 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+/** Вспомогательный класс, служащий для преобразования получаемых данных.
+ * <p>Реализованы методы
+ * <ul>
+ *     <li>{@link #convertToWeather(OpenWeatherMapResponse)}</li>
+ *     <li>{@link #convertToHourlyWeather(OpenWeatherMapResponse)}</li>
+ *     <li>{@link #convertToDailyWeather(DailyResponse)}</li>
+ * </ul>
+ *
+ */
+
 public class AppUtils {
 
+    /**
+     * Метод для конвертирования ответа от API в объект типа {@link Weather} для запроса
+     * текущего прогноза погоды.
+     * @param response объект типа {@link OpenWeatherMapResponse}, содержащий ответ от API.
+     */
     public static Weather convertToWeather(OpenWeatherMapResponse response) {
         Weather weather = new Weather();
         weather.setTemperature(response.getMain().getTemp());
@@ -27,6 +42,11 @@ public class AppUtils {
         return weather;
     }
 
+    /**
+     * Метод для конвертирования ответа от API в коллекцию типа {@link Map}<{@link Calendar}, {@link Weather}>
+     * для запроса почасового прогноза погоды.
+     * @param response объект типа {@link OpenWeatherMapResponse}, содержащий ответ от API.
+     */
     public static Map<Calendar, Weather> convertToHourlyWeather(OpenWeatherMapResponse response) {
         Map<Calendar, Weather> map = new HashMap<>();
         for (HourlyForecastList forecast : response.getList()) {
@@ -48,6 +68,11 @@ public class AppUtils {
         return map;
     }
 
+    /**
+     * Метод для конвертирования ответа от API в коллекцию типа {@link Map}<{@link Calendar}, {@link Weather}>
+     * для запроса прогноза погоды по дням.
+     * @param response объект типа {@link DailyResponse}, содержащий ответ от API.
+     */
     public static Map<Calendar, Weather> convertToDailyWeather(DailyResponse response) {
         Map<Calendar, Weather> map = new HashMap<>();
         for (DailyForecastList forecast : response.getList()) {
@@ -69,8 +94,15 @@ public class AppUtils {
         return map;
     }
 
+    /**
+     * Метод преобразует градусы направления ветра в перечисление типа Wind.Direction,
+     * а так же устанавливает свойства для класса {@link Weather}.
+     * @param weather объект типа {@link Weather}.
+     * @param speed скорость ветра в м/с.
+     * @param deg направление ветра в градусах.
+     */
     private static void setWindDirectionAndSpeed(Weather weather, double speed, double deg) {
-        if (deg >= 0 && deg <= 22.5) {
+        if ((deg >= 0 && deg <= 22.5) || (deg > 337.5 && deg <= 360)) {
             weather.setWind(Wind.Direction.NORTH, speed);
         } else if (deg > 22.5 && deg <= 67.5) {
             weather.setWind(Wind.Direction.NORTHEAST, speed);
@@ -86,15 +118,16 @@ public class AppUtils {
             weather.setWind(Wind.Direction.WEST, speed);
         } else if (deg > 292.5 && deg <= 337.5) {
             weather.setWind(Wind.Direction.NORTHWEST, speed);
-        } else if (deg > 337.5 && deg <= 360) {
-            weather.setWind(Wind.Direction.NORTH, speed);
         }
     }
 
+    /**
+     * Метод, преобразующий UNIX-время в объект типа {@link Calendar}.
+     * @param unixTime UNIX-время.
+     */
     private static Calendar unixToCalendar(long unixTime) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(unixTime * 1000L);
         return calendar;
     }
-
 }
