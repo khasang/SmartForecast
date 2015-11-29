@@ -1,4 +1,4 @@
-package com.khasang.forecast.fragment;
+package com.khasang.forecast.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

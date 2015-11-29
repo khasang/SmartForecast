@@ -1,8 +1,6 @@
 package com.khasang.forecast;
 
-import android.app.Activity;
-
-import com.khasang.forecast.activity.WeatherActivity;
+import com.khasang.forecast.activities.WeatherActivity;
 
 import java.util.ArrayList;
 import java.util.Collections;

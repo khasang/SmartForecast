@@ -1,4 +1,4 @@
-package com.khasang.forecast.activity;
+package com.khasang.forecast.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,9 +12,8 @@ import android.widget.TextView;
 import com.khasang.forecast.PositionManager;
 import com.khasang.forecast.R;
 import com.khasang.forecast.Weather;
-import com.khasang.forecast.adapter.ForecastPageAdapter;
+import com.khasang.forecast.adapters.ForecastPageAdapter;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 
