@@ -131,15 +131,12 @@ public class PositionManager {
         return weather;
     }
 
-    public Weather updateCurrent() {
-        //currStation.updateWeather(currPosition.getCoordinate(), this);
-        // Заглушка для тестирования
-        return new Weather(5, 35.0, 90, new Wind(Wind.Direction.EAST, 11.0),new Precipitation(Precipitation.Type.CLOUDS, 3), "");
+    public void updateCurrent() {
+        currStation.updateWeather(currPosition.getCoordinate(), this);
     }
 
-    public Weather updateHourly() {
-        //currStation.updateHourlyWeather(currPosition.getCoordinate(), this);
-        return new Weather(5, 35.0, 90, new Wind(Wind.Direction.EAST, 11.0),new Precipitation(Precipitation.Type.CLOUDS, 3), "");
+    public void updateHourly() {
+        currStation.updateHourlyWeather(currPosition.getCoordinate(), this);
     }
 
     public void updateWeekly() {
