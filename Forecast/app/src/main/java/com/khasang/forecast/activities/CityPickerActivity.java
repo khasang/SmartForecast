@@ -1,5 +1,8 @@
 package com.khasang.forecast.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -9,14 +12,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.khasang.forecast.OpenWeatherMap;
+import com.khasang.forecast.PositionManager;
 import com.khasang.forecast.R;
 import com.khasang.forecast.adapters.RecyclerAdapter;
 import com.khasang.forecast.adapters.etc.HidingScrollListener;
@@ -30,6 +37,12 @@ import java.util.List;
  * Activity для выбора местоположения
  */
 public class CityPickerActivity extends AppCompatActivity implements View.OnClickListener {
+    String TAG = this.getClass().getSimpleName();
+
+    Intent answerIntent = new Intent();
+    public final static String CITY = "ПИТЕР";
+
+    List<String> itemList = new ArrayList<>();
 
     private Toolbar toolbar;
     private ImageButton fabBtn;
@@ -54,7 +67,8 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        RecyclerAdapter recyclerAdapter = new RecyclerAdapter(createItemList());
+        //RecyclerAdapter recyclerAdapter = new RecyclerAdapter(createItemList());
+        RecyclerAdapter recyclerAdapter = new RecyclerAdapter(itemList);
         recyclerView.setAdapter(recyclerAdapter);
 
         /** Вычисляет степень прокрутки и выполняет нужное действие.*/
@@ -92,12 +106,18 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public void onClick(View v) {
+        showChooseCityDialog();
+
+        /*Intent answerIntent = new Intent();
         switch (v.getId()) {
             case R.id.fabBtn:
-                Toast.makeText(this, "Кнопка добавления города", Toast.LENGTH_SHORT).show();
+
+                Toast.makeText(this, "Выбран город ПИТЕР", Toast.LENGTH_SHORT).show();
+                answerIntent.putExtra(CITY, "ПИТЕР");
                 break;
         }
-
+        setResult(RESULT_OK, answerIntent);
+        finish();*/
     }
 
     /**
@@ -115,10 +135,61 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
     // Вспомогательный метод для подготовки списка
     private List<String> createItemList() {
+        //List<String> itemList = new ArrayList<>();
         List<String> itemList = new ArrayList<>();
         for (int i = 0; i < 8; i++) {
             itemList.add("Город " + i);
         }
         return itemList;
+    }
+
+    // Вспомогательный метод для добавления города в список
+    int i = 0;
+    private List<String> addItemToList(String city) {
+        itemList.add(city + " " +i);
+        i++;
+        return itemList;
+    }
+
+    private PositionManager manager;
+    private String positionName;
+    private ArrayList<String> positions;
+    private OpenWeatherMap owm;
+
+    private void showChooseCityDialog() {
+        final View view = getLayoutInflater().inflate(R.layout.choose_city_dialog, null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final EditText chooseCity = (EditText) view.findViewById(R.id.editTextCityName);
+        builder.setTitle("Введите название города")
+                .setView(view)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        positionName = chooseCity.getText().toString();
+                        //positions.add(positionName);
+                        //manager.initPositions(positions);
+                        //manager.setCurrPosition(positionName);
+                        try {
+                            addItemToList(positionName);
+                            //answerIntent.putExtra(CITY, positionName);
+                            //setResult(RESULT_OK, answerIntent);
+                            //finish();
+                            //owm.updateWeather(manager.getPosition(positionName).getCoordinate(), manager);
+                            Log.i(TAG, "Coordinates: " + manager.getPosition(positionName).getCoordinate().getLatitude() + ", " + manager.getPosition(positionName).getCoordinate().getLongitude());
+                        } catch (NullPointerException e) {
+                            e.printStackTrace();
+                            Toast.makeText(CityPickerActivity.this, "Вы ввели некорректный адрес, повторите попытку", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

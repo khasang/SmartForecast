@@ -1,19 +1,27 @@
 package com.khasang.forecast.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.khasang.forecast.OpenWeatherMap;
 import com.khasang.forecast.PositionManager;
 import com.khasang.forecast.R;
 import com.khasang.forecast.Weather;
 import com.khasang.forecast.adapters.ForecastPageAdapter;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 
@@ -27,6 +35,8 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
      * ViewPager для отображения нижних вкладок прогноза: по часам и по дням
      */
     private ViewPager pager;
+
+    String TAG = this.getClass().getSimpleName();
 
     private TextView city;
     private TextView temperature;
@@ -45,6 +55,7 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
     int hours;
     int minutes;
 
+    int CHOOSE_CITY;
     // Для тестирования
     private String current_city = "Berlin";
     private int current_temperature = 1;
@@ -107,28 +118,39 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.syncBtn:
-                syncBtn.startAnimation(animationRotateCenter);
                 //manager.updateCurrent();
                 //manager.updateHourly();
+                syncBtn.startAnimation(animationRotateCenter);
                 updateInterface(manager.updateCurrent());
-                updateHourForecast(manager.updateHourly());
+                //updateHourForecast(manager.updateHourly());
                 break;
             case R.id.cityPickerBnt:
-                startActivity(new Intent(this, CityPickerActivity.class));
+                //startActivity(new Intent(this, CityPickerActivity.class));
+                startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
                 break;
         }
+        //onActivityResult()
     }
 
     /**
      * Обновление интерфейса Activity
      */
     public void updateInterface(Weather wCurent) {
+
+        //TODO нужно перепроверить
+        if (wCurent == null) {
+            Log.i(TAG, "Weather is null!");
+            return;
+        }
         /** Получаем текущее время
          * TODO minutes в формате 13:04, сейчас выводит 13:4
+         * TODO UPDATE Check fixes
          * */
         Calendar c = Calendar.getInstance();
         hours = c.get(Calendar.HOUR_OF_DAY);
         minutes = c.get(Calendar.MINUTE);
+
+
 
         //updateCurrent(Weather w);
         city.setText(String.valueOf(current_city));
@@ -152,7 +174,12 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
                 getString(R.string.humidity),
                 wCurent.getHumidity()));
 
-        timeStamp.setText(String.format("%s %s:%s",
+      /*  timeStamp.setText(String.format("%s %d:%02d",
+                getString(R.string.timeStamp),
+                hours,
+                minutes)); */
+
+        timeStamp.setText(String.format("%s %d:%02d",
                 getString(R.string.timeStamp),
                 hours,
                 minutes));
@@ -168,5 +195,23 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
 
     }
 
+
+    /**
+     * Получаем город из CityPickActivity
+     * */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == CHOOSE_CITY) {
+            if (resultCode == RESULT_OK) {
+                String newCity = data.getStringExtra(CityPickerActivity.CITY);
+                city.setText(newCity);
+            }else {
+                //TODO Временная заглушка
+                city.setText(""); // стираем текст
+            }
+        }
+    }
 
 }
