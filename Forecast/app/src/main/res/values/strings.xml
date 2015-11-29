@@ -8,4 +8,15 @@
     <string name="timeStamp">Обновлено</string>
     <string name="pressure_measure">мм рт/ст</string>
     <string name="wind_measure">м/c</string>
+
+    <string name="clear_sky">Ясно</string> 
+    <string name="few_clouds">Небольшая облачность</string>
+    <string name="scattered_clouds">Облачно</string> 
+    <string name="broken_clouds">Облачно с прояснениями</string> 
+    <string name="shower_rain">Ливень</string> 
+    <string name="rain">Дождь</string> 
+    <string name="thunderstorm">Гроза</string> 
+    <string name="snow">Снег</string> 
+    <string name="mist">Туман</string>
+    
 </resources>
