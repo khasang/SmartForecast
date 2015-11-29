@@ -29,6 +29,10 @@ public class PositionManager {
         return null;
     }
 
+    public Object getCurrPosition() {
+        return null;
+    }
+
     public enum TemperatureMetrics {KELVIN, CELSIUS, FAHRENHEIT}
 
     public enum SpeedMetrics {METER_PER_SECOND, FOOT_PER_SECOND, KM_PER_HOURS, MILES_PER_HOURS}
@@ -139,16 +143,19 @@ public class PositionManager {
         return weather;
     }
 
-    public void updateCurrent() {
+    public Weather updateCurrent() {
         currStation.updateWeather(currPosition.getCoordinate(), this);
+        return new Weather();
     }
 
-    public void updateHourly() {
+    public Weather updateHourly() {
         currStation.updateHourlyWeather(currPosition.getCoordinate(), this);
+        return new Weather();
     }
 
-    public void updateWeekly() {
+    public Weather updateWeekly() {
         currStation.updateWeeklyWeather(currPosition.getCoordinate(), this);
+        return new Weather();
     }
 
     private Position getPositionByCoordinate (Coordinate coordinate) {

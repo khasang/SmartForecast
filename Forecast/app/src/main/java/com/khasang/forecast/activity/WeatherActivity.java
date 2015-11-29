@@ -15,7 +15,7 @@ import android.widget.Toast;
 import com.khasang.forecast.OpenWeatherMap;
 import com.khasang.forecast.PositionManager;
 import com.khasang.forecast.R;
-import com.khasang.forecast.adapter.ForecastPageAdapter;
+import com.khasang.forecast.adapters.ForecastPageAdapter;
 
 import java.util.ArrayList;
 
@@ -61,7 +61,7 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
 
-        manager = new PositionManager(this);
+//        manager = new PositionManager(this);
         owm = new OpenWeatherMap();
 
 
@@ -96,7 +96,7 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
             showChooseCityDialog();
         }
         updateInterface(current_city, current_temperature, current_precipitation,
-                    current_pressure, current_wind, current_humidity, current_timeStamp);
+                current_pressure, current_wind, current_humidity, current_timeStamp);
 //            manager.updateCurrent();
 
 
