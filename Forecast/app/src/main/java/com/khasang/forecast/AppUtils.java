@@ -33,6 +33,7 @@ public class AppUtils {
         weather.setTemperature(response.getMain().getTemp());
         weather.setHumidity(response.getMain().getHumidity());
         weather.setPressure(response.getMain().getPressure());
+        setPrecipitationType(response.getWeather().get(0).getMain(), weather);
         double speed = response.getWind().getSpeed();
         double deg = response.getWind().getDeg();
         setWindDirectionAndSpeed(weather, speed, deg);
@@ -61,6 +62,7 @@ public class AppUtils {
             double speed = forecast.getWind().getSpeed();
             double deg = forecast.getWind().getDeg();
             setWindDirectionAndSpeed(weather, speed, deg);
+            setPrecipitationType(forecast.getWeather().get(0).getMain(), weather);
             String description = null;
             for (com.khasang.forecast.models.Weather descr : forecast.getWeather()) {
                 description = descr.getDescription();
@@ -87,6 +89,7 @@ public class AppUtils {
             double speed = forecast.getSpeed();
             double deg = forecast.getDeg();
             setWindDirectionAndSpeed(weather, speed, deg);
+            setPrecipitationType(forecast.getWeather().get(0).getMain(), weather);
             String description = null;
             for (com.khasang.forecast.models.Weather descr : forecast.getWeather()) {
                 description = descr.getDescription();
@@ -132,5 +135,40 @@ public class AppUtils {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(unixTime * 1000L);
         return calendar;
+    }
+
+    /**
+     * //TODO
+     */
+    private static void setPrecipitationType(String type, Weather weather) {
+        switch (type) {
+            case "Thunderstorm":
+                weather.setPrecipitation(Precipitation.Type.THUNDERSTORM);
+                break;
+            case "Drizzle":
+                weather.setPrecipitation(Precipitation.Type.DRIZZLE);
+                break;
+            case "Rain":
+                weather.setPrecipitation(Precipitation.Type.RAIN);
+                break;
+            case "Snow":
+                weather.setPrecipitation(Precipitation.Type.SNOW);
+                break;
+            case "Atmosphere":
+                weather.setPrecipitation(Precipitation.Type.ATMOSPHERE);
+                break;
+            case "Clear":
+                weather.setPrecipitation(Precipitation.Type.CLEAR);
+                break;
+            case "Clouds":
+                weather.setPrecipitation(Precipitation.Type.CLOUDS);
+                break;
+            case "Extreme":
+                weather.setPrecipitation(Precipitation.Type.EXTREME);
+                break;
+            case "Additional":
+                weather.setPrecipitation(Precipitation.Type.ADDITIONAL);
+                break;
+        }
     }
 }

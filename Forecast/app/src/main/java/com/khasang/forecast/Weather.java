@@ -98,12 +98,12 @@ public class Weather {
         return wind.getSpeed();
     }
 
-    public void setPrecipitation(Precipitation.Type type, int probability) {
+    public void setPrecipitation(Precipitation.Type type) {
         if (this.precipitation == null) {
-            this.precipitation = new Precipitation(type, probability);
+            this.precipitation = new Precipitation(type);
         } else {
             this.precipitation.setType(type);
-            this.precipitation.setProbability(probability);
+            //this.precipitation.setProbability(probability);
         }
     }
 
@@ -119,9 +119,9 @@ public class Weather {
      * Получение из вероятности установления погоды
      * @return Метод возвращает вероятности установления погоды
      */
-    public int getPrecipitationProbability() {
+    /*public int getPrecipitationProbability() {
         return precipitation.getProbability();
-    }
+    }*/
 
     public String getDescription() {
         return description;
@@ -129,5 +129,19 @@ public class Weather {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return "Weather{" +
+                "temperature=" + temperature +
+                ", temp_min=" + temp_min +
+                ", temp_max=" + temp_max +
+                ", pressure=" + pressure +
+                ", humidity=" + humidity +
+                ", wind=" + wind +
+                ", precipitation=" + precipitation +
+                ", description='" + description + '\'' +
+                '}';
     }
 }
