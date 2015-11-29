@@ -38,11 +38,13 @@ public class PositionManager {
     private HashMap<String, WeatherStation> stations;
     private Map<String, Position> positions;
     private Context mActivity;
+    private PositionFactory factory;
     private String posName;
 
     public PositionManager(Context context) {
         posName = "Moscow";
         mActivity = context;
+        factory = new PositionFactory(mActivity);
         ArrayList <String> pos = new ArrayList<>();
         pos.add(posName);
         initStations();         //  Пока тут
@@ -64,16 +66,14 @@ public class PositionManager {
      * @param favorites коллекция {@link List} типа {@link String}, содержащий названия городов
      */
     public void initPositions(List<String> favorites) {
-        PositionFactory positionFactory = new PositionFactory(mActivity);
-        positionFactory.addCurrentPosition();
+        factory.addCurrentPosition();
         for (String pos : favorites) {
-            positionFactory.addFavouritePosition(pos);
+            factory.addFavouritePosition(pos);
         }
-        positions = positionFactory.getPositions();
+        positions = factory.getPositions();
     }
 
-    public void addFaVouritePosition(String name){
-        PositionFactory factory = new PositionFactory(mActivity);
+    public void addFavouritePosition(String name){
         factory.addFavouritePosition(name);
     }
     /**

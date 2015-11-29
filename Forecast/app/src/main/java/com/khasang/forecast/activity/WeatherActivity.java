@@ -14,11 +14,10 @@ import android.widget.Toast;
 
 import com.khasang.forecast.OpenWeatherMap;
 import com.khasang.forecast.PositionManager;
-import com.khasang.forecast.Precipitation;
 import com.khasang.forecast.R;
 import com.khasang.forecast.adapter.ForecastPageAdapter;
 
-import java.awt.font.TextAttribute;
+import java.util.ArrayList;
 
 /**
  * Данные которые необходимо отображать в WeatherActivity (для первого релиза):
@@ -55,7 +54,7 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
     private String current_timeStamp = "10:15";
     private OpenWeatherMap owm;
     private String positionName;
-
+    private ArrayList<String> positions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +63,9 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
 
         manager = new PositionManager(this);
         owm = new OpenWeatherMap();
+
+
+        positions = new ArrayList<>();
 
         city = (TextView) findViewById(R.id.city);
         temperature = (TextView) findViewById(R.id.temperature);
@@ -89,24 +91,14 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
      * Обработчик нажатия кнопки
      */
     @Override
-    public void onClick(View view) {
+    public void onClick(View view){
         if (manager.getCurrPosition() == null) {
             showChooseCityDialog();
-        } else {
-            try {
-                owm.updateWeather(manager.getPosition(positionName).getCoordinate(), manager);
-//              updateInterface(current_city, current_temperature, current_precipitation,
-//                    current_pressure, current_wind, current_humidity, current_timeStamp);
-//              manager.updateCurrent();
-                Log.i(TAG, "Coordinates: " + manager.getPosition(positionName).getCoordinate().getLatitude() + ", " + manager.getPosition(positionName).getCoordinate().getLongitude());
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage("Проверьте правилность набора адреса");
-                AlertDialog dialog = builder.create();
-                dialog.show();
-            }
         }
+        updateInterface(current_city, current_temperature, current_precipitation,
+                    current_pressure, current_wind, current_humidity, current_timeStamp);
+//            manager.updateCurrent();
+
 
     }
 
@@ -140,8 +132,16 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
                     public void onClick(DialogInterface dialog, int which) {
 
                         positionName = chooseCity.getText().toString();
-                        manager.addFaVouritePosition(positionName);
+                        positions.add(positionName);
+                        manager.initPositions(positions);
                         manager.setCurrPosition(positionName);
+                        try {
+                            owm.updateWeather(manager.getPosition(positionName).getCoordinate(), manager);
+                            Log.i(TAG, "Coordinates: " + manager.getPosition(positionName).getCoordinate().getLatitude() + ", " + manager.getPosition(positionName).getCoordinate().getLongitude());
+                        } catch (NullPointerException e) {
+                            e.printStackTrace();
+                            Toast.makeText(WeatherActivity.this, "Вы ввели некорректный адрес, повторите попытку", Toast.LENGTH_LONG).show();
+                        }
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
