@@ -169,7 +169,7 @@ public class PositionManager {
 
     private Position getPositionByCoordinate (Coordinate coordinate) {
         for (Position pos : mPositions.values()) {
-            if (pos.getCoordinate().compareTo(coordinate)) {
+            if (pos.getCoordinate().compareTo(coordinate) == 0) {
                 return pos;
             }
         }
