@@ -23,6 +23,10 @@ public class Weather {
         this.temperature = temperature;
     }
 
+    /**
+     * Получение температуры из обьекта
+     * @return Метод возвращает температуру
+     */
     public double getTemperature() {
         return temperature;
     }
@@ -31,6 +35,10 @@ public class Weather {
         this.temperature = temperature;
     }
 
+    /**
+     * Получение давления из обьекта
+     * @return Метод возвращает давление
+     */
     public double getPressure() {
         return pressure;
     }
@@ -39,6 +47,10 @@ public class Weather {
         this.pressure = pressure;
     }
 
+    /**
+     * Получение влажность из обьекта
+     * @return Метод возвращает влажность
+     */
     public int getHumidity() {
         return humidity;
     }
@@ -56,10 +68,18 @@ public class Weather {
         }
     }
 
+    /**
+     * Получение из обьекта направления ветра
+     * @return Метод возвращает значение {@link com.khasang.forecast.Wind.Direction}
+     */
     public Wind.Direction getWindDirection() {
         return wind.getDirection();
     }
 
+    /**
+     * Получение из обьекта скорости ветра
+     * @return Метод возвращает скорость ветра
+     */
     public double getWindPower() {
         return wind.getSpeed();
     }
@@ -73,10 +93,18 @@ public class Weather {
         }
     }
 
+    /**
+     * Получение из обьекта типа погоды
+     * @return Метод возвращает значение {@link com.khasang.forecast.Precipitation.Type}
+     */
     public Precipitation.Type getPrecipitation() {
         return precipitation.getType();
     }
 
+    /**
+     * Получение из вероятности установления погоды
+     * @return Метод возвращает вероятности установления погоды
+     */
     public int getPrecipitationProbability() {
         return precipitation.getProbability();
     }

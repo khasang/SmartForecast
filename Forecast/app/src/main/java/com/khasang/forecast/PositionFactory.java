@@ -53,10 +53,10 @@ public class PositionFactory {
             coordinate.setLongitude(currentAddress.getLongitude());
             p.setCoordinate(coordinate);
             Log.i(TAG, "Coordinate of " + name + " lat: " + currentAddress.getLatitude() + ", lon: " + currentAddress.getLongitude());
+            mPositions.put(name, p);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        mPositions.put(name, p);
     }
 
     public Map<String, Position> getPositions() {
