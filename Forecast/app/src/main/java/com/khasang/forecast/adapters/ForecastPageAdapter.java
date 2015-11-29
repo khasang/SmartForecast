@@ -1,15 +1,10 @@
-package com.khasang.forecast.adapter;
+package com.khasang.forecast.adapters;
 
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
-import com.khasang.forecast.R;
-import com.khasang.forecast.fragment.DayForecastFragment;
+import com.khasang.forecast.fragments.DayForecastFragment;
 
 /**
  * Created by qwsa on 24.11.15.

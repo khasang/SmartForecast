@@ -1,8 +1,6 @@
 package com.khasang.forecast;
 
-import android.content.Context;
-
-import com.khasang.forecast.activity.WeatherActivity;
+import com.khasang.forecast.activities.WeatherActivity;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,6 +21,18 @@ public class PositionManager {
     public static final double KM_TO_MILES = 0.62137;
     public static final double METER_TO_FOOT = 3.28083;
 
+    public void setCurrPosition(String positionName) {
+
+    }
+
+    public Position getPosition(String positionName) {
+        return null;
+    }
+
+    public Object getCurrPosition() {
+        return null;
+    }
+
     public enum TemperatureMetrics {KELVIN, CELSIUS, FAHRENHEIT}
 
     public enum SpeedMetrics {METER_PER_SECOND, FOOT_PER_SECOND, KM_PER_HOURS, MILES_PER_HOURS}
@@ -36,24 +46,17 @@ public class PositionManager {
     private WeatherStation currStation;
     private Position currPosition;
     private HashMap<String, WeatherStation> stations;
-    private Map<String, Position> positions;
-    private Context mActivity;
-    private PositionFactory factory;
-    private String posName;
+    private Map<String, Position> mPositions;
+    private WeatherActivity mActivity;
 
-    public PositionManager(Context context) {
-        posName = "Moscow";
-        mActivity = context;
-        factory = new PositionFactory(mActivity);
+    public PositionManager(WeatherActivity activity) {
+        mActivity = activity;
         ArrayList <String> pos = new ArrayList<>();
-        pos.add(posName);
+        pos.add("Moscow");
         initStations();         //  Пока тут
         initPositions(pos);     //  Пока тут
     }
 
-    /**
-     * Метод инициализации списка сервисов для получения информации о погодных условиях.
-     */
     public void initStations() {
         WeatherStationFactory wsf = new WeatherStationFactory();
         stations = wsf
@@ -61,44 +64,27 @@ public class PositionManager {
                 .create();
     }
 
-    /**
-     * Метод инициализации списка избранных местоположений (городов)
-     * @param favorites коллекция {@link List} типа {@link String}, содержащий названия городов
-     */
     public void initPositions(List<String> favorites) {
-        factory.addCurrentPosition();
+        PositionFactory positionFactory = new PositionFactory(mActivity);
+        positionFactory.addCurrentPosition();
         for (String pos : favorites) {
-            factory.addFavouritePosition(pos);
+            positionFactory.addFavouritePosition(pos);
         }
-        positions = factory.getPositions();
+        mPositions = positionFactory.getPositions();
     }
 
-    public void addFavouritePosition(String name){
-        factory.addFavouritePosition(name);
+    public Position getFavoritePosition(String name) {
+        return mPositions.get(name);
     }
-    /**
-     * Перегруженный метод, с помощью которого получаем сохраненные погодные данные от текущей станции, на текущую дату
-     * @return обьект типа {@link Weather}
-     */
+
     public Weather getWeather() {
         return getWeather(currStation.getServiceType());
     }
 
-    /**
-     * Перегруженный метод, с помощью которого получаем сохраненные погодные данные от заданной станции
-     * @param stationType объект типа {@link com.khasang.forecast.WeatherStationFactory.ServiceType}, содержащий погодный сервис, с которого получены данные
-     * @return обьект типа {@link Weather}
-     */
     public Weather getWeather(WeatherStationFactory.ServiceType stationType) {
         return getWeather(stationType, GregorianCalendar.getInstance());
     }
 
-    /**
-     * Перегруженный метод, с помощью которого получаем сохраненные погодные данные от заданной станции  на заданную дату
-     * @param stationType объект типа {@link com.khasang.forecast.WeatherStationFactory.ServiceType}, содержащий погодный сервис, с которого получены данные
-     * @param necessaryDate объект типа {@link Calendar} - необходимо выбрать наиболее приближенные к этой дате погодные данные
-     * @return обьект типа {@link Weather}
-     */
     public Weather getWeather(WeatherStationFactory.ServiceType stationType, Calendar necessaryDate) {
         final Set<Calendar> dates = currPosition.getAllDates(stationType);
         if (dates.size() == 0) {
@@ -132,10 +118,6 @@ public class PositionManager {
         return currPosition.getWeather(stationType, dateAtList);
     }
 
-    /**
-     * Метод, с помощью которого получаем сохраненные погодные данные от текущей станции  на сутки
-     * @return массив типа {@link Weather}
-     */
     public Weather[] getHourlyWeather() {
         final int HOUR_PERIOD = 4;
         Calendar calendar = GregorianCalendar.getInstance();
@@ -149,10 +131,6 @@ public class PositionManager {
         return weather;
     }
 
-    /**
-     * Метод, с помощью которого получаем сохраненные погодные данные от текущей станции  на неделю
-     * @return массив типа {@link Weather}
-     */
     public Weather[] getWeeklyWeather() {
         Weather[] weather = new Weather[7];
         Calendar calendar = GregorianCalendar.getInstance();
@@ -165,58 +143,33 @@ public class PositionManager {
         return weather;
     }
 
-    /**
-     * Метод, вызывемый активити, для обновления текущей погоды от текущей погодной станции
-     */
-    public void updateCurrent() {
+    public Weather updateCurrent() {
         currStation.updateWeather(currPosition.getCoordinate(), this);
+        return new Weather();
     }
 
-    /**
-     * Метод, вызывемый активити, для обновления погоды на сутки
-     */
-    public void updateHourly() {
+    public Weather updateHourly() {
         currStation.updateHourlyWeather(currPosition.getCoordinate(), this);
+        return new Weather();
     }
 
-    /**
-     * Метод, вызывемый активити, для обновления погоды на неделю
-     */
-    public void updateWeekly() {
+    public Weather updateWeekly() {
         currStation.updateWeeklyWeather(currPosition.getCoordinate(), this);
+        return new Weather();
     }
 
-    /**
-     * Пролучение локации из списка локаций
-     * @param name объект типа {@link String}, содержащий названия города
-     * @return обьект типа {@link Position}
-     */
-    public Position getPosition(String name) {
-        return positions.get(name);
-    }
-
-    /**
-     * Пролучение локации из списка локаций
-     * @param coordinate объект типа {@link Coordinate}, указывающий на местоположение локации
-     * @return обьект типа {@link Position}
-     */
-    private Position getPosition (Coordinate coordinate) {
-        for (Position pos : positions.values()) {
-            if (pos.getCoordinate().equals(coordinate)) {
+    private Position getPositionByCoordinate (Coordinate coordinate) {
+        for (Position pos : mPositions.values()) {
+            if (pos.getCoordinate().getLatitude() == coordinate.getLatitude() && pos.getCoordinate().getLongitude() == coordinate.getLongitude()) {
                 return pos;
             }
         }
         return null;
     }
 
-    /**
-     * Метод для обновления погодных данных. Вызывается погодным сервисом, когда он получает актуальные данные
-     * @param coordinate объект типа {@link Coordinate}, указывающий на местоположение локации для которой получены характеристики погодных условий
-     * @param weather обьект типа {@link Weather}, содержащий погодные характеристики
-     */
     public void onResponseReceived(Coordinate coordinate, Weather weather) {
         //TODO Положить данные в Position
-        Position position = getPosition(coordinate);
+        Position position = getPositionByCoordinate(coordinate);
         // position.setWeather();
 
         //TODO Сообщить активити что бы она обновила свои данные
@@ -224,11 +177,7 @@ public class PositionManager {
 //                weather.getPressure(), weather.getWindPower(), weather.getHumidity(), "");
     }
 
-    /**
-     * Метод для преобразования температуры в заданную пользователем метрику
-     * @param temperature температура на входе (в Кельвинах)
-     * @return температура в выбранной пользователем метрике
-     */
+    // Установка режима отображения температуры
     double formatTemperature(double temperature) {
 
         switch (settingsTemperatureMetrics) {
@@ -244,11 +193,7 @@ public class PositionManager {
         return temperature;
     }
 
-    /**
-     * Метод для преобразования скорости ветра в заданную пользователем метрику
-     * @param speed преобразуемая скорость
-     * @return скорость в выбранной пользователем метрике
-     */
+    // Установка режима отображения скорости
     double formatSpeed(double speed) {
         switch (formatSpeedMetrics) {
             case METER_PER_SECOND:
@@ -266,11 +211,7 @@ public class PositionManager {
         return speed;
     }
 
-    /**
-     * Метод для преобразования давления в заданную пользователем метрику
-     * @param pressure преобразуемое давление
-     * @return давление в выбранной пользователем метрике
-     */
+    // Установка режима отображения давления
     double formatPressure(double pressure) {
         switch (formatPressureMetrics) {
             case HPA:
@@ -282,6 +223,8 @@ public class PositionManager {
         return pressure;
     }
 
+    // Непосредственно методы преобразований
+    // Преобразование из Кельвина в Цельсий
     public double kelvinToCelsius(double temperature) {
         double celsiusTemperature = temperature - KELVIN_CELSIUS_DELTA;
         return celsiusTemperature;
@@ -317,14 +260,4 @@ public class PositionManager {
         return mmHg;
     }
 
-    // Установить текущую позицию
-    public void setCurrPosition(String name){
-        currPosition = getPosition(name);
-    }
-
-
-    //
-    public Position getCurrPosition(){
-        return currPosition;
-    }
 }
