@@ -3,23 +3,17 @@ package com.khasang.forecast.activity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.text.format.Time;
-import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.khasang.forecast.PositionManager;
-import com.khasang.forecast.Precipitation;
 import com.khasang.forecast.R;
 import com.khasang.forecast.Weather;
 import com.khasang.forecast.adapter.ForecastPageAdapter;
-
-import java.awt.font.TextAttribute;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.TimeZone;
+
 
 /**
  * Данные которые необходимо отображать в WeatherActivity (для первого релиза):
@@ -41,7 +35,10 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
     private TextView timeStamp;
     private ImageButton syncBtn;
 
+    private Animation animationRotateCenter;
+
     private PositionManager manager;
+
 
     // Для тестирования
     private String current_city = "Berlin";
@@ -83,14 +80,11 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
         timeStamp = (TextView) findViewById(R.id.timeStamp);
         syncBtn = (ImageButton) findViewById(R.id.syncBtn);
 
-        syncBtn.setOnClickListener(this);
+        /** Анимация кнопки */
+        animationRotateCenter = AnimationUtils.loadAnimation(
+                this, R.anim.rotate_center);
 
-        /**
-         * Получаем текущее время
-         */
-        Calendar c = Calendar.getInstance();
-        hours = c.get(Calendar.HOUR);
-        minutes = c.get(Calendar.MINUTE);
+        syncBtn.setOnClickListener(this);
 
         /**
          * Код для фрагментов
@@ -105,40 +99,53 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
      */
     @Override
     public void onClick(View view) {
-        manager.updateCurrent();
-        updateInterface(manager.updateCurrent());
+        syncBtn.startAnimation(animationRotateCenter);
         //manager.updateCurrent();
+        //manager.updateHourly();
+        updateInterface(manager.updateCurrent());
+        updateHourForecast(manager.updateHourly());
     }
 
     /**
      * Обновление интерфейса Activity
      */
-    public void updateInterface(Weather w) {
+    public void updateInterface(Weather wCurent) {
+        /** Получаем текущее время */
+        Calendar c = Calendar.getInstance();
+        hours = c.get(Calendar.HOUR);
+        minutes = c.get(Calendar.MINUTE);
 
+        //updateCurrent(Weather w);
         city.setText(String.valueOf(current_city));
-        temperature.setText(String.format("%.0f°C", w.getTemperature()));
+        temperature.setText(String.format("%.0f°C", wCurent.getTemperature()));
 
         //precipitation.setText(String.format("%s %s", w.getPrecipitation(), w.getPrecipitationProbability()));
-        precipitation.setText(String.format("%s", w.getPrecipitation()));
+        precipitation.setText(String.format("%s", wCurent.getPrecipitation()));
 
         pressure.setText(String.format("%s %.0f %s",
                 getString(R.string.pressure),
-                w.getPressure(),
+                wCurent.getPressure(),
                 getString(R.string.pressure_measure)));
 
         wind.setText(String.format("%s %s %.0f%s",
                 getString(R.string.wind),
-                w.getWindDirection(),
-                w.getWindPower(),
+                wCurent.getWindDirection(),
+                wCurent.getWindPower(),
                 getString(R.string.wind_measure)));
 
         humidity.setText(String.format("%s %s%%",
                 getString(R.string.humidity),
-                w.getHumidity()));
+                wCurent.getHumidity()));
 
         timeStamp.setText(String.format("%s %s:%s",
                 getString(R.string.timeStamp),
                 hours,
                 minutes));
     }
+
+    public void updateHourForecast(Weather wHour) {
+
+    }
+
+
 }
