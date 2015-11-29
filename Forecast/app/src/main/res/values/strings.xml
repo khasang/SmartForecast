@@ -2,6 +2,8 @@
     <string name="app_name">Forecast</string>
     <string name="service_name_open_weather_map">OpenWeatherMap</string>
 
+    <string name="city_list">Список городов</string>
+
     <string name="pressure">Давление</string>
     <string name="wind">Ветер</string>
     <string name="humidity">Влажность</string>
@@ -20,6 +22,6 @@
     <string name="mist">Туман</string>
 
     <string name="choose_city_label">WOW</string>
-    <string name="city_list">city</string>
+
 
 </resources>
