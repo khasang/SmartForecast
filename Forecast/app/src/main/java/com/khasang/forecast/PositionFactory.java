@@ -35,7 +35,7 @@ public class PositionFactory {
         // positions.add(p);
     }
 
-    public PositionFactory addFavouritePosition(String name) {
+    public void addFavouritePosition(String name) {
         Position p = new Position();
         p.setLocationName(name);
         // Через геокодер получить и занести координаты
@@ -45,7 +45,7 @@ public class PositionFactory {
             addresses = geocoder.getFromLocationName(name, 3);
             if (addresses.size() == 0){
                 Log.i(TAG, "Coordinates not found");
-                return null;
+                return;
             }
             Address currentAddress = addresses.get(0);
             Coordinate coordinate = new Coordinate();
@@ -57,7 +57,6 @@ public class PositionFactory {
             e.printStackTrace();
         }
         mPositions.put(name, p);
-        return this;
     }
 
     public Map<String, Position> getPositions() {

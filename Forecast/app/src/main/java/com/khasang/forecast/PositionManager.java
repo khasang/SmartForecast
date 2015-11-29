@@ -38,11 +38,13 @@ public class PositionManager {
     private HashMap<String, WeatherStation> stations;
     private Map<String, Position> positions;
     private Context mActivity;
+    private String posName;
 
     public PositionManager(Context context) {
+        posName = "Moscow";
         mActivity = context;
         ArrayList <String> pos = new ArrayList<>();
-        pos.add("");
+        pos.add(posName);
         initStations();         //  Пока тут
         initPositions(pos);     //  Пока тут
     }
@@ -70,6 +72,10 @@ public class PositionManager {
         positions = positionFactory.getPositions();
     }
 
+    public void addFaVouritePosition(String name){
+        PositionFactory factory = new PositionFactory(mActivity);
+        factory.addFavouritePosition(name);
+    }
     /**
      * Перегруженный метод, с помощью которого получаем сохраненные погодные данные от текущей станции, на текущую дату
      * @return обьект типа {@link Weather}
@@ -311,5 +317,14 @@ public class PositionManager {
         return mmHg;
     }
 
+    // Установить текущую позицию
+    public void setCurrPosition(String name){
+        currPosition = getPosition(name);
+    }
 
+
+    //
+    public Position getCurrPosition(){
+        return currPosition;
+    }
 }

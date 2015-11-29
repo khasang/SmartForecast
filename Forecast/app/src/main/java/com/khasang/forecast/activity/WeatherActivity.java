@@ -1,11 +1,13 @@
 package com.khasang.forecast.activity;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,7 +45,7 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
     private PositionManager manager;
 
     // Для тестирования
-    private String current_city = "Berlin";
+    private String current_city = "Moscow";
     private int current_temperature = 1;
     //private Precipitation current_precipitation;
     private String current_precipitation = "Солнечно";
@@ -51,7 +53,8 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
     private int current_wind = 25;
     private int current_humidity = 12;
     private String current_timeStamp = "10:15";
-
+    private OpenWeatherMap owm;
+    private String positionName;
 
 
     @Override
@@ -60,18 +63,7 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
         setContentView(R.layout.activity_weather);
 
         manager = new PositionManager(this);
-        String posName = "";
-        try {
-            OpenWeatherMap owm = new OpenWeatherMap();
-            owm.updateWeather(manager.getPosition(posName).getCoordinate(), manager);
-            Log.i(TAG, "Coordinates: " + manager.getPosition(posName).getCoordinate().getLatitude() + ", " + manager.getPosition(posName).getCoordinate().getLongitude());
-        } catch (NullPointerException e){
-            Log.e(TAG, "Проверьте правилность набора адреса");
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage("Проверьте правилность набора адреса");
-            AlertDialog dialog = builder.create();
-            dialog.show();
-        }
+        owm = new OpenWeatherMap();
 
         city = (TextView) findViewById(R.id.city);
         temperature = (TextView) findViewById(R.id.temperature);
@@ -98,9 +90,22 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
      */
     @Override
     public void onClick(View view) {
-        updateInterface(current_city, current_temperature, current_precipitation,
-                current_pressure, current_wind, current_humidity, current_timeStamp);
-        manager.updateCurrent();
+        try {
+            owm.updateWeather(manager.getPosition(positionName).getCoordinate(), manager);
+            updateInterface(current_city, current_temperature, current_precipitation,
+                    current_pressure, current_wind, current_humidity, current_timeStamp);
+//            manager.updateCurrent();
+            Log.i(TAG, "Coordinates: " + manager.getPosition(positionName).getCoordinate().getLatitude() + ", " + manager.getPosition(positionName).getCoordinate().getLongitude());
+        }
+        catch (NullPointerException e){
+            Log.e(TAG, "Проверьте правилность набора адреса");
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Проверьте правилность набора адреса");
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+
+
     }
 
     /**
@@ -120,5 +125,38 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
         wind.setText(getString(R.string.wind) + " " + String.valueOf(current_wind) + getString(R.string.wind_measure));
         humidity.setText(getString(R.string.humidity) + " " + String.valueOf(current_humidity) + "%");
         timeStamp.setText(getString(R.string.timeStamp) + " " +String.valueOf(current_timeStamp));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (manager.getCurrPosition() == null){
+            showChooseCityDialog();
+        }
+    }
+
+    private void showChooseCityDialog() {
+        final View view = getLayoutInflater().inflate(R.layout.choose_city_dialog, null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final EditText chooseCity = (EditText) view.findViewById(R.id.editTextCityName);
+        builder.setTitle("Введите название города")
+                .setView(view)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        positionName = chooseCity.getText().toString();
+                        manager.addFaVouritePosition(positionName);
+                        manager.setCurrPosition(positionName);
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

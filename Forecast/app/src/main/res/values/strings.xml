@@ -8,4 +8,5 @@
     <string name="timeStamp">Обновлено</string>
     <string name="pressure_measure">мм рт/ст</string>
     <string name="wind_measure">м/c</string>
+    <string name="choose_city_label">Введите название города</string>
 </resources>
