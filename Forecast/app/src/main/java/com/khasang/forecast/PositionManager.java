@@ -1,5 +1,7 @@
 package com.khasang.forecast;
 
+import android.util.Log;
+
 import com.khasang.forecast.activities.WeatherActivity;
 
 import java.util.ArrayList;
@@ -55,6 +57,8 @@ public class PositionManager {
         pos.add("Moscow");
         initStations();         //  Пока тут
         initPositions(pos);     //  Пока тут
+        currPosition = mPositions.get("Moscow");
+        currStation = stations.get(mActivity.getString(R.string.service_name_open_weather_map));
     }
 
     public void initStations() {
@@ -144,7 +148,11 @@ public class PositionManager {
     }
 
     public Weather updateCurrent() {
-        currStation.updateWeather(currPosition.getCoordinate(), this);
+        Coordinate coordinate = new Coordinate();
+        coordinate.setLatitude(55.75996355993382);
+        coordinate.setLongitude(37.639561146497726);
+        currStation.updateWeather(coordinate, this);
+
         return new Weather();
     }
 
@@ -167,7 +175,7 @@ public class PositionManager {
         return null;
     }
 
-    public void onResponseReceived(Coordinate coordinate, Weather weather) {
+    public void onResponseReceived(Coordinate coordinate, Map<Calendar, Weather> weather) {
         //TODO Положить данные в Position
         Position position = getPositionByCoordinate(coordinate);
         // position.setWeather();

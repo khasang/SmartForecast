@@ -17,7 +17,7 @@ public class WeatherStationFactory {
 
     public WeatherStationFactory addOpenWeatherMap() {
         WeatherStation ws = new OpenWeatherMap();
-        String name = String.valueOf(R.string.service_name_open_weather_map);
+        String name = "OpenWeatherMap";
         ws.serviceType = ServiceType.OPEN_WEATHER_MAP;
         stations.put(name, ws);
         return this;

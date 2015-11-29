@@ -18,5 +18,8 @@
     <string name="thunderstorm">Гроза</string> 
     <string name="snow">Снег</string> 
     <string name="mist">Туман</string>
-    
+
+    <string name="choose_city_label">WOW</string>
+    <string name="city_list">city</string>
+
 </resources>
