@@ -43,8 +43,6 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
 
     private PositionManager manager;
 
-    int hours;
-    int minutes;
 
     // Для тестирования
     private String current_city = "Berlin";
@@ -55,7 +53,8 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
     private int current_wind = 25;
     private int current_humidity = 12;
     private String current_timeStamp = "10:15";
-
+    int hours;
+    int minutes;
 
     // Для заглушки в PositionManager
     /*private String current_city = "Berlin";
