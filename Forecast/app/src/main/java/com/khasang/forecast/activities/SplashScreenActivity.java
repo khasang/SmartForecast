@@ -1,4 +1,4 @@
-package com.khasang.forecast.activity;
+package com.khasang.forecast.activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
