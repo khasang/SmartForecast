@@ -2,13 +2,21 @@
     <string name="app_name">Forecast</string>
     <string name="service_name_open_weather_map">OpenWeatherMap</string>
 
-    <string name="city_list">Список городов</string>
-
     <string name="pressure">Давление</string>
     <string name="wind">Ветер</string>
     <string name="humidity">Влажность</string>
     <string name="timeStamp">Обновлено</string>
     <string name="pressure_measure">мм рт/ст</string>
     <string name="wind_measure">м/c</string>
-    <string name="choose_city_label">Введите название города</string>
+
+    <string name="clear_sky">Ясно</string> 
+    <string name="few_clouds">Небольшая облачность</string>
+    <string name="scattered_clouds">Облачно</string> 
+    <string name="broken_clouds">Облачно с прояснениями</string> 
+    <string name="shower_rain">Ливень</string> 
+    <string name="rain">Дождь</string> 
+    <string name="thunderstorm">Гроза</string> 
+    <string name="snow">Снег</string> 
+    <string name="mist">Туман</string>
+    
 </resources>
