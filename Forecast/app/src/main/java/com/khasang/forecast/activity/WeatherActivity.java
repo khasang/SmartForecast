@@ -1,13 +1,16 @@
 package com.khasang.forecast.activity;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.khasang.forecast.OpenWeatherMap;
 import com.khasang.forecast.PositionManager;
 import com.khasang.forecast.Precipitation;
 import com.khasang.forecast.R;
@@ -21,6 +24,8 @@ import java.awt.font.TextAttribute;
  */
 
 public class WeatherActivity extends FragmentActivity implements View.OnClickListener{
+    private static final String TAG = WeatherActivity.class.getSimpleName();
+
     /**
      * ViewPager для отображения нижних вкладок прогноза: по часам и по дням
      */
@@ -55,6 +60,18 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
         setContentView(R.layout.activity_weather);
 
         manager = new PositionManager(this);
+        String posName = "";
+        try {
+            OpenWeatherMap owm = new OpenWeatherMap();
+            owm.updateWeather(manager.getPosition(posName).getCoordinate(), manager);
+            Log.i(TAG, "Coordinates: " + manager.getPosition(posName).getCoordinate().getLatitude() + ", " + manager.getPosition(posName).getCoordinate().getLongitude());
+        } catch (NullPointerException e){
+            Log.e(TAG, "Проверьте правилность набора адреса");
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Проверьте правилность набора адреса");
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
 
         city = (TextView) findViewById(R.id.city);
         temperature = (TextView) findViewById(R.id.temperature);

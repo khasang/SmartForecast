@@ -103,9 +103,9 @@ public class OpenWeatherMap  extends WeatherStation {
             @Override
             public void onResponse(Response<OpenWeatherMapResponse> response, Retrofit retrofit) {
                 //TODO handle execution success.
-                /*Log.d(TAG, "updateWeather, onResponse: " + response.body().toString());
+                Log.d(TAG, "updateWeather, onResponse: " + response.body().toString());
                 Weather weather = AppUtils.convertToWeather(response.body());
-                Log.d(TAG, "updateWeather: " + weather.toString());*/
+                Log.d(TAG, "updateWeather: " + weather.toString());
                 manager.onResponseReceived(coordinate, AppUtils.convertToWeather(response.body()));
             }
 

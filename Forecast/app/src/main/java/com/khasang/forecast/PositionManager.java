@@ -42,7 +42,7 @@ public class PositionManager {
     public PositionManager(Context context) {
         mActivity = context;
         ArrayList <String> pos = new ArrayList<>();
-        pos.add("Moscow");
+        pos.add("");
         initStations();         //  Пока тут
         initPositions(pos);     //  Пока тут
     }
@@ -310,5 +310,6 @@ public class PositionManager {
         double mmHg = pressure / KPA_TO_MM_HG;
         return mmHg;
     }
+
 
 }
