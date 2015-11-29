@@ -19,8 +19,22 @@ public class Weather {
 
     }
 
-    public Weather(int temperature) {
+    public Weather(double temperature, double pressure, int humidity,
+                   Wind wind, Precipitation precipitation) {
         this.temperature = temperature;
+        this.pressure = pressure;
+        this.humidity = humidity;
+        this.wind = wind;
+        this.precipitation = precipitation;
+    }
+
+    public Weather(double temperature, double temp_min, double temp_max,
+                   double pressure, int humidity, Wind wind, Precipitation precipitation,
+                   String description) {
+        this(temperature, pressure, humidity, wind, precipitation);
+        this.temp_min = temp_min;
+        this.temp_max = temp_max;
+        this.description = description;
     }
 
     public double getTemperature() {
