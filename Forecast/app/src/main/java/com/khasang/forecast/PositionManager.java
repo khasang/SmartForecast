@@ -21,6 +21,14 @@ public class PositionManager {
     public static final double KM_TO_MILES = 0.62137;
     public static final double METER_TO_FOOT = 3.28083;
 
+    public void setCurrPosition(String positionName) {
+
+    }
+
+    public Position getPosition(String positionName) {
+        return null;
+    }
+
     public enum TemperatureMetrics {KELVIN, CELSIUS, FAHRENHEIT}
 
     public enum SpeedMetrics {METER_PER_SECOND, FOOT_PER_SECOND, KM_PER_HOURS, MILES_PER_HOURS}
