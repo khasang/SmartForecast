@@ -1,6 +1,7 @@
 package com.khasang.forecast;
 
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -14,6 +15,11 @@ public class Position implements ILocation {
     private int cityID;     // Надо подумать нужно ли ....
     private Coordinate coordinate;
     private Map<WeatherStationFactory.ServiceType, Map<Calendar, Weather>> weather;
+
+    public Position() {
+        weather = new HashMap<>();
+        weather.put(WeatherStationFactory.ServiceType.OPEN_WEATHER_MAP, new HashMap<Calendar, Weather>());
+    }
 
     public void setLocationName(String name) {
         this.name = name;

@@ -108,16 +108,16 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View v) {
         showChooseCityDialog();
 
-        /*Intent answerIntent = new Intent();
-        switch (v.getId()) {
-            case R.id.fabBtn:
-
-                Toast.makeText(this, "Выбран город ПИТЕР", Toast.LENGTH_SHORT).show();
-                answerIntent.putExtra(CITY, "ПИТЕР");
-                break;
-        }
-        setResult(RESULT_OK, answerIntent);
-        finish();*/
+//        Intent answerIntent = new Intent();
+//        switch (v.getId()) {
+//            case R.id.fabBtn:
+//
+//                Toast.makeText(this, "Выбран город ПИТЕР", Toast.LENGTH_SHORT).show();
+//                answerIntent.putExtra(CITY, "ПИТЕР");
+//                break;
+//        }
+//        setResult(RESULT_OK, answerIntent);
+//        finish();
     }
 
     /**
@@ -172,9 +172,9 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                         //manager.setCurrPosition(positionName);
                         try {
                             addItemToList(positionName);
-                            //answerIntent.putExtra(CITY, positionName);
-                            //setResult(RESULT_OK, answerIntent);
-                            //finish();
+                            answerIntent.putExtra(CITY, positionName);
+                            setResult(RESULT_OK, answerIntent);
+                            finish();
                             //owm.updateWeather(manager.getPosition(positionName).getCoordinate(), manager);
                             Log.i(TAG, "Coordinates: " + manager.getPosition(positionName).getCoordinate().getLatitude() + ", " + manager.getPosition(positionName).getCoordinate().getLongitude());
                         } catch (NullPointerException e) {
