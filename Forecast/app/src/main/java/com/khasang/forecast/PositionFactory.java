@@ -27,6 +27,11 @@ public class PositionFactory {
         mContext = context;
     }
 
+    public PositionFactory(Context context, HashMap<String, Position> positions) {
+        mPositions = positions;
+        mContext = context;
+    }
+
     public void addCurrentPosition() {
         Position p = new Position();
         // Получить название города
@@ -59,7 +64,7 @@ public class PositionFactory {
         }
     }
 
-    public Map<String, Position> getPositions() {
+    public HashMap<String, Position> getPositions() {
         return mPositions;
     }
 }

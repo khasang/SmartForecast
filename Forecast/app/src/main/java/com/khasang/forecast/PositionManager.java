@@ -48,12 +48,12 @@ public class PositionManager {
     private WeatherStation currStation;
     private Position currPosition;
     private HashMap<WeatherStationFactory.ServiceType, WeatherStation> stations;
-    private Map<String, Position> mPositions;
+    private HashMap<String, Position> mPositions;
     private WeatherActivity mActivity;
 
     public PositionManager(WeatherActivity activity) {
         mActivity = activity;
-        ArrayList <String> pos = new ArrayList<>();
+        ArrayList<String> pos = new ArrayList<>();
         pos.add("Moscow");
         initStations();         //  Пока тут
         initPositions(pos);     //  Пока тут
@@ -77,8 +77,29 @@ public class PositionManager {
         mPositions = positionFactory.getPositions();
     }
 
+    public void addPosition(String name) {
+        PositionFactory positionFactory = new PositionFactory(mActivity, mPositions);
+        positionFactory.addFavouritePosition(name);
+        mPositions = positionFactory.getPositions();
+    }
+
+    public void removePosition(String name) {
+        if (mPositions.containsKey(name)) {
+            mPositions.remove(name);
+        }
+    }
+
+    public void setCurrentPosition(String name) {
+        if (mPositions.containsKey(name)) {
+            currPosition = mPositions.get(name);
+        }
+    }
+
     public Position getFavoritePosition(String name) {
-        return mPositions.get(name);
+        if (mPositions.containsKey(name)) {
+            return mPositions.get(name);
+        }
+        return null;
     }
 
     public Weather getWeather() {
@@ -104,7 +125,7 @@ public class PositionManager {
                 if (i == 0) {
                     dateAtList = baseDate;
                 } else {
-                    Calendar prevDate = sortedDates.get(i-1);
+                    Calendar prevDate = sortedDates.get(i - 1);
                     long diff1 = baseDate.getTimeInMillis() - necessaryDate.getTimeInMillis();
                     long diff2 = necessaryDate.getTimeInMillis() - prevDate.getTimeInMillis();
                     if (diff1 < diff2) {
@@ -149,8 +170,8 @@ public class PositionManager {
 
     public Weather updateCurrent() {
         Coordinate coordinate = currPosition.getCoordinate();
-        coordinate.setLatitude(55.75996355993382);
-        coordinate.setLongitude(37.639561146497726);
+//        coordinate.setLatitude(55.75996355993382);
+//        coordinate.setLongitude(37.639561146497726);
 
         currStation.updateWeather(coordinate, this);
 
@@ -167,7 +188,7 @@ public class PositionManager {
         return null;
     }
 
-    private Position getPositionByCoordinate (Coordinate coordinate) {
+    private Position getPositionByCoordinate(Coordinate coordinate) {
         for (Position pos : mPositions.values()) {
             if (pos.getCoordinate().compareTo(coordinate) == 0) {
                 return pos;
@@ -177,15 +198,18 @@ public class PositionManager {
     }
 
     public void onResponseReceived(Coordinate coordinate, Map<Calendar, Weather> weather) {
+        /*
         Position position = getPositionByCoordinate(coordinate);
         // Позиция не обнаружена, выход
         if (position == null) {
             return;
         }
-
+*/
         HashMap.Entry<Calendar, Weather> firstEntry = (Map.Entry<Calendar, Weather>) weather.entrySet().iterator().next();
         currPosition.setWeather(currStation.getServiceType(), firstEntry.getKey(), firstEntry.getValue());
-        mActivity.updateInterface(firstEntry.getValue());
+        if (currPosition.getCoordinate().compareTo(coordinate) == 0) {
+            mActivity.updateInterface(firstEntry.getValue());
+        }
 /*
         for (Map.Entry<Calendar, Weather> entry: weather.entrySet()) {
             currPosition.setWeather(currStation.getServiceType(), entry.getKey(), entry.getValue());
