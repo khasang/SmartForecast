@@ -47,7 +47,7 @@ public class PositionManager {
 
     private WeatherStation currStation;
     private Position currPosition;
-    private HashMap<String, WeatherStation> stations;
+    private HashMap<WeatherStationFactory.ServiceType, WeatherStation> stations;
     private Map<String, Position> mPositions;
     private WeatherActivity mActivity;
 
@@ -58,7 +58,7 @@ public class PositionManager {
         initStations();         //  Пока тут
         initPositions(pos);     //  Пока тут
         currPosition = mPositions.get("Moscow");
-        currStation = stations.get(mActivity.getString(R.string.service_name_open_weather_map));
+        currStation = stations.get(WeatherStationFactory.ServiceType.OPEN_WEATHER_MAP);
     }
 
     public void initStations() {
@@ -148,27 +148,28 @@ public class PositionManager {
     }
 
     public Weather updateCurrent() {
-        Coordinate coordinate = new Coordinate();
+        Coordinate coordinate = currPosition.getCoordinate();
         coordinate.setLatitude(55.75996355993382);
         coordinate.setLongitude(37.639561146497726);
+
         currStation.updateWeather(coordinate, this);
 
-        return new Weather();
+        return null;
     }
 
     public Weather updateHourly() {
         currStation.updateHourlyWeather(currPosition.getCoordinate(), this);
-        return new Weather();
+        return null;
     }
 
     public Weather updateWeekly() {
         currStation.updateWeeklyWeather(currPosition.getCoordinate(), this);
-        return new Weather();
+        return null;
     }
 
     private Position getPositionByCoordinate (Coordinate coordinate) {
         for (Position pos : mPositions.values()) {
-            if (pos.getCoordinate().getLatitude() == coordinate.getLatitude() && pos.getCoordinate().getLongitude() == coordinate.getLongitude()) {
+            if (pos.getCoordinate().compareTo(coordinate)) {
                 return pos;
             }
         }
@@ -176,8 +177,21 @@ public class PositionManager {
     }
 
     public void onResponseReceived(Coordinate coordinate, Map<Calendar, Weather> weather) {
-        //TODO Положить данные в Position
         Position position = getPositionByCoordinate(coordinate);
+        // Позиция не обнаружена, выход
+        if (position == null) {
+            return;
+        }
+
+        HashMap.Entry<Calendar, Weather> firstEntry = (Map.Entry<Calendar, Weather>) weather.entrySet().iterator().next();
+        currPosition.setWeather(currStation.getServiceType(), firstEntry.getKey(), firstEntry.getValue());
+        mActivity.updateInterface(firstEntry.getValue());
+/*
+        for (Map.Entry<Calendar, Weather> entry: weather.entrySet()) {
+            currPosition.setWeather(currStation.getServiceType(), entry.getKey(), entry.getValue());
+            mActivity.updateInterface(entry.getValue());
+        }
+*/
         // position.setWeather();
 
         //TODO Сообщить активити что бы она обновила свои данные

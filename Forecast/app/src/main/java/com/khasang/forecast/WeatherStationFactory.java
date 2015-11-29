@@ -9,17 +9,17 @@ import java.util.HashMap;
 public class WeatherStationFactory {
     public enum ServiceType {OPEN_WEATHER_MAP}
 
-    private HashMap<String, WeatherStation> stations;
+    private HashMap<ServiceType, WeatherStation> stations;
 
     public WeatherStationFactory() {
-        stations = new HashMap<String, WeatherStation>();
+        stations = new HashMap<ServiceType, WeatherStation>();
     }
 
     public WeatherStationFactory addOpenWeatherMap() {
         WeatherStation ws = new OpenWeatherMap();
         String name = "OpenWeatherMap";
         ws.serviceType = ServiceType.OPEN_WEATHER_MAP;
-        stations.put(name, ws);
+        stations.put(ServiceType.OPEN_WEATHER_MAP, ws);
         return this;
     }
 
@@ -30,7 +30,7 @@ public class WeatherStationFactory {
 
     */
 
-    public HashMap<String, WeatherStation> create() {
+    public HashMap<ServiceType, WeatherStation> create() {
         return stations;
     }
 
