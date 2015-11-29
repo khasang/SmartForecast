@@ -22,12 +22,14 @@ import java.util.Map;
 public class AppUtils {
 
     /**
-     * Метод для конвертирования ответа от API в объект типа {@link Weather} для запроса
-     * текущего прогноза погоды.
+     * Метод для конвертирования ответа от API в коллекцию типа {@link Map}<{@link Calendar}, {@link Weather}>
+     * для запроса текущего прогноза погоды.
      * @param response объект типа {@link OpenWeatherMapResponse}, содержащий ответ от API.
      */
-    public static Weather convertToWeather(OpenWeatherMapResponse response) {
+    public static Map<Calendar, Weather> convertToWeather(OpenWeatherMapResponse response) {
+        Map<Calendar, Weather> map = new HashMap<>();
         Weather weather = new Weather();
+        Calendar calendar = unixToCalendar(response.getDt());
         weather.setTemperature(response.getMain().getTemp());
         weather.setHumidity(response.getMain().getHumidity());
         weather.setPressure(response.getMain().getPressure());
@@ -39,7 +41,8 @@ public class AppUtils {
             description = descr.getDescription();
         }
         weather.setDescription(description);
-        return weather;
+        map.put(calendar, weather);
+        return map;
     }
 
     /**

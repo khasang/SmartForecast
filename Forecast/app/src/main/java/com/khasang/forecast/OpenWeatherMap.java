@@ -25,15 +25,21 @@ import retrofit.Retrofit;
  * на UI поток через методы onResponse или onFailure.
  */
 
-public class OpenWeatherMap  extends WeatherStation {
+public class OpenWeatherMap extends WeatherStation {
 
-    /** Тэг для дебаггинга. */
+    /**
+     * Тэг для дебаггинга.
+     */
     private static final String TAG = OpenWeatherMap.class.getSimpleName();
 
-    /** API URL. */
+    /**
+     * API URL.
+     */
     private static final String API_BASE_URL = "http://api.openweathermap.org";
 
-    /** API ключ. */
+    /**
+     * API ключ.
+     */
     private static final String APP_ID = "96dd81a807540894eb4c96c05f17ed01";
 
     /**
@@ -42,10 +48,14 @@ public class OpenWeatherMap  extends WeatherStation {
      */
     public static final String SYSTEM_LANGUAGE = Locale.getDefault().getLanguage();
 
-    /** Количество 3-х часовых интервалов для запроса к API. */
+    /**
+     * Количество 3-х часовых интервалов для запроса к API.
+     */
     private static final int TIME_PERIOD = 8;
 
-    /** Количество дней для запроса к API. */
+    /**
+     * Количество дней для запроса к API.
+     */
     private static final int DAYS_PERIOD = 7;
 
     /**
@@ -86,26 +96,24 @@ public class OpenWeatherMap  extends WeatherStation {
                 return chain.proceed(request);
             }
         });
-        //client.interceptors().add(logging);
+        client.interceptors().add(logging);
     }
 
     /**
      * Метод для асинхронного получения текущего прогноза погоды.
+     *
      * @param coordinate объект типа {@link Coordinate}, содержащий географические координаты
      *                   для запроса.
-     * @param manager //TODO
+     * @param manager    //TODO
      */
     @Override
     public void updateWeather(final Coordinate coordinate, final PositionManager manager) {
         addInterceptors();
-        Call<OpenWeatherMapResponse> call = service.getCurrent(coordinate.getLatitude(), coordinate.getLongitude());
+        Call<OpenWeatherMapResponse> call = service.getCurrent(coordinate.getLatitude(),
+                                                                coordinate.getLongitude());
         call.enqueue(new Callback<OpenWeatherMapResponse>() {
             @Override
             public void onResponse(Response<OpenWeatherMapResponse> response, Retrofit retrofit) {
-                //TODO handle execution success.
-                Log.d(TAG, "updateWeather, onResponse: " + response.body().toString());
-                Weather weather = AppUtils.convertToWeather(response.body());
-                Log.d(TAG, "updateWeather: " + weather.toString());
                 manager.onResponseReceived(coordinate, AppUtils.convertToWeather(response.body()));
             }
 
@@ -120,25 +128,22 @@ public class OpenWeatherMap  extends WeatherStation {
     /**
      * Метод для асинхронного получения прогноза погоды с заданым количеством 3-х часовых
      * интервалов.
+     *
      * @param coordinate объект типа {@link Coordinate}, содержащий географические координаты
      *                   для запроса.
-     * @param manager //TODO
+     * @param manager    //TODO
      */
     @Override
-    public void updateHourlyWeather(Coordinate coordinate, PositionManager manager) {
+    public void updateHourlyWeather(final Coordinate coordinate, final PositionManager manager) {
         addInterceptors();
-        Call<OpenWeatherMapResponse> call = service.getHourly(55.7796551, 37.7125017, TIME_PERIOD);
+        Call<OpenWeatherMapResponse> call = service.getHourly(coordinate.getLatitude(),
+                                                                coordinate.getLongitude(),
+                                                                TIME_PERIOD);
         call.enqueue(new Callback<OpenWeatherMapResponse>() {
             @Override
             public void onResponse(Response<OpenWeatherMapResponse> response, Retrofit retrofit) {
-                //TODO handle execution success.
-                /*Log.d(TAG, "updateHourlyWeather, onResponse: " + response.body().toString());
-                Map<Calendar, Weather> map = AppUtils.convertToHourlyWeather(response.body());
-                DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-                for (Map.Entry<Calendar, Weather> m : map.entrySet()) {
-                    Log.d(TAG, "updateHourlyWeather: " + dateFormat.format(m.getKey().getTime())
-                    + " Weather: " + m.getValue());
-                }*/
+                manager.onResponseReceived(coordinate,
+                                            AppUtils.convertToHourlyWeather(response.body()));
             }
 
             @Override
@@ -151,24 +156,22 @@ public class OpenWeatherMap  extends WeatherStation {
 
     /**
      * Метод для асинхронного получения прогноза погоды с заданным количеством дней.
+     *
      * @param coordinate объект типа {@link Coordinate}, содержащий географические координаты
      *                   для запроса.
-     * @param manager //TODO
+     * @param manager    //TODO
      */
     @Override
-    public void updateWeeklyWeather(Coordinate coordinate, PositionManager manager) {
+    public void updateWeeklyWeather(final Coordinate coordinate, final PositionManager manager) {
         addInterceptors();
-        Call<DailyResponse> call = service.getDaily(55.7796551, 37.7125017, DAYS_PERIOD);
+        Call<DailyResponse> call = service.getDaily(coordinate.getLatitude(),
+                                                    coordinate.getLongitude(),
+                                                    DAYS_PERIOD);
         call.enqueue(new Callback<DailyResponse>() {
             @Override
             public void onResponse(Response<DailyResponse> response, Retrofit retrofit) {
-                //TODO handle execution success.
-                /*Log.d(TAG, "updateWeeklyWeather, onResponse: " + response.body().toString());
-                Map<Calendar, Weather> map = AppUtils.convertToDailyWeather(response.body());
-                DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-                for (Map.Entry<Calendar, Weather> m : map.entrySet()) {
-                    Log.d(TAG, "updateWeeklyWeather: " + dateFormat.format(m.getKey().getTime()) + " Weather: " + m.getValue());
-                }*/
+                manager.onResponseReceived(coordinate,
+                                            AppUtils.convertToDailyWeather(response.body()));
             }
 
             @Override
