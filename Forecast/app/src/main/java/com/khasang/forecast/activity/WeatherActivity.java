@@ -1,5 +1,6 @@
 package com.khasang.forecast.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -12,6 +13,8 @@ import com.khasang.forecast.PositionManager;
 import com.khasang.forecast.R;
 import com.khasang.forecast.Weather;
 import com.khasang.forecast.adapter.ForecastPageAdapter;
+
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 
@@ -34,6 +37,7 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
     private TextView humidity;
     private TextView timeStamp;
     private ImageButton syncBtn;
+    private ImageButton cityPickerBtn;
 
     private Animation animationRotateCenter;
 
@@ -79,12 +83,14 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
         humidity = (TextView) findViewById(R.id.humidity);
         timeStamp = (TextView) findViewById(R.id.timeStamp);
         syncBtn = (ImageButton) findViewById(R.id.syncBtn);
+        cityPickerBtn = (ImageButton) findViewById(R.id.cityPickerBnt);
 
         /** Анимация кнопки */
         animationRotateCenter = AnimationUtils.loadAnimation(
                 this, R.anim.rotate_center);
 
         syncBtn.setOnClickListener(this);
+        cityPickerBtn.setOnClickListener(this);
 
         /**
          * Код для фрагментов
@@ -98,21 +104,30 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
      * Обработчик нажатия кнопки
      */
     @Override
-    public void onClick(View view) {
-        syncBtn.startAnimation(animationRotateCenter);
-        //manager.updateCurrent();
-        //manager.updateHourly();
-        updateInterface(manager.updateCurrent());
-        updateHourForecast(manager.updateHourly());
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.syncBtn:
+                syncBtn.startAnimation(animationRotateCenter);
+                //manager.updateCurrent();
+                //manager.updateHourly();
+                updateInterface(manager.updateCurrent());
+                updateHourForecast(manager.updateHourly());
+                break;
+            case R.id.cityPickerBnt:
+                startActivity(new Intent(this, CityPickerActivity.class));
+                break;
+        }
     }
 
     /**
      * Обновление интерфейса Activity
      */
     public void updateInterface(Weather wCurent) {
-        /** Получаем текущее время */
+        /** Получаем текущее время
+         * TODO minutes в формате 13:04, сейчас выводит 13:4
+         * */
         Calendar c = Calendar.getInstance();
-        hours = c.get(Calendar.HOUR);
+        hours = c.get(Calendar.HOUR_OF_DAY);
         minutes = c.get(Calendar.MINUTE);
 
         //updateCurrent(Weather w);
@@ -143,7 +158,13 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
                 minutes));
     }
 
+    //TODO Реализовать метод получения прогноза по часам
     public void updateHourForecast(Weather wHour) {
+
+    }
+
+    //TODO Реализовать метод получения прогноза по дням
+    public void updateDayForecast(Weather wDay) {
 
     }
 
