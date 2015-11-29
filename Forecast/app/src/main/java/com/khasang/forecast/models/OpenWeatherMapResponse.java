@@ -1,11 +1,10 @@
 package com.khasang.forecast.models;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class OpenWeatherMapResponse {
-    private Weather[] weather;
+    private ArrayList<Weather> weather = new ArrayList<>();
     private Main main;
     private Wind wind;
     private Clouds clouds;
@@ -16,7 +15,7 @@ public class OpenWeatherMapResponse {
     private String name;
     private List<HourlyForecastList> list = new ArrayList<>();
 
-    public Weather[] getWeather() {
+    public ArrayList<Weather> getWeather() {
         return weather;
     }
 
@@ -59,7 +58,7 @@ public class OpenWeatherMapResponse {
     @Override
     public String toString() {
         return "OpenWeatherMapResponse{" +
-                "weather=" + Arrays.toString(weather) +
+                "weather=" + weather +
                 ", main=" + main +
                 ", wind=" + wind +
                 ", clouds=" + clouds +

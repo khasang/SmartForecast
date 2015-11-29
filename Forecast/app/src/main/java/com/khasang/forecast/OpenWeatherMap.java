@@ -115,6 +115,9 @@ public class OpenWeatherMap extends WeatherStation {
             @Override
             public void onResponse(Response<OpenWeatherMapResponse> response, Retrofit retrofit) {
                 manager.onResponseReceived(coordinate, AppUtils.convertToWeather(response.body()));
+                /*for (Map.Entry<Calendar, Weather> m : AppUtils.convertToWeather(response.body()).entrySet()) {
+                    Log.d(TAG, "onResponse: " + m.getValue().toString());
+                }*/
             }
 
             @Override
@@ -144,6 +147,9 @@ public class OpenWeatherMap extends WeatherStation {
             public void onResponse(Response<OpenWeatherMapResponse> response, Retrofit retrofit) {
                 manager.onResponseReceived(coordinate,
                                             AppUtils.convertToHourlyWeather(response.body()));
+                /*for (Map.Entry<Calendar, Weather> m : AppUtils.convertToHourlyWeather(response.body()).entrySet()) {
+                    Log.d(TAG, "onResponse: " + m.getValue().toString());
+                }*/
             }
 
             @Override
@@ -172,6 +178,9 @@ public class OpenWeatherMap extends WeatherStation {
             public void onResponse(Response<DailyResponse> response, Retrofit retrofit) {
                 manager.onResponseReceived(coordinate,
                                             AppUtils.convertToDailyWeather(response.body()));
+                /*for (Map.Entry<Calendar, Weather> m : AppUtils.convertToDailyWeather(response.body()).entrySet()) {
+                    Log.d(TAG, "onResponse: " + m.getValue().toString());
+                }*/
             }
 
             @Override

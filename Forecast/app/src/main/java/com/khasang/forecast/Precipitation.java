@@ -6,9 +6,9 @@ package com.khasang.forecast;
 
 public class Precipitation {
     private Type type;
-    private int probability;
+    //private int probability;
 
-    public static enum Type {
+    /*public static enum Type {
         CLEAR_SKY, FEW_CLOUDS, SCATTERED_CLOUDS, BROKEN_CLOUDS,
         SHOWER_RAIN, RAIN, TRUNDERSTORM, SNOW, MIST;
 
@@ -27,11 +27,22 @@ public class Precipitation {
                 default: return "Type";
             }
         }
+    }*/
+
+    public static enum Type {
+        THUNDERSTORM, DRIZZLE, RAIN, SNOW, ATMOSPHERE, CLEAR, CLOUDS, EXTREME, ADDITIONAL
     }
 
-    public Precipitation(Type type, int probability) {
+    @Override
+    public String toString() {
+        return "Precipitation{" +
+                "type=" + type +
+                '}';
+    }
+
+    public Precipitation(Type type) {
         this.type = type;
-        this.probability = probability;
+        //this.probability = probability;
     }
 
     public Type getType() {
@@ -42,11 +53,11 @@ public class Precipitation {
         this.type = type;
     }
 
-    public int getProbability() {
+    /*public int getProbability() {
         return probability;
     }
 
     public void setProbability(int probability) {
         this.probability = probability;
-    }
+    }*/
 }
