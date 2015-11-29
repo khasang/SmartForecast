@@ -1,7 +1,5 @@
 package com.khasang.forecast;
 
-import android.widget.Switch;
-
 /**
  * Created by Veda on 24.11.15.
  */
