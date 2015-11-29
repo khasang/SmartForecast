@@ -25,7 +25,7 @@ import java.awt.font.TextAttribute;
  * город, температура, давление, влажность, ветер, временная метка.
  */
 
-public class WeatherActivity extends FragmentActivity implements View.OnClickListener{
+public class WeatherActivity extends FragmentActivity implements View.OnClickListener {
     private static final String TAG = WeatherActivity.class.getSimpleName();
 
     /**
@@ -90,21 +90,23 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
      */
     @Override
     public void onClick(View view) {
-        try {
-            owm.updateWeather(manager.getPosition(positionName).getCoordinate(), manager);
-            updateInterface(current_city, current_temperature, current_precipitation,
-                    current_pressure, current_wind, current_humidity, current_timeStamp);
-//            manager.updateCurrent();
-            Log.i(TAG, "Coordinates: " + manager.getPosition(positionName).getCoordinate().getLatitude() + ", " + manager.getPosition(positionName).getCoordinate().getLongitude());
+        if (manager.getCurrPosition() == null) {
+            showChooseCityDialog();
+        } else {
+            try {
+                owm.updateWeather(manager.getPosition(positionName).getCoordinate(), manager);
+//              updateInterface(current_city, current_temperature, current_precipitation,
+//                    current_pressure, current_wind, current_humidity, current_timeStamp);
+//              manager.updateCurrent();
+                Log.i(TAG, "Coordinates: " + manager.getPosition(positionName).getCoordinate().getLatitude() + ", " + manager.getPosition(positionName).getCoordinate().getLongitude());
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage("Проверьте правилность набора адреса");
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
         }
-        catch (NullPointerException e){
-            Log.e(TAG, "Проверьте правилность набора адреса");
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage("Проверьте правилность набора адреса");
-            AlertDialog dialog = builder.create();
-            dialog.show();
-        }
-
 
     }
 
@@ -124,15 +126,7 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
                 getString(R.string.pressure_measure)));
         wind.setText(getString(R.string.wind) + " " + String.valueOf(current_wind) + getString(R.string.wind_measure));
         humidity.setText(getString(R.string.humidity) + " " + String.valueOf(current_humidity) + "%");
-        timeStamp.setText(getString(R.string.timeStamp) + " " +String.valueOf(current_timeStamp));
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (manager.getCurrPosition() == null){
-            showChooseCityDialog();
-        }
+        timeStamp.setText(getString(R.string.timeStamp) + " " + String.valueOf(current_timeStamp));
     }
 
     private void showChooseCityDialog() {
