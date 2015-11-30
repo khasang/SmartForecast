@@ -218,7 +218,7 @@ public class PositionManager {
         coordinate.setLatitude(55.75996355993382);
         coordinate.setLongitude(37.639561146497726);
 
-        currStation.updateWeather(coordinate, this);
+        currStation.updateWeather(currPosition.getCityID(), coordinate, this);
 
         return null;
     }
@@ -267,11 +267,13 @@ public class PositionManager {
     /**
      * Метод для обновления погодных данных. Вызывается погодным сервисом, когда он получает актуальные данные
      *
-     * @param coordinate объект типа {@link Coordinate}, указывающий на местоположение локации для которой получены характеристики погодных условий
+     * @param cityId внутренний идентификатор города, передается в погодную станцию во время запроса погоды
+     * @param serviceType идентификатор погодного сервиса
      * @param weather    обьект типа {@link Weather}, содержащий погодные характеристики
      */
-    public void onResponseReceived(Coordinate coordinate, Map<Calendar, Weather> weather) {
+    public void onResponseReceived(int cityId, WeatherStationFactory.ServiceType serviceType, Map<Calendar, Weather> weather) {
         /*
+        (int cityId, WeatherStationFactory.ServiceType serviceType, Map<Calendar, Weather> weather)
         Position position = getPositionByCoordinate(coordinate);
         // Позиция не обнаружена, выход
         if (position == null) {
@@ -280,9 +282,9 @@ public class PositionManager {
 */
         HashMap.Entry<Calendar, Weather> firstEntry = (Map.Entry<Calendar, Weather>) weather.entrySet().iterator().next();
         currPosition.setWeather(currStation.getServiceType(), firstEntry.getKey(), firstEntry.getValue());
-        if (currPosition.getCoordinate().compareTo(coordinate) == 0) {
+        if (currPosition.getCityID() == cityId && currStation.getServiceType() == serviceType) {
+            mActivity.updateInterface(firstEntry.getValue());
         }
-        mActivity.updateInterface(firstEntry.getValue());
 /*
         for (Map.Entry<Calendar, Weather> entry: weather.entrySet()) {
             currPosition.setWeather(currStation.getServiceType(), entry.getKey(), entry.getValue());
