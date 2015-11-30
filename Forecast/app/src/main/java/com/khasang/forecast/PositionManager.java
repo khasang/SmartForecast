@@ -35,7 +35,7 @@ public class PositionManager {
 
     public enum PressureMetrics {HPA, MM_HG}
 
-    TemperatureMetrics settingsTemperatureMetrics = TemperatureMetrics.KELVIN;
+    TemperatureMetrics settingsTemperatureMetrics = TemperatureMetrics.CELSIUS;
     SpeedMetrics formatSpeedMetrics = SpeedMetrics.METER_PER_SECOND;
     PressureMetrics formatPressureMetrics = PressureMetrics.HPA;
 
@@ -283,7 +283,8 @@ public class PositionManager {
         HashMap.Entry<Calendar, Weather> firstEntry = (Map.Entry<Calendar, Weather>) weather.entrySet().iterator().next();
         currPosition.setWeather(currStation.getServiceType(), firstEntry.getKey(), firstEntry.getValue());
         if (currPosition.getCityID() == cityId && currStation.getServiceType() == serviceType) {
-            mActivity.updateInterface(firstEntry.getValue());
+            mActivity.updateInterface(formatWeather(firstEntry.getValue()));
+
         }
 /*
         for (Map.Entry<Calendar, Weather> entry: weather.entrySet()) {
@@ -298,6 +299,13 @@ public class PositionManager {
 //                weather.getPressure(), weather.getWindPower(), weather.getHumidity(), "");
     }
 
+    private Weather formatWeather(Weather weather) {
+        weather.setTemperature(formatTemperature(weather.getTemperature()));
+        weather.setPressure(formatPressure(weather.getPressure()));
+        weather.setWind(weather.getWindDirection(),formatSpeed(weather.getWindPower()));
+        return weather;
+    }
+
     /**
      * Метод для преобразования температуры в заданную пользователем метрику
      *
@@ -309,11 +317,9 @@ public class PositionManager {
             case KELVIN:
                 break;
             case CELSIUS:
-                kelvinToCelsius(temperature);
-                break;
+                return kelvinToCelsius(temperature);
             case FAHRENHEIT:
-                kelvinToFahrenheit(temperature);
-                break;
+                return kelvinToFahrenheit(temperature);
         }
         return temperature;
     }
@@ -329,14 +335,11 @@ public class PositionManager {
             case METER_PER_SECOND:
                 break;
             case FOOT_PER_SECOND:
-                meterInSecondToFootInSecond(speed);
-                break;
+                return meterInSecondToFootInSecond(speed);
             case KM_PER_HOURS:
-                meterInSecondToKmInHours(speed);
-                break;
+                return meterInSecondToKmInHours(speed);
             case MILES_PER_HOURS:
-                meterInSecondToMilesInHour(speed);
-                break;
+                return meterInSecondToMilesInHour(speed);
         }
         return speed;
     }
@@ -352,8 +355,7 @@ public class PositionManager {
             case HPA:
                 break;
             case MM_HG:
-                kpaToMmHg(pressure);
-                break;
+                return kpaToMmHg(pressure);
         }
         return pressure;
     }
