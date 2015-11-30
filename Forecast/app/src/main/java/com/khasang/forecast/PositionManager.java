@@ -6,12 +6,12 @@ import android.content.SharedPreferences;
 import com.khasang.forecast.activities.WeatherActivity;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.Set;
 
 /**
@@ -43,7 +43,10 @@ public class PositionManager {
     private HashMap<String, Position> positions;
     private WeatherActivity mActivity;
 
-    // Запись настроек выбора параметров и ключей
+     /**
+     * Запись настроек выбора параметров и ключей
+     *
+     */
     protected void savePreferences() {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("temp", settingsTemperatureMetrics.toString());
@@ -56,7 +59,9 @@ public class PositionManager {
         editor.commit();
     }
 
-    // Чтение настроек выбора параметров и ключей, второе значение по умолчанию
+    /**
+     * Чтение настроек выбора параметров и ключей, второе значение по умолчанию
+     */
     private void loadPreferences() {
         preferences = mActivity.getSharedPreferences(MY_PREFF, Activity.MODE_PRIVATE);
         String temp = preferences.getString("temp", "KELVIN");
