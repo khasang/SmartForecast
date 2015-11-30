@@ -138,7 +138,10 @@ public class AppUtils {
     }
 
     /**
-     * //TODO
+     * Метод преобразует полученный тип осадков в перечисление типа Precipitation.Type, а так же
+     * устанавливает свойства для класса {@link Weather}.
+     * @param type строка, приходящая как тип осадков.
+     * @param weather объект типа {@link Weather}.
      */
     private static void setPrecipitationType(String type, Weather weather) {
         switch (type) {
