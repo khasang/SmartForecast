@@ -21,14 +21,6 @@ public class PositionManager {
     public static final double KM_TO_MILES = 0.62137;
     public static final double METER_TO_FOOT = 3.28083;
 
-    public void setCurrPosition(String positionName) {
-
-    }
-
-    public Position getCurrPosition() {
-        return currPosition;
-    }
-
     public enum TemperatureMetrics {KELVIN, CELSIUS, FAHRENHEIT}
 
     public enum SpeedMetrics {METER_PER_SECOND, FOOT_PER_SECOND, KM_PER_HOURS, MILES_PER_HOURS}
@@ -90,6 +82,16 @@ public class PositionManager {
         PositionFactory positionFactory = new PositionFactory(mActivity, positions);
         positionFactory.addFavouritePosition(name, stations.keySet());
         positions = positionFactory.getPositions();
+    }
+
+    /**
+     * Метод, с помощью которого получаем список местоположений
+     * Вызывается когда пользователь открывает диалог городов
+     *
+     * @return возвращает коллекцию {@link Set} типа {@link String}, содержащий названия городов
+     */
+    public Set<String> getPositions() {
+        return positions.keySet();
     }
 
     /**
@@ -267,9 +269,9 @@ public class PositionManager {
     /**
      * Метод для обновления погодных данных. Вызывается погодным сервисом, когда он получает актуальные данные
      *
-     * @param cityId внутренний идентификатор города, передается в погодную станцию во время запроса погоды
+     * @param cityId      внутренний идентификатор города, передается в погодную станцию во время запроса погоды
      * @param serviceType идентификатор погодного сервиса
-     * @param weather    обьект типа {@link Weather}, содержащий погодные характеристики
+     * @param weather     обьект типа {@link Weather}, содержащий погодные характеристики
      */
     public void onResponseReceived(int cityId, WeatherStationFactory.ServiceType serviceType, Map<Calendar, Weather> weather) {
         HashMap.Entry<Calendar, Weather> firstEntry = (Map.Entry<Calendar, Weather>) weather.entrySet().iterator().next();
@@ -293,7 +295,7 @@ public class PositionManager {
     private Weather formatWeather(Weather weather) {
         weather.setTemperature(formatTemperature(weather.getTemperature()));
         weather.setPressure(formatPressure(weather.getPressure()));
-        weather.setWind(weather.getWindDirection(),formatSpeed(weather.getWindPower()));
+        weather.setWind(weather.getWindDirection(), formatSpeed(weather.getWindPower()));
         return weather;
     }
 
