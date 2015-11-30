@@ -56,7 +56,7 @@ public class PositionManager {
         pos.add("Тула");
         initStations();         //  Пока тут
         initPositions(pos);     //  Пока тут
-        currPosition = positions.get("Moscow");
+        currPosition = positions.get("Тула");
         currStation = stations.get(WeatherStationFactory.ServiceType.OPEN_WEATHER_MAP);
     }
 
@@ -208,8 +208,8 @@ public class PositionManager {
         HashMap.Entry<Calendar, Weather> firstEntry = (Map.Entry<Calendar, Weather>) weather.entrySet().iterator().next();
         currPosition.setWeather(currStation.getServiceType(), firstEntry.getKey(), firstEntry.getValue());
         if (currPosition.getCoordinate().compareTo(coordinate) == 0) {
-            mActivity.updateInterface(firstEntry.getValue());
         }
+        mActivity.updateInterface(firstEntry.getValue());
 /*
         for (Map.Entry<Calendar, Weather> entry: weather.entrySet()) {
             currPosition.setWeather(currStation.getServiceType(), entry.getKey(), entry.getValue());
