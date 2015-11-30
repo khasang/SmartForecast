@@ -85,6 +85,8 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
         setContentView(R.layout.activity_weather);
 
         manager = new PositionManager(this);
+        manager.initStations();
+        manager.initPositions();
 
         city = (TextView) findViewById(R.id.city);
         temperature = (TextView) findViewById(R.id.temperature);
