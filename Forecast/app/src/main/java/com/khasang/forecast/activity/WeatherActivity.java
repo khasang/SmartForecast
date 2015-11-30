@@ -136,7 +136,7 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
                         manager.initPositions(positions);
                         manager.setCurrPosition(positionName);
                         try {
-                            owm.updateWeather(manager.getPosition(positionName).getCoordinate(), manager);
+                            owm.updateWeather(manager.getCurrPosition().getCityID(), manager.getPosition(positionName).getCoordinate(), manager);
                             Log.i(TAG, "Coordinates: " + manager.getPosition(positionName).getCoordinate().getLatitude() + ", " + manager.getPosition(positionName).getCoordinate().getLongitude());
                         } catch (NullPointerException e) {
                             e.printStackTrace();

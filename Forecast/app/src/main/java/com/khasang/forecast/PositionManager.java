@@ -25,8 +25,8 @@ public class PositionManager {
 
     }
 
-    public Object getCurrPosition() {
-        return null;
+    public Position getCurrPosition() {
+        return currPosition;
     }
 
     public enum TemperatureMetrics {KELVIN, CELSIUS, FAHRENHEIT}
@@ -227,7 +227,7 @@ public class PositionManager {
      * Метод, вызывемый активити, для обновления погоды на сутки
      */
     public Weather updateHourly() {
-        currStation.updateHourlyWeather(currPosition.getCoordinate(), this);
+        currStation.updateHourlyWeather(currPosition.getCityID(), currPosition.getCoordinate(), this);
         return null;
     }
 
@@ -235,7 +235,7 @@ public class PositionManager {
      * Метод, вызывемый активити, для обновления погоды на неделю
      */
     public Weather updateWeekly() {
-        currStation.updateWeeklyWeather(currPosition.getCoordinate(), this);
+        currStation.updateWeeklyWeather(currPosition.getCityID(), currPosition.getCoordinate(), this);
         return null;
     }
 

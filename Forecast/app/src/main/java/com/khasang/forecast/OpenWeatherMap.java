@@ -108,7 +108,7 @@ public class OpenWeatherMap extends WeatherStation {
      *
      */
     @Override
-    public void updateWeather(int cityID, final Coordinate coordinate, final PositionManager manager) {
+    public void updateWeather(final int cityID, final Coordinate coordinate, final PositionManager manager) {
         addInterceptors();
         Call<OpenWeatherMapResponse> call = service.getCurrent(coordinate.getLatitude(),
                                                                 coordinate.getLongitude());
@@ -116,7 +116,7 @@ public class OpenWeatherMap extends WeatherStation {
             @Override
             public void onResponse(Response<OpenWeatherMapResponse> response, Retrofit retrofit) {
                 manager.onResponseReceived(cityID,
-                                            WeatherStationFactory.ServiceType.OPEN_WEATHER_MAP,
+                                            serviceType,
                                             AppUtils.convertToWeather(response.body()));
             }
 
@@ -137,7 +137,7 @@ public class OpenWeatherMap extends WeatherStation {
      * @param manager    объект типа {@link PositionManager}.
      */
     @Override
-    public void updateHourlyWeather(int cityID, final Coordinate coordinate, final PositionManager manager) {
+    public void updateHourlyWeather(final int cityID, final Coordinate coordinate, final PositionManager manager) {
         addInterceptors();
         Call<OpenWeatherMapResponse> call = service.getHourly(coordinate.getLatitude(),
                                                                 coordinate.getLongitude(),
@@ -146,7 +146,7 @@ public class OpenWeatherMap extends WeatherStation {
             @Override
             public void onResponse(Response<OpenWeatherMapResponse> response, Retrofit retrofit) {
                 manager.onResponseReceived(cityID,
-                                            WeatherStationFactory.ServiceType.OPEN_WEATHER_MAP,
+                                            serviceType,
                                             AppUtils.convertToHourlyWeather(response.body()));
             }
 
@@ -175,7 +175,7 @@ public class OpenWeatherMap extends WeatherStation {
             @Override
             public void onResponse(Response<DailyResponse> response, Retrofit retrofit) {
                 manager.onResponseReceived(cityID,
-                                            WeatherStationFactory.ServiceType.OPEN_WEATHER_MAP,
+                                            serviceType,
                                             AppUtils.convertToDailyWeather(response.body()));
             }
 
