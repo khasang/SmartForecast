@@ -272,31 +272,22 @@ public class PositionManager {
      * @param weather    обьект типа {@link Weather}, содержащий погодные характеристики
      */
     public void onResponseReceived(int cityId, WeatherStationFactory.ServiceType serviceType, Map<Calendar, Weather> weather) {
-        /*
-        (int cityId, WeatherStationFactory.ServiceType serviceType, Map<Calendar, Weather> weather)
-        Position position = getPositionByCoordinate(coordinate);
-        // Позиция не обнаружена, выход
-        if (position == null) {
-            return;
-        }
-*/
         HashMap.Entry<Calendar, Weather> firstEntry = (Map.Entry<Calendar, Weather>) weather.entrySet().iterator().next();
         currPosition.setWeather(currStation.getServiceType(), firstEntry.getKey(), firstEntry.getValue());
         if (currPosition.getCityID() == cityId && currStation.getServiceType() == serviceType) {
             mActivity.updateInterface(formatWeather(firstEntry.getValue()));
 
         }
-/*
-        for (Map.Entry<Calendar, Weather> entry: weather.entrySet()) {
-            currPosition.setWeather(currStation.getServiceType(), entry.getKey(), entry.getValue());
-            mActivity.updateInterface(entry.getValue());
-        }
-*/
-        // position.setWeather();
+    }
 
-        //TODO Сообщить активити что бы она обновила свои данные
-//        mActivity.updateInterface(position.getLocationName(), weather.getTemperature(), weather.getPrecipitation(),
-//                weather.getPressure(), weather.getWindPower(), weather.getHumidity(), "");
+    public void onHourlyResponseReceived(int cityId, WeatherStationFactory.ServiceType serviceType, Map<Calendar, Weather> weather) {
+        HashMap.Entry<Calendar, Weather> firstEntry = (Map.Entry<Calendar, Weather>) weather.entrySet().iterator().next();
+        currPosition.setWeather(currStation.getServiceType(), firstEntry.getKey(), firstEntry.getValue());
+    }
+
+    public void onMonthlyResponseReceived(int cityId, WeatherStationFactory.ServiceType serviceType, Map<Calendar, Weather> weather) {
+        HashMap.Entry<Calendar, Weather> firstEntry = (Map.Entry<Calendar, Weather>) weather.entrySet().iterator().next();
+        currPosition.setWeather(currStation.getServiceType(), firstEntry.getKey(), firstEntry.getValue());
     }
 
     private Weather formatWeather(Weather weather) {
