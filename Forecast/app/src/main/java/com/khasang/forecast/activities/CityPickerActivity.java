@@ -67,8 +67,8 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        //RecyclerAdapter recyclerAdapter = new RecyclerAdapter(createItemList());
-        RecyclerAdapter recyclerAdapter = new RecyclerAdapter(itemList);
+        RecyclerAdapter recyclerAdapter = new RecyclerAdapter(createItemList());
+        //RecyclerAdapter recyclerAdapter = new RecyclerAdapter(itemList);
         recyclerView.setAdapter(recyclerAdapter);
 
         /** Вычисляет степень прокрутки и выполняет нужное действие.*/
