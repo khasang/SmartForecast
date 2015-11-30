@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by Роман on 26.11.2015.
@@ -19,6 +20,11 @@ import java.util.Map;
 
 public class PositionFactory {
     private final static String TAG = PositionFactory.class.getSimpleName();
+    private static int cityIdentificationCounter;
+
+    static {
+        cityIdentificationCounter = 0;
+    }
 
     private HashMap<String, Position> mPositions;
     private Context mContext;
@@ -33,7 +39,7 @@ public class PositionFactory {
         mContext = context;
     }
 
-    public void addCurrentPosition() {
+    public void addCurrentPosition(Set<WeatherStationFactory.ServiceType> serviceType) {
         Position p = new Position();
         // Получить название города
         // и
@@ -41,9 +47,13 @@ public class PositionFactory {
         // positions.add(p);
     }
 
-    public void addFavouritePosition(String name) {
+    public void addFavouritePosition(String name, Set<WeatherStationFactory.ServiceType> serviceTypes) {
         Position p = new Position();
         p.setLocationName(name);
+        p.setCityID(cityIdentificationCounter++);
+        for (WeatherStationFactory.ServiceType stationType : serviceTypes) {
+            p.addWeatherStation(stationType);
+        }
         // Через геокодер получить и занести координаты
         Geocoder geocoder = new Geocoder(mContext);
         List<Address> addresses;

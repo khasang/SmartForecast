@@ -73,9 +73,9 @@ public class PositionManager {
      */
     public void initPositions(List<String> favorites) {
         PositionFactory positionFactory = new PositionFactory(mActivity.getApplicationContext());
-        positionFactory.addCurrentPosition();
+        positionFactory.addCurrentPosition(stations.keySet());
         for (String pos : favorites) {
-            positionFactory.addFavouritePosition(pos);
+            positionFactory.addFavouritePosition(pos, stations.keySet());
         }
         positions = positionFactory.getPositions();
     }
@@ -88,7 +88,7 @@ public class PositionManager {
      */
     public void addPosition(String name) {
         PositionFactory positionFactory = new PositionFactory(mActivity, positions);
-        positionFactory.addFavouritePosition(name);
+        positionFactory.addFavouritePosition(name, stations.keySet());
         positions = positionFactory.getPositions();
     }
 
