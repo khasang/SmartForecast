@@ -12,13 +12,16 @@ import java.util.TreeSet;
 
 public class Position implements ILocation {
     private String name;
-    private int cityID;     // Надо подумать нужно ли ....
+    private int cityID;
     private Coordinate coordinate;
     private Map<WeatherStationFactory.ServiceType, Map<Calendar, Weather>> weather;
 
     public Position() {
         weather = new HashMap<>();
-        weather.put(WeatherStationFactory.ServiceType.OPEN_WEATHER_MAP, new HashMap<Calendar, Weather>());
+    }
+
+    public void addWeatherStation(WeatherStationFactory.ServiceType ws) {
+        weather.put(ws, new HashMap<Calendar, Weather>());
     }
 
     public void setLocationName(String name) {
@@ -45,12 +48,12 @@ public class Position implements ILocation {
         this.coordinate = coordinate;
     }
 
-    public Set<Calendar> getAllDates (WeatherStationFactory.ServiceType ws) {
+    public Set<Calendar> getAllDates(WeatherStationFactory.ServiceType ws) {
         return weather.get(ws).keySet();
     }
 
     public Weather getWeather(WeatherStationFactory.ServiceType ws, Calendar date) {
-  //      Weather weatherOfDate = null;
+        //      Weather weatherOfDate = null;
         return weather.get(ws).get(date);
 /*
         for (Map.Entry<WeatherStationFactory.ServiceType, Map<Calendar, Weather>> entry : weather.entrySet()) {
@@ -74,6 +77,32 @@ public class Position implements ILocation {
     @Override
     public Coordinate getPosition() {
         return null;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null) {
+            return false;
+        }
+        if (getClass() != o.getClass()) {
+            return false;
+        }
+        Position position = (Position) o;
+        if (cityID == position.cityID) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 7;
+        result = 17 * result + (name == null ? 0 : name.hashCode());
+        result = 17 * result + cityID;
+        return result;
     }
 }
 
