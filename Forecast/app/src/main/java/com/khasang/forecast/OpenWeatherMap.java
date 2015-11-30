@@ -104,7 +104,8 @@ public class OpenWeatherMap extends WeatherStation {
      *
      * @param coordinate объект типа {@link Coordinate}, содержащий географические координаты
      *                   для запроса.
-     * @param manager    //TODO
+     * @param manager    объект типа {@link PositionManager}.
+     *
      */
     @Override
     public void updateWeather(final Coordinate coordinate, final PositionManager manager) {
@@ -134,7 +135,7 @@ public class OpenWeatherMap extends WeatherStation {
      *
      * @param coordinate объект типа {@link Coordinate}, содержащий географические координаты
      *                   для запроса.
-     * @param manager    //TODO
+     * @param manager    объект типа {@link PositionManager}.
      */
     @Override
     public void updateHourlyWeather(final Coordinate coordinate, final PositionManager manager) {
@@ -165,7 +166,7 @@ public class OpenWeatherMap extends WeatherStation {
      *
      * @param coordinate объект типа {@link Coordinate}, содержащий географические координаты
      *                   для запроса.
-     * @param manager    //TODO
+     * @param manager    объект типа {@link PositionManager}.
      */
     @Override
     public void updateWeeklyWeather(final Coordinate coordinate, final PositionManager manager) {
