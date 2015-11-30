@@ -4,6 +4,7 @@ import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 import android.util.Log;
+import android.widget.Toast;
 
 
 import java.io.IOException;
@@ -50,6 +51,7 @@ public class PositionFactory {
             addresses = geocoder.getFromLocationName(name, 3);
             if (addresses.size() == 0){
                 Log.i(TAG, "Coordinates not found");
+                Toast.makeText(mContext, "Координаты местоположения " + name + " не обнаружены", Toast.LENGTH_SHORT).show();
                 return;
             }
             Address currentAddress = addresses.get(0);

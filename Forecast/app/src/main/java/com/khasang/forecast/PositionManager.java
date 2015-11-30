@@ -1,7 +1,5 @@
 package com.khasang.forecast;
 
-import android.util.Log;
-
 import com.khasang.forecast.activities.WeatherActivity;
 
 import java.util.ArrayList;
@@ -48,56 +46,57 @@ public class PositionManager {
     private WeatherStation currStation;
     private Position currPosition;
     private HashMap<WeatherStationFactory.ServiceType, WeatherStation> stations;
-    private HashMap<String, Position> mPositions;
+    private HashMap<String, Position> positions;
     private WeatherActivity mActivity;
 
     public PositionManager(WeatherActivity activity) {
         mActivity = activity;
-        ArrayList<String> pos = new ArrayList<>();
-        pos.add("Moscow");
+        List<String> pos = new ArrayList<>();
+        pos.add("Москва");
+        pos.add("Тула");
         initStations();         //  Пока тут
         initPositions(pos);     //  Пока тут
-        currPosition = mPositions.get("Moscow");
+        currPosition = positions.get("Moscow");
         currStation = stations.get(WeatherStationFactory.ServiceType.OPEN_WEATHER_MAP);
     }
 
     public void initStations() {
         WeatherStationFactory wsf = new WeatherStationFactory();
         stations = wsf
-                .addOpenWeatherMap()
+                .addOpenWeatherMap(mActivity.getString(R.string.service_name_open_weather_map))
                 .create();
     }
 
     public void initPositions(List<String> favorites) {
-        PositionFactory positionFactory = new PositionFactory(mActivity);
+        PositionFactory positionFactory = new PositionFactory(mActivity.getApplicationContext());
         positionFactory.addCurrentPosition();
         for (String pos : favorites) {
             positionFactory.addFavouritePosition(pos);
         }
-        mPositions = positionFactory.getPositions();
+        positions = positionFactory.getPositions();
     }
 
     public void addPosition(String name) {
-        PositionFactory positionFactory = new PositionFactory(mActivity, mPositions);
+        PositionFactory positionFactory = new PositionFactory(mActivity, positions);
         positionFactory.addFavouritePosition(name);
-        mPositions = positionFactory.getPositions();
+        positions = positionFactory.getPositions();
     }
 
     public void removePosition(String name) {
-        if (mPositions.containsKey(name)) {
-            mPositions.remove(name);
+        if (positions.containsKey(name)) {
+            positions.remove(name);
         }
     }
 
     public void setCurrentPosition(String name) {
-        if (mPositions.containsKey(name)) {
-            currPosition = mPositions.get(name);
+        if (positions.containsKey(name)) {
+            currPosition = positions.get(name);
         }
     }
 
     public Position getFavoritePosition(String name) {
-        if (mPositions.containsKey(name)) {
-            return mPositions.get(name);
+        if (positions.containsKey(name)) {
+            return positions.get(name);
         }
         return null;
     }
@@ -169,9 +168,10 @@ public class PositionManager {
     }
 
     public Weather updateCurrent() {
-        Coordinate coordinate = currPosition.getCoordinate();
-//        coordinate.setLatitude(55.75996355993382);
-//        coordinate.setLongitude(37.639561146497726);
+ //       Coordinate coordinate = currPosition.getCoordinate();
+        Coordinate coordinate = new Coordinate();
+        coordinate.setLatitude(55.75996355993382);
+        coordinate.setLongitude(37.639561146497726);
 
         currStation.updateWeather(coordinate, this);
 
@@ -189,7 +189,7 @@ public class PositionManager {
     }
 
     private Position getPositionByCoordinate(Coordinate coordinate) {
-        for (Position pos : mPositions.values()) {
+        for (Position pos : positions.values()) {
             if (pos.getCoordinate().compareTo(coordinate) == 0) {
                 return pos;
             }

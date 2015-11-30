@@ -15,9 +15,9 @@ public class WeatherStationFactory {
         stations = new HashMap<ServiceType, WeatherStation>();
     }
 
-    public WeatherStationFactory addOpenWeatherMap() {
+    public WeatherStationFactory addOpenWeatherMap(String name) {
         WeatherStation ws = new OpenWeatherMap();
-        String name = "OpenWeatherMap";
+        ws.weatherStationName = name;
         ws.serviceType = ServiceType.OPEN_WEATHER_MAP;
         stations.put(ServiceType.OPEN_WEATHER_MAP, ws);
         return this;
