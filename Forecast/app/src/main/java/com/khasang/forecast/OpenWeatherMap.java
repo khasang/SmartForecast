@@ -108,17 +108,16 @@ public class OpenWeatherMap extends WeatherStation {
      *
      */
     @Override
-    public void updateWeather(final Coordinate coordinate, final PositionManager manager) {
+    public void updateWeather(int cityID, final Coordinate coordinate, final PositionManager manager) {
         addInterceptors();
         Call<OpenWeatherMapResponse> call = service.getCurrent(coordinate.getLatitude(),
                                                                 coordinate.getLongitude());
         call.enqueue(new Callback<OpenWeatherMapResponse>() {
             @Override
             public void onResponse(Response<OpenWeatherMapResponse> response, Retrofit retrofit) {
-                manager.onResponseReceived(coordinate, AppUtils.convertToWeather(response.body()));
-                /*for (Map.Entry<Calendar, Weather> m : AppUtils.convertToWeather(response.body()).entrySet()) {
-                    Log.d(TAG, "onResponse: " + m.getValue().toString());
-                }*/
+                manager.onResponseReceived(cityID,
+                                            WeatherStationFactory.ServiceType.OPEN_WEATHER_MAP,
+                                            AppUtils.convertToWeather(response.body()));
             }
 
             @Override
@@ -138,7 +137,7 @@ public class OpenWeatherMap extends WeatherStation {
      * @param manager    объект типа {@link PositionManager}.
      */
     @Override
-    public void updateHourlyWeather(final Coordinate coordinate, final PositionManager manager) {
+    public void updateHourlyWeather(int cityID, final Coordinate coordinate, final PositionManager manager) {
         addInterceptors();
         Call<OpenWeatherMapResponse> call = service.getHourly(coordinate.getLatitude(),
                                                                 coordinate.getLongitude(),
@@ -146,11 +145,9 @@ public class OpenWeatherMap extends WeatherStation {
         call.enqueue(new Callback<OpenWeatherMapResponse>() {
             @Override
             public void onResponse(Response<OpenWeatherMapResponse> response, Retrofit retrofit) {
-                manager.onResponseReceived(coordinate,
+                manager.onResponseReceived(cityID,
+                                            WeatherStationFactory.ServiceType.OPEN_WEATHER_MAP,
                                             AppUtils.convertToHourlyWeather(response.body()));
-                /*for (Map.Entry<Calendar, Weather> m : AppUtils.convertToHourlyWeather(response.body()).entrySet()) {
-                    Log.d(TAG, "onResponse: " + m.getValue().toString());
-                }*/
             }
 
             @Override
@@ -169,7 +166,7 @@ public class OpenWeatherMap extends WeatherStation {
      * @param manager    объект типа {@link PositionManager}.
      */
     @Override
-    public void updateWeeklyWeather(final Coordinate coordinate, final PositionManager manager) {
+    public void updateWeeklyWeather(final int cityID, final Coordinate coordinate, final PositionManager manager) {
         addInterceptors();
         Call<DailyResponse> call = service.getDaily(coordinate.getLatitude(),
                                                     coordinate.getLongitude(),
@@ -177,11 +174,9 @@ public class OpenWeatherMap extends WeatherStation {
         call.enqueue(new Callback<DailyResponse>() {
             @Override
             public void onResponse(Response<DailyResponse> response, Retrofit retrofit) {
-                manager.onResponseReceived(coordinate,
+                manager.onResponseReceived(cityID,
+                                            WeatherStationFactory.ServiceType.OPEN_WEATHER_MAP,
                                             AppUtils.convertToDailyWeather(response.body()));
-                /*for (Map.Entry<Calendar, Weather> m : AppUtils.convertToDailyWeather(response.body()).entrySet()) {
-                    Log.d(TAG, "onResponse: " + m.getValue().toString());
-                }*/
             }
 
             @Override
