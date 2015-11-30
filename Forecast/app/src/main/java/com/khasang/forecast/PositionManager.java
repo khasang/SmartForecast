@@ -1,5 +1,8 @@
 package com.khasang.forecast;
 
+import android.app.Activity;
+import android.content.SharedPreferences;
+
 import com.khasang.forecast.activities.WeatherActivity;
 
 import java.util.ArrayList;
@@ -20,6 +23,9 @@ public class PositionManager {
     public static final double KPA_TO_MM_HG = 1.33322;
     public static final double KM_TO_MILES = 0.62137;
     public static final double METER_TO_FOOT = 3.28083;
+    public static final String MY_PREFF = "MY_PREFF";
+    private SharedPreferences preferences;
+    private String[] positionsKey;
 
     public enum TemperatureMetrics {KELVIN, CELSIUS, FAHRENHEIT}
 
@@ -36,6 +42,31 @@ public class PositionManager {
     private HashMap<WeatherStationFactory.ServiceType, WeatherStation> stations;
     private HashMap<String, Position> positions;
     private WeatherActivity mActivity;
+
+    // Запись настроек выбора параметров и ключей
+    protected void savePreferences() {
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("temp", settingsTemperatureMetrics.toString());
+        editor.putString("speed", formatSpeedMetrics.toString());
+        editor.putString("pressure", formatPressureMetrics.toString());
+        int i = 0;
+        for (Map.Entry<String, Position> entry : positions.entrySet()) {
+            editor.putString("" + i++, entry.getKey());
+        }
+        editor.commit();
+    }
+
+    // Чтение настроек выбора параметров и ключей, второе значение по умолчанию
+    private void loadPreferences() {
+        preferences = mActivity.getSharedPreferences(MY_PREFF, Activity.MODE_PRIVATE);
+        String temp = preferences.getString("temp", "KELVIN");
+        String speed = preferences.getString("speed", "METER_PER_SECOND");
+        String pressure = preferences.getString("pressure", "HPA");
+        positionsKey = new String[positions.size()];
+        for (int i = 0; i < positions.size(); i++) {
+            positionsKey[i] = preferences.getString("i", "");
+        }
+    }
 
     public PositionManager(WeatherActivity activity) {
         mActivity = activity;
