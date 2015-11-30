@@ -95,6 +95,15 @@ public class PositionManager {
     }
 
     /**
+     * Метод, с помощью которого получаем название рекущей локации
+     *
+     * @return возвращает {@link String}, содержащий названия города
+     */
+    public String getCurrentPositionName() {
+        return currPosition.getLocationName();
+    }
+
+    /**
      * Метод, с помощью которого удаляем локацию в списка "Избранных"
      * Вызывается, когда пользователь удяляет город из списка
      *
