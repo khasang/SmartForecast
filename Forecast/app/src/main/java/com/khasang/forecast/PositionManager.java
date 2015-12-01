@@ -96,6 +96,8 @@ public class PositionManager {
         //loadPreferences();    Здесь загружать список городов
         List<String> pos = new ArrayList<>();
         pos.add("Berlin");
+        pos.add("London");
+        pos.add("Moscow");
         initPositions(pos);
     }
 
@@ -111,7 +113,7 @@ public class PositionManager {
             positionFactory.addFavouritePosition(pos, stations.keySet());
         }
         positions = positionFactory.getPositions();
-        currPosition = positions.get("Berlin");
+        currPosition = positions.get("Moscow");
     }
 
     /**
@@ -266,13 +268,7 @@ public class PositionManager {
      * Метод, вызывемый активити, для обновления текущей погоды от текущей погодной станции
      */
     public Weather updateCurrent() {
-        //       Coordinate coordinate = currPosition.getCoordinate();
-        Coordinate coordinate = new Coordinate();
-        coordinate.setLatitude(55.75996355993382);
-        coordinate.setLongitude(37.639561146497726);
-
-        currStation.updateWeather(currPosition.getCityID(), coordinate, this);
-
+        currStation.updateWeather(currPosition.getCityID(), currPosition.getCoordinate(), this);
         return null;
     }
 
@@ -328,8 +324,7 @@ public class PositionManager {
         HashMap.Entry<Calendar, Weather> firstEntry = (Map.Entry<Calendar, Weather>) weather.entrySet().iterator().next();
         currPosition.setWeather(currStation.getServiceType(), firstEntry.getKey(), firstEntry.getValue());
         if (currPosition.getCityID() == cityId && currStation.getServiceType() == serviceType) {
-            mActivity.updateInterface(formatWeather(firstEntry.getValue()));
-
+            mActivity.updateInterface(firstEntry.getKey(), formatWeather(firstEntry.getValue()));
         }
     }
 
