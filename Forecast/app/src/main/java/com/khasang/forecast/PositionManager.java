@@ -282,7 +282,7 @@ public class PositionManager {
      * Метод, вызывемый активити, для обновления текущей погоды от текущей погодной станции
      */
     public Weather updateCurrent() {
-        currStation.updateWeather(currPosition.getCityID(), currPosition.getCoordinate());
+ //       currStation.updateWeather(currPosition.getCityID(), currPosition.getCoordinate());
         return null;
     }
 
