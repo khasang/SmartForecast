@@ -57,7 +57,7 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
 
     int CHOOSE_CITY;
     // Для тестирования
-    private String current_city = "Berlin";
+    private String current_city = "London";
     private int current_temperature = 1;
     //private Precipitation current_precipitation;
     private String current_precipitation = "Солнечно";
@@ -123,7 +123,10 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
                 //manager.updateCurrent();
                 //manager.updateHourly();
                 syncBtn.startAnimation(animationRotateCenter);
-                updateInterface(manager.updateCurrent());
+                manger.setCurrentPosition(current_city);
+                manager.updateCurrent();
+                
+                //updateInterface(manager.updateCurrent());
                 //updateHourForecast(manager.updateHourly());
                 break;
             case R.id.cityPickerBnt:
