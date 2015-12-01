@@ -123,7 +123,8 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
                 //manager.updateCurrent();
                 //manager.updateHourly();
                 syncBtn.startAnimation(animationRotateCenter);
-                manger.setCurrentPosition(current_city);
+                manager.addPosition(current_city);
+                manager.setCurrentPosition(current_city);
                 manager.updateCurrent();
                 
                 //updateInterface(manager.updateCurrent());
