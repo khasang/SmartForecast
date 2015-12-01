@@ -6,12 +6,12 @@ import android.content.SharedPreferences;
 import com.khasang.forecast.activities.WeatherActivity;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.Set;
 
 /**
@@ -43,7 +43,10 @@ public class PositionManager {
     private HashMap<String, Position> positions;
     private WeatherActivity mActivity;
 
-    // Запись настроек выбора параметров и ключей
+     /**
+     * Запись настроек выбора параметров и ключей
+     *
+     */
     protected void savePreferences() {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("temp", settingsTemperatureMetrics.toString());
@@ -56,7 +59,9 @@ public class PositionManager {
         editor.commit();
     }
 
-    // Чтение настроек выбора параметров и ключей, второе значение по умолчанию
+    /**
+     * Чтение настроек выбора параметров и ключей, второе значение по умолчанию
+     */
     private void loadPreferences() {
         preferences = mActivity.getSharedPreferences(MY_PREFF, Activity.MODE_PRIVATE);
         String temp = preferences.getString("temp", "KELVIN");
@@ -91,6 +96,9 @@ public class PositionManager {
         //loadPreferences();    Здесь загружать список городов
         List<String> pos = new ArrayList<>();
         pos.add("Berlin");
+        pos.add("London");
+        pos.add("Moscow");
+        pos.add("Buenos Aires");
         initPositions(pos);
     }
 
@@ -106,7 +114,7 @@ public class PositionManager {
             positionFactory.addFavouritePosition(pos, stations.keySet());
         }
         positions = positionFactory.getPositions();
-        currPosition = positions.get("Berlin");
+        currPosition = positions.get("London");
     }
 
     /**
@@ -261,13 +269,7 @@ public class PositionManager {
      * Метод, вызывемый активити, для обновления текущей погоды от текущей погодной станции
      */
     public Weather updateCurrent() {
-        //       Coordinate coordinate = currPosition.getCoordinate();
-        Coordinate coordinate = new Coordinate();
-        coordinate.setLatitude(55.75996355993382);
-        coordinate.setLongitude(37.639561146497726);
-
-        currStation.updateWeather(currPosition.getCityID(), coordinate, this);
-
+        currStation.updateWeather(currPosition.getCityID(), currPosition.getCoordinate(), this);
         return null;
     }
 
@@ -323,8 +325,7 @@ public class PositionManager {
         HashMap.Entry<Calendar, Weather> firstEntry = (Map.Entry<Calendar, Weather>) weather.entrySet().iterator().next();
         currPosition.setWeather(currStation.getServiceType(), firstEntry.getKey(), firstEntry.getValue());
         if (currPosition.getCityID() == cityId && currStation.getServiceType() == serviceType) {
-            mActivity.updateInterface(formatWeather(firstEntry.getValue()));
-
+            mActivity.updateInterface(firstEntry.getKey(), formatWeather(firstEntry.getValue()));
         }
     }
 
