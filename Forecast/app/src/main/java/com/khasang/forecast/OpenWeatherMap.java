@@ -104,20 +104,19 @@ public class OpenWeatherMap extends WeatherStation {
      *
      * @param coordinate объект типа {@link Coordinate}, содержащий географические координаты
      *                   для запроса.
-     * @param manager    объект типа {@link PositionManager}.
      *
      */
     @Override
-    public void updateWeather(final int cityID, final Coordinate coordinate, final PositionManager manager) {
+    public void updateWeather(final int cityID, final Coordinate coordinate) {
         addInterceptors();
         Call<OpenWeatherMapResponse> call = service.getCurrent(coordinate.getLatitude(),
                                                                 coordinate.getLongitude());
         call.enqueue(new Callback<OpenWeatherMapResponse>() {
             @Override
             public void onResponse(Response<OpenWeatherMapResponse> response, Retrofit retrofit) {
-                manager.onResponseReceived(cityID,
-                                            serviceType,
-                                            AppUtils.convertToWeather(response.body()));
+                PositionManager.getInstance().onResponseReceived(cityID,
+                        serviceType,
+                        AppUtils.convertToWeather(response.body()));
             }
 
             @Override
@@ -134,10 +133,9 @@ public class OpenWeatherMap extends WeatherStation {
      *
      * @param coordinate объект типа {@link Coordinate}, содержащий географические координаты
      *                   для запроса.
-     * @param manager    объект типа {@link PositionManager}.
      */
     @Override
-    public void updateHourlyWeather(final int cityID, final Coordinate coordinate, final PositionManager manager) {
+    public void updateHourlyWeather(final int cityID, final Coordinate coordinate) {
         addInterceptors();
         Call<OpenWeatherMapResponse> call = service.getHourly(coordinate.getLatitude(),
                                                                 coordinate.getLongitude(),
@@ -145,9 +143,9 @@ public class OpenWeatherMap extends WeatherStation {
         call.enqueue(new Callback<OpenWeatherMapResponse>() {
             @Override
             public void onResponse(Response<OpenWeatherMapResponse> response, Retrofit retrofit) {
-                manager.onResponseReceived(cityID,
-                                            serviceType,
-                                            AppUtils.convertToHourlyWeather(response.body()));
+                PositionManager.getInstance().onResponseReceived(cityID,
+                        serviceType,
+                        AppUtils.convertToHourlyWeather(response.body()));
             }
 
             @Override
@@ -163,10 +161,9 @@ public class OpenWeatherMap extends WeatherStation {
      *
      * @param coordinate объект типа {@link Coordinate}, содержащий географические координаты
      *                   для запроса.
-     * @param manager    объект типа {@link PositionManager}.
      */
     @Override
-    public void updateWeeklyWeather(final int cityID, final Coordinate coordinate, final PositionManager manager) {
+    public void updateWeeklyWeather(final int cityID, final Coordinate coordinate) {
         addInterceptors();
         Call<DailyResponse> call = service.getDaily(coordinate.getLatitude(),
                                                     coordinate.getLongitude(),
@@ -174,7 +171,7 @@ public class OpenWeatherMap extends WeatherStation {
         call.enqueue(new Callback<DailyResponse>() {
             @Override
             public void onResponse(Response<DailyResponse> response, Retrofit retrofit) {
-                manager.onResponseReceived(cityID,
+                PositionManager.getInstance().onResponseReceived(cityID,
                                             serviceType,
                                             AppUtils.convertToDailyWeather(response.body()));
             }
