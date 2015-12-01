@@ -52,11 +52,12 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
 
     private PositionManager manager;
 
-    int hours;
-    int minutes;
+//    int hours;
+//    int minutes;
 
     int CHOOSE_CITY;
     // Для тестирования
+/*
     private String current_city = "London";
     private int current_temperature = 1;
     //private Precipitation current_precipitation;
@@ -65,7 +66,7 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
     private int current_wind = 25;
     private int current_humidity = 12;
     private String current_timeStamp = "10:15";
-
+*/
 
     // Для заглушки в PositionManager
     /*private String current_city = "Berlin";
@@ -111,6 +112,8 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
         pager = (ViewPager) findViewById(R.id.pager);
         ForecastPageAdapter adapter = new ForecastPageAdapter(getSupportFragmentManager());
         pager.setAdapter(adapter);
+
+        manager.updateCurrent();
     }
 
     /**
@@ -123,8 +126,8 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
                 //manager.updateCurrent();
                 //manager.updateHourly();
                 syncBtn.startAnimation(animationRotateCenter);
-                manager.addPosition(current_city);
-                manager.setCurrentPosition(current_city);
+//                manager.addPosition(current_city);            Это итак делается в менеджере
+//               manager.setCurrentPosition(current_city);      Это делается в менеджере
                 manager.updateCurrent();
                 
                 //updateInterface(manager.updateCurrent());
@@ -141,7 +144,7 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
     /**
      * Обновление интерфейса Activity
      */
-    public void updateInterface(Weather wCurent) {
+    public void updateInterface(Calendar date, Weather wCurent) {
 
         //TODO нужно перепроверить
         if (wCurent == null) {
@@ -152,14 +155,11 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
          * TODO minutes в формате 13:04, сейчас выводит 13:4
          * TODO UPDATE Check fixes
          * */
-        Calendar c = Calendar.getInstance();
-        hours = c.get(Calendar.HOUR_OF_DAY);
-        minutes = c.get(Calendar.MINUTE);
-
-
+        int hours = date.get(Calendar.HOUR_OF_DAY);
+        int minutes = date.get(Calendar.MINUTE);
 
         //updateCurrent(Weather w);
-        city.setText(String.valueOf(current_city));
+        city.setText(manager.getCurrentPositionName()); // отображаем имя текущей локации
         temperature.setText(String.format("%.0f°C", wCurent.getTemperature()));
 
         //precipitation.setText(String.format("%s %s", w.getPrecipitation(), w.getPrecipitationProbability()));
