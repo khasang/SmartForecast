@@ -75,13 +75,6 @@ public class PositionManager {
 
     public PositionManager(WeatherActivity activity) {
         mActivity = activity;
-        List<String> pos = new ArrayList<>();
-        pos.add("Москва");
-        pos.add("Тула");
-        initStations();         //  Пока тут
-        initPositions(pos);     //  Пока тут
-        currPosition = positions.get("Тула");
-        currStation = stations.get(WeatherStationFactory.ServiceType.OPEN_WEATHER_MAP);
     }
 
     /**
@@ -92,6 +85,18 @@ public class PositionManager {
         stations = wsf
                 .addOpenWeatherMap(mActivity.getString(R.string.service_name_open_weather_map))
                 .create();
+        currStation = stations.get(WeatherStationFactory.ServiceType.OPEN_WEATHER_MAP);
+    }
+
+    /**
+     * Метод инициализации списка местоположений, вызывается из активити
+     *
+     */
+    public void initPositions () {
+        //loadPreferences();    Здесь загружать список городов
+        List<String> pos = new ArrayList<>();
+        pos.add("Berlin");
+        initPositions(pos);
     }
 
     /**
@@ -106,6 +111,7 @@ public class PositionManager {
             positionFactory.addFavouritePosition(pos, stations.keySet());
         }
         positions = positionFactory.getPositions();
+        currPosition = positions.get("Berlin");
     }
 
     /**
@@ -128,6 +134,15 @@ public class PositionManager {
      */
     public Set<String> getPositions() {
         return positions.keySet();
+    }
+
+    /**
+     * Метод, с помощью которого получаем название рекущей локации
+     *
+     * @return возвращает {@link String}, содержащий названия города
+     */
+    public String getCurrentPositionName() {
+        return currPosition.getLocationName();
     }
 
     /**

@@ -73,7 +73,7 @@
             android:layout_gravity="center_horizontal|center_vertical"
             android:layout_marginTop="40dp"
             android:text="1°C"
-            android:textSize="90dp"
+            android:textSize="90sp"
             android:textStyle="bold" />
 
         <TextView
@@ -106,10 +106,11 @@
 
             <ImageButton
                 android:id="@+id/syncBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:src="@drawable/sync"
                 android:background="@null"
+                android:scaleType="fitCenter"
                 android:contentDescription="test"
                 android:layout_gravity="center" />
 
