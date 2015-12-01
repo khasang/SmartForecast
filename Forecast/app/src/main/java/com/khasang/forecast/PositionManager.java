@@ -98,6 +98,7 @@ public class PositionManager {
         pos.add("Berlin");
         pos.add("London");
         pos.add("Moscow");
+        pos.add("Buenos Aires");
         initPositions(pos);
     }
 
@@ -113,7 +114,7 @@ public class PositionManager {
             positionFactory.addFavouritePosition(pos, stations.keySet());
         }
         positions = positionFactory.getPositions();
-        currPosition = positions.get("Moscow");
+        currPosition = positions.get("London");
     }
 
     /**
