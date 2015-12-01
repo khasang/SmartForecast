@@ -6,12 +6,12 @@ import android.content.SharedPreferences;
 import com.khasang.forecast.activities.WeatherActivity;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.Set;
 
 /**
@@ -43,39 +43,28 @@ public class PositionManager {
     private HashMap<String, Position> positions;
     private WeatherActivity mActivity;
 
-    // Запись настроек выбора параметров и ключей
-    protected void savePreferences() {
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("temp", settingsTemperatureMetrics.toString());
-        editor.putString("speed", formatSpeedMetrics.toString());
-        editor.putString("pressure", formatPressureMetrics.toString());
-        int i = 0;
-        for (Map.Entry<String, Position> entry : positions.entrySet()) {
-            editor.putString("" + i++, entry.getKey());
-        }
-        editor.commit();
+    private static class ManagerHolder {
+        private final static PositionManager instance = new PositionManager();
     }
 
-    // Чтение настроек выбора параметров и ключей, второе значение по умолчанию
-    private void loadPreferences() {
-        preferences = mActivity.getSharedPreferences(MY_PREFF, Activity.MODE_PRIVATE);
-        String temp = preferences.getString("temp", "KELVIN");
-        String speed = preferences.getString("speed", "METER_PER_SECOND");
-        String pressure = preferences.getString("pressure", "HPA");
-        positionsKey = new String[positions.size()];
-        for (int i = 0; i < positions.size(); i++) {
-            positionsKey[i] = preferences.getString("i", "");
-        }
+    private PositionManager() {
+
     }
 
-    public PositionManager(WeatherActivity activity) {
+    public static PositionManager getInstance () {
+        return ManagerHolder.instance;
+    }
+
+    public void initManager(WeatherActivity activity) {
         mActivity = activity;
+        initStations();
+        initPositions();
     }
 
     /**
      * Метод инициализации списка сервисов для получения информации о погодных условиях.
      */
-    public void initStations() {
+    private void initStations() {
         WeatherStationFactory wsf = new WeatherStationFactory();
         stations = wsf
                 .addOpenWeatherMap(mActivity.getString(R.string.service_name_open_weather_map))
@@ -85,12 +74,15 @@ public class PositionManager {
 
     /**
      * Метод инициализации списка местоположений, вызывается из активити
-     *
      */
-    public void initPositions () {
+    private void initPositions() {
         //loadPreferences();    Здесь загружать список городов
         List<String> pos = new ArrayList<>();
         pos.add("Berlin");
+        pos.add("London");
+        pos.add("Moscow");
+        pos.add("Buenos Aires");
+        pos.add("Нижний Новгород");
         initPositions(pos);
     }
 
@@ -99,14 +91,14 @@ public class PositionManager {
      *
      * @param favorites коллекция {@link List} типа {@link String}, содержащий названия городов
      */
-    public void initPositions(List<String> favorites) {
+    private void initPositions(List<String> favorites) {
         PositionFactory positionFactory = new PositionFactory(mActivity.getApplicationContext());
         positionFactory.addCurrentPosition(stations.keySet());
         for (String pos : favorites) {
             positionFactory.addFavouritePosition(pos, stations.keySet());
         }
         positions = positionFactory.getPositions();
-        currPosition = positions.get("Berlin");
+        currPosition = positions.get("Нижний Новгород");
     }
 
     /**
@@ -160,6 +152,35 @@ public class PositionManager {
     public void setCurrentPosition(String name) {
         if (positions.containsKey(name)) {
             currPosition = positions.get(name);
+        }
+    }
+
+    /**
+     * Запись настроек выбора параметров и ключей
+     */
+    protected void savePreferences() {
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("temp", settingsTemperatureMetrics.toString());
+        editor.putString("speed", formatSpeedMetrics.toString());
+        editor.putString("pressure", formatPressureMetrics.toString());
+        int i = 0;
+        for (Map.Entry<String, Position> entry : positions.entrySet()) {
+            editor.putString("" + i++, entry.getKey());
+        }
+        editor.commit();
+    }
+
+    /**
+     * Чтение настроек выбора параметров и ключей, второе значение по умолчанию
+     */
+    private void loadPreferences() {
+        preferences = mActivity.getSharedPreferences(MY_PREFF, Activity.MODE_PRIVATE);
+        String temp = preferences.getString("temp", "KELVIN");
+        String speed = preferences.getString("speed", "METER_PER_SECOND");
+        String pressure = preferences.getString("pressure", "HPA");
+        positionsKey = new String[positions.size()];
+        for (int i = 0; i < positions.size(); i++) {
+            positionsKey[i] = preferences.getString("i", "");
         }
     }
 
@@ -261,13 +282,7 @@ public class PositionManager {
      * Метод, вызывемый активити, для обновления текущей погоды от текущей погодной станции
      */
     public Weather updateCurrent() {
-        //       Coordinate coordinate = currPosition.getCoordinate();
-        Coordinate coordinate = new Coordinate();
-        coordinate.setLatitude(55.75996355993382);
-        coordinate.setLongitude(37.639561146497726);
-
-        currStation.updateWeather(currPosition.getCityID(), coordinate, this);
-
+        currStation.updateWeather(currPosition.getCityID(), currPosition.getCoordinate());
         return null;
     }
 
@@ -275,7 +290,7 @@ public class PositionManager {
      * Метод, вызывемый активити, для обновления погоды на сутки
      */
     public Weather updateHourly() {
-        currStation.updateHourlyWeather(currPosition.getCityID(), currPosition.getCoordinate(), this);
+        currStation.updateHourlyWeather(currPosition.getCityID(), currPosition.getCoordinate());
         return null;
     }
 
@@ -283,7 +298,7 @@ public class PositionManager {
      * Метод, вызывемый активити, для обновления погоды на неделю
      */
     public Weather updateWeekly() {
-        currStation.updateWeeklyWeather(currPosition.getCityID(), currPosition.getCoordinate(), this);
+        currStation.updateWeeklyWeather(currPosition.getCityID(), currPosition.getCoordinate());
         return null;
     }
 
@@ -323,8 +338,7 @@ public class PositionManager {
         HashMap.Entry<Calendar, Weather> firstEntry = (Map.Entry<Calendar, Weather>) weather.entrySet().iterator().next();
         currPosition.setWeather(currStation.getServiceType(), firstEntry.getKey(), firstEntry.getValue());
         if (currPosition.getCityID() == cityId && currStation.getServiceType() == serviceType) {
-            mActivity.updateInterface(formatWeather(firstEntry.getValue()));
-
+            mActivity.updateInterface(firstEntry.getKey(), formatWeather(firstEntry.getValue()));
         }
     }
 
