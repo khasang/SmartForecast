@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -30,7 +31,7 @@ import java.util.Calendar;
  * город, температура, давление, влажность, ветер, временная метка.
  */
 
-public class WeatherActivity extends FragmentActivity implements View.OnClickListener{
+public class WeatherActivity extends AppCompatActivity implements View.OnClickListener{
     /**
      * ViewPager для отображения нижних вкладок прогноза: по часам и по дням
      */
