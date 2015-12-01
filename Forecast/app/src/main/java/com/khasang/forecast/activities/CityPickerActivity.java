@@ -29,6 +29,7 @@ import com.khasang.forecast.adapters.etc.HidingScrollListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by CopyPasteStd on 29.11.15.
@@ -36,10 +37,9 @@ import java.util.List;
  * Activity для выбора местоположения
  */
 public class CityPickerActivity extends AppCompatActivity implements View.OnClickListener {
-    String TAG = this.getClass().getSimpleName();
+    String TAG = "MyTAG";
 
-    Intent answerIntent = new Intent();
-    public final static String CITY = "ПИТЕР";
+    public final static String CITY_PICKER_TAG = "com.khasang.forecast.activities.CityPickerActivity";
 
     RecyclerView favoriteList;
     List<String> cityList = new ArrayList<>();
@@ -87,6 +87,9 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
         fabBtn = (ImageButton) findViewById(R.id.fabBtn);
         fabBtn.setOnClickListener(this);
+
+        createItemList();
+        Log.d(TAG, String.valueOf(PositionManager.getInstance().getPositions()));
     }
 
     // Вспомогательные методы
@@ -118,11 +121,11 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 final int position = favoriteList.getChildAdapterPosition(v);
                 //final String string = cityList.get(position);
                 //TODO Получать текст по ID элемента
-                answerIntent.putExtra(CITY, positionName + position);
+                Intent answerIntent = new Intent();
+                answerIntent.putExtra(CITY_PICKER_TAG, cityList.get(position - 1));
                 setResult(RESULT_OK, answerIntent);
                 finish();
                 return;
-
         }
 
 //        Intent answerIntent = new Intent();
@@ -152,21 +155,22 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
     // Вспомогательный метод для подготовки списка
     private List<String> createItemList() {
-        //List<String> cityList = new ArrayList<>();
-        List<String> itemList = new ArrayList<>();
-        for (int i = 0; i < 8; i++) {
-            itemList.add("Город " + i);
+        Set<String> cities = PositionManager.getInstance().getPositions();
+        for (String city : cities) {
+            cityList.add(city);
         }
-        return itemList;
+        return cityList;
     }
 
     // Вспомогательный метод для добавления города в список
-    int i = 0;
-    private List<String> addItemToList(String city) {
-        cityList.add(city + " " + i);
-        i++;
-        return cityList;
+    private void addItem(String city) {
+        Intent answerIntent = new Intent();
+        answerIntent.putExtra(CITY_PICKER_TAG, city);
+        setResult(RESULT_OK, answerIntent);
+        finish();
     }
+
+
 
     private PositionManager manager;
     private String positionName;
@@ -188,7 +192,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                         //manager.initPositions(positions);
                         //manager.setCurrPosition(positionName);
                         try {
-                            addItemToList(positionName);
+                            addItem(positionName);
 
                          /*   answerIntent.putExtra(CITY, positionName);
                             setResult(RESULT_OK, answerIntent);

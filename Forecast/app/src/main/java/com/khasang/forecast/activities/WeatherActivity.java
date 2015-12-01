@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.khasang.forecast.OpenWeatherMap;
+import com.khasang.forecast.Position;
 import com.khasang.forecast.PositionManager;
 import com.khasang.forecast.R;
 import com.khasang.forecast.Weather;
@@ -30,13 +31,13 @@ import java.util.Calendar;
  * город, температура, давление, влажность, ветер, временная метка.
  */
 
-public class WeatherActivity extends FragmentActivity implements View.OnClickListener{
+public class WeatherActivity extends FragmentActivity implements View.OnClickListener {
     /**
      * ViewPager для отображения нижних вкладок прогноза: по часам и по дням
      */
     private ViewPager pager;
 
-    String TAG = this.getClass().getSimpleName();
+    String TAG = "MyTAG";
 
     private TextView city;
     private TextView temperature;
@@ -53,7 +54,7 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
 //    int hours;
 //    int minutes;
 
-    int CHOOSE_CITY;
+    private final int CHOOSE_CITY = 1;
     // Для тестирования
 /*
     private String current_city = "London";
@@ -74,8 +75,6 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
     private double current_wind = 11;
     private int current_humidity = 90;
     private String current_timeStamp = "10:15";*/
-
-
 
 
     @Override
@@ -125,7 +124,7 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
 //                manager.addPosition(current_city);            Это итак делается в менеджере
 //               manager.setCurrentPosition(current_city);      Это делается в менеджере
                 PositionManager.getInstance().updateCurrent();
-                
+
                 //updateInterface(manager.updateCurrent());
                 //updateHourForecast(manager.updateHourly());
                 break;
@@ -200,18 +199,27 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
 
     /**
      * Получаем город из CityPickActivity
-     * */
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == CHOOSE_CITY) {
             if (resultCode == RESULT_OK) {
-                String newCity = data.getStringExtra(CityPickerActivity.CITY);
+                String newCity = data.getStringExtra(CityPickerActivity.CITY_PICKER_TAG);
                 city.setText(newCity);
-            }else {
+                Log.d(TAG, newCity);
+
+                if (PositionManager.getInstance().positionIsPresent(newCity)) {
+                    PositionManager.getInstance().setCurrentPosition(newCity);
+                    PositionManager.getInstance().updateCurrent();
+                } else {
+                    PositionManager.getInstance().addPosition(newCity);
+                }
+
+            } else {
                 //TODO Временная заглушка
-                city.setText(""); // стираем текст
+                //city.setText(""); // стираем текст
             }
         }
     }
