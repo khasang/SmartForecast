@@ -50,8 +50,6 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
 
     private Animation animationRotateCenter;
 
-    private PositionManager manager;
-
 //    int hours;
 //    int minutes;
 
@@ -85,9 +83,7 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
 
-        manager = new PositionManager(this);
-        manager.initStations();
-        manager.initPositions();
+        PositionManager.getInstance().initManager(this);
 
         city = (TextView) findViewById(R.id.city);
         temperature = (TextView) findViewById(R.id.temperature);
@@ -113,7 +109,7 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
         ForecastPageAdapter adapter = new ForecastPageAdapter(getSupportFragmentManager());
         pager.setAdapter(adapter);
 
-        manager.updateCurrent();
+        PositionManager.getInstance().updateCurrent();
     }
 
     /**
@@ -128,7 +124,7 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
                 syncBtn.startAnimation(animationRotateCenter);
 //                manager.addPosition(current_city);            Это итак делается в менеджере
 //               manager.setCurrentPosition(current_city);      Это делается в менеджере
-                manager.updateCurrent();
+                PositionManager.getInstance().updateCurrent();
                 
                 //updateInterface(manager.updateCurrent());
                 //updateHourForecast(manager.updateHourly());
@@ -159,7 +155,7 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
         int minutes = date.get(Calendar.MINUTE);
 
         //updateCurrent(Weather w);
-        city.setText(manager.getCurrentPositionName()); // отображаем имя текущей локации
+        city.setText(PositionManager.getInstance().getCurrentPositionName()); // отображаем имя текущей локации
         temperature.setText(String.format("%.0f°C", wCurent.getTemperature()));
 
         //precipitation.setText(String.format("%s %s", w.getPrecipitation(), w.getPrecipitationProbability()));
