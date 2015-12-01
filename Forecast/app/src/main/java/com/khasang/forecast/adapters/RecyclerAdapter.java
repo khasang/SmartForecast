@@ -21,10 +21,27 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private static final int TYPE_ITEM = 1;
 
     private List<String> mItemList;
+    private final View.OnClickListener mListener;
 
-    public RecyclerAdapter(List<String> itemList) {
+
+    public RecyclerAdapter(List<String> itemList, View.OnClickListener mListener) {
         mItemList = itemList;
+        this.mListener = mListener;
     }
+
+   /* @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        Context context = parent.getContext();
+        if (viewType == TYPE_ITEM) {
+            final View view = LayoutInflater.from(parent.getContext()).
+                    inflate(R.layout.recycler_item, parent, false);
+            return RecyclerItemViewHolder.newInstance(view);
+        } else if (viewType == TYPE_HEADER) {
+            final View view = LayoutInflater.from(context).inflate(R.layout.recycler_header, parent, false);
+            return new RecyclerHeaderViewHolder(view);
+        }
+        throw new RuntimeException("There is no type that matches the type " + viewType + " + make sure your using types    correctly");
+    }*/
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -32,7 +49,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (viewType == TYPE_ITEM) {
             final View view = LayoutInflater.from(parent.getContext()).
                     inflate(R.layout.recycler_item, parent, false);
-            return RecyclerItemViewHolder.newInstance(view);
+            return new RecyclerItemViewHolder(view, mListener);
         } else if (viewType == TYPE_HEADER) {
             final View view = LayoutInflater.from(context).inflate(R.layout.recycler_header, parent, false);
             return new RecyclerHeaderViewHolder(view);
