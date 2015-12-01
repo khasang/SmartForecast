@@ -7,7 +7,6 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -42,7 +41,8 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     Intent answerIntent = new Intent();
     public final static String CITY = "ПИТЕР";
 
-    List<String> itemList = new ArrayList<>();
+    RecyclerView favoriteList;
+    List<String> cityList = new ArrayList<>();
 
     private Toolbar toolbar;
     private ImageButton fabBtn;
@@ -65,14 +65,15 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         //toolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
         toolbar.setTitleTextColor(ContextCompat.getColor(this, android.R.color.white));
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        favoriteList = (RecyclerView) findViewById(R.id.recyclerView);
+        favoriteList.setLayoutManager(new LinearLayoutManager(this));
         //RecyclerAdapter recyclerAdapter = new RecyclerAdapter(createItemList());
-        RecyclerAdapter recyclerAdapter = new RecyclerAdapter(itemList);
-        recyclerView.setAdapter(recyclerAdapter);
+        //RecyclerAdapter recyclerAdapter = new RecyclerAdapter(cityList, mListener);
+        RecyclerAdapter recyclerAdapter = new RecyclerAdapter(cityList, this);
+        favoriteList.setAdapter(recyclerAdapter);
 
         /** Вычисляет степень прокрутки и выполняет нужное действие.*/
-        recyclerView.addOnScrollListener(new HidingScrollListener() {
+        favoriteList.addOnScrollListener(new HidingScrollListener() {
             @Override
             public void onHide() {
                 hideViews();
@@ -106,7 +107,23 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public void onClick(View v) {
-        showChooseCityDialog();
+        //if (favoriteList =! null)
+        //final int position = favoriteList.getChildAdapterPosition(v);
+        switch (v.getId()) {
+            case R.id.fabBtn:
+                //Toast.makeText(this, "Start AlertDialog", Toast.LENGTH_SHORT).show();
+                showChooseCityDialog();
+                return;
+            case R.id.recycler_item:
+                final int position = favoriteList.getChildAdapterPosition(v);
+                //final String string = cityList.get(position);
+                //TODO Получать текст по ID элемента
+                answerIntent.putExtra(CITY, positionName + position);
+                setResult(RESULT_OK, answerIntent);
+                finish();
+                return;
+
+        }
 
 //        Intent answerIntent = new Intent();
 //        switch (v.getId()) {
@@ -135,7 +152,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
     // Вспомогательный метод для подготовки списка
     private List<String> createItemList() {
-        //List<String> itemList = new ArrayList<>();
+        //List<String> cityList = new ArrayList<>();
         List<String> itemList = new ArrayList<>();
         for (int i = 0; i < 8; i++) {
             itemList.add("Город " + i);
@@ -146,9 +163,9 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     // Вспомогательный метод для добавления города в список
     int i = 0;
     private List<String> addItemToList(String city) {
-        itemList.add(city + " " +i);
+        cityList.add(city + " " + i);
         i++;
-        return itemList;
+        return cityList;
     }
 
     private PositionManager manager;
@@ -172,14 +189,18 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                         //manager.setCurrPosition(positionName);
                         try {
                             addItemToList(positionName);
-                            answerIntent.putExtra(CITY, positionName);
+
+                         /*   answerIntent.putExtra(CITY, positionName);
                             setResult(RESULT_OK, answerIntent);
-                            finish();
+                            finish();*/
+
                             //owm.updateWeather(manager.getPosition(positionName).getCoordinate(), manager);
                             Log.i(TAG, "Coordinates: " + manager.getPosition(positionName).getCoordinate().getLatitude() + ", " + manager.getPosition(positionName).getCoordinate().getLongitude());
                         } catch (NullPointerException e) {
                             e.printStackTrace();
-                            Toast.makeText(CityPickerActivity.this, "Вы ввели некорректный адрес, повторите попытку", Toast.LENGTH_LONG).show();
+
+                            //TODO Check catch
+                            //Toast.makeText(CityPickerActivity.this, "Вы ввели некорректный адрес, повторите попытку", Toast.LENGTH_LONG).show();
                         }
                     }
                 })
