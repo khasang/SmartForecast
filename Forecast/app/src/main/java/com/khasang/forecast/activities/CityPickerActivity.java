@@ -28,6 +28,8 @@ import com.khasang.forecast.adapters.RecyclerAdapter;
 import com.khasang.forecast.adapters.etc.HidingScrollListener;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -38,9 +40,7 @@ import java.util.Set;
  */
 public class CityPickerActivity extends AppCompatActivity implements View.OnClickListener {
     String TAG = "MyTAG";
-
     public final static String CITY_PICKER_TAG = "com.khasang.forecast.activities.CityPickerActivity";
-
     RecyclerView favoriteList;
     List<String> cityList = new ArrayList<>();
 
@@ -57,18 +57,15 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         final Drawable upArrow = ContextCompat.getDrawable(this, R.mipmap.ic_arrow_back_white_24dp);
         upArrow.setColorFilter(ContextCompat.getColor(this, R.color.back_arrow), PorterDuff.Mode.SRC_ATOP);
         //TODO fix NullPointerException
-        getSupportActionBar().setHomeAsUpIndicator(upArrow);
+    //    getSupportActionBar().setHomeAsUpIndicator(upArrow);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         setTitle(getString(R.string.city_list));
-        //toolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
         toolbar.setTitleTextColor(ContextCompat.getColor(this, android.R.color.white));
 
         favoriteList = (RecyclerView) findViewById(R.id.recyclerView);
         favoriteList.setLayoutManager(new LinearLayoutManager(this));
-        //RecyclerAdapter recyclerAdapter = new RecyclerAdapter(createItemList());
-        //RecyclerAdapter recyclerAdapter = new RecyclerAdapter(cityList, mListener);
         RecyclerAdapter recyclerAdapter = new RecyclerAdapter(cityList, this);
         favoriteList.setAdapter(recyclerAdapter);
 
@@ -110,34 +107,18 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public void onClick(View v) {
-        //if (favoriteList =! null)
-        //final int position = favoriteList.getChildAdapterPosition(v);
         switch (v.getId()) {
             case R.id.fabBtn:
-                //Toast.makeText(this, "Start AlertDialog", Toast.LENGTH_SHORT).show();
                 showChooseCityDialog();
                 return;
             case R.id.recycler_item:
                 final int position = favoriteList.getChildAdapterPosition(v);
-                //final String string = cityList.get(position);
-                //TODO Получать текст по ID элемента
                 Intent answerIntent = new Intent();
                 answerIntent.putExtra(CITY_PICKER_TAG, cityList.get(position - 1));
                 setResult(RESULT_OK, answerIntent);
                 finish();
                 return;
         }
-
-//        Intent answerIntent = new Intent();
-//        switch (v.getId()) {
-//            case R.id.fabBtn:
-//
-//                Toast.makeText(this, "Выбран город ПИТЕР", Toast.LENGTH_SHORT).show();
-//                answerIntent.putExtra(CITY, "ПИТЕР");
-//                break;
-//        }
-//        setResult(RESULT_OK, answerIntent);
-//        finish();
     }
 
     /**
@@ -159,6 +140,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         for (String city : cities) {
             cityList.add(city);
         }
+        Collections.sort(cityList);
         return cityList;
     }
 
@@ -170,13 +152,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         finish();
     }
 
-
-
-    private PositionManager manager;
-    private String positionName;
-    private ArrayList<String> positions;
-    private OpenWeatherMap owm;
-
     private void showChooseCityDialog() {
         final View view = getLayoutInflater().inflate(R.layout.choose_city_dialog, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -186,25 +161,11 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
-                        positionName = chooseCity.getText().toString();
-                        //positions.add(positionName);
-                        //manager.initPositions(positions);
-                        //manager.setCurrPosition(positionName);
+                        String positionName = chooseCity.getText().toString();
                         try {
                             addItem(positionName);
-
-                         /*   answerIntent.putExtra(CITY, positionName);
-                            setResult(RESULT_OK, answerIntent);
-                            finish();*/
-
-                            //owm.updateWeather(manager.getPosition(positionName).getCoordinate(), manager);
-                            Log.i(TAG, "Coordinates: " + manager.getPosition(positionName).getCoordinate().getLatitude() + ", " + manager.getPosition(positionName).getCoordinate().getLongitude());
                         } catch (NullPointerException e) {
                             e.printStackTrace();
-
-                            //TODO Check catch
-                            //Toast.makeText(CityPickerActivity.this, "Вы ввели некорректный адрес, повторите попытку", Toast.LENGTH_LONG).show();
                         }
                     }
                 })

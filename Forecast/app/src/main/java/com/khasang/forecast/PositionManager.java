@@ -2,6 +2,7 @@ package com.khasang.forecast;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.widget.Toast;
 
 import com.khasang.forecast.activities.WeatherActivity;
 
@@ -286,7 +287,11 @@ public class PositionManager {
      * Метод, вызывемый активити, для обновления текущей погоды от текущей погодной станции
      */
     public Weather updateCurrent() {
-        currStation.updateWeather(currPosition.getCityID(), currPosition.getCoordinate());
+        if (positionIsPresent(currPosition.getLocationName())) {
+            currStation.updateWeather(currPosition.getCityID(), currPosition.getCoordinate());
+        } else {
+            Toast.makeText(mActivity, "Ошибка обновления погоды.\nГород отсутствует в списке локаций.",Toast.LENGTH_SHORT).show();
+        }
         return null;
     }
 
