@@ -2,6 +2,7 @@ package com.khasang.forecast;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.widget.Toast;
 
 import com.khasang.forecast.activities.WeatherActivity;
 
@@ -78,8 +79,6 @@ public class PositionManager {
     private void initPositions() {
         //loadPreferences();    Здесь загружать список городов
         List<String> pos = new ArrayList<>();
-        pos.add("Berlin");
-        pos.add("London");
         pos.add("Moscow");
         pos.add("Buenos Aires");
         pos.add("Нижний Новгород");
@@ -111,6 +110,8 @@ public class PositionManager {
         PositionFactory positionFactory = new PositionFactory(mActivity, positions);
         positionFactory.addFavouritePosition(name, stations.keySet());
         positions = positionFactory.getPositions();
+        setCurrentPosition(name);
+        updateCurrent();
     }
 
     /**
@@ -278,11 +279,19 @@ public class PositionManager {
         return weather;
     }
 
+    public boolean positionIsPresent(String name) {
+        return positions.containsKey(name);
+    }
+
     /**
      * Метод, вызывемый активити, для обновления текущей погоды от текущей погодной станции
      */
     public Weather updateCurrent() {
-        currStation.updateWeather(currPosition.getCityID(), currPosition.getCoordinate());
+        if (positionIsPresent(currPosition.getLocationName())) {
+            currStation.updateWeather(currPosition.getCityID(), currPosition.getCoordinate());
+        } else {
+            Toast.makeText(mActivity, "Ошибка обновления погоды.\nГород отсутствует в списке локаций.",Toast.LENGTH_SHORT).show();
+        }
         return null;
     }
 

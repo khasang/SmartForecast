@@ -19,7 +19,7 @@ import java.util.Set;
  */
 
 public class PositionFactory {
-    private final static String TAG = PositionFactory.class.getSimpleName();
+    private final static String TAG = "MyTAG";
     private static int cityIdentificationCounter;
 
     static {
@@ -61,7 +61,7 @@ public class PositionFactory {
             addresses = geocoder.getFromLocationName(name, 3);
             if (addresses.size() == 0){
                 Log.i(TAG, "Coordinates not found");
-                Toast.makeText(mContext, "Координаты местоположения " + name + " не обнаружены", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "Координаты местоположения " + name + " не обнаружены.\nЛокация не добавлена", Toast.LENGTH_SHORT).show();
                 return;
             }
             Address currentAddress = addresses.get(0);
