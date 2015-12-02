@@ -43,8 +43,9 @@ import java.util.Set;
 public class CityPickerActivity extends AppCompatActivity implements View.OnClickListener {
     String TAG = "MyTAG";
     public final static String CITY_PICKER_TAG = "com.khasang.forecast.activities.CityPickerActivity";
+
     RecyclerView favoriteList;
-    List<String> cityList = new ArrayList<>();
+    List<String> cityList;
 
     private Toolbar toolbar;
     private ImageButton fabBtn;
@@ -69,9 +70,10 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         toolbar.setTitleTextColor(ContextCompat.getColor(this, android.R.color.white));
 
         favoriteList = (RecyclerView) findViewById(R.id.recyclerView);
+
+        cityList = new ArrayList<>();
+
         favoriteList.setLayoutManager(new LinearLayoutManager(this));
-        RecyclerAdapter recyclerAdapter = new RecyclerAdapter(cityList, this);
-        favoriteList.setAdapter(recyclerAdapter);
 
         /** Вычисляет степень прокрутки и выполняет нужное действие.*/
         favoriteList.addOnScrollListener(new HidingScrollListener() {
@@ -91,6 +93,8 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
         createItemList();
         Log.d(TAG, String.valueOf(PositionManager.getInstance().getPositions()));
+
+        showList(favoriteList);
     }
 
     // Вспомогательные методы
@@ -108,6 +112,14 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         toolbar.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2));
         fabBtn.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
     }
+
+
+    /** Показывает список городов*/
+    private void showList(RecyclerView favoriteList) {
+        RecyclerAdapter recyclerAdapter = new RecyclerAdapter(cityList, this);
+        favoriteList.setAdapter(recyclerAdapter);
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -142,6 +154,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         CityPickerActivity.this.clearList();
+                        showList(favoriteList);
                     }
                 });
                 builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -176,6 +189,8 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void clearList () {
+        // TODO дописать удалиние городов из ManagerPosition
+        cityList.clear();
         Toast.makeText(this, "Удфлю все нафиг", Toast.LENGTH_SHORT).show();
     }
 
