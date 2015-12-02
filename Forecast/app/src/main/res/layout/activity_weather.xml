@@ -135,6 +135,7 @@
                 android:id="@+id/wind"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingBottom="8dp"
                 android:text="Ветер Ю 7м/с"
                 android:layout_gravity="right" />
 

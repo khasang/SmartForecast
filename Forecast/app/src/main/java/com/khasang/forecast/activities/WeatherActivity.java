@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -167,11 +168,11 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
                 wCurent.getPressure(),
                 getString(R.string.pressure_measure)));
 
-        wind.setText(String.format("%s %s %.0f%s",
+        wind.setText(Html.fromHtml(String.format("%s %s %.0f%s",
                 getString(R.string.wind),
                 wCurent.getWindDirection(),
                 wCurent.getWindPower(),
-                getString(R.string.wind_measure)));
+                getString(R.string.wind_measure))));
 
         humidity.setText(String.format("%s %s%%",
                 getString(R.string.humidity),
