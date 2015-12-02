@@ -24,6 +24,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.khasang.forecast.OpenWeatherMap;
+import com.khasang.forecast.Position;
 import com.khasang.forecast.PositionManager;
 import com.khasang.forecast.R;
 import com.khasang.forecast.adapters.RecyclerAdapter;
@@ -43,8 +44,9 @@ import java.util.Set;
 public class CityPickerActivity extends AppCompatActivity implements View.OnClickListener {
     String TAG = "MyTAG";
     public final static String CITY_PICKER_TAG = "com.khasang.forecast.activities.CityPickerActivity";
+
     RecyclerView favoriteList;
-    List<String> cityList = new ArrayList<>();
+    List<String> cityList;
 
     private Toolbar toolbar;
     private ImageButton fabBtn;
@@ -53,7 +55,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_city_picker);
-
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         final Drawable upArrow = ContextCompat.getDrawable(this, R.mipmap.ic_arrow_back_white_24dp);
@@ -64,14 +65,14 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         setTitle(getString(R.string.city_list));
-
         //TODO Проверить код кнопки HOME - цвет должен быть белый (не работает)
         toolbar.setTitleTextColor(ContextCompat.getColor(this, android.R.color.white));
 
         favoriteList = (RecyclerView) findViewById(R.id.recyclerView);
+
+        cityList = new ArrayList<>();
+
         favoriteList.setLayoutManager(new LinearLayoutManager(this));
-        RecyclerAdapter recyclerAdapter = new RecyclerAdapter(cityList, this);
-        favoriteList.setAdapter(recyclerAdapter);
 
         /** Вычисляет степень прокрутки и выполняет нужное действие.*/
         favoriteList.addOnScrollListener(new HidingScrollListener() {
@@ -85,12 +86,11 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 showViews();
             }
         });
-
         fabBtn = (ImageButton) findViewById(R.id.fabBtn);
         fabBtn.setOnClickListener(this);
-
         createItemList();
         Log.d(TAG, String.valueOf(PositionManager.getInstance().getPositions()));
+        showList(favoriteList);
     }
 
     // Вспомогательные методы
@@ -108,6 +108,13 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         toolbar.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2));
         fabBtn.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
     }
+
+    /** Показывает список городов*/
+    private void showList(RecyclerView favoriteList) {
+        RecyclerAdapter recyclerAdapter = new RecyclerAdapter(cityList, this);
+        favoriteList.setAdapter(recyclerAdapter);
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -142,6 +149,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         CityPickerActivity.this.clearList();
+                        showList(favoriteList);
                     }
                 });
                 builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -176,6 +184,8 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void clearList () {
+        PositionManager.getInstance().removePositions();
+        cityList.clear();
         Toast.makeText(this, "Удфлю все нафиг", Toast.LENGTH_SHORT).show();
     }
 
@@ -210,12 +220,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.menu_activity_city_picker, menu);
-
-        //Тут меняем видимость кнопки на экране
         menu.findItem(R.id.clear_favorite).setVisible(true);
-
         return super.onCreateOptionsMenu(menu);
     }
-
-
 }

@@ -41,7 +41,7 @@ public class PositionManager {
     private WeatherStation currStation;
     private Position currPosition;
     private HashMap<WeatherStationFactory.ServiceType, WeatherStation> stations;
-    private HashMap<String, Position> positions;
+    private volatile HashMap<String, Position> positions;
     private WeatherActivity mActivity;
 
     private static class ManagerHolder {
@@ -110,8 +110,6 @@ public class PositionManager {
         PositionFactory positionFactory = new PositionFactory(mActivity, positions);
         positionFactory.addFavouritePosition(name, stations.keySet());
         positions = positionFactory.getPositions();
-        setCurrentPosition(name);
-        updateCurrent();
     }
 
     /**
@@ -143,6 +141,10 @@ public class PositionManager {
         if (positions.containsKey(name)) {
             positions.remove(name);
         }
+    }
+
+    public void removePositions () {
+        positions.clear();
     }
 
     /**
