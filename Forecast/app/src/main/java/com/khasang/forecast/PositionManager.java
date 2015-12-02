@@ -110,8 +110,6 @@ public class PositionManager {
         PositionFactory positionFactory = new PositionFactory(mActivity, positions);
         positionFactory.addFavouritePosition(name, stations.keySet());
         positions = positionFactory.getPositions();
-        setCurrentPosition(name);
-        updateCurrent();
     }
 
     /**
@@ -143,6 +141,10 @@ public class PositionManager {
         if (positions.containsKey(name)) {
             positions.remove(name);
         }
+    }
+
+    public void removePositions () {
+        positions.clear();
     }
 
     /**

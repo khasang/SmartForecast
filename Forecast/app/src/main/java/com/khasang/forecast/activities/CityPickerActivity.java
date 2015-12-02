@@ -24,6 +24,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.khasang.forecast.OpenWeatherMap;
+import com.khasang.forecast.Position;
 import com.khasang.forecast.PositionManager;
 import com.khasang.forecast.R;
 import com.khasang.forecast.adapters.RecyclerAdapter;
@@ -188,11 +189,13 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         finish();
     }
 
+<<<<<<< Updated upstream
     private void clearList () {
-        // TODO дописать удалиние городов из ManagerPosition
+        PositionManager.getInstance().removePositions();
         cityList.clear();
         Toast.makeText(this, "Удфлю все нафиг", Toast.LENGTH_SHORT).show();
-    }
+        }
+
 
     private void showChooseCityDialog() {
         final View view = getLayoutInflater().inflate(R.layout.choose_city_dialog, null);
