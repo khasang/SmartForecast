@@ -203,16 +203,18 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CHOOSE_CITY) {
-            if (PositionManager.getInstance().getPositions().size() == 0) {
-                city.setText("--/--");
-                temperature.setText("--/--");
-                precipitation.setText("--/--");
-                pressure.setText("--/--");
-                wind.setText("--/--");
-                humidity.setText("--/--");
-                timeStamp.setText("--/--");
-            } else if (resultCode == RESULT_OK) {
+        int size = PositionManager.getInstance().getPositions().size();
+        if (size == 0) {
+            city.setText("--/--");
+            temperature.setText("--/--");
+            precipitation.setText("--/--");
+            pressure.setText("--/--");
+            wind.setText("--/--");
+            humidity.setText("--/--");
+            timeStamp.setText("--/--");
+        }
+        else if (requestCode == CHOOSE_CITY) {
+            if (resultCode == RESULT_OK) {
                 String newCity = data.getStringExtra(CityPickerActivity.CITY_PICKER_TAG);
                 city.setText(newCity);
                 Log.d(TAG, newCity);

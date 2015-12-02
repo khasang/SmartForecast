@@ -55,7 +55,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_city_picker);
-
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         final Drawable upArrow = ContextCompat.getDrawable(this, R.mipmap.ic_arrow_back_white_24dp);
@@ -66,7 +65,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         setTitle(getString(R.string.city_list));
-
         //TODO Проверить код кнопки HOME - цвет должен быть белый (не работает)
         toolbar.setTitleTextColor(ContextCompat.getColor(this, android.R.color.white));
 
@@ -88,13 +86,10 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 showViews();
             }
         });
-
         fabBtn = (ImageButton) findViewById(R.id.fabBtn);
         fabBtn.setOnClickListener(this);
-
         createItemList();
         Log.d(TAG, String.valueOf(PositionManager.getInstance().getPositions()));
-
         showList(favoriteList);
     }
 
@@ -113,7 +108,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         toolbar.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2));
         fabBtn.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
     }
-
 
     /** Показывает список городов*/
     private void showList(RecyclerView favoriteList) {
@@ -189,13 +183,11 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         finish();
     }
 
-<<<<<<< Updated upstream
     private void clearList () {
         PositionManager.getInstance().removePositions();
         cityList.clear();
         Toast.makeText(this, "Удфлю все нафиг", Toast.LENGTH_SHORT).show();
-        }
-
+    }
 
     private void showChooseCityDialog() {
         final View view = getLayoutInflater().inflate(R.layout.choose_city_dialog, null);
@@ -228,12 +220,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.menu_activity_city_picker, menu);
-
-        //Тут меняем видимость кнопки на экране
         menu.findItem(R.id.clear_favorite).setVisible(true);
-
         return super.onCreateOptionsMenu(menu);
     }
-
-
 }

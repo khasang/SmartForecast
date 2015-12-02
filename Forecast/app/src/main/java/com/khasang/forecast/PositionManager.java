@@ -41,7 +41,7 @@ public class PositionManager {
     private WeatherStation currStation;
     private Position currPosition;
     private HashMap<WeatherStationFactory.ServiceType, WeatherStation> stations;
-    private HashMap<String, Position> positions;
+    private volatile HashMap<String, Position> positions;
     private WeatherActivity mActivity;
 
     private static class ManagerHolder {
