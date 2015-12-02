@@ -42,9 +42,9 @@ public class ForecastPageAdapter extends FragmentPagerAdapter {
         switch (position) {
             case 0: // Fragment # 0 - This will show FirstFragment
                 return DayForecastFragment.newInstance(0, "Page # 1");
-            /*case 1: // Fragment # 0 - This will show FirstFragment different title
-                return FirstFragment.newInstance(1, "Page # 2");
-            case 2: // Fragment # 1 - This will show SecondFragment
+            case 1: // Fragment # 0 - This will show FirstFragment different title
+                return DayForecastFragment.newInstance(1, "Page # 2");
+            /*case 2: // Fragment # 1 - This will show SecondFragment
                 return SecondFragment.newInstance(2, "Page # 3");*/
             default:
                 return null;

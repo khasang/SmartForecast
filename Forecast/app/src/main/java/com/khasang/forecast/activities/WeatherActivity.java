@@ -108,6 +108,7 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
         pager = (ViewPager) findViewById(R.id.pager);
         ForecastPageAdapter adapter = new ForecastPageAdapter(getSupportFragmentManager());
         pager.setAdapter(adapter);
+        pager.setCurrentItem(0);
 
         PositionManager.getInstance().updateCurrent();
     }
