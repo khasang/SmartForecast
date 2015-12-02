@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
@@ -17,7 +18,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.khasang.forecast.OpenWeatherMap;
-import com.khasang.forecast.Position;
 import com.khasang.forecast.PositionManager;
 import com.khasang.forecast.R;
 import com.khasang.forecast.Weather;
@@ -32,13 +32,13 @@ import java.util.Calendar;
  * город, температура, давление, влажность, ветер, временная метка.
  */
 
-public class WeatherActivity extends FragmentActivity implements View.OnClickListener {
+public class WeatherActivity extends AppCompatActivity implements View.OnClickListener{
     /**
      * ViewPager для отображения нижних вкладок прогноза: по часам и по дням
      */
     private ViewPager pager;
 
-    String TAG = "MyTAG";
+    String TAG = this.getClass().getSimpleName();
 
     private TextView city;
     private TextView temperature;
@@ -55,7 +55,7 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
 //    int hours;
 //    int minutes;
 
-    private final int CHOOSE_CITY = 1;
+    int CHOOSE_CITY;
     // Для тестирования
 /*
     private String current_city = "London";
@@ -76,6 +76,8 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
     private double current_wind = 11;
     private int current_humidity = 90;
     private String current_timeStamp = "10:15";*/
+
+
 
 
     @Override
@@ -108,7 +110,6 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
         pager = (ViewPager) findViewById(R.id.pager);
         ForecastPageAdapter adapter = new ForecastPageAdapter(getSupportFragmentManager());
         pager.setAdapter(adapter);
-        pager.setCurrentItem(0);
 
         PositionManager.getInstance().updateCurrent();
     }
@@ -126,7 +127,7 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
 //                manager.addPosition(current_city);            Это итак делается в менеджере
 //               manager.setCurrentPosition(current_city);      Это делается в менеджере
                 PositionManager.getInstance().updateCurrent();
-
+                
                 //updateInterface(manager.updateCurrent());
                 //updateHourForecast(manager.updateHourly());
                 break;
@@ -201,35 +202,20 @@ public class WeatherActivity extends FragmentActivity implements View.OnClickLis
 
     /**
      * Получаем город из CityPickActivity
-     */
+     * */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        int size = PositionManager.getInstance().getPositions().size();
-        if (size == 0) {
-            city.setText("--/--");
-            temperature.setText("--/--");
-            precipitation.setText("--/--");
-            pressure.setText("--/--");
-            wind.setText("--/--");
-            humidity.setText("--/--");
-            timeStamp.setText("--/--");
-        }
-        else if (requestCode == CHOOSE_CITY) {
-            if (resultCode == RESULT_OK) {
-                String newCity = data.getStringExtra(CityPickerActivity.CITY_PICKER_TAG);
-                city.setText(newCity);
-                Log.d(TAG, newCity);
 
-                if (!PositionManager.getInstance().positionIsPresent(newCity)) {
-                    PositionManager.getInstance().addPosition(newCity);
-                }
-                PositionManager.getInstance().setCurrentPosition(newCity);
-                PositionManager.getInstance().updateCurrent();
-            } else {
+        if (requestCode == CHOOSE_CITY) {
+            if (resultCode == RESULT_OK) {
+                String newCity = data.getStringExtra(CityPickerActivity.CITY);
+                city.setText(newCity);
+            }else {
                 //TODO Временная заглушка
-                //city.setText(""); // стираем текст
+                city.setText(""); // стираем текст
             }
         }
     }
+
 }
