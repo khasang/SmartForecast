@@ -12,6 +12,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
@@ -62,6 +64,8 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         setTitle(getString(R.string.city_list));
+
+        //TODO Проверить код кнопки HOME - цвет должен быть белый (не работает)
         toolbar.setTitleTextColor(ContextCompat.getColor(this, android.R.color.white));
 
         favoriteList = (RecyclerView) findViewById(R.id.recyclerView);
@@ -130,6 +134,10 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             case android.R.id.home:
                 onBackPressed();
                 break;
+            case R.id.clear_favorite:
+                // Тут прописываем действие по нажатию
+                Toast.makeText(this, "Нажата кнопка ПОМОЙКА", Toast.LENGTH_SHORT).show();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -178,4 +186,17 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu_activity_city_picker, menu);
+
+        //Тут меняем видимость кнопки на экране
+        menu.findItem(R.id.clear_favorite).setVisible(false);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
 }

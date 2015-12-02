@@ -22,6 +22,7 @@
     <string name="mist">Туман</string>
 
     <string name="choose_city_label"></string>
+    <string name="clear_favorite">Удалить все города</string>
 
 
 </resources>
