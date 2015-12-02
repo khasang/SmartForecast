@@ -135,8 +135,23 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 onBackPressed();
                 break;
             case R.id.clear_favorite:
-                // Тут прописываем действие по нажатию
-                Toast.makeText(this, "Нажата кнопка ПОМОЙКА", Toast.LENGTH_SHORT).show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage("Вы действительно хотите очистить список городов?");
+                builder.setCancelable(false);
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        CityPickerActivity.this.clearList();
+                    }
+                });
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -158,6 +173,10 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         answerIntent.putExtra(CITY_PICKER_TAG, city);
         setResult(RESULT_OK, answerIntent);
         finish();
+    }
+
+    private void clearList () {
+        Toast.makeText(this, "Удфлю все нафиг", Toast.LENGTH_SHORT).show();
     }
 
     private void showChooseCityDialog() {
@@ -193,7 +212,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         menuInflater.inflate(R.menu.menu_activity_city_picker, menu);
 
         //Тут меняем видимость кнопки на экране
-        menu.findItem(R.id.clear_favorite).setVisible(false);
+        menu.findItem(R.id.clear_favorite).setVisible(true);
 
         return super.onCreateOptionsMenu(menu);
     }
