@@ -55,7 +55,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 //    int hours;
 //    int minutes;
 
-    int CHOOSE_CITY;
+    private final int CHOOSE_CITY = 1;
     // Для тестирования
 /*
     private String current_city = "London";
@@ -76,9 +76,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     private double current_wind = 11;
     private int current_humidity = 90;
     private String current_timeStamp = "10:15";*/
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,7 +124,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 //                manager.addPosition(current_city);            Это итак делается в менеджере
 //               manager.setCurrentPosition(current_city);      Это делается в менеджере
                 PositionManager.getInstance().updateCurrent();
-                
+
                 //updateInterface(manager.updateCurrent());
                 //updateHourForecast(manager.updateHourly());
                 break;
