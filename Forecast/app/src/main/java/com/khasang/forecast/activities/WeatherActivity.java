@@ -1,10 +1,7 @@
 package com.khasang.forecast.activities;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
@@ -12,19 +9,16 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.khasang.forecast.OpenWeatherMap;
 import com.khasang.forecast.PositionManager;
 import com.khasang.forecast.R;
 import com.khasang.forecast.Weather;
 import com.khasang.forecast.adapters.ForecastPageAdapter;
 
-import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Map;
 
 
 /**
@@ -108,7 +102,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         ForecastPageAdapter adapter = new ForecastPageAdapter(getSupportFragmentManager());
         pager.setAdapter(adapter);
 
-        PositionManager.getInstance().updateCurrent();
+        PositionManager.getInstance().getCurrentForecast();
     }
 
     /**
@@ -118,15 +112,8 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.syncBtn:
-                //manager.updateCurrent();
-                //manager.updateHourly();
                 syncBtn.startAnimation(animationRotateCenter);
-//                manager.addPosition(current_city);            Это итак делается в менеджере
-//               manager.setCurrentPosition(current_city);      Это делается в менеджере
-                PositionManager.getInstance().updateCurrent();
-
-                //updateInterface(manager.updateCurrent());
-                //updateHourForecast(manager.updateHourly());
+                PositionManager.getInstance().getCurrentForecast();
                 break;
             case R.id.cityPickerBnt:
                 //startActivity(new Intent(this, CityPickerActivity.class));
@@ -153,7 +140,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         int hours = date.get(Calendar.HOUR_OF_DAY);
         int minutes = date.get(Calendar.MINUTE);
 
-        //updateCurrent(Weather w);
         city.setText(PositionManager.getInstance().getCurrentPositionName()); // отображаем имя текущей локации
         temperature.setText(String.format("%.0f°C", wCurent.getTemperature()));
 
@@ -187,12 +173,12 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     //TODO Реализовать метод получения прогноза по часам
-    public void updateHourForecast(Weather wHour) {
+    public void updateHourForecast(Map<Calendar, Weather> hourlyForecast) {
 
     }
 
     //TODO Реализовать метод получения прогноза по дням
-    public void updateDayForecast(Weather wDay) {
+    public void updateDayForecast(Map<Calendar, Weather> weeklyForecast) {
 
     }
 
@@ -219,7 +205,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 city.setText(newCity);
                 Log.d(TAG, newCity);
                 PositionManager.getInstance().setCurrentPosition(newCity);
-                PositionManager.getInstance().updateCurrent();
+                PositionManager.getInstance().getCurrentForecast();
             } else {
                 //TODO Временная заглушка
                 //city.setText(""); // стираем текст
