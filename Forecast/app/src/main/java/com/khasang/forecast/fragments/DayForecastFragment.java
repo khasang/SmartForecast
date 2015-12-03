@@ -66,13 +66,16 @@ public class DayForecastFragment extends Fragment {
 
     private void initDataset() {
 //        dataset = new String[]{"ПН", "ВТ", "СР", "ЧТ", "ПН"};
-        Map<Calendar, Weather> forecasts = PositionManager.getInstance().getDaylyForecast();
+        Map<Calendar, Weather> forecasts = PositionManager.getInstance().getDailyForecast();
+        sDate = new ArrayList<>(/*forecasts.size()*/);
+        weathers = new ArrayList<>(/*forecasts.size()*/);
+        if (forecasts == null) {
+            return; // TODO: пока просто выходим
+        }
         // TODO: пока заполняю списки просто в цикле
-        sDate = new ArrayList<>(forecasts.size());
-        weathers = new ArrayList<>(forecasts.size());
         for (Map.Entry<Calendar, Weather> entry : forecasts.entrySet()) {
             Calendar calendar = entry.getKey();
-// TODO: привести в порядок (строковое выражение дня недели)
+//            TODO: привести в порядок (строковое выражение дня недели)
 //            String dayOfWeek = calendar.get(Calendar.HOUR_OF_DAY);
             int index = calendar.get(Calendar.DAY_OF_WEEK);
 //            String dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);

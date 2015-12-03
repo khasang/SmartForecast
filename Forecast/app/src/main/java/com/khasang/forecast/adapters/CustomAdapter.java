@@ -11,9 +11,6 @@ import com.khasang.forecast.R;
 import com.khasang.forecast.Weather;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by aleksandrlihovidov on 03.12.15.
@@ -39,12 +36,12 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-//        holder.tvDayOfWeek.setText(dataset[position]);
+//        holder.tvDayOfWeekOrTime.setText(dataset[position]);
 // TODO: добавить заполнение иконки и т.д.
         String dayOfWeek = dateTimeList.get(position);
-        holder.tvDayOfWeek.setText(dayOfWeek);
+        holder.tvDayOfWeekOrTime.setText(dayOfWeek);
 //        String dayOfWeek = dateTimeList.get(position);
-//        holder.tvDayOfWeek.setText(dayOfWeek);
+//        holder.tvDayOfWeekOrTime.setText(dayOfWeek);
         String tvTemperature = String.valueOf(dataset.get(position).getTemperature());
         holder.tvTemperature.setText(tvTemperature);
     }
@@ -55,7 +52,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvDayOfWeek;
+        TextView tvDayOfWeekOrTime;
         ImageView ivWeatherIcon;
 //        TextView tvTemperatureDay;
 //        TextView tvTemperatureNight;
@@ -64,13 +61,13 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         public ViewHolder(View itemView) {
             super(itemView);
 
-            tvDayOfWeek = (TextView) itemView.findViewById(R.id.tvDayOfWeek);
+            tvDayOfWeekOrTime = (TextView) itemView.findViewById(R.id.tvDayOfWeek);
             ivWeatherIcon = (ImageView) itemView.findViewById(R.id.ivWeatherIcon);
             tvTemperature = (TextView) itemView.findViewById(R.id.tvTemperature);
         }
 
         TextView getTextView() {
-            return tvDayOfWeek;
+            return tvDayOfWeekOrTime;
         }
     }
 }
