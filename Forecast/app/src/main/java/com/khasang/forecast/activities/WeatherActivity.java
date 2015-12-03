@@ -199,7 +199,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
     /**
      * Получаем город из CityPickActivity
-     * */
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
