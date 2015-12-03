@@ -9,7 +9,7 @@
     <string name="humidity">Влажность</string>
     <string name="timeStamp">Обновлено</string>
     <string name="pressure_measure">мм рт/ст</string>
-    <string name="wind_measure">м/c</string>
+    <string name="wind_measure"><![CDATA[<sup><small>м</small></sup>/<small>c</small>]]></string>
 
     <string name="clear_sky">Ясно</string> 
     <string name="few_clouds">Небольшая облачность</string>
@@ -21,7 +21,8 @@
     <string name="snow">Снег</string> 
     <string name="mist">Туман</string>
 
-    <string name="choose_city_label">WOW</string>
+    <string name="choose_city_label"></string>
+    <string name="clear_favorite">Удалить все города</string>
 
 
 </resources>

@@ -12,6 +12,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
@@ -22,13 +24,17 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.khasang.forecast.OpenWeatherMap;
+import com.khasang.forecast.Position;
 import com.khasang.forecast.PositionManager;
 import com.khasang.forecast.R;
 import com.khasang.forecast.adapters.RecyclerAdapter;
 import com.khasang.forecast.adapters.etc.HidingScrollListener;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by CopyPasteStd on 29.11.15.
@@ -36,13 +42,11 @@ import java.util.List;
  * Activity для выбора местоположения
  */
 public class CityPickerActivity extends AppCompatActivity implements View.OnClickListener {
-    String TAG = this.getClass().getSimpleName();
-
-    Intent answerIntent = new Intent();
-    public final static String CITY = "ПИТЕР";
+    String TAG = "MyTAG";
+    public final static String CITY_PICKER_TAG = "com.khasang.forecast.activities.CityPickerActivity";
 
     RecyclerView favoriteList;
-    List<String> cityList = new ArrayList<>();
+    List<String> cityList;
 
     private Toolbar toolbar;
     private ImageButton fabBtn;
@@ -51,26 +55,24 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_city_picker);
-
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         final Drawable upArrow = ContextCompat.getDrawable(this, R.mipmap.ic_arrow_back_white_24dp);
         upArrow.setColorFilter(ContextCompat.getColor(this, R.color.back_arrow), PorterDuff.Mode.SRC_ATOP);
         //TODO fix NullPointerException
-        getSupportActionBar().setHomeAsUpIndicator(upArrow);
+    //    getSupportActionBar().setHomeAsUpIndicator(upArrow);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         setTitle(getString(R.string.city_list));
-        //toolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
+        //TODO Проверить код кнопки HOME - цвет должен быть белый (не работает)
         toolbar.setTitleTextColor(ContextCompat.getColor(this, android.R.color.white));
 
         favoriteList = (RecyclerView) findViewById(R.id.recyclerView);
+
+        cityList = new ArrayList<>();
+
         favoriteList.setLayoutManager(new LinearLayoutManager(this));
-        //RecyclerAdapter recyclerAdapter = new RecyclerAdapter(createItemList());
-        //RecyclerAdapter recyclerAdapter = new RecyclerAdapter(cityList, mListener);
-        RecyclerAdapter recyclerAdapter = new RecyclerAdapter(cityList, this);
-        favoriteList.setAdapter(recyclerAdapter);
 
         /** Вычисляет степень прокрутки и выполняет нужное действие.*/
         favoriteList.addOnScrollListener(new HidingScrollListener() {
@@ -84,9 +86,11 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 showViews();
             }
         });
-
         fabBtn = (ImageButton) findViewById(R.id.fabBtn);
         fabBtn.setOnClickListener(this);
+        createItemList();
+        Log.d(TAG, String.valueOf(PositionManager.getInstance().getPositions()));
+        showList(favoriteList);
     }
 
     // Вспомогательные методы
@@ -105,36 +109,27 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         fabBtn.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
     }
 
+    /** Показывает список городов*/
+    private void showList(RecyclerView favoriteList) {
+        RecyclerAdapter recyclerAdapter = new RecyclerAdapter(cityList, this);
+        favoriteList.setAdapter(recyclerAdapter);
+    }
+
+
     @Override
     public void onClick(View v) {
-        //if (favoriteList =! null)
-        //final int position = favoriteList.getChildAdapterPosition(v);
         switch (v.getId()) {
             case R.id.fabBtn:
-                //Toast.makeText(this, "Start AlertDialog", Toast.LENGTH_SHORT).show();
                 showChooseCityDialog();
                 return;
             case R.id.recycler_item:
                 final int position = favoriteList.getChildAdapterPosition(v);
-                //final String string = cityList.get(position);
-                //TODO Получать текст по ID элемента
-                answerIntent.putExtra(CITY, positionName + position);
+                Intent answerIntent = new Intent();
+                answerIntent.putExtra(CITY_PICKER_TAG, cityList.get(position - 1));
                 setResult(RESULT_OK, answerIntent);
                 finish();
                 return;
-
         }
-
-//        Intent answerIntent = new Intent();
-//        switch (v.getId()) {
-//            case R.id.fabBtn:
-//
-//                Toast.makeText(this, "Выбран город ПИТЕР", Toast.LENGTH_SHORT).show();
-//                answerIntent.putExtra(CITY, "ПИТЕР");
-//                break;
-//        }
-//        setResult(RESULT_OK, answerIntent);
-//        finish();
     }
 
     /**
@@ -146,32 +141,53 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             case android.R.id.home:
                 onBackPressed();
                 break;
+            case R.id.clear_favorite:
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage("Вы действительно хотите очистить список городов?");
+                builder.setCancelable(false);
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        CityPickerActivity.this.clearList();
+                        showList(favoriteList);
+                    }
+                });
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
 
     // Вспомогательный метод для подготовки списка
     private List<String> createItemList() {
-        //List<String> cityList = new ArrayList<>();
-        List<String> itemList = new ArrayList<>();
-        for (int i = 0; i < 8; i++) {
-            itemList.add("Город " + i);
+        Set<String> cities = PositionManager.getInstance().getPositions();
+        for (String city : cities) {
+            cityList.add(city);
         }
-        return itemList;
-    }
-
-    // Вспомогательный метод для добавления города в список
-    int i = 0;
-    private List<String> addItemToList(String city) {
-        cityList.add(city + " " + i);
-        i++;
+        Collections.sort(cityList);
         return cityList;
     }
 
-    private PositionManager manager;
-    private String positionName;
-    private ArrayList<String> positions;
-    private OpenWeatherMap owm;
+    // Вспомогательный метод для добавления города в список
+    private void addItem(String city) {
+        Intent answerIntent = new Intent();
+        answerIntent.putExtra(CITY_PICKER_TAG, city);
+        setResult(RESULT_OK, answerIntent);
+        finish();
+    }
+
+    private void clearList () {
+        PositionManager.getInstance().removePositions();
+        cityList.clear();
+        Toast.makeText(this, "Удфлю все нафиг", Toast.LENGTH_SHORT).show();
+    }
 
     private void showChooseCityDialog() {
         final View view = getLayoutInflater().inflate(R.layout.choose_city_dialog, null);
@@ -182,25 +198,11 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
-                        positionName = chooseCity.getText().toString();
-                        //positions.add(positionName);
-                        //manager.initPositions(positions);
-                        //manager.setCurrPosition(positionName);
+                        String positionName = chooseCity.getText().toString();
                         try {
-                            addItemToList(positionName);
-
-                         /*   answerIntent.putExtra(CITY, positionName);
-                            setResult(RESULT_OK, answerIntent);
-                            finish();*/
-
-                            //owm.updateWeather(manager.getPosition(positionName).getCoordinate(), manager);
-                            Log.i(TAG, "Coordinates: " + manager.getPosition(positionName).getCoordinate().getLatitude() + ", " + manager.getPosition(positionName).getCoordinate().getLongitude());
+                            addItem(positionName);
                         } catch (NullPointerException e) {
                             e.printStackTrace();
-
-                            //TODO Check catch
-                            //Toast.makeText(CityPickerActivity.this, "Вы ввели некорректный адрес, повторите попытку", Toast.LENGTH_LONG).show();
                         }
                     }
                 })
@@ -212,5 +214,13 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 });
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu_activity_city_picker, menu);
+        menu.findItem(R.id.clear_favorite).setVisible(true);
+        return super.onCreateOptionsMenu(menu);
     }
 }

@@ -2,6 +2,7 @@ package com.khasang.forecast;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.widget.Toast;
 
 import com.khasang.forecast.activities.WeatherActivity;
 
@@ -40,7 +41,7 @@ public class PositionManager {
     private WeatherStation currStation;
     private Position currPosition;
     private HashMap<WeatherStationFactory.ServiceType, WeatherStation> stations;
-    private HashMap<String, Position> positions;
+    private volatile HashMap<String, Position> positions;
     private WeatherActivity mActivity;
 
     private static class ManagerHolder {
@@ -78,8 +79,6 @@ public class PositionManager {
     private void initPositions() {
         //loadPreferences();    Здесь загружать список городов
         List<String> pos = new ArrayList<>();
-        pos.add("Berlin");
-        pos.add("London");
         pos.add("Moscow");
         pos.add("Buenos Aires");
         pos.add("Нижний Новгород");
@@ -142,6 +141,10 @@ public class PositionManager {
         if (positions.containsKey(name)) {
             positions.remove(name);
         }
+    }
+
+    public void removePositions () {
+        positions.clear();
     }
 
     /**
@@ -278,11 +281,19 @@ public class PositionManager {
         return weather;
     }
 
+    public boolean positionIsPresent(String name) {
+        return positions.containsKey(name);
+    }
+
     /**
      * Метод, вызывемый активити, для обновления текущей погоды от текущей погодной станции
      */
     public Weather updateCurrent() {
-        currStation.updateWeather(currPosition.getCityID(), currPosition.getCoordinate());
+        if (positionIsPresent(currPosition.getLocationName())) {
+            currStation.updateWeather(currPosition.getCityID(), currPosition.getCoordinate());
+        } else {
+            Toast.makeText(mActivity, "Ошибка обновления погоды.\nГород отсутствует в списке локаций.",Toast.LENGTH_SHORT).show();
+        }
         return null;
     }
 
@@ -351,6 +362,8 @@ public class PositionManager {
         HashMap.Entry<Calendar, Weather> firstEntry = (Map.Entry<Calendar, Weather>) weather.entrySet().iterator().next();
         currPosition.setWeather(currStation.getServiceType(), firstEntry.getKey(), firstEntry.getValue());
     }
+
+    //region Вспомогательные методы
 
     private Weather formatWeather(Weather weather) {
         weather.setTemperature(formatTemperature(weather.getTemperature()));
@@ -478,4 +491,5 @@ public class PositionManager {
         double mmHg = pressure / KPA_TO_MM_HG;
         return mmHg;
     }
+    //endregion
 }
