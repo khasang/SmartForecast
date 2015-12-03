@@ -218,10 +218,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 String newCity = data.getStringExtra(CityPickerActivity.CITY_PICKER_TAG);
                 city.setText(newCity);
                 Log.d(TAG, newCity);
-
-                if (!PositionManager.getInstance().positionIsPresent(newCity)) {
-                    PositionManager.getInstance().addPosition(newCity);
-                }
                 PositionManager.getInstance().setCurrentPosition(newCity);
                 PositionManager.getInstance().updateCurrent();
             } else {

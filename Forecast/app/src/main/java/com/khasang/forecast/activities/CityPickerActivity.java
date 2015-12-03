@@ -23,15 +23,12 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.khasang.forecast.OpenWeatherMap;
-import com.khasang.forecast.Position;
 import com.khasang.forecast.PositionManager;
 import com.khasang.forecast.R;
 import com.khasang.forecast.adapters.RecyclerAdapter;
 import com.khasang.forecast.adapters.etc.HidingScrollListener;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -45,7 +42,8 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     String TAG = "MyTAG";
     public final static String CITY_PICKER_TAG = "com.khasang.forecast.activities.CityPickerActivity";
 
-    RecyclerView favoriteList;
+    RecyclerView recyclerView;
+    private RecyclerAdapter recyclerAdapter;
     List<String> cityList;
 
     private Toolbar toolbar;
@@ -68,14 +66,16 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         //TODO Проверить код кнопки HOME - цвет должен быть белый (не работает)
         toolbar.setTitleTextColor(ContextCompat.getColor(this, android.R.color.white));
 
-        favoriteList = (RecyclerView) findViewById(R.id.recyclerView);
-
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         cityList = new ArrayList<>();
 
-        favoriteList.setLayoutManager(new LinearLayoutManager(this));
+        recyclerAdapter = new RecyclerAdapter(cityList, this);
+        recyclerView.setAdapter(recyclerAdapter);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         /** Вычисляет степень прокрутки и выполняет нужное действие.*/
-        favoriteList.addOnScrollListener(new HidingScrollListener() {
+        recyclerView.addOnScrollListener(new HidingScrollListener() {
             @Override
             public void onHide() {
                 hideViews();
@@ -90,7 +90,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         fabBtn.setOnClickListener(this);
         createItemList();
         Log.d(TAG, String.valueOf(PositionManager.getInstance().getPositions()));
-        showList(favoriteList);
     }
 
     // Вспомогательные методы
@@ -109,13 +108,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         fabBtn.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
     }
 
-    /** Показывает список городов*/
-    private void showList(RecyclerView favoriteList) {
-        RecyclerAdapter recyclerAdapter = new RecyclerAdapter(cityList, this);
-        favoriteList.setAdapter(recyclerAdapter);
-    }
-
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -123,7 +115,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 showChooseCityDialog();
                 return;
             case R.id.recycler_item:
-                final int position = favoriteList.getChildAdapterPosition(v);
+                final int position = recyclerView.getChildAdapterPosition(v);
                 Intent answerIntent = new Intent();
                 answerIntent.putExtra(CITY_PICKER_TAG, cityList.get(position - 1));
                 setResult(RESULT_OK, answerIntent);
@@ -149,7 +141,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         CityPickerActivity.this.clearList();
-                        showList(favoriteList);
+                        recyclerAdapter.notifyDataSetChanged();
                     }
                 });
                 builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -177,6 +169,9 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
     // Вспомогательный метод для добавления города в список
     private void addItem(String city) {
+        if (!PositionManager.getInstance().positionIsPresent(city)) {
+            PositionManager.getInstance().addPosition(city);
+        }
         Intent answerIntent = new Intent();
         answerIntent.putExtra(CITY_PICKER_TAG, city);
         setResult(RESULT_OK, answerIntent);
