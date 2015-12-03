@@ -202,20 +202,35 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
     /**
      * Получаем город из CityPickActivity
-     * */
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == CHOOSE_CITY) {
+        int size = PositionManager.getInstance().getPositions().size();
+        if (size == 0) {
+            city.setText("--/--");
+            temperature.setText("--/--");
+            precipitation.setText("--/--");
+            pressure.setText("--/--");
+            wind.setText("--/--");
+            humidity.setText("--/--");
+            timeStamp.setText("--/--");
+        }
+        else if (requestCode == CHOOSE_CITY) {
             if (resultCode == RESULT_OK) {
-                String newCity = data.getStringExtra(CityPickerActivity.CITY);
+                String newCity = data.getStringExtra(CityPickerActivity.CITY_PICKER_TAG);
                 city.setText(newCity);
-            }else {
+                Log.d(TAG, newCity);
+
+                if (!PositionManager.getInstance().positionIsPresent(newCity)) {
+                    PositionManager.getInstance().addPosition(newCity);
+                }
+                PositionManager.getInstance().setCurrentPosition(newCity);
+                PositionManager.getInstance().updateCurrent();
+            } else {
                 //TODO Временная заглушка
-                city.setText(""); // стираем текст
+                //city.setText(""); // стираем текст
             }
         }
     }
-
 }
