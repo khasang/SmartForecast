@@ -363,6 +363,8 @@ public class PositionManager {
         currPosition.setWeather(currStation.getServiceType(), firstEntry.getKey(), firstEntry.getValue());
     }
 
+    //region Вспомогательные методы
+
     private Weather formatWeather(Weather weather) {
         weather.setTemperature(formatTemperature(weather.getTemperature()));
         weather.setPressure(formatPressure(weather.getPressure()));
@@ -489,4 +491,5 @@ public class PositionManager {
         double mmHg = pressure / KPA_TO_MM_HG;
         return mmHg;
     }
+    //endregion
 }
