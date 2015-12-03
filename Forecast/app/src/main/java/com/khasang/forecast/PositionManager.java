@@ -52,7 +52,7 @@ public class PositionManager {
 
     }
 
-    public static PositionManager getInstance () {
+    public static PositionManager getInstance() {
         return ManagerHolder.instance;
     }
 
@@ -143,7 +143,7 @@ public class PositionManager {
         }
     }
 
-    public void removePositions () {
+    public void removePositions() {
         positions.clear();
     }
 
@@ -288,29 +288,37 @@ public class PositionManager {
     /**
      * Метод, вызывемый активити, для обновления текущей погоды от текущей погодной станции
      */
-    public Weather updateCurrent() {
-        if (positionIsPresent(currPosition.getLocationName())) {
-            currStation.updateWeather(currPosition.getCityID(), currPosition.getCoordinate());
-        } else {
-            Toast.makeText(mActivity, "Ошибка обновления погоды.\nГород отсутствует в списке локаций.",Toast.LENGTH_SHORT).show();
+    public Weather getCurrentForecast() {
+        if (!positionIsPresent(currPosition.getLocationName())) {
+            Toast.makeText(mActivity, "Ошибка обновления погоды.\nГород отсутствует в списке локаций.", Toast.LENGTH_SHORT).show();
+            return null;
         }
-        return null;
+        currStation.updateWeather(currPosition.getCityID(), currPosition.getCoordinate());
+        return null;    // Возвращать ближайшую погоду
     }
 
     /**
      * Метод, вызывемый активити, для обновления погоды на сутки
      */
-    public Weather updateHourly() {
+    public Map<Calendar, Weather> getHourlyForecast() {
+        if (!positionIsPresent(currPosition.getLocationName())) {
+            Toast.makeText(mActivity, "Ошибка обновления погоды.\nГород отсутствует в списке локаций.", Toast.LENGTH_SHORT).show();
+            return null;
+        }
         currStation.updateHourlyWeather(currPosition.getCityID(), currPosition.getCoordinate());
-        return null;
+        return null;    // Возвращать ближайшую погоду
     }
 
     /**
      * Метод, вызывемый активити, для обновления погоды на неделю
      */
-    public Weather updateWeekly() {
+    public Map<Calendar, Weather> getDailyForecast() {
+        if (!positionIsPresent(currPosition.getLocationName())) {
+            Toast.makeText(mActivity, "Ошибка обновления погоды.\nГород отсутствует в списке локаций.", Toast.LENGTH_SHORT).show();
+            return null;
+        }
         currStation.updateWeeklyWeather(currPosition.getCityID(), currPosition.getCoordinate());
-        return null;
+        return null;    // Возвращать ближайшую погоду
     }
 
     /**
@@ -339,6 +347,21 @@ public class PositionManager {
     }
 
     /**
+     * Пролучение локации из списка локаций
+     *
+     * @param cityID идентификатор местоположения
+     * @return обьект типа {@link Position}
+     */
+    private Position getPosition(int cityID) {
+        for (Position pos : positions.values()) {
+            if (pos.getCityID() == cityID) {
+                return pos;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Метод для обновления погодных данных. Вызывается погодным сервисом, когда он получает актуальные данные
      *
      * @param cityId      внутренний идентификатор города, передается в погодную станцию во время запроса погоды
@@ -347,20 +370,43 @@ public class PositionManager {
      */
     public void onResponseReceived(int cityId, WeatherStationFactory.ServiceType serviceType, Map<Calendar, Weather> weather) {
         HashMap.Entry<Calendar, Weather> firstEntry = (Map.Entry<Calendar, Weather>) weather.entrySet().iterator().next();
-        currPosition.setWeather(currStation.getServiceType(), firstEntry.getKey(), firstEntry.getValue());
+        Position position = getPosition(cityId);
+        if (position != null) {
+            position.setWeather(serviceType, firstEntry.getKey(), firstEntry.getValue());
+        }
         if (currPosition.getCityID() == cityId && currStation.getServiceType() == serviceType) {
             mActivity.updateInterface(firstEntry.getKey(), formatWeather(firstEntry.getValue()));
         }
     }
 
     public void onHourlyResponseReceived(int cityId, WeatherStationFactory.ServiceType serviceType, Map<Calendar, Weather> weather) {
-        HashMap.Entry<Calendar, Weather> firstEntry = (Map.Entry<Calendar, Weather>) weather.entrySet().iterator().next();
-        currPosition.setWeather(currStation.getServiceType(), firstEntry.getKey(), firstEntry.getValue());
+        Position position = getPosition(cityId);
+        if (position != null) {
+            for (Map.Entry<Calendar, Weather> entry : weather.entrySet()) {
+                position.setWeather(serviceType, entry.getKey(), entry.getValue());                 // Здесь заносим в базу
+            }
+        }
+        if (currPosition.getCityID() == cityId && currStation.getServiceType() == serviceType) {
+            for (Map.Entry<Calendar, Weather> entry : weather.entrySet()) {
+                entry.setValue(formatWeather(entry.getValue()));                                    //Есди позиция и станция теккущие
+            }                                                                                       //Преобразуем погодные данные в нужные метрики
+            mActivity.updateHourForecast(weather);                                                  //Отправляем данные в интерфейс
+        }
     }
 
     public void onMonthlyResponseReceived(int cityId, WeatherStationFactory.ServiceType serviceType, Map<Calendar, Weather> weather) {
-        HashMap.Entry<Calendar, Weather> firstEntry = (Map.Entry<Calendar, Weather>) weather.entrySet().iterator().next();
-        currPosition.setWeather(currStation.getServiceType(), firstEntry.getKey(), firstEntry.getValue());
+        Position position = getPosition(cityId);
+        if (position != null) {
+            for (Map.Entry<Calendar, Weather> entry : weather.entrySet()) {
+                position.setWeather(serviceType, entry.getKey(), entry.getValue());
+            }
+        }
+        if (currPosition.getCityID() == cityId && currStation.getServiceType() == serviceType) {
+            for (Map.Entry<Calendar, Weather> entry : weather.entrySet()) {
+                entry.setValue(formatWeather(entry.getValue()));
+            }
+            mActivity.updateDayForecast(weather);
+        }
     }
 
     //region Вспомогательные методы
