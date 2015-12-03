@@ -55,7 +55,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 //    int hours;
 //    int minutes;
 
-    int CHOOSE_CITY;
+    private final int CHOOSE_CITY = 1;
     // Для тестирования
 /*
     private String current_city = "London";
@@ -76,9 +76,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     private double current_wind = 11;
     private int current_humidity = 90;
     private String current_timeStamp = "10:15";*/
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,7 +124,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 //                manager.addPosition(current_city);            Это итак делается в менеджере
 //               manager.setCurrentPosition(current_city);      Это делается в менеджере
                 PositionManager.getInstance().updateCurrent();
-                
+
                 //updateInterface(manager.updateCurrent());
                 //updateHourForecast(manager.updateHourly());
                 break;
@@ -206,16 +203,31 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == CHOOSE_CITY) {
+        int size = PositionManager.getInstance().getPositions().size();
+        if (size == 0) {
+            city.setText("--/--");
+            temperature.setText("--/--");
+            precipitation.setText("--/--");
+            pressure.setText("--/--");
+            wind.setText("--/--");
+            humidity.setText("--/--");
+            timeStamp.setText("--/--");
+        }
+        else if (requestCode == CHOOSE_CITY) {
             if (resultCode == RESULT_OK) {
-                String newCity = data.getStringExtra(CityPickerActivity.CITY);
+                String newCity = data.getStringExtra(CityPickerActivity.CITY_PICKER_TAG);
                 city.setText(newCity);
-            }else {
+                Log.d(TAG, newCity);
+
+                if (!PositionManager.getInstance().positionIsPresent(newCity)) {
+                    PositionManager.getInstance().addPosition(newCity);
+                }
+                PositionManager.getInstance().setCurrentPosition(newCity);
+                PositionManager.getInstance().updateCurrent();
+            } else {
                 //TODO Временная заглушка
-                city.setText(""); // стираем текст
+                //city.setText(""); // стираем текст
             }
         }
     }
-
 }
