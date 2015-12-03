@@ -3,8 +3,10 @@ package com.khasang.forecast.adapters;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.Log;
 
 import com.khasang.forecast.fragments.DayForecastFragment;
+import com.khasang.forecast.fragments.HourForecastFragment;
 
 /**
  * Created by qwsa on 24.11.15.
@@ -40,13 +42,12 @@ public class ForecastPageAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         switch (position) {
-            case 0: // Fragment # 0 - This will show FirstFragment
+            case 0:
                 return DayForecastFragment.newInstance(0, "Page # 1");
-            /*case 1: // Fragment # 0 - This will show FirstFragment different title
-                return FirstFragment.newInstance(1, "Page # 2");
-            case 2: // Fragment # 1 - This will show SecondFragment
-                return SecondFragment.newInstance(2, "Page # 3");*/
+            case 1:
+                return HourForecastFragment.newInstance(1, "Page # 1");
             default:
+                Log.i("Adapter", "NULL");
                 return null;
         }
     }
