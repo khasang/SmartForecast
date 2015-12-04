@@ -7,6 +7,15 @@ package com.khasang.forecast;
 public class Weather {
 
     private double temperature;
+
+    public double getTemp_min() {
+        return temp_min;
+    }
+
+    public double getTemp_max() {
+        return temp_max;
+    }
+
     private double temp_min;
     private double temp_max;
     private double pressure;

@@ -4,8 +4,10 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.khasang.forecast.Coordinate;
+import com.khasang.forecast.PositionManager;
 import com.khasang.forecast.Precipitation;
 import com.khasang.forecast.Weather;
+import com.khasang.forecast.WeatherStation;
 import com.khasang.forecast.WeatherStationFactory;
 import com.khasang.forecast.Wind;
 
@@ -25,19 +27,19 @@ public class SQLiteProcessData {
     }
 
     // Сохранение списка городов.
-    public void saveTown(String town, String latitude, String longtitude) {
-        deleteOldTowns();
-        sqLite.queryExExec(SQLiteFields.QUERY_INSERT_TOWN, new String[]{town, latitude, longtitude});
+    public void saveTown(String town, double latitude, double longitude) {
+        sqLite.queryExExec(SQLiteFields.QUERY_INSERT_TOWN, new String[]{town, Double.toString(latitude), Double.toString(longitude)});
     }
 
     // Сохранение погоды.
-    public void saveWeather(WeatherStationFactory.ServiceType serviceType, String townName, Calendar date, double temperature, double temperatureMax, double temperatureMin,
-                            double pressure, int humidity, String description, Wind.Direction windDirection, double windSpeed, Precipitation.Type precipitationType) {
-
-        deleteOldWeather();
+    public void saveWeather(WeatherStationFactory.ServiceType serviceType, String townName, Calendar date, Weather weather) {
+    // double temperature, double temperatureMax, double temperatureMin,
+    // double pressure, int humidity, String description, Wind.Direction windDirection, double windSpeed, Precipitation.Type precipitationType) {
         sqLite.queryExExec(SQLiteFields.QUERY_INSERT_WEATHER, new String[]
-            {serviceType.name(), townName, date.toString(), Double.toString(temperature), Double.toString(temperatureMax), Double.toString(temperatureMin), Double.toString(pressure),
-                    Integer.toString(humidity), description, windDirection.name(), Double.toString(windSpeed), precipitationType.name()});
+            {serviceType.name(), townName, date.toString(), Double.toString(weather.getTemperature()), Double.toString(weather.getTemp_max()),
+                    Double.toString(weather.getTemp_min()), Double.toString(weather.getPressure()),
+                    Integer.toString(weather.getHumidity()), weather.getDescription(), weather.getWindDirection().name(),
+                    Double.toString(weather.getWindPower()), weather.getPrecipitation().name()});
     }
 
     /*
@@ -58,44 +60,58 @@ public class SQLiteProcessData {
     }
 
     // Загрузка TemperatureMetrics.
-    public String loadTemperatureMetrics() {
+    public PositionManager.TemperatureMetrics loadTemperatureMetrics() {
         Cursor dataset = sqLite.queryOpen(SQLiteFields.QUERY_SELECT_SETTINGS, null);
         if (dataset != null && dataset.getCount() != 0) {
             if (dataset.moveToFirst()) {
-                return dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_TEMPIRATURE_METRICS));
+                switch (dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_TEMPIRATURE_METRICS))) {
+                    case "KELVIN": return PositionManager.TemperatureMetrics.KELVIN;
+                    case "CELSIUS": return PositionManager.TemperatureMetrics.CELSIUS;
+                    case "FAHRENHEIT": return PositionManager.TemperatureMetrics.FAHRENHEIT;
+                }
             }
         }
         return null;
     }
 
-    // Загрузка SpeedMetrics.
-    public String loadSpeedMetrics() {
+    // Загрузка SpeedMetrics. {METER_PER_SECOND, FOOT_PER_SECOND, KM_PER_HOURS, MILES_PER_HOURS}
+    public PositionManager.SpeedMetrics loadSpeedMetrics() {
         Cursor dataset = sqLite.queryOpen(SQLiteFields.QUERY_SELECT_SETTINGS, null);
         if (dataset != null && dataset.getCount() != 0) {
             if (dataset.moveToFirst()) {
-                return dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_SPEED_METRICS));
+                switch (dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_SPEED_METRICS))) {
+                    case "METER_PER_SECOND": return PositionManager.SpeedMetrics.METER_PER_SECOND;
+                    case "FOOT_PER_SECOND": return PositionManager.SpeedMetrics.FOOT_PER_SECOND;
+                    case "KM_PER_HOURS": return PositionManager.SpeedMetrics.KM_PER_HOURS;
+                    case "MILES_PER_HOURS": return PositionManager.SpeedMetrics.MILES_PER_HOURS;
+                }
             }
         }
         return null;
     }
 
-    // Загрузка PressureMetrics.
-    public String loadPressureMetrics() {
+    // Загрузка PressureMetrics.  {HPA, MM_HG}
+    public PositionManager.PressureMetrics loadPressureMetrics() {
         Cursor dataset = sqLite.queryOpen(SQLiteFields.QUERY_SELECT_SETTINGS, null);
         if (dataset != null && dataset.getCount() != 0) {
             if (dataset.moveToFirst()) {
-                return dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_PRESSURE_METRICS));
+                switch (dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_PRESSURE_METRICS))) {
+                    case "HPA": return PositionManager.PressureMetrics.HPA;
+                    case "MM_HG": return PositionManager.PressureMetrics.MM_HG;
+                }
             }
         }
         return null;
     }
 
     // Загрузка Station.
-    public String loadStation() {
+    public WeatherStationFactory.ServiceType loadStation() {
         Cursor dataset = sqLite.queryOpen(SQLiteFields.QUERY_SELECT_SETTINGS, null);
         if (dataset != null && dataset.getCount() != 0) {
             if (dataset.moveToFirst()) {
-                return dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_STATION));
+                switch (dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_STATION))) {
+                    case "OPEN_WEATHER_MAP": return WeatherStationFactory.ServiceType.OPEN_WEATHER_MAP;
+                }
             }
         }
         return null;
