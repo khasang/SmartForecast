@@ -37,7 +37,6 @@ public class DayForecastFragment extends CommonForecastFragment {
 
             weathers.add(entry.getValue());
         }
-        adapter.notifyDataSetChanged();
     }
 
 }

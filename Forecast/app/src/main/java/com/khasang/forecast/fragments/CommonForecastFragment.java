@@ -32,7 +32,10 @@ public abstract class CommonForecastFragment extends Fragment {
 
     public void setDatas(Map<Calendar, Weather> forecasts) {
         this.forecasts = forecasts;
+        sDate.clear();
+        weathers.clear();
         updateForecasts();
+        adapter.notifyDataSetChanged();
     }
 
     @Override

@@ -32,8 +32,6 @@ public class HourForecastFragment extends CommonForecastFragment {
             sDate.add(sTime);
             weathers.add(entry.getValue());
         }
-
-        adapter.notifyDataSetChanged();
     }
 
 }
