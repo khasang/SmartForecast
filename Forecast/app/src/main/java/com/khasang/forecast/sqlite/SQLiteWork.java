@@ -88,7 +88,6 @@ public class SQLiteWork {
         checkTable(SQLiteFields.TABLE_TOWNS, SQLiteFields.QUERY_CREATE_TABLE_TOWNS);
         checkTable(SQLiteFields.TABLE_WEATHER, SQLiteFields.QUERY_CREATE_TABLE_WEATHER);
         checkTable(SQLiteFields.TABLE_SETTINGS, SQLiteFields.QUERY_CREATE_TABLE_SETTINGS);
-        checkTable(SQLiteFields.TABLE_STATIONS, SQLiteFields.QUERY_CREATE_TABLE_STATIONS);
     }
 
     public void tablesDelete() {
@@ -96,6 +95,5 @@ public class SQLiteWork {
         sqlDatabase.execSQL(SQLiteFields.QUERY_DELETE_TABLE_TOWNS);
         sqlDatabase.execSQL(SQLiteFields.QUERY_DELETE_TABLE_WEATHER);
         sqlDatabase.execSQL(SQLiteFields.QUERY_DELETE_TABLE_SETTINGS);
-        sqlDatabase.execSQL(SQLiteFields.QUERY_DELETE_TABLE_STATIONS);
     }
 }
