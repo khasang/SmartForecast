@@ -398,7 +398,7 @@ public class PositionManager {
         }
     }
 
-    public void onMonthlyResponseReceived(int cityId, WeatherStationFactory.ServiceType serviceType, Map<Calendar, Weather> weather) {
+    public void onDaylyResponseReceived(int cityId, WeatherStationFactory.ServiceType serviceType, Map<Calendar, Weather> weather) {
         Position position = getPosition(cityId);
         if (position != null) {
             for (Map.Entry<Calendar, Weather> entry : weather.entrySet()) {
