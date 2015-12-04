@@ -52,7 +52,7 @@ public abstract class CommonForecastFragment extends Fragment {
 
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
 
-        layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, true);
         recyclerView.setLayoutManager(layoutManager);
 
         adapter = new CustomAdapter(sDate, weathers);
