@@ -40,6 +40,10 @@ public class Precipitation {
                 '}';
     }
 
+    public Precipitation() {
+
+    }
+
     public Precipitation(Type type) {
         this.type = type;
         //this.probability = probability;
@@ -52,6 +56,26 @@ public class Precipitation {
     public void setType(Type type) {
         this.type = type;
     }
+
+    public void setType(String type) {
+        this.type = stringToType(type);
+    }
+
+    public Type stringToType(String direction) {
+        switch (direction) {
+            case "THUNDERSTORM": return Type.THUNDERSTORM;
+            case "DRIZZLE": return Type.DRIZZLE;
+            case "RAIN": return Type.RAIN;
+            case "SNOW": return Type.SNOW;
+            case "ATMOSPHERE": return Type.ATMOSPHERE;
+            case "CLEAR": return Type.CLEAR;
+            case "CLOUDS": return Type.CLOUDS;
+            case "EXTREME": return Type.EXTREME;
+            case "ADDITIONAL": return Type.ADDITIONAL;
+        }
+        return null;
+    }
+
 
     /*public int getProbability() {
         return probability;

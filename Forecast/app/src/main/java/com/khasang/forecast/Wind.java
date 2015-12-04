@@ -15,6 +15,10 @@ public class Wind {
 */
     public static enum Direction {NORTH, NORTHEAST, EAST, SOUTHEAST, SOUTH, SOUTHWEST, WEST, NORTHWEST}
 
+    public Wind() {
+
+    }
+
     public Wind(Direction direction, double speed) {
         this.direction = direction;
         this.speed = speed;
@@ -28,6 +32,10 @@ public class Wind {
         this.direction = direction;
     }
 
+    public void setDirection(String direction) {
+        this.direction = stringToDirection(direction);
+    }
+
     public double getSpeed() {
         return speed;
     }
@@ -35,4 +43,19 @@ public class Wind {
     public void setSpeed(double speed) {
         this.speed = speed;
     }
+
+    public Direction stringToDirection(String direction) {
+        switch (direction) {
+            case "NORTH": return Direction.NORTH;
+            case "NORTHEAST": return Direction.NORTHEAST;
+            case "EAST": return Direction.EAST;
+            case "SOUTHEAST": return Direction.SOUTHEAST;
+            case "SOUTH": return Direction.SOUTH;
+            case "SOUTHWEST": return Direction.SOUTHWEST;
+            case "WEST": return Direction.WEST;
+            case "NORTHWEST": return Direction.NORTHWEST;
+        }
+        return null;
+    }
+
 }
