@@ -10,12 +10,18 @@ import java.util.TreeSet;
  * Created by Veda on 24.11.15.
  */
 
-public class Position {
+public class Position implements ILocation {
     private String name;
     private int cityID;
     private Coordinate coordinate;
+    private Map<WeatherStationFactory.ServiceType, Map<Calendar, Weather>> weather;
 
     public Position() {
+        weather = new HashMap<>();
+    }
+
+    public void addWeatherStation(WeatherStationFactory.ServiceType ws) {
+        weather.put(ws, new HashMap<Calendar, Weather>());
     }
 
     public void setLocationName(String name) {
@@ -40,6 +46,37 @@ public class Position {
 
     public void setCoordinate(Coordinate coordinate) {
         this.coordinate = coordinate;
+    }
+
+    public Set<Calendar> getAllDates(WeatherStationFactory.ServiceType ws) {
+        return weather.get(ws).keySet();
+    }
+
+    public Weather getWeather(WeatherStationFactory.ServiceType ws, Calendar date) {
+        //      Weather weatherOfDate = null;
+        return weather.get(ws).get(date);
+/*
+        for (Map.Entry<WeatherStationFactory.ServiceType, Map<Calendar, Weather>> entry : weather.entrySet()) {
+            if (entry.getKey() == ws) {
+                weatherOfDate = entry.getValue().get(date);
+            }
+        }
+        return weatherOfDate;
+        */
+    }
+
+    @Override
+    public void setWeather(WeatherStationFactory.ServiceType ws, Calendar date, Weather weather) {
+        for (Map.Entry<WeatherStationFactory.ServiceType, Map<Calendar, Weather>> entry : this.weather.entrySet()) {
+            if (entry.getKey() == ws) {
+                entry.getValue().put(date, weather);
+            }
+        }
+    }
+
+    @Override
+    public Coordinate getPosition() {
+        return null;
     }
 
     @Override
