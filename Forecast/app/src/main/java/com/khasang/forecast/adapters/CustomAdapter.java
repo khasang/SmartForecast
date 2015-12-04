@@ -16,11 +16,9 @@ import java.util.ArrayList;
  * Created by aleksandrlihovidov on 03.12.15.
  */
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder>{
-//    private String[] dataset;
     private ArrayList<String> dateTimeList;
     private ArrayList<Weather> dataset;
 
-//    public CustomAdapter(String[] dataset) {
     public CustomAdapter(ArrayList<String> dateTimeList, ArrayList<Weather> dataset) {
         this.dateTimeList = dateTimeList;
         this.dataset = dataset;
@@ -36,14 +34,13 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-//        holder.tvDayOfWeekOrTime.setText(dataset[position]);
 // TODO: добавить заполнение иконки и т.д.
         String dayOfWeek = dateTimeList.get(position);
         holder.tvDayOfWeekOrTime.setText(dayOfWeek);
-//        String dayOfWeek = dateTimeList.get(position);
-//        holder.tvDayOfWeekOrTime.setText(dayOfWeek);
         String tvTemperature = String.valueOf(dataset.get(position).getTemperature());
         holder.tvTemperature.setText(tvTemperature);
+
+        holder.ivWeatherIcon.setImageResource(R.drawable.cloudy);
     }
 
     @Override
@@ -54,8 +51,6 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvDayOfWeekOrTime;
         ImageView ivWeatherIcon;
-//        TextView tvTemperatureDay;
-//        TextView tvTemperatureNight;
         TextView tvTemperature;
 
         public ViewHolder(View itemView) {
@@ -64,10 +59,6 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
             tvDayOfWeekOrTime = (TextView) itemView.findViewById(R.id.tvDayOfWeek);
             ivWeatherIcon = (ImageView) itemView.findViewById(R.id.ivWeatherIcon);
             tvTemperature = (TextView) itemView.findViewById(R.id.tvTemperature);
-        }
-
-        TextView getTextView() {
-            return tvDayOfWeekOrTime;
         }
     }
 }

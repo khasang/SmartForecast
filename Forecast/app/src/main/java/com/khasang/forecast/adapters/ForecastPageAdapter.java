@@ -5,56 +5,45 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
 
+import com.khasang.forecast.Weather;
+import com.khasang.forecast.fragments.CommonForecastFragment;
 import com.khasang.forecast.fragments.DayForecastFragment;
 import com.khasang.forecast.fragments.HourForecastFragment;
+
+import java.util.Calendar;
+import java.util.Map;
 
 /**
  * Created by qwsa on 24.11.15.
  */
 public class ForecastPageAdapter extends FragmentPagerAdapter {
-
-    private static int NUM_ITEMS = 2;
+    private CommonForecastFragment[] fragments;
 
     public ForecastPageAdapter(FragmentManager fragmentManager) {
         super(fragmentManager);
+
+        fragments = new CommonForecastFragment[2];
+        fragments[0] = new HourForecastFragment();
+        fragments[1] = new DayForecastFragment();
     }
 
-    /*private FragmentManager fm;
+    public void setHourForecast(Map<Calendar, Weather> forecasts) {
+        fragments[0].setDatas(forecasts);
+    }
 
-    public DailyForecastPageAdapter(FragmentManager fm) {
-        super(fm);
-        this.fm = fm;
-    }*/
-
-  /*  @Override
-    public Fragment getItem(int position) {
-        DayForecastFragment f = new DayForecastFragment();
-        return f;
-    }*/
+    public void setDayForecast(Map<Calendar, Weather> forecasts) {
+        fragments[1].setDatas(forecasts);
+    }
 
     // Returns total number of pages
     @Override
     public int getCount() {
-        return NUM_ITEMS;
+        return fragments.length;
     }
 
     // Returns the fragment to display for that page
     @Override
     public Fragment getItem(int position) {
-        switch (position) {
-            case 0:
-                return DayForecastFragment.newInstance(0, "Page # 1");
-            case 1:
-                return HourForecastFragment.newInstance(1, "Page # 1");
-            default:
-                Log.i("Adapter", "NULL");
-                return null;
-        }
+        return fragments[position];
     }
-
-    // Returns the page title for the top indicator
-   /* @Override
-    public CharSequence getPageTitle(int position) {
-        return "Page " + position;
-    }*/
 }

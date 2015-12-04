@@ -2,6 +2,7 @@ package com.khasang.forecast.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
@@ -12,6 +13,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.khasang.forecast.Position;
 import com.khasang.forecast.PositionManager;
 import com.khasang.forecast.R;
 import com.khasang.forecast.Weather;
@@ -161,25 +163,23 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 getString(R.string.humidity),
                 wCurent.getHumidity()));
 
-      /*  timeStamp.setText(String.format("%s %d:%02d",
-                getString(R.string.timeStamp),
-                hours,
-                minutes)); */
-
         timeStamp.setText(String.format("%s %d:%02d",
                 getString(R.string.timeStamp),
                 hours,
                 minutes));
+
+        PositionManager.getInstance().getHourlyForecast();
     }
 
     //TODO Реализовать метод получения прогноза по часам
     public void updateHourForecast(Map<Calendar, Weather> hourlyForecast) {
-
+        ((ForecastPageAdapter) pager.getAdapter()).setHourForecast(hourlyForecast);
+        PositionManager.getInstance().getDailyForecast();
     }
 
     //TODO Реализовать метод получения прогноза по дням
     public void updateDayForecast(Map<Calendar, Weather> weeklyForecast) {
-
+        ((ForecastPageAdapter) pager.getAdapter()).setDayForecast(weeklyForecast);
     }
 
 
