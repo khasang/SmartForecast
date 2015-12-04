@@ -289,7 +289,9 @@ public class PositionManager {
      * Метод, вызывемый активити, для обновления текущей погоды от текущей погодной станции
      */
     public Weather getCurrentForecast() {
-        if (!positionIsPresent(currPosition.getLocationName())) {
+        // TODO: currPosition == null
+//        if (!positionIsPresent(currPosition.getLocationName())) {
+        if (currPosition == null || !positionIsPresent(currPosition.getLocationName())) {
             Toast.makeText(mActivity, "Ошибка обновления погоды.\nГород отсутствует в списке локаций.", Toast.LENGTH_SHORT).show();
             return null;
         }
@@ -313,7 +315,9 @@ public class PositionManager {
      * Метод, вызывемый активити, для обновления погоды на неделю
      */
     public Map<Calendar, Weather> getDailyForecast() {
-        if (!positionIsPresent(currPosition.getLocationName())) {
+        // TODO: currPosition == null
+//        if (!positionIsPresent(currPosition.getLocationName())) {
+        if (currPosition == null || !positionIsPresent(currPosition.getLocationName())) {
             Toast.makeText(mActivity, "Ошибка обновления погоды.\nГород отсутствует в списке локаций.", Toast.LENGTH_SHORT).show();
             return null;
         }
