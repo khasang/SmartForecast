@@ -51,12 +51,16 @@ public class PositionManager {
     private WeatherActivity mActivity;
     private SQLiteProcessData dbManager;
 
-    private static PositionManager instance = new PositionManager();
+    private static class ManagerHolder {
+        private final static PositionManager instance = new PositionManager();
+    }
 
-    private PositionManager() { }
+    private PositionManager() {
 
-    public static PositionManager getInstance() {
-        return instance;
+    }
+
+    public static PositionManager getInstance () {
+        return ManagerHolder.instance;
     }
 
     public void initManager(WeatherActivity activity) {
@@ -303,7 +307,7 @@ public class PositionManager {
             return null;
         }
         currStation.updateWeather(currPosition.getCityID(), currPosition.getCoordinate());
-        return dbManager.loadWeather(currStation.serviceType, currPosition.getLocationName(), Calendar.getInstance().getTime());
+        return dbManager.loadWeather(currStation.serviceType, currPosition.getLocationName(), Calendar.getInstance());
     }
 
     /**

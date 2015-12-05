@@ -166,7 +166,7 @@ public class SQLiteProcessData {
     }
 
     // Загрузка погоды.
-    public Weather loadWeather(WeatherStationFactory.ServiceType serviceType, String cityName, Date data) {
+    public Weather loadWeather(WeatherStationFactory.ServiceType serviceType, String cityName, Calendar data) {
 
         double TEMPIRATURE = 0;
         double TEMPIRATURE_MAX = 0;
@@ -183,7 +183,7 @@ public class SQLiteProcessData {
         Weather weather = null;
 
         SimpleDateFormat dtFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        Cursor dataset = sqLite.queryOpen(SQLiteFields.QUERY_SELECT_WEATHER, new String[]{serviceType.name(), cityName, dtFormat.format(data)});
+        Cursor dataset = sqLite.queryOpen(SQLiteFields.QUERY_SELECT_WEATHER, new String[]{serviceType.name(), cityName, dtFormat.format(data.getTime())});
 
         if (dataset != null && dataset.getCount() != 0) {
             if (dataset.moveToFirst()) {
