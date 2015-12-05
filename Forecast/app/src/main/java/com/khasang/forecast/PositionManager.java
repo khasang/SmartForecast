@@ -3,6 +3,7 @@ package com.khasang.forecast;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.widget.Toast;
 
 import com.khasang.forecast.activities.WeatherActivity;
@@ -28,8 +29,6 @@ public class PositionManager {
     public static final double KM_TO_MILES = 0.62137;
     public static final double METER_TO_FOOT = 3.28083;
     public static final String MY_PREFF = "MY_PREFF";
-
-    public Context context;
 
     private SharedPreferences preferences;
     private String[] positionsKey;
@@ -121,6 +120,11 @@ public class PositionManager {
         PositionFactory positionFactory = new PositionFactory(mActivity, positions);
         positionFactory.addFavouritePosition(name, dbManager);
         positions = positionFactory.getPositions();
+    }
+
+    public boolean isNetworkAvailable(final Context context) {
+        final ConnectivityManager connectivityManager = ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE));
+        return connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isConnected();
     }
 
     /**
@@ -306,7 +310,11 @@ public class PositionManager {
             Toast.makeText(mActivity, "Ошибка обновления погоды.\nГород отсутствует в списке локаций.", Toast.LENGTH_SHORT).show();
             return null;
         }
-        currStation.updateWeather(currPosition.getCityID(), currPosition.getCoordinate());
+        if (isNetworkAvailable(mActivity)) {
+            currStation.updateWeather(currPosition.getCityID(), currPosition.getCoordinate());
+        } else {
+            Toast.makeText(mActivity, "Ошибка обновления погоды.\nСеть недоступна.", Toast.LENGTH_SHORT).show();
+        }
         return dbManager.loadWeather(currStation.serviceType, currPosition.getLocationName(), Calendar.getInstance());
     }
 
@@ -318,7 +326,11 @@ public class PositionManager {
             Toast.makeText(mActivity, "Ошибка обновления погоды.\nГород отсутствует в списке локаций.", Toast.LENGTH_SHORT).show();
             return null;
         }
-        currStation.updateHourlyWeather(currPosition.getCityID(), currPosition.getCoordinate());
+        if (isNetworkAvailable(mActivity)) {
+            currStation.updateHourlyWeather(currPosition.getCityID(), currPosition.getCoordinate());
+        } else {
+            Toast.makeText(mActivity, "Ошибка обновления погоды.\nСеть недоступна.", Toast.LENGTH_SHORT).show();
+        }
         return null;
     }
 
@@ -332,7 +344,11 @@ public class PositionManager {
             Toast.makeText(mActivity, "Ошибка обновления погоды.\nГород отсутствует в списке локаций.", Toast.LENGTH_SHORT).show();
             return null;
         }
-        currStation.updateWeeklyWeather(currPosition.getCityID(), currPosition.getCoordinate());
+        if (isNetworkAvailable(mActivity)) {
+            currStation.updateWeeklyWeather(currPosition.getCityID(), currPosition.getCoordinate());
+        } else {
+            Toast.makeText(mActivity, "Ошибка обновления погоды.\nСеть недоступна.", Toast.LENGTH_SHORT).show();
+        }
         return null;    // Возвращать ближайшую погоду
     }
 
