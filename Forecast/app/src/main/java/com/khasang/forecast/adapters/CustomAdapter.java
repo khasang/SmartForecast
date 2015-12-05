@@ -14,6 +14,9 @@ import java.util.ArrayList;
 
 /**
  * Created by aleksandrlihovidov on 03.12.15.
+ * Адаптер отображения карточек
+ * на конкрентное время
+ * и конкретнкую дату
  */
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder>{
     private ArrayList<String> dateTimeList;

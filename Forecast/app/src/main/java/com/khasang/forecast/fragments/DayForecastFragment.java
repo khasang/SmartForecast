@@ -20,7 +20,8 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * Created by qwsa on 24.11.15.
+ * Created by CopyPasteStd on 24.11.15.
+ * Фрагмент для отображения погоды по дням
  */
 public class DayForecastFragment extends CommonForecastFragment {
 

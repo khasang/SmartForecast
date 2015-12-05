@@ -10,8 +10,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.khasang.forecast.Position;
 import com.khasang.forecast.PositionManager;
@@ -45,6 +47,9 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     private TextView timeStamp;
     private ImageButton syncBtn;
     private ImageButton cityPickerBtn;
+    private Button hourForecastBtn;
+    private Button dayForecastBtn;
+
 
     private Animation animationRotateCenter;
 
@@ -89,13 +94,19 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         timeStamp = (TextView) findViewById(R.id.timeStamp);
         syncBtn = (ImageButton) findViewById(R.id.syncBtn);
         cityPickerBtn = (ImageButton) findViewById(R.id.cityPickerBnt);
+        hourForecastBtn = (Button) findViewById(R.id.hourForecastBtn);
+        dayForecastBtn = (Button) findViewById(R.id.dayForecastBtn);
+
 
         /** Анимация кнопки */
         animationRotateCenter = AnimationUtils.loadAnimation(
                 this, R.anim.rotate_center);
 
+        /** Слушатели нажатий кнопкок */
         syncBtn.setOnClickListener(this);
         cityPickerBtn.setOnClickListener(this);
+        hourForecastBtn.setOnClickListener(this);
+        dayForecastBtn.setOnClickListener(this);
 
         /**
          * Код для фрагментов
@@ -120,6 +131,12 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.cityPickerBnt:
                 //startActivity(new Intent(this, CityPickerActivity.class));
                 startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
+                break;
+            case R.id.hourForecastBtn:
+                pager.setCurrentItem(0);
+                break;
+            case R.id.dayForecastBtn:
+                pager.setCurrentItem(1);
                 break;
         }
         //onActivityResult()
