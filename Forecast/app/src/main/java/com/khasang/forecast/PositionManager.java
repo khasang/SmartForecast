@@ -1,12 +1,14 @@
 package com.khasang.forecast;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.widget.Toast;
 
 import com.khasang.forecast.activities.WeatherActivity;
 import com.khasang.forecast.sqlite.SQLiteProcessData;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -26,6 +28,9 @@ public class PositionManager {
     public static final double KM_TO_MILES = 0.62137;
     public static final double METER_TO_FOOT = 3.28083;
     public static final String MY_PREFF = "MY_PREFF";
+
+    public Context context;
+
     private SharedPreferences preferences;
     private String[] positionsKey;
 
@@ -46,23 +51,25 @@ public class PositionManager {
     private WeatherActivity mActivity;
     private SQLiteProcessData dbManager;
 
-    private static class ManagerHolder {
-        private final static PositionManager instance = new PositionManager();
-    }
+    private static PositionManager instance = null;
 
-    private PositionManager() {
-        dbManager = new SQLiteProcessData(mActivity.getApplicationContext());
-        settingsTemperatureMetrics = dbManager.loadTemperatureMetrics();
-        formatSpeedMetrics = dbManager.loadSpeedMetrics();
-        formatPressureMetrics = dbManager.loadPressureMetrics();
-    }
+    private PositionManager() { }
 
     public static PositionManager getInstance() {
-        return ManagerHolder.instance;
+        if (instance == null ) {
+            instance = new PositionManager();
+        }
+        return instance;
     }
 
     public void initManager(WeatherActivity activity) {
-        mActivity = activity;
+        this.mActivity = activity;
+
+        dbManager = new SQLiteProcessData(mActivity.context);
+        settingsTemperatureMetrics = dbManager.loadTemperatureMetrics();
+        formatSpeedMetrics = dbManager.loadSpeedMetrics();
+        formatPressureMetrics = dbManager.loadPressureMetrics();
+
         initStations();
         initPositions();
     }
@@ -299,7 +306,7 @@ public class PositionManager {
             return null;
         }
         currStation.updateWeather(currPosition.getCityID(), currPosition.getCoordinate());
-        return dbManager.loadWeather(currStation.serviceType, currPosition.getLocationName(), Calendar.getInstance());
+        return dbManager.loadWeather(currStation.serviceType, currPosition.getLocationName(), Calendar.getInstance().getTime());
     }
 
     /**

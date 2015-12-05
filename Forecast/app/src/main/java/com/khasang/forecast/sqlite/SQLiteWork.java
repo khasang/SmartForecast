@@ -18,7 +18,7 @@ public class SQLiteWork {
         dbWork = new SQLiteOpen(context, dbName);
         sqlDatabase = dbWork.getWritableDatabase();
         // удаление таблиц, пока не устаканится их структура
-        tablesDelete();
+        // tablesDelete();
         tablesCreate();
     }
 

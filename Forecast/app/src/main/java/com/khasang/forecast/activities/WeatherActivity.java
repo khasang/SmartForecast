@@ -1,5 +1,6 @@
 package com.khasang.forecast.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -18,6 +19,7 @@ import com.khasang.forecast.PositionManager;
 import com.khasang.forecast.R;
 import com.khasang.forecast.Weather;
 import com.khasang.forecast.adapters.ForecastPageAdapter;
+import com.khasang.forecast.sqlite.SQLiteProcessData;
 
 import java.util.Calendar;
 import java.util.Map;
@@ -46,12 +48,14 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     private ImageButton syncBtn;
     private ImageButton cityPickerBtn;
 
+
     private Animation animationRotateCenter;
 
 //    int hours;
 //    int minutes;
 
     private final int CHOOSE_CITY = 1;
+    public Context context;
     // Для тестирования
 /*
     private String current_city = "London";
@@ -75,8 +79,11 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
+
+        context = getApplicationContext();
 
         PositionManager.getInstance().initManager(this);
 

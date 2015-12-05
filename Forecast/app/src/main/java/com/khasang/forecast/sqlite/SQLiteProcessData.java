@@ -11,6 +11,9 @@ import com.khasang.forecast.WeatherStation;
 import com.khasang.forecast.WeatherStationFactory;
 import com.khasang.forecast.Wind;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import java.util.Calendar;
 import java.util.HashMap;
 
@@ -22,36 +25,35 @@ public class SQLiteProcessData {
 
     public SQLiteWork sqLite;
 
+
     public SQLiteProcessData(Context context) {
         this.sqLite = new SQLiteWork(context, "Forecast.db");
+        setDefaultValues();
     }
 
-    // Сохранение списка городов.
+    void setDefaultValues() {
+        saveTown("Москва", 55.75, 37.62);
+        saveTown("Волгоград", 48.72, 44.5);
+        saveTown("Краснодар", 45.03, 38.98);
+
+        sqLite.queryExExec(SQLiteFields.QUERY_INSERT_WEATHER, new String[]
+                {"OPEN_WEATHER_MAP", "Краснодар", "2015-12-04 00:00:00", "0.0", "+1.0", "-1.0", "20.0",
+                "5", "зима", "NORTHEAST", "5.0", "SNOW"});
+    }
+
+    // Сохранение города с координатами.
     public void saveTown(String town, double latitude, double longitude) {
         sqLite.queryExExec(SQLiteFields.QUERY_INSERT_TOWN, new String[]{town, Double.toString(latitude), Double.toString(longitude)});
     }
 
     // Сохранение погоды.
     public void saveWeather(WeatherStationFactory.ServiceType serviceType, String townName, Calendar date, Weather weather) {
-    // double temperature, double temperatureMax, double temperatureMin,
-    // double pressure, int humidity, String description, Wind.Direction windDirection, double windSpeed, Precipitation.Type precipitationType) {
         sqLite.queryExExec(SQLiteFields.QUERY_INSERT_WEATHER, new String[]
             {serviceType.name(), townName, date.toString(), Double.toString(weather.getTemperature()), Double.toString(weather.getTemp_max()),
                     Double.toString(weather.getTemp_min()), Double.toString(weather.getPressure()),
                     Integer.toString(weather.getHumidity()), weather.getDescription(), weather.getWindDirection().name(),
                     Double.toString(weather.getWindPower()), weather.getPrecipitation().name()});
     }
-
-    /*
-    public void saveWeather(String stationName, String townName, String date, String temperature, String temperatureMax, String temperatureMin,
-                            String pressure, String humidity, String description, String windDirection,
-                            String windSpeed, String precipitationType) {
-
-        deleteOldWeather();
-        sqLite.queryExExec(SQLiteFields.QUERY_INSERT_WEATHER,
-                new String[]
-                {stationName, townName, date, temperature, temperatureMax, temperatureMin, pressure, humidity, description, windDirection, windSpeed, precipitationType});
-    }*/
 
     // Сохранение насроек.
     public void saveSettings(String currentStation, String temperatureMetrics, String speedMetrics, String pressureMetrics) {
@@ -71,7 +73,8 @@ public class SQLiteProcessData {
                 }
             }
         }
-        return null;
+        // Значение по умолчанию.
+        return PositionManager.TemperatureMetrics.CELSIUS;
     }
 
     // Загрузка SpeedMetrics. {METER_PER_SECOND, FOOT_PER_SECOND, KM_PER_HOURS, MILES_PER_HOURS}
@@ -87,7 +90,8 @@ public class SQLiteProcessData {
                 }
             }
         }
-        return null;
+        // Значение по умолчанию.
+        return PositionManager.SpeedMetrics.METER_PER_SECOND;
     }
 
     // Загрузка PressureMetrics.  {HPA, MM_HG}
@@ -101,7 +105,8 @@ public class SQLiteProcessData {
                 }
             }
         }
-        return null;
+        // Значение по умолчанию.
+        return PositionManager.PressureMetrics.HPA;
     }
 
     // Загрузка Station.
@@ -114,7 +119,8 @@ public class SQLiteProcessData {
                 }
             }
         }
-        return null;
+        // Значение по умолчанию.
+        return WeatherStationFactory.ServiceType.OPEN_WEATHER_MAP;
     }
 
     // Очистка таблицы настроек.
@@ -160,7 +166,7 @@ public class SQLiteProcessData {
     }
 
     // Загрузка погоды.
-    public Weather loadWeather(WeatherStationFactory.ServiceType serviceType, String cityName, Calendar data) {
+    public Weather loadWeather(WeatherStationFactory.ServiceType serviceType, String cityName, Date data) {
 
         double TEMPIRATURE = 0;
         double TEMPIRATURE_MAX = 0;
@@ -174,7 +180,11 @@ public class SQLiteProcessData {
         Wind WIND;
         Precipitation PRECIPITATION;
 
-        Cursor dataset = sqLite.queryOpen(SQLiteFields.QUERY_SELECT_WEATHER, new String[]{serviceType.name(), cityName, data.toString()});
+        Weather weather = null;
+
+        SimpleDateFormat dtFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        Cursor dataset = sqLite.queryOpen(SQLiteFields.QUERY_SELECT_WEATHER, new String[]{serviceType.name(), cityName, dtFormat.format(data)});
+
         if (dataset != null && dataset.getCount() != 0) {
             if (dataset.moveToFirst()) {
                 TEMPIRATURE = dataset.getDouble(dataset.getColumnIndex(SQLiteFields.TEMPIRATURE));
@@ -194,9 +204,9 @@ public class SQLiteProcessData {
                 PRECIPITATION = new Precipitation();
                 PRECIPITATION.setType(PRECIPITATION_TYPE);
 
-                return new Weather(TEMPIRATURE, TEMPIRATURE_MIN, TEMPIRATURE_MAX, PRESSURE, HUMIDITY, WIND, PRECIPITATION, DESCRIPTION);
+                weather = new Weather(TEMPIRATURE, TEMPIRATURE_MIN, TEMPIRATURE_MAX, PRESSURE, HUMIDITY, WIND, PRECIPITATION, DESCRIPTION);
             }
         }
-        return null;
+        return weather;
     }
 }
