@@ -1,11 +1,15 @@
 package com.khasang.forecast;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.widget.Toast;
 
 import com.khasang.forecast.activities.WeatherActivity;
+import com.khasang.forecast.sqlite.SQLiteProcessData;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -25,8 +29,10 @@ public class PositionManager {
     public static final double KM_TO_MILES = 0.62137;
     public static final double METER_TO_FOOT = 3.28083;
     public static final String MY_PREFF = "MY_PREFF";
+
     private SharedPreferences preferences;
     private String[] positionsKey;
+    private SQLiteProcessData dbManager;
 
     public enum TemperatureMetrics {KELVIN, CELSIUS, FAHRENHEIT}
 
@@ -52,12 +58,18 @@ public class PositionManager {
 
     }
 
-    public static PositionManager getInstance() {
+    public static PositionManager getInstance () {
         return ManagerHolder.instance;
     }
 
     public void initManager(WeatherActivity activity) {
-        mActivity = activity;
+        this.mActivity = activity;
+
+        dbManager = new SQLiteProcessData(mActivity.context);
+        settingsTemperatureMetrics = dbManager.loadTemperatureMetrics();
+        formatSpeedMetrics = dbManager.loadSpeedMetrics();
+        formatPressureMetrics = dbManager.loadPressureMetrics();
+
         initStations();
         initPositions();
     }
@@ -110,6 +122,11 @@ public class PositionManager {
         PositionFactory positionFactory = new PositionFactory(mActivity, positions);
         positionFactory.addFavouritePosition(name, stations.keySet());
         positions = positionFactory.getPositions();
+    }
+
+    public boolean isNetworkAvailable(final Context context) {
+        final ConnectivityManager connectivityManager = ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE));
+        return connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isConnected();
     }
 
     /**
@@ -287,6 +304,7 @@ public class PositionManager {
 
     /**
      * Метод, вызывемый активити, для обновления текущей погоды от текущей погодной станции
+     * @return weather  обьект типа {@link Weather}, содержащий погодные характеристики на ближайшую дату
      */
     public Weather getCurrentForecast() {
         // TODO: currPosition == null
@@ -295,24 +313,36 @@ public class PositionManager {
             Toast.makeText(mActivity, "Ошибка обновления погоды.\nГород отсутствует в списке локаций.", Toast.LENGTH_SHORT).show();
             return null;
         }
-        currStation.updateWeather(currPosition.getCityID(), currPosition.getCoordinate());
-        return null;    // Возвращать ближайшую погоду
+        if (isNetworkAvailable(mActivity)) {
+            currStation.updateWeather(currPosition.getCityID(), currPosition.getCoordinate());
+        } else {
+            Toast.makeText(mActivity, "Ошибка обновления погоды.\nСеть недоступна.", Toast.LENGTH_SHORT).show();
+        }
+        return dbManager.loadWeather(currStation.serviceType, currPosition.getLocationName(), Calendar.getInstance());
     }
 
     /**
      * Метод, вызывемый активити, для обновления погоды на сутки
+     *
+     * @return контейнер, содержит погоду на ближайшие часы, типа {@link Map} содержащий обьекты класса {@link Weather}, передаваемые в качестве значения контейнера. Ключем контейнера является дата прогноза (объект класса {@link Calendar}).
      */
     public Map<Calendar, Weather> getHourlyForecast() {
         if (!positionIsPresent(currPosition.getLocationName())) {
             Toast.makeText(mActivity, "Ошибка обновления погоды.\nГород отсутствует в списке локаций.", Toast.LENGTH_SHORT).show();
             return null;
         }
-        currStation.updateHourlyWeather(currPosition.getCityID(), currPosition.getCoordinate());
-        return null;    // Возвращать ближайшую погоду
+        if (isNetworkAvailable(mActivity)) {
+            currStation.updateHourlyWeather(currPosition.getCityID(), currPosition.getCoordinate());
+        } else {
+            Toast.makeText(mActivity, "Ошибка обновления погоды.\nСеть недоступна.", Toast.LENGTH_SHORT).show();
+        }
+        return null;
     }
 
     /**
      * Метод, вызывемый активити, для обновления погоды на неделю
+     *
+     * @return контейнер, содержит погоду на ближайшие даты, типа {@link Map} содержащий обьекты класса {@link Weather}, передаваемые в качестве значения контейнера. Ключем контейнера является дата прогноза (объект класса {@link Calendar}).
      */
     public Map<Calendar, Weather> getDailyForecast() {
         // TODO: currPosition == null
@@ -321,7 +351,11 @@ public class PositionManager {
             Toast.makeText(mActivity, "Ошибка обновления погоды.\nГород отсутствует в списке локаций.", Toast.LENGTH_SHORT).show();
             return null;
         }
-        currStation.updateWeeklyWeather(currPosition.getCityID(), currPosition.getCoordinate());
+        if (isNetworkAvailable(mActivity)) {
+            currStation.updateWeeklyWeather(currPosition.getCityID(), currPosition.getCoordinate());
+        } else {
+            Toast.makeText(mActivity, "Ошибка обновления погоды.\nСеть недоступна.", Toast.LENGTH_SHORT).show();
+        }
         return null;    // Возвращать ближайшую погоду
     }
 
@@ -383,6 +417,13 @@ public class PositionManager {
         }
     }
 
+    /**
+     * Метод, в который приходит ответ от станции на запрос погоды на сутки
+     *
+     * @param cityId внутренний идентификатор города, однозначно указывающая на локацию в списке
+     * @param serviceType станция, от которой пришел прогноз погоды
+     * @param weather контейнер типа {@link Map} содержащий обьекты класса {@link Weather}, передаваемые в качестве значения контейнера. Ключем контейнера является дата полученного запроса (объект класса {@link Calendar})
+     */
     public void onHourlyResponseReceived(int cityId, WeatherStationFactory.ServiceType serviceType, Map<Calendar, Weather> weather) {
         Position position = getPosition(cityId);
         if (position != null) {
@@ -398,6 +439,13 @@ public class PositionManager {
         }
     }
 
+    /**
+     * Метод, в который приходит ответ от станции на недельный запрос погоды
+     *
+     * @param cityId внутренний идентификатор города, однозначно указывающая на локацию в списке
+     * @param serviceType станция, от которой пришел прогноз погоды
+     * @param weather контейнер типа {@link Map} содержащий обьекты класса {@link Weather}, передаваемые в качестве значения контейнера. Ключем контейнера является дата полученного запроса (объект класса {@link Calendar})
+     */
     public void onDaylyResponseReceived(int cityId, WeatherStationFactory.ServiceType serviceType, Map<Calendar, Weather> weather) {
         Position position = getPosition(cityId);
         if (position != null) {
@@ -414,7 +462,12 @@ public class PositionManager {
     }
 
     //region Вспомогательные методы
-
+    /**
+     * Метод для преобразования погодных характеристик в заданные пользователями метрики
+     *
+     * @param weather обьект класса {@link Weather}, в котором нужно привести погодные характеристики к заданным метрикам
+     * @return обьект класса {@link Weather} с преобразованными погодными характеристиками
+     */
     private Weather formatWeather(Weather weather) {
         weather.setTemperature(formatTemperature(weather.getTemperature()));
         weather.setPressure(formatPressure(weather.getPressure()));

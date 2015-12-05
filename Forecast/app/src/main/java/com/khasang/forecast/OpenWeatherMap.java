@@ -63,27 +63,26 @@ public class OpenWeatherMap extends WeatherStation {
      * потому что Retrofit версии 2.0.0-beta2 использует их старые версии, в которых еще нет
      * некоторых нужных нам возможностей. Например, получения полного тела запроса.
      */
-    HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-    OkHttpClient client = new OkHttpClient();
+    private HttpLoggingInterceptor logging;
+    private OkHttpClient client;
 
     /**
      * Создаем экземпляр объекта Retrofit, подключая конвертер GSON и созданный нами OkHttpClient.
      */
-    Retrofit retrofit = new Retrofit.Builder().baseUrl(API_BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create()).client(client).build();
+    private Retrofit retrofit;
 
     /**
      * Создаем сервис из интерфейса {@link OpenWeatherMapService} с заданными конечными точками
      * для запроса.
      */
-    OpenWeatherMapService service = retrofit.create(OpenWeatherMapService.class);
+    private OpenWeatherMapService service;
 
     /**
      * Метод, который добавляет постоянно-используемые параметры к нашему запросу, а так же
      * устанавливает уровень логирования.
      */
     private void addInterceptors() {
-        logging.setLevel(Level.BODY);
+        logging.setLevel(Level.BASIC);
         client.interceptors().add(new Interceptor() {
             @Override
             public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
@@ -100,17 +99,27 @@ public class OpenWeatherMap extends WeatherStation {
     }
 
     /**
+     * Конструктор класса.
+     */
+    public OpenWeatherMap() {
+        logging = new HttpLoggingInterceptor();
+        client = new OkHttpClient();
+        retrofit = new Retrofit.Builder().baseUrl(API_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create()).client(client).build();
+        service = retrofit.create(OpenWeatherMapService.class);
+        addInterceptors();
+    }
+
+    /**
      * Метод для асинхронного получения текущего прогноза погоды.
      *
      * @param coordinate объект типа {@link Coordinate}, содержащий географические координаты
      *                   для запроса.
-     *
      */
     @Override
     public void updateWeather(final int cityID, final Coordinate coordinate) {
-        addInterceptors();
         Call<OpenWeatherMapResponse> call = service.getCurrent(coordinate.getLatitude(),
-                                                                coordinate.getLongitude());
+                coordinate.getLongitude());
         call.enqueue(new Callback<OpenWeatherMapResponse>() {
             @Override
             public void onResponse(Response<OpenWeatherMapResponse> response, Retrofit retrofit) {
@@ -136,10 +145,9 @@ public class OpenWeatherMap extends WeatherStation {
      */
     @Override
     public void updateHourlyWeather(final int cityID, final Coordinate coordinate) {
-        addInterceptors();
         Call<OpenWeatherMapResponse> call = service.getHourly(coordinate.getLatitude(),
-                                                                coordinate.getLongitude(),
-                                                                TIME_PERIOD);
+                coordinate.getLongitude(),
+                TIME_PERIOD);
         call.enqueue(new Callback<OpenWeatherMapResponse>() {
             @Override
             public void onResponse(Response<OpenWeatherMapResponse> response, Retrofit retrofit) {
@@ -164,10 +172,9 @@ public class OpenWeatherMap extends WeatherStation {
      */
     @Override
     public void updateWeeklyWeather(final int cityID, final Coordinate coordinate) {
-        addInterceptors();
         Call<DailyResponse> call = service.getDaily(coordinate.getLatitude(),
-                                                    coordinate.getLongitude(),
-                                                    DAYS_PERIOD);
+                coordinate.getLongitude(),
+                DAYS_PERIOD);
         call.enqueue(new Callback<DailyResponse>() {
             @Override
             public void onResponse(Response<DailyResponse> response, Retrofit retrofit) {

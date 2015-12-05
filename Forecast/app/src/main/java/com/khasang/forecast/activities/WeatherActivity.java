@@ -1,11 +1,13 @@
 package com.khasang.forecast.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -20,10 +22,10 @@ import com.khasang.forecast.PositionManager;
 import com.khasang.forecast.R;
 import com.khasang.forecast.Weather;
 import com.khasang.forecast.adapters.ForecastPageAdapter;
+import com.khasang.forecast.sqlite.SQLiteProcessData;
 
 import java.util.Calendar;
 import java.util.Map;
-
 
 /**
  * Данные которые необходимо отображать в WeatherActivity (для первого релиза):
@@ -50,16 +52,18 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     private ImageButton hourForecastBtn;
     private ImageButton dayForecastBtn;
 
-
     private Animation animationRotateCenter;
 
-
     private final int CHOOSE_CITY = 1;
+    public Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
+
+        context = getApplicationContext();
 
         PositionManager.getInstance().initManager(this);
 
@@ -140,7 +144,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         city.setText(PositionManager.getInstance().getCurrentPositionName()); // отображаем имя текущей локации
         temperature.setText(String.format("%.0f°C", wCurent.getTemperature()));
 
-        //precipitation.setText(String.format("%s %s", w.getPrecipitation(), w.getPrecipitationProbability()));
         precipitation.setText(String.format("%s", wCurent.getPrecipitation()));
 
         pressure.setText(String.format("%s %.0f %s",
@@ -176,7 +179,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     public void updateDayForecast(Map<Calendar, Weather> weeklyForecast) {
         ((ForecastPageAdapter) pager.getAdapter()).setDayForecast(weeklyForecast);
     }
-
 
     /**
      * Получаем город из CityPickActivity
