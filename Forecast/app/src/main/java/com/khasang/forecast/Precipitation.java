@@ -61,19 +61,8 @@ public class Precipitation {
         this.type = stringToType(type);
     }
 
-    public Type stringToType(String direction) {
-        switch (direction) {
-            case "THUNDERSTORM": return Type.THUNDERSTORM;
-            case "DRIZZLE": return Type.DRIZZLE;
-            case "RAIN": return Type.RAIN;
-            case "SNOW": return Type.SNOW;
-            case "ATMOSPHERE": return Type.ATMOSPHERE;
-            case "CLEAR": return Type.CLEAR;
-            case "CLOUDS": return Type.CLOUDS;
-            case "EXTREME": return Type.EXTREME;
-            case "ADDITIONAL": return Type.ADDITIONAL;
-        }
-        return null;
+    public Type stringToType(String type) {
+        return Type.valueOf(type);
     }
 
 

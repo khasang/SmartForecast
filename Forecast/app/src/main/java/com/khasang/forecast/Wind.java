@@ -45,17 +45,7 @@ public class Wind {
     }
 
     public Direction stringToDirection(String direction) {
-        switch (direction) {
-            case "NORTH": return Direction.NORTH;
-            case "NORTHEAST": return Direction.NORTHEAST;
-            case "EAST": return Direction.EAST;
-            case "SOUTHEAST": return Direction.SOUTHEAST;
-            case "SOUTH": return Direction.SOUTH;
-            case "SOUTHWEST": return Direction.SOUTHWEST;
-            case "WEST": return Direction.WEST;
-            case "NORTHWEST": return Direction.NORTHWEST;
-        }
-        return null;
+        return Direction.valueOf(direction);
     }
 
 }
