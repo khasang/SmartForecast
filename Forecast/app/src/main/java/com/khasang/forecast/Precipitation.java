@@ -30,13 +30,13 @@ public class Precipitation {
     }*/
 
     public static enum Type {
-        THUNDERSTORM(R.drawable.thunder),
-        DRIZZLE(R.drawable.partlycloudy),
-        RAIN(0),
-        SNOW(R.drawable.snowy),
+        THUNDERSTORM(R.drawable.ic_thunderstorm),
+        DRIZZLE(R.drawable.ic_drizzle),
+        RAIN(R.drawable.ic_rain),
+        SNOW(R.drawable.ic_show),
         ATMOSPHERE(0),
-        CLEAR(R.drawable.sunny),
-        CLOUDS(R.drawable.cloudy),
+        CLEAR(R.drawable.ic_sun),
+        CLOUDS(R.drawable.ic_cloud),
         EXTREME(0),
         ADDITIONAL(0);
 
