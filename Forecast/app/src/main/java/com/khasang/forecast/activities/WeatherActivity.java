@@ -10,8 +10,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.khasang.forecast.Position;
 import com.khasang.forecast.PositionManager;
@@ -45,33 +47,14 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     private TextView timeStamp;
     private ImageButton syncBtn;
     private ImageButton cityPickerBtn;
+    private ImageButton hourForecastBtn;
+    private ImageButton dayForecastBtn;
+
 
     private Animation animationRotateCenter;
 
-//    int hours;
-//    int minutes;
 
     private final int CHOOSE_CITY = 1;
-    // Для тестирования
-/*
-    private String current_city = "London";
-    private int current_temperature = 1;
-    //private Precipitation current_precipitation;
-    private String current_precipitation = "Солнечно";
-    private int current_pressure = 40;
-    private int current_wind = 25;
-    private int current_humidity = 12;
-    private String current_timeStamp = "10:15";
-*/
-
-    // Для заглушки в PositionManager
-    /*private String current_city = "Berlin";
-    private int current_temperature = 10;
-    private String current_precipitation = "Солнечно";
-    private double current_pressure = 35.0;
-    private double current_wind = 11;
-    private int current_humidity = 90;
-    private String current_timeStamp = "10:15";*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,13 +72,19 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         timeStamp = (TextView) findViewById(R.id.timeStamp);
         syncBtn = (ImageButton) findViewById(R.id.syncBtn);
         cityPickerBtn = (ImageButton) findViewById(R.id.cityPickerBnt);
+        hourForecastBtn = (ImageButton) findViewById(R.id.hourForecastBtn);
+        dayForecastBtn = (ImageButton) findViewById(R.id.dayForecastBtn);
+
 
         /** Анимация кнопки */
         animationRotateCenter = AnimationUtils.loadAnimation(
                 this, R.anim.rotate_center);
 
+        /** Слушатели нажатий кнопкок */
         syncBtn.setOnClickListener(this);
         cityPickerBtn.setOnClickListener(this);
+        hourForecastBtn.setOnClickListener(this);
+        dayForecastBtn.setOnClickListener(this);
 
         /**
          * Код для фрагментов
@@ -120,6 +109,12 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.cityPickerBnt:
                 //startActivity(new Intent(this, CityPickerActivity.class));
                 startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
+                break;
+            case R.id.hourForecastBtn:
+                pager.setCurrentItem(0);
+                break;
+            case R.id.dayForecastBtn:
+                pager.setCurrentItem(1);
                 break;
         }
         //onActivityResult()

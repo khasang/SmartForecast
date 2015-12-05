@@ -19,6 +19,8 @@ import java.util.Map;
 
 /**
  * Created by aleksandrlihovidov on 05.12.15.
+ * Родительский класс для фрагментов
+ * DayForecastFragment && HourForecastFragment
  */
 public abstract class CommonForecastFragment extends Fragment {
 
@@ -63,4 +65,5 @@ public abstract class CommonForecastFragment extends Fragment {
 
         return v;
     }
+
 }

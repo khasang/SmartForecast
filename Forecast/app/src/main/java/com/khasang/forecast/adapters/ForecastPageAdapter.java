@@ -14,7 +14,8 @@ import java.util.Calendar;
 import java.util.Map;
 
 /**
- * Created by qwsa on 24.11.15.
+ * Created by CopyPasteStd on 24.11.15.
+ * Адаптер для отображения погоды по часам и по дням
  */
 public class ForecastPageAdapter extends FragmentPagerAdapter {
     private CommonForecastFragment[] fragments;
