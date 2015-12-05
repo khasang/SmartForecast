@@ -25,7 +25,7 @@ import java.util.Map;
 public class DayForecastFragment extends CommonForecastFragment {
 
     @Override
-    public void updateForecasts() {
+    protected void updateForecasts() {
         if (forecasts == null) {
             return; // TODO: пока просто выходим
         }

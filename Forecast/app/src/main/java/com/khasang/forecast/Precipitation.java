@@ -30,7 +30,25 @@ public class Precipitation {
     }*/
 
     public static enum Type {
-        THUNDERSTORM, DRIZZLE, RAIN, SNOW, ATMOSPHERE, CLEAR, CLOUDS, EXTREME, ADDITIONAL
+        THUNDERSTORM(R.drawable.thunder),
+        DRIZZLE(R.drawable.partlycloudy),
+        RAIN(0),
+        SNOW(R.drawable.snowy),
+        ATMOSPHERE(0),
+        CLEAR(R.drawable.sunny),
+        CLOUDS(R.drawable.cloudy),
+        EXTREME(0),
+        ADDITIONAL(0);
+
+        int iconResId;
+
+        Type(int iconResId) {
+            this.iconResId = iconResId;
+        }
+
+        public int getIconResId() {
+            return iconResId;
+        }
     }
 
     @Override

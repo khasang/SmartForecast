@@ -46,7 +46,7 @@ public abstract class CommonForecastFragment extends Fragment {
         weathers = new ArrayList<>();
     }
 
-    public abstract void updateForecasts();
+    protected abstract void updateForecasts();
 
     @Nullable
     @Override

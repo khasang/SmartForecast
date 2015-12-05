@@ -25,7 +25,7 @@ import java.util.Map;
 public class HourForecastFragment extends CommonForecastFragment {
 
     @Override
-    public void updateForecasts() {
+    protected void updateForecasts() {
         for (Map.Entry<Calendar, Weather> entry : forecasts.entrySet()) {
             Calendar calendar = entry.getKey();
             String sTime = String.format(Locale.getDefault(), "%tR", calendar);

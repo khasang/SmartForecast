@@ -40,7 +40,8 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         String tvTemperature = String.format("%+.1f", dataset.get(position).getTemperature());
         holder.tvTemperature.setText(tvTemperature);
 
-        holder.ivWeatherIcon.setImageResource(R.drawable.cloudy);
+        int iconId = dataset.get(position).getPrecipitation().getIconResId();
+        holder.ivWeatherIcon.setImageResource(iconId == 0 ? R.mipmap.ic_launcher : iconId);
     }
 
     @Override
