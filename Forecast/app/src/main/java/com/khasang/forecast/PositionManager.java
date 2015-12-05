@@ -51,14 +51,11 @@ public class PositionManager {
     private WeatherActivity mActivity;
     private SQLiteProcessData dbManager;
 
-    private static PositionManager instance = null;
+    private static PositionManager instance = new PositionManager();
 
     private PositionManager() { }
 
     public static PositionManager getInstance() {
-        if (instance == null ) {
-            instance = new PositionManager();
-        }
         return instance;
     }
 
