@@ -3,6 +3,7 @@ package com.khasang.forecast.activities;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -226,10 +227,13 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         switch (v.getId()) {
             case R.id.recycler_item:
                 final int position = recyclerView.getChildAdapterPosition(v);
-                TextView thisCity = (TextView) recyclerView.getChildAt(position).findViewById(R.id.itemTextView);
+                TextView thisCity = (TextView) recyclerView.getChildAt(position).findViewById(R.id.cityTW);
+                String cityName = String.valueOf(thisCity.getText());
                 Toast.makeText(this, "click on " + thisCity.getText(), Toast.LENGTH_SHORT).show();
-                cityList.remove(thisCity.getText());
+                cityList.remove(cityName);
                 recyclerAdapter.notifyDataSetChanged();
+                PositionManager.getInstance().removePosition(cityName);
+
         }
     return true;
     }

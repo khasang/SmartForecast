@@ -20,7 +20,7 @@ public class RecyclerItemViewHolder extends RecyclerView.ViewHolder {
 
      public RecyclerItemViewHolder (View itemView, View.OnClickListener listener, View.OnLongClickListener longListener) {
          super(itemView);
-         mItemTextView = (TextView) itemView.findViewById(R.id.itemTextView);
+         mItemTextView = (TextView) itemView.findViewById(R.id.cityTW);
          itemView.setOnClickListener(listener);
          itemView.setOnLongClickListener(longListener);
      }
