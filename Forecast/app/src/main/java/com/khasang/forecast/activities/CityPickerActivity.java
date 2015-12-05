@@ -21,6 +21,8 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.khasang.forecast.PositionManager;
@@ -38,7 +40,7 @@ import java.util.Set;
  *
  * Activity для выбора местоположения
  */
-public class CityPickerActivity extends AppCompatActivity implements View.OnClickListener {
+public class CityPickerActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
     String TAG = "MyTAG";
     public final static String CITY_PICKER_TAG = "com.khasang.forecast.activities.CityPickerActivity";
 
@@ -69,7 +71,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         cityList = new ArrayList<>();
 
-        recyclerAdapter = new RecyclerAdapter(cityList, this);
+        recyclerAdapter = new RecyclerAdapter(cityList, this, this);
         recyclerView.setAdapter(recyclerAdapter);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -217,5 +219,18 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         menuInflater.inflate(R.menu.menu_activity_city_picker, menu);
         menu.findItem(R.id.clear_favorite).setVisible(true);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        switch (v.getId()) {
+            case R.id.recycler_item:
+                final int position = recyclerView.getChildAdapterPosition(v);
+                TextView thisCity = (TextView) recyclerView.getChildAt(position).findViewById(R.id.itemTextView);
+                Toast.makeText(this, "click on " + thisCity.getText(), Toast.LENGTH_SHORT).show();
+                cityList.remove(thisCity.getText());
+                recyclerAdapter.notifyDataSetChanged();
+        }
+    return true;
     }
 }

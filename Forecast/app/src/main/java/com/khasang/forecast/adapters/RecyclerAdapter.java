@@ -22,11 +22,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private List<String> mItemList;
     private final View.OnClickListener mListener;
+    private final View.OnLongClickListener mLongListener;
 
 
-    public RecyclerAdapter(List<String> itemList, View.OnClickListener mListener) {
+
+    public RecyclerAdapter(List<String> itemList, View.OnClickListener mListener, View.OnLongClickListener mLongListener) {
         mItemList = itemList;
         this.mListener = mListener;
+        this.mLongListener = mLongListener;
     }
 
     @Override
@@ -35,7 +38,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (viewType == TYPE_ITEM) {
             final View view = LayoutInflater.from(parent.getContext()).
                     inflate(R.layout.recycler_item, parent, false);
-            return new RecyclerItemViewHolder(view, mListener);
+            return new RecyclerItemViewHolder(view, mListener, mLongListener);
         } else if (viewType == TYPE_HEADER) {
             final View view = LayoutInflater.from(context).inflate(R.layout.recycler_header, parent, false);
             return new RecyclerHeaderViewHolder(view);
