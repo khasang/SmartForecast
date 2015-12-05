@@ -1,6 +1,8 @@
 package com.khasang.forecast.activities;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -12,11 +14,14 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.khasang.forecast.Position;
 import com.khasang.forecast.PositionManager;
+import com.khasang.forecast.Precipitation;
 import com.khasang.forecast.R;
 import com.khasang.forecast.Weather;
 import com.khasang.forecast.adapters.ForecastPageAdapter;
@@ -52,6 +57,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
 
     private Animation animationRotateCenter;
+    private Animation animScale;
 
 
     private final int CHOOSE_CITY = 1;
@@ -76,9 +82,18 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         dayForecastBtn = (ImageButton) findViewById(R.id.dayForecastBtn);
 
 
+        hourForecastBtn.setBackgroundColor(0xFF00DDFF);
+        //LinearLayout linearLayout = (LinearLayout) findViewById(R.id.llCommon);
+        //linearLayout.setBackgroundResource(R.drawable.tunder_bg_25);
+
+
+        //LinearLayout linearLayout = (LinearLayout) findViewById(R.id.llMainInformation);
+        //linearLayout.setBackgroundResource(R.drawable.tunder_bg_25);
+
+
         /** Анимация кнопки */
-        animationRotateCenter = AnimationUtils.loadAnimation(
-                this, R.anim.rotate_center);
+        animationRotateCenter = AnimationUtils.loadAnimation(this, R.anim.rotate_center);
+        animScale = AnimationUtils.loadAnimation(this, R.anim.scale);
 
         /** Слушатели нажатий кнопкок */
         syncBtn.setOnClickListener(this);
@@ -107,17 +122,21 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 PositionManager.getInstance().getCurrentForecast();
                 break;
             case R.id.cityPickerBnt:
-                //startActivity(new Intent(this, CityPickerActivity.class));
                 startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
                 break;
             case R.id.hourForecastBtn:
+                hourForecastBtn.startAnimation(animScale);
+                hourForecastBtn.setBackgroundColor(getResources().getColor(R.color.my_holo_blue_bright));
+                dayForecastBtn.setBackgroundColor(getResources().getColor(R.color.my_white));
                 pager.setCurrentItem(0);
                 break;
             case R.id.dayForecastBtn:
+                dayForecastBtn.startAnimation(animScale);
+                dayForecastBtn.setBackgroundColor(getResources().getColor(R.color.my_holo_blue_bright));
+                hourForecastBtn.setBackgroundColor(getResources().getColor(R.color.my_white));
                 pager.setCurrentItem(1);
                 break;
         }
-        //onActivityResult()
     }
 
     /**
@@ -140,8 +159,16 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         city.setText(PositionManager.getInstance().getCurrentPositionName()); // отображаем имя текущей локации
         temperature.setText(String.format("%.0f°C", wCurent.getTemperature()));
 
+
+        /*RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.relative_layout);
+        //relativeLayout.setBackgroundResource(R.drawable.tunder_bg);
+        relativeLayout.setBackgroundResource(R.drawable.tunder_bg_25);
+
+        if (wCurent.getPrecipitation() == Precipitation.Type.CLOUDS)
+            relativeLayout.setBackgroundResource(R.drawable.tunder_bg_25);
+        else    relativeLayout.setBackgroundResource(R.drawable.tunder_bg_invert_25);*/
         //precipitation.setText(String.format("%s %s", w.getPrecipitation(), w.getPrecipitationProbability()));
-        precipitation.setText(String.format("%s", wCurent.getPrecipitation()));
+        precipitation.setText(String.format("%s", wCurent.getPrecipitation().name()));
 
         pressure.setText(String.format("%s %.0f %s",
                 getString(R.string.pressure),
@@ -201,10 +228,8 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 Log.d(TAG, newCity);
                 PositionManager.getInstance().setCurrentPosition(newCity);
                 PositionManager.getInstance().getCurrentForecast();
-            } else {
-                //TODO Временная заглушка
-                //city.setText(""); // стираем текст
             }
         }
     }
 }
+
