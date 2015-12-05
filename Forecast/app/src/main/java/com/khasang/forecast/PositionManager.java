@@ -302,6 +302,7 @@ public class PositionManager {
 
     /**
      * Метод, вызывемый активити, для обновления текущей погоды от текущей погодной станции
+     * @return weather  обьект типа {@link Weather}, содержащий погодные характеристики на ближайшую дату
      */
     public Weather getCurrentForecast() {
         // TODO: currPosition == null
@@ -320,6 +321,8 @@ public class PositionManager {
 
     /**
      * Метод, вызывемый активити, для обновления погоды на сутки
+     *
+     * @return контейнер, содержит погоду на ближайшие часы, типа {@link Map} содержащий обьекты класса {@link Weather}, передаваемые в качестве значения контейнера. Ключем контейнера является дата прогноза (объект класса {@link Calendar}).
      */
     public Map<Calendar, Weather> getHourlyForecast() {
         if (!positionIsPresent(currPosition.getLocationName())) {
@@ -336,6 +339,8 @@ public class PositionManager {
 
     /**
      * Метод, вызывемый активити, для обновления погоды на неделю
+     *
+     * @return контейнер, содержит погоду на ближайшие даты, типа {@link Map} содержащий обьекты класса {@link Weather}, передаваемые в качестве значения контейнера. Ключем контейнера является дата прогноза (объект класса {@link Calendar}).
      */
     public Map<Calendar, Weather> getDailyForecast() {
         // TODO: currPosition == null
@@ -410,6 +415,13 @@ public class PositionManager {
         }
     }
 
+    /**
+     * Метод, в который приходит ответ от станции на запрос погоды на сутки
+     *
+     * @param cityId внутренний идентификатор города, однозначно указывающая на локацию в списке
+     * @param serviceType станция, от которой пришел прогноз погоды
+     * @param weather контейнер типа {@link Map} содержащий обьекты класса {@link Weather}, передаваемые в качестве значения контейнера. Ключем контейнера является дата полученного запроса (объект класса {@link Calendar})
+     */
     public void onHourlyResponseReceived(int cityId, WeatherStationFactory.ServiceType serviceType, Map<Calendar, Weather> weather) {
         Position position = getPosition(cityId);
         if (position != null) {
@@ -425,6 +437,13 @@ public class PositionManager {
         }
     }
 
+    /**
+     * Метод, в который приходит ответ от станции на недельный запрос погоды
+     *
+     * @param cityId внутренний идентификатор города, однозначно указывающая на локацию в списке
+     * @param serviceType станция, от которой пришел прогноз погоды
+     * @param weather контейнер типа {@link Map} содержащий обьекты класса {@link Weather}, передаваемые в качестве значения контейнера. Ключем контейнера является дата полученного запроса (объект класса {@link Calendar})
+     */
     public void onDaylyResponseReceived(int cityId, WeatherStationFactory.ServiceType serviceType, Map<Calendar, Weather> weather) {
         Position position = getPosition(cityId);
         if (position != null) {
@@ -441,7 +460,12 @@ public class PositionManager {
     }
 
     //region Вспомогательные методы
-
+    /**
+     * Метод для преобразования погодных характеристик в заданные пользователями метрики
+     *
+     * @param weather обьект класса {@link Weather}, в котором нужно привести погодные характеристики к заданным метрикам
+     * @return обьект класса {@link Weather} с преобразованными погодными характеристиками
+     */
     private Weather formatWeather(Weather weather) {
         weather.setTemperature(formatTemperature(weather.getTemperature()));
         weather.setPressure(formatPressure(weather.getPressure()));
