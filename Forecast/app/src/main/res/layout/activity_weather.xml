@@ -164,16 +164,18 @@
             android:layout_weight="0"
             android:visibility="visible">
 
-            <Button
+            <ImageButton
                 android:id="@+id/hourForecastBtn"
+                android:src="@drawable/ic_by_hour_24"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Ежечасно" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/dayForecastBtn"
+                android:src="@drawable/ic_by_date_24"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
