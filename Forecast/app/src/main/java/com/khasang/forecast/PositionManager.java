@@ -95,10 +95,13 @@ public class PositionManager {
     private void initPositions(HashMap<String, Coordinate> favorites) {
         PositionFactory positionFactory = new PositionFactory(mActivity.getApplicationContext());
         positionFactory.addCurrentPosition();
-        for (HashMap.Entry<String, Coordinate> entry : favorites.entrySet()) {
-            positionFactory.addFavouritePosition(entry.getKey(), entry.getValue());
+
+        if (favorites != null) {
+            for (HashMap.Entry<String, Coordinate> entry : favorites.entrySet()) {
+                positionFactory.addFavouritePosition(entry.getKey(), entry.getValue());
+            }
+            positions = positionFactory.getPositions();
         }
-        positions = positionFactory.getPositions();
         currPosition = positions.get(dbManager.loadСurrentTown());
     }
 

@@ -28,6 +28,9 @@ public class SQLiteWork {
         try {
             if (!isTableExists(tableName)) {
                 queryExec(query);
+                if (tableName.equals(SQLiteFields.TABLE_SETTINGS)) {
+                    queryExExec(SQLiteFields.QUERY_INSERT_SETTINGS, new String[]{"OPEN_WEATHER_MAP", "Москва", "CELSIUS", "METER_PER_SECOND", "HPA"});
+                }
             }
         } catch (Exception e) {
             System.out.println("createTables ERROR " + e);
