@@ -9,7 +9,7 @@
     android:id="@+id/recycler_item">
 
     <TextView
-        android:id="@+id/itemTextView"
+        android:id="@+id/cityTW"
         style="@style/Base.TextAppearance.AppCompat.Body2"
         android:layout_width="match_parent"
         android:layout_height="?attr/listPreferredItemHeight"
