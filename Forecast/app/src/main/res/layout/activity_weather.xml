@@ -174,7 +174,9 @@
             android:id="@+id/sliding_tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
+            app:tabBackground="@color/my_holo_blue_bright"
+            app:tabIndicatorColor="@color/my_white"
+            app:tabIndicatorHeight="7dp"
             app:tabGravity="fill"
             app:tabMaxWidth="0dp"
             />
