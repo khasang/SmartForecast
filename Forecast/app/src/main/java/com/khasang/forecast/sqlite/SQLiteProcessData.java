@@ -4,9 +4,11 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.khasang.forecast.Coordinate;
+import com.khasang.forecast.Position;
 import com.khasang.forecast.PositionManager;
 import com.khasang.forecast.Precipitation;
 import com.khasang.forecast.Weather;
+import com.khasang.forecast.WeatherStation;
 import com.khasang.forecast.WeatherStationFactory;
 import com.khasang.forecast.Wind;
 
@@ -24,8 +26,10 @@ public class SQLiteProcessData {
     public SimpleDateFormat dtFormat;
 
     public SQLiteProcessData(Context context) {
-        this.sqLite = new SQLiteWork(context, "Forecast.db");
+        // TODO Перед релизом флаг deleteOldTables при создании SQLiteWork менять на false.
+        this.sqLite = new SQLiteWork(context, "Forecast.db", true);
         dtFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        // TODO Дефолтные настройки. Сделать диалоговое окно для запроса нового имени города, если база пустая.
         setDefaultValues();
     }
 
@@ -67,9 +71,11 @@ public class SQLiteProcessData {
     }
 
     // Сохранение насроек.
-    public void saveSettings(String currentStation, String temperatureMetrics, String speedMetrics, String pressureMetrics) {
+    public void saveSettings(WeatherStation currentStation, Position currPosition, PositionManager.TemperatureMetrics temperatureMetrics,
+                             PositionManager.SpeedMetrics speedMetrics, PositionManager.PressureMetrics pressureMetrics) {
         deleteSettins();
-        sqLite.queryExExec(SQLiteFields.QUERY_INSERT_SETTINGS, new String[]{currentStation, temperatureMetrics, speedMetrics, pressureMetrics});
+        sqLite.queryExExec(SQLiteFields.QUERY_INSERT_SETTINGS, new String[]{currentStation.getWeatherStationName(), currPosition.getLocationName(),
+                temperatureMetrics.name(), speedMetrics.name(), pressureMetrics.name()});
     }
 
     // Загрузка TemperatureMetrics.
@@ -84,7 +90,7 @@ public class SQLiteProcessData {
         return PositionManager.TemperatureMetrics.CELSIUS;
     }
 
-    // Загрузка SpeedMetrics. {METER_PER_SECOND, FOOT_PER_SECOND, KM_PER_HOURS, MILES_PER_HOURS}
+    // Загрузка SpeedMetrics.
     public PositionManager.SpeedMetrics loadSpeedMetrics() {
         Cursor dataset = sqLite.queryOpen(SQLiteFields.QUERY_SELECT_SETTINGS, null);
         if (dataset != null && dataset.getCount() != 0) {
@@ -146,11 +152,13 @@ public class SQLiteProcessData {
         double townLat = 0;
         double townLong = 0;
         String townName = "";
-        HashMap hashMap = new HashMap();
+        HashMap hashMap = null;
 
         Cursor dataset = sqLite.queryOpen(SQLiteFields.QUERY_SELECT_TOWNS, null);
         if (dataset != null && dataset.getCount() != 0) {
             if (dataset.moveToFirst()) {
+                hashMap = new HashMap();
+
                 do {
                     townName = dataset.getString(dataset.getColumnIndex(SQLiteFields.TOWN));
                     townLat = dataset.getDouble(dataset.getColumnIndex(SQLiteFields.LATITUDE));

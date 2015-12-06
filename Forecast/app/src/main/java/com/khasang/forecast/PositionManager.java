@@ -27,15 +27,10 @@ public class PositionManager {
     private SharedPreferences preferences;
     private String[] positionsKey;
 
+    public enum TemperatureMetrics {KELVIN, CELSIUS, FAHRENHEIT};
+    public enum SpeedMetrics {METER_PER_SECOND, FOOT_PER_SECOND, KM_PER_HOURS, MILES_PER_HOURS};
+    public enum PressureMetrics {HPA, MM_HG};
 
-
-    public enum TemperatureMetrics {KELVIN, CELSIUS, FAHRENHEIT;}
-
-
-    public enum SpeedMetrics {METER_PER_SECOND, FOOT_PER_SECOND, KM_PER_HOURS, MILES_PER_HOURS;}
-
-
-    public enum PressureMetrics {HPA, MM_HG;}
     TemperatureMetrics temperatureMetric;
     SpeedMetrics speedMetric;
     PressureMetrics pressureMetric;
@@ -45,13 +40,12 @@ public class PositionManager {
     private volatile HashMap<String, Position> positions;
     private WeatherActivity mActivity;
     private SQLiteProcessData dbManager;
-    private static class ManagerHolder {
 
+    private static class ManagerHolder {
         private final static PositionManager instance = new PositionManager();
     }
-    private PositionManager() {
 
-    }
+    private PositionManager() { }
 
     public static PositionManager getInstance () {
         return ManagerHolder.instance;
@@ -70,11 +64,7 @@ public class PositionManager {
     }
 
     public void saveSettings() {
-
-    }
-
-    public void saveSettings (String name, String currT, String currS, String currP) {
-        dbManager.saveSettings(name, currT, currS, currP);
+        dbManager.saveSettings(currStation, currPosition, temperatureMetric, speedMetric, pressureMetric);
     }
 
     /**
