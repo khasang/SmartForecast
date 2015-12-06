@@ -1,10 +1,7 @@
 package com.khasang.forecast.activities;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
@@ -12,16 +9,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.khasang.forecast.Position;
 import com.khasang.forecast.PositionManager;
-import com.khasang.forecast.Precipitation;
 import com.khasang.forecast.R;
 import com.khasang.forecast.Weather;
 import com.khasang.forecast.adapters.ForecastPageAdapter;
@@ -45,7 +36,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
     private TextView city;
     private TextView temperature;
-    private TextView precipitation;
+    private TextView description;
     private TextView pressure;
     private TextView wind;
     private TextView humidity;
@@ -71,7 +62,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
         city = (TextView) findViewById(R.id.city);
         temperature = (TextView) findViewById(R.id.temperature);
-        precipitation = (TextView) findViewById(R.id.precipitation);
+        description = (TextView) findViewById(R.id.precipitation);
         pressure = (TextView) findViewById(R.id.pressure);
         wind = (TextView) findViewById(R.id.wind);
         humidity = (TextView) findViewById(R.id.humidity);
@@ -88,6 +79,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
         /** Слушатели нажатий кнопкок */
         syncBtn.setOnClickListener(this);
+        city.setOnClickListener(this);
         cityPickerBtn.setOnClickListener(this);
         hourForecastBtn.setOnClickListener(this);
         dayForecastBtn.setOnClickListener(this);
@@ -111,6 +103,9 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.syncBtn:
                 syncBtn.startAnimation(animationRotateCenter);
                 PositionManager.getInstance().getCurrentForecast();
+                break;
+            case R.id.city:
+                startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
                 break;
             case R.id.cityPickerBnt:
                 startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
@@ -158,8 +153,14 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         if (wCurent.getPrecipitation() == Precipitation.Type.CLOUDS)
             relativeLayout.setBackgroundResource(R.drawable.tunder_bg_25);
         else    relativeLayout.setBackgroundResource(R.drawable.tunder_bg_invert_25);*/
-        //precipitation.setText(String.format("%s %s", w.getPrecipitation(), w.getPrecipitationProbability()));
-        precipitation.setText(String.format("%s", wCurent.getPrecipitation().name()));
+        //description.setText(String.format("%s %s", w.getPrecipitation(), w.getPrecipitationProbability()));
+        //description.setText(String.format("%s", wCurent.getPrecipitation().name()));
+
+        description.setText(String.format("%s", wCurent.getDescription()
+                .substring(0, 1)
+                .toUpperCase() + wCurent
+                .getDescription()
+                .substring(1)));
 
         pressure.setText(String.format("%s %.0f %s",
                 getString(R.string.pressure),
@@ -206,7 +207,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         if (size == 0) {
             city.setText("--/--");
             temperature.setText("--/--");
-            precipitation.setText("--/--");
+            description.setText("--/--");
             pressure.setText("--/--");
             wind.setText("--/--");
             humidity.setText("--/--");
