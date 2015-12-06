@@ -99,7 +99,6 @@ public class PositionManager {
             positionFactory.addFavouritePosition(entry.getKey(), entry.getValue());
         }
         positions = positionFactory.getPositions();
-        HashMap.Entry<String, Coordinate> firstEntry = (Map.Entry<String, Coordinate>) favorites.entrySet().iterator().next();;
         currPosition = positions.get(dbManager.loadСurrentTown());
     }
 
