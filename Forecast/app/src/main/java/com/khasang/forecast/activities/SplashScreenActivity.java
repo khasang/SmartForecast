@@ -36,7 +36,12 @@ public class SplashScreenActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash_screen);
+
+        Intent intent = new Intent(this, WeatherActivity.class);
+        startActivity(intent);
+        finish();
+
+        /*setContentView(R.layout.activity_splash_screen);
 
         mLocationProvider = new LocationProvider(this, this);
         mAndroidLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -55,7 +60,7 @@ public class SplashScreenActivity
                     buildAlertMessageNoGps();
                 }
             }
-        });
+        });*/
     }
 
     private void buildAlertMessageNoGps() {
@@ -78,7 +83,7 @@ public class SplashScreenActivity
                 .show();
     }
 
-    @Override
+    /*@Override
     protected void onResume() {
         super.onResume();
         mLocationProvider.connect();
@@ -88,7 +93,7 @@ public class SplashScreenActivity
     protected void onPause() {
         super.onPause();
         mLocationProvider.disconnect();
-    }
+    }*/
 
     @Override
     public void handleNewLocation(Location location) {
