@@ -170,38 +170,11 @@
         android:layout_below="@id/llCurrentWeather"
         android:layout_alignParentBottom="true">
 
-        <!--<LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:orientation="horizontal"
-            android:layout_weight="0"
-            android:visibility="visible">
-
-            <ImageButton
-                android:id="@+id/hourForecastBtn"
-                android:src="@drawable/ic_by_hour_24"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Ежечасно" />
-
-            <ImageButton
-                android:id="@+id/dayForecastBtn"
-                android:src="@drawable/ic_by_date_24"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Недели" />
-
-        </LinearLayout>-->
-
         <android.support.design.widget.TabLayout
             android:id="@+id/sliding_tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+
             app:tabGravity="fill"
             app:tabMaxWidth="0dp"
             />

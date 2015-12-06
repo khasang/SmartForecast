@@ -1,6 +1,7 @@
 package com.khasang.forecast.activities;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -45,9 +46,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     private TextView timeStamp;
     private ImageButton syncBtn;
     private ImageButton cityPickerBtn;
-    //private ImageButton hourForecastBtn;
-    //private ImageButton dayForecastBtn;
-
 
     private Animation animationRotateCenter;
     private Animation animScale;
@@ -71,11 +69,8 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         timeStamp = (TextView) findViewById(R.id.timeStamp);
         syncBtn = (ImageButton) findViewById(R.id.syncBtn);
         cityPickerBtn = (ImageButton) findViewById(R.id.cityPickerBnt);
-        //hourForecastBtn = (ImageButton) findViewById(R.id.hourForecastBtn);
-        //dayForecastBtn = (ImageButton) findViewById(R.id.dayForecastBtn);
 
         /** Анимация кнопки */
-        //hourForecastBtn.setBackgroundColor(0xFF00DDFF);
         animationRotateCenter = AnimationUtils.loadAnimation(this, R.anim.rotate_center);
         animScale = AnimationUtils.loadAnimation(this, R.anim.scale);
 
@@ -83,8 +78,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         syncBtn.setOnClickListener(this);
         city.setOnClickListener(this);
         cityPickerBtn.setOnClickListener(this);
-        //hourForecastBtn.setOnClickListener(this);
-        //dayForecastBtn.setOnClickListener(this);
 
         /**
          * Код для фрагментов
@@ -94,6 +87,9 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         ForecastPageAdapter adapter = new ForecastPageAdapter(getSupportFragmentManager());
         pager.setAdapter(adapter);
         tabLayout.setupWithViewPager(pager);
+        tabLayout.getTabAt(0).setIcon(R.drawable.ic_by_hour_24);
+        tabLayout.getTabAt(1).setIcon(R.drawable.ic_by_date_24);
+
 
         PositionManager.getInstance().getCurrentForecast();
     }
@@ -114,18 +110,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.cityPickerBnt:
                 startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
                 break;
-          /*  case R.id.hourForecastBtn:
-                hourForecastBtn.startAnimation(animScale);
-                hourForecastBtn.setBackgroundColor(getResources().getColor(R.color.my_holo_blue_bright));
-                dayForecastBtn.setBackgroundColor(getResources().getColor(R.color.my_white));
-                pager.setCurrentItem(0);
-                break;
-            case R.id.dayForecastBtn:
-                dayForecastBtn.startAnimation(animScale);
-                dayForecastBtn.setBackgroundColor(getResources().getColor(R.color.my_holo_blue_bright));
-                hourForecastBtn.setBackgroundColor(getResources().getColor(R.color.my_white));
-                pager.setCurrentItem(1);
-                break;*/
         }
     }
 
@@ -148,17 +132,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
         city.setText(PositionManager.getInstance().getCurrentPositionName()); // отображаем имя текущей локации
         temperature.setText(String.format("%.0f°C", wCurent.getTemperature()));
-
-
-        /*RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.relative_layout);
-        //relativeLayout.setBackgroundResource(R.drawable.tunder_bg);
-        relativeLayout.setBackgroundResource(R.drawable.tunder_bg_25);
-
-        if (wCurent.getPrecipitation() == Precipitation.Type.CLOUDS)
-            relativeLayout.setBackgroundResource(R.drawable.tunder_bg_25);
-        else    relativeLayout.setBackgroundResource(R.drawable.tunder_bg_invert_25);*/
-        //description.setText(String.format("%s %s", w.getPrecipitation(), w.getPrecipitationProbability()));
-        //description.setText(String.format("%s", wCurent.getPrecipitation().name()));
 
         description.setText(String.format("%s", wCurent.getDescription()
                 .substring(0, 1)
