@@ -32,7 +32,7 @@ public class SQLiteProcessData {
     void setDefaultValues() {
         saveTown("Москва", 55.75, 37.62);
         saveTown("Волгоград", 48.72, 44.5);
-        saveTown("Краснодар", 45.03, 38.98);
+        saveTown("Buenos Aires", 45.03, 38.98);
 
         deleteSettins();
 
