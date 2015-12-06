@@ -100,7 +100,7 @@ public class PositionManager {
         }
         positions = positionFactory.getPositions();
         HashMap.Entry<String, Coordinate> firstEntry = (Map.Entry<String, Coordinate>) favorites.entrySet().iterator().next();;
-        currPosition = positions.get(firstEntry.getKey());
+        currPosition = positions.get(dbManager.loadСurrentTown());
     }
 
     /**
