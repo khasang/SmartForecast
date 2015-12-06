@@ -120,7 +120,7 @@
                     android:id="@+id/syncBtn"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:src="@drawable/sync"
+                    android:src="@drawable/ic_refresh"
                     android:background="@null"
                     android:scaleType="fitCenter"
                     android:contentDescription="test"

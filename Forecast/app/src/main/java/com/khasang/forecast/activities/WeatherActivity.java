@@ -81,17 +81,8 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         hourForecastBtn = (ImageButton) findViewById(R.id.hourForecastBtn);
         dayForecastBtn = (ImageButton) findViewById(R.id.dayForecastBtn);
 
-
-        hourForecastBtn.setBackgroundColor(0xFF00DDFF);
-        //LinearLayout linearLayout = (LinearLayout) findViewById(R.id.llCommon);
-        //linearLayout.setBackgroundResource(R.drawable.tunder_bg_25);
-
-
-        //LinearLayout linearLayout = (LinearLayout) findViewById(R.id.llMainInformation);
-        //linearLayout.setBackgroundResource(R.drawable.tunder_bg_25);
-
-
         /** Анимация кнопки */
+        hourForecastBtn.setBackgroundColor(0xFF00DDFF);
         animationRotateCenter = AnimationUtils.loadAnimation(this, R.anim.rotate_center);
         animScale = AnimationUtils.loadAnimation(this, R.anim.scale);
 

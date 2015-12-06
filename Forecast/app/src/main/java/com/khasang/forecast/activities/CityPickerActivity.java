@@ -229,10 +229,13 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 final int position = recyclerView.getChildAdapterPosition(v);
                 TextView thisCity = (TextView) recyclerView.getChildAt(position).findViewById(R.id.cityTW);
                 String cityName = String.valueOf(thisCity.getText());
-                Toast.makeText(this, "click on " + thisCity.getText(), Toast.LENGTH_SHORT).show();
+                Log.i(TAG, "OnLongClick: город - " + cityName);
+
+                //TODO реализовать удаление города через Context Menu
+    /*            Toast.makeText(this, "click on " + thisCity.getText(), Toast.LENGTH_SHORT).show();
                 cityList.remove(cityName);
                 recyclerAdapter.notifyDataSetChanged();
-                PositionManager.getInstance().removePosition(cityName);
+                PositionManager.getInstance().removePosition(cityName);*/
 
         }
     return true;
