@@ -99,6 +99,12 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         PositionManager.getInstance().getCurrentForecast();
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        PositionManager.getInstance().saveSettings();
+    }
+
     /**
      * Обработчик нажатия кнопки
      */

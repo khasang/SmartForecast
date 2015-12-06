@@ -13,12 +13,14 @@ public class SQLiteWork {
     public SQLiteDatabase sqlDatabase;
     public SQLiteOpen dbWork;
 
-    public SQLiteWork(Context context, String dbName) {
+    public SQLiteWork(Context context, String dbName, Boolean deleteOldTables) {
         // инициализация класса обёртки
         dbWork = new SQLiteOpen(context, dbName);
         sqlDatabase = dbWork.getWritableDatabase();
-        // удаление таблиц, пока не устаканится их структура
-        // tablesDelete();
+        // удаление таблиц, использовать, если в структуру таблиц внесли изменения
+        if (deleteOldTables) {
+            tablesDelete();
+        }
         tablesCreate();
     }
 
