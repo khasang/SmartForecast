@@ -10,6 +10,13 @@ import retrofit.http.Query;
 /**
  * Этот интерфейс задает конечные точки для запроса к API. Методы и параметры запроса указываются
  * через аннотации.
+ *
+ * <p><b>Методы:</b>
+ * <ul>
+ *     <li>{@link #getCurrent(double, double)}</li>
+ *     <li>{@link #getHourly(double, double, int)}</li>
+ *     <li>{@link #getDaily(double, double, int)}</li>
+ * </ul>
  */
 
 public interface OpenWeatherMapService {
