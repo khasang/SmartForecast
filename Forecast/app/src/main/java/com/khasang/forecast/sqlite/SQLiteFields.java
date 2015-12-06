@@ -68,7 +68,7 @@ public class SQLiteFields {
     public static final String QUERY_DELETE_TABLE_SETTINGS = "DROP TABLE IF EXISTS " + TABLE_SETTINGS;
 
     public static final String QUERY_DELETE_DATA_WEATHER = "DELETE FROM " + TABLE_WEATHER;
-    public static final String QUERY_DELETE_OLD_DATA_WEATHER = "DELETE FROM " + TABLE_WEATHER + " WHERE STATION_NAME = ? and TOWN = ? and " + DATE + " < date( ? )";
+    public static final String QUERY_DELETE_OLD_DATA_WEATHER = "DELETE FROM " + TABLE_WEATHER + " WHERE " + STATION_NAME + " = ? and " + TOWN + " = ? and " + DATE + " < date( ? )";
 
     public static final String QUERY_DELETE_DATA_TOWNS = "DELETE FROM " + TABLE_TOWNS;
     public static final String QUERY_DELETE_DATA_SETTINGS = "DELETE FROM " + TABLE_SETTINGS;

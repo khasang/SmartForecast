@@ -78,6 +78,18 @@ public class SQLiteProcessData {
                 temperatureMetrics.name(), speedMetrics.name(), pressureMetrics.name()});
     }
 
+    // Загрузка CurrentTown.
+    public String loadСurrentTown() {
+        Cursor dataset = sqLite.queryOpen(SQLiteFields.QUERY_SELECT_SETTINGS, null);
+        if (dataset != null && dataset.getCount() != 0) {
+            if (dataset.moveToFirst()) {
+                return dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_TOWN));
+            }
+        }
+        // Значение по умолчанию.
+        return "Москва";
+    }
+
     // Загрузка TemperatureMetrics.
     public PositionManager.TemperatureMetrics loadTemperatureMetrics() {
         Cursor dataset = sqLite.queryOpen(SQLiteFields.QUERY_SELECT_SETTINGS, null);
@@ -158,7 +170,6 @@ public class SQLiteProcessData {
         if (dataset != null && dataset.getCount() != 0) {
             if (dataset.moveToFirst()) {
                 hashMap = new HashMap();
-
                 do {
                     townName = dataset.getString(dataset.getColumnIndex(SQLiteFields.TOWN));
                     townLat = dataset.getDouble(dataset.getColumnIndex(SQLiteFields.LATITUDE));
@@ -167,11 +178,9 @@ public class SQLiteProcessData {
                     Coordinate coordinate = new Coordinate(townLat, townLong);
                     hashMap.put(townName, coordinate);
                 } while (dataset.moveToNext());
-
-                return hashMap;
             }
         }
-        return null;
+        return hashMap;
     }
 
     // Загрузка погоды.
