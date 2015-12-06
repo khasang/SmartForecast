@@ -2,6 +2,7 @@ package com.khasang.forecast.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
@@ -30,6 +31,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     /**
      * ViewPager для отображения нижних вкладок прогноза: по часам и по дням
      */
+    private TabLayout tabLayout;
     private ViewPager pager;
 
     String TAG = this.getClass().getSimpleName();
@@ -43,8 +45,8 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     private TextView timeStamp;
     private ImageButton syncBtn;
     private ImageButton cityPickerBtn;
-    private ImageButton hourForecastBtn;
-    private ImageButton dayForecastBtn;
+    //private ImageButton hourForecastBtn;
+    //private ImageButton dayForecastBtn;
 
 
     private Animation animationRotateCenter;
@@ -69,11 +71,11 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         timeStamp = (TextView) findViewById(R.id.timeStamp);
         syncBtn = (ImageButton) findViewById(R.id.syncBtn);
         cityPickerBtn = (ImageButton) findViewById(R.id.cityPickerBnt);
-        hourForecastBtn = (ImageButton) findViewById(R.id.hourForecastBtn);
-        dayForecastBtn = (ImageButton) findViewById(R.id.dayForecastBtn);
+        //hourForecastBtn = (ImageButton) findViewById(R.id.hourForecastBtn);
+        //dayForecastBtn = (ImageButton) findViewById(R.id.dayForecastBtn);
 
         /** Анимация кнопки */
-        hourForecastBtn.setBackgroundColor(0xFF00DDFF);
+        //hourForecastBtn.setBackgroundColor(0xFF00DDFF);
         animationRotateCenter = AnimationUtils.loadAnimation(this, R.anim.rotate_center);
         animScale = AnimationUtils.loadAnimation(this, R.anim.scale);
 
@@ -81,15 +83,17 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         syncBtn.setOnClickListener(this);
         city.setOnClickListener(this);
         cityPickerBtn.setOnClickListener(this);
-        hourForecastBtn.setOnClickListener(this);
-        dayForecastBtn.setOnClickListener(this);
+        //hourForecastBtn.setOnClickListener(this);
+        //dayForecastBtn.setOnClickListener(this);
 
         /**
          * Код для фрагментов
          */
+        tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         pager = (ViewPager) findViewById(R.id.pager);
         ForecastPageAdapter adapter = new ForecastPageAdapter(getSupportFragmentManager());
         pager.setAdapter(adapter);
+        tabLayout.setupWithViewPager(pager);
 
         PositionManager.getInstance().getCurrentForecast();
     }
@@ -110,7 +114,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.cityPickerBnt:
                 startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
                 break;
-            case R.id.hourForecastBtn:
+          /*  case R.id.hourForecastBtn:
                 hourForecastBtn.startAnimation(animScale);
                 hourForecastBtn.setBackgroundColor(getResources().getColor(R.color.my_holo_blue_bright));
                 dayForecastBtn.setBackgroundColor(getResources().getColor(R.color.my_white));
@@ -121,7 +125,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 dayForecastBtn.setBackgroundColor(getResources().getColor(R.color.my_holo_blue_bright));
                 hourForecastBtn.setBackgroundColor(getResources().getColor(R.color.my_white));
                 pager.setCurrentItem(1);
-                break;
+                break;*/
         }
     }
 
