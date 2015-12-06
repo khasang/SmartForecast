@@ -27,19 +27,13 @@ import retrofit.Retrofit;
 
 public class OpenWeatherMap extends WeatherStation {
 
-    /**
-     * Тэг для дебаггинга.
-     */
+    /** Тэг для дебаггинга. */
     private static final String TAG = OpenWeatherMap.class.getSimpleName();
 
-    /**
-     * API URL.
-     */
+    /** API URL. */
     private static final String API_BASE_URL = "http://api.openweathermap.org";
 
-    /**
-     * API ключ.
-     */
+    /** API ключ. */
     private static final String APP_ID = "96dd81a807540894eb4c96c05f17ed01";
 
     /**
@@ -48,14 +42,10 @@ public class OpenWeatherMap extends WeatherStation {
      */
     public static final String SYSTEM_LANGUAGE = Locale.getDefault().getLanguage();
 
-    /**
-     * Количество 3-х часовых интервалов для запроса к API.
-     */
+    /** Количество 3-х часовых интервалов для запроса к API. */
     private static final int TIME_PERIOD = 8;
 
-    /**
-     * Количество дней для запроса к API.
-     */
+    /** Количество дней для запроса к API. */
     private static final int DAYS_PERIOD = 7;
 
     /**
@@ -65,11 +55,6 @@ public class OpenWeatherMap extends WeatherStation {
      */
     private HttpLoggingInterceptor logging;
     private OkHttpClient client;
-
-    /**
-     * Создаем экземпляр объекта Retrofit, подключая конвертер GSON и созданный нами OkHttpClient.
-     */
-    private Retrofit retrofit;
 
     /**
      * Создаем сервис из интерфейса {@link OpenWeatherMapService} с заданными конечными точками
@@ -98,13 +83,11 @@ public class OpenWeatherMap extends WeatherStation {
         client.interceptors().add(logging);
     }
 
-    /**
-     * Конструктор класса.
-     */
+    /** Конструктор. */
     public OpenWeatherMap() {
         logging = new HttpLoggingInterceptor();
         client = new OkHttpClient();
-        retrofit = new Retrofit.Builder().baseUrl(API_BASE_URL)
+        Retrofit retrofit = new Retrofit.Builder().baseUrl(API_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create()).client(client).build();
         service = retrofit.create(OpenWeatherMapService.class);
         addInterceptors();
@@ -112,7 +95,7 @@ public class OpenWeatherMap extends WeatherStation {
 
     /**
      * Метод для асинхронного получения текущего прогноза погоды.
-     *
+     * @param cityID внутренний идентификатор города.
      * @param coordinate объект типа {@link Coordinate}, содержащий географические координаты
      *                   для запроса.
      */
@@ -139,7 +122,7 @@ public class OpenWeatherMap extends WeatherStation {
     /**
      * Метод для асинхронного получения прогноза погоды с заданым количеством 3-х часовых
      * интервалов.
-     *
+     * @param cityID внутренний идентификатор города.
      * @param coordinate объект типа {@link Coordinate}, содержащий географические координаты
      *                   для запроса.
      */
@@ -166,7 +149,7 @@ public class OpenWeatherMap extends WeatherStation {
 
     /**
      * Метод для асинхронного получения прогноза погоды с заданным количеством дней.
-     *
+     * @param cityID внутренний идентификатор города.
      * @param coordinate объект типа {@link Coordinate}, содержащий географические координаты
      *                   для запроса.
      */
