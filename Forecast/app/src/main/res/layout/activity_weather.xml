@@ -139,11 +139,11 @@
     <LinearLayout
         android:id="@+id/llHourAndDayWeather"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="visible"
         android:layout_below="@id/llCurrentWeather"
-        android:layout_alignParentBottom="true">
+        >
 
         <android.support.design.widget.TabLayout
             android:id="@+id/sliding_tabs"
@@ -165,11 +165,10 @@
 
     <LinearLayout
         android:id="@+id/llRefresh"
-        android:layout_below="@id/llCurrentWeather"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="false">
+        android:layout_alignParentBottom="true">
 
         <ImageButton
             android:id="@+id/syncBtn"
