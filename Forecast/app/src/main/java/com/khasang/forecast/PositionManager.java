@@ -117,7 +117,7 @@ public class PositionManager {
         }
         positions = positionFactory.getPositions();
         String currPositionName = dbManager.loadСurrentTown();
-        if (!currPositionName.isEmpty()) {
+        if (!currPositionName.isEmpty() && positionIsPresent(currPositionName)) {
             currPosition = positions.get(currPositionName);
         }
     }
@@ -159,6 +159,9 @@ public class PositionManager {
      * @return возвращает {@link String}, содержащий названия города
      */
     public String getCurrentPositionName() {
+        if (currPosition == null) {
+            return "";
+        }
         return currPosition.getLocationName();
     }
 
@@ -171,6 +174,7 @@ public class PositionManager {
     public void removePosition(String name) {
         if (positions.containsKey(name)) {
             positions.remove(name);
+            dbManager.deleteTown(name);
         }
     }
 
