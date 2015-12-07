@@ -27,30 +27,16 @@ public class SQLiteProcessData {
 
     public SQLiteProcessData(Context context) {
         // TODO Перед релизом флаг deleteOldTables при создании SQLiteWork менять на false.
-        this.sqLite = new SQLiteWork(context, "Forecast.db", true);
+        this.sqLite = new SQLiteWork(context, "Forecast.db", false);
         dtFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         // TODO Дефолтные настройки. Сделать диалоговое окно для запроса нового имени города, если база пустая.
         setDefaultValues();
     }
 
     void setDefaultValues() {
-        saveTown("Москва", 55.75, 37.62);
-        saveTown("Волгоград", 48.72, 44.5);
-        saveTown("Buenos Aires", 45.03, 38.98);
-
-        deleteSettins();
-
-        sqLite.queryExExec(SQLiteFields.QUERY_INSERT_WEATHER, new String[]
-                {"OPEN_WEATHER_MAP", "Москва", dtFormat.format(Calendar.getInstance().getTime()), "0.0", "+1.0", "-1.0", "20.0",
-                        "5", "зима", "NORTHEAST", "5.0", "SNOW"});
-
-        sqLite.queryExExec(SQLiteFields.QUERY_INSERT_WEATHER, new String[]
-                {"OPEN_WEATHER_MAP", "Краснодар", dtFormat.format(Calendar.getInstance().getTime()), "0.0", "+1.0", "-1.0", "20.0",
-                        "5", "зима", "NORTHEAST", "5.0", "SNOW"});
-
-        sqLite.queryExExec(SQLiteFields.QUERY_INSERT_WEATHER, new String[]
-                {"OPEN_WEATHER_MAP", "Волгоград", dtFormat.format(Calendar.getInstance().getTime()), "0.0", "+1.0", "-1.0", "20.0",
-                        "5", "зима", "NORTHEAST", "5.0", "SNOW"});
+        if (loadTownList() == null) {
+            saveTown("Москва", 55.75, 37.62);
+        }
     }
 
     // Сохранение города с координатами (перед сохранением списка нужно очистить старый)
@@ -70,11 +56,11 @@ public class SQLiteProcessData {
                     Double.toString(weather.getWindPower()), weather.getPrecipitation().name()});
     }
 
-    // Сохранение насроек.
+    // Сохранение настроек.
     public void saveSettings(WeatherStation currentStation, Position currPosition, PositionManager.TemperatureMetrics temperatureMetrics,
                              PositionManager.SpeedMetrics speedMetrics, PositionManager.PressureMetrics pressureMetrics) {
-        deleteSettins();
-        sqLite.queryExExec(SQLiteFields.QUERY_INSERT_SETTINGS, new String[]{currentStation.getWeatherStationName(), currPosition.getLocationName(),
+
+        sqLite.queryExExec(SQLiteFields.QUERY_UPDATE_SETTINGS, new String[]{currentStation.getServiceType().name(), currPosition.getLocationName(),
                 temperatureMetrics.name(), speedMetrics.name(), pressureMetrics.name()});
     }
 
@@ -86,7 +72,6 @@ public class SQLiteProcessData {
                 return dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_TOWN));
             }
         }
-        // Значение по умолчанию.
         return "Москва";
     }
 
@@ -136,16 +121,6 @@ public class SQLiteProcessData {
         }
         // Значение по умолчанию.
         return WeatherStationFactory.ServiceType.OPEN_WEATHER_MAP;
-    }
-
-    // Очистка таблицы настроек.
-    public void deleteSettins() {
-        sqLite.queryExec(SQLiteFields.QUERY_DELETE_DATA_SETTINGS);
-    }
-
-    // Очистка таблицы погоды.
-    public void deleteWeather() {
-        sqLite.queryExec(SQLiteFields.QUERY_DELETE_DATA_WEATHER);
     }
 
     // Очистка таблицы от погоды, которая старше текущего дня.
