@@ -15,6 +15,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.khasang.forecast.PositionManager;
 import com.khasang.forecast.R;
@@ -98,7 +99,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
         city.setText("--/--");
         temperature.setText("--/--");
-        precipitation.setText("--/--");
+        description.setText("--/--");
         pressure.setText("--/--");
         wind.setText("--/--");
         humidity.setText("--/--");
