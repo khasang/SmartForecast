@@ -131,6 +131,10 @@ public class SQLiteProcessData {
         sqLite.queryExec(SQLiteFields.QUERY_DELETE_DATA_TOWNS);
     }
 
+    public void deleteTown(String name) {
+        sqLite.queryExExec(SQLiteFields.QUERY_DELETE_DATA_TOWN, new String[]{name});
+    }
+
     // Загрузка списка городов.
     public HashMap<String, Coordinate> loadTownList() {
 

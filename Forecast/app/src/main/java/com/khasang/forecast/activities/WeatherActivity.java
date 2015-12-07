@@ -205,17 +205,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        int size = PositionManager.getInstance().getPositions().size();
-        if (size == 0) {
-            city.setText("--/--");
-            temperature.setText("--/--");
-            description.setText("--/--");
-            pressure.setText("--/--");
-            wind.setText("--/--");
-            humidity.setText("--/--");
-            timeStamp.setText("--/--");
-        }
-        else if (requestCode == CHOOSE_CITY) {
+        if (requestCode == CHOOSE_CITY) {
             if (resultCode == RESULT_OK) {
                 String newCity = data.getStringExtra(CityPickerActivity.CITY_PICKER_TAG);
                 city.setText(newCity);
@@ -223,6 +213,11 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 PositionManager.getInstance().setCurrentPosition(newCity);
                 PositionManager.getInstance().saveCurrPosition();
                 PositionManager.getInstance().getCurrentForecast();
+                syncBtn.setVisibility(View.VISIBLE);
+            } else {
+                if (!PositionManager.getInstance().positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {
+                    syncBtn.setVisibility(View.GONE);
+                }
             }
         }
     }
