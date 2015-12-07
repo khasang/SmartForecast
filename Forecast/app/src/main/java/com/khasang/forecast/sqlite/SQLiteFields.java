@@ -109,9 +109,15 @@ public class SQLiteFields {
             CURRENT_PRESSURE_METRICS + ") " +
             " VALUES ( ? , ? , ? , ? , ? )";
 
-    public static final String QUERY_UPDATE_SETTINGS = "UPDATE " + TABLE_SETTINGS + " SET " +
-            CURRENT_STATION + " = ? ," +
-            CURRENT_TOWN + " = ? ," +
+    public static final String QUERY_UPDATE_CURRCITY_SETTING = "UPDATE " + TABLE_SETTINGS + " SET " +
+            CURRENT_TOWN + " = ? " +
+            " WHERE " + ID + " = 1";
+
+    public static final String QUERY_UPDATE_CURRSTATION_SETTING = "UPDATE " + TABLE_SETTINGS + " SET " +
+            CURRENT_STATION + " = ? " +
+            " WHERE " + ID + " = 1";
+
+    public static final String QUERY_UPDATE_METRICS_SETTINGS = "UPDATE " + TABLE_SETTINGS + " SET " +
             CURRENT_TEMPIRATURE_METRICS + " = ? ," +
             CURRENT_SPEED_METRICS + " = ? ," +
             CURRENT_PRESSURE_METRICS + " = ? " +

@@ -96,7 +96,21 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         tabLayout.getTabAt(1).setIcon(R.drawable.ic_by_date_24);
 
 
-        PositionManager.getInstance().getCurrentForecast();
+        city.setText("--/--");
+        temperature.setText("--/--");
+        precipitation.setText("--/--");
+        pressure.setText("--/--");
+        wind.setText("--/--");
+        humidity.setText("--/--");
+        timeStamp.setText("--/--");
+        if (PositionManager.getInstance().getPositions().size() == 0) {
+            Toast.makeText(this, "Для продолжения работы необходимо добавить город.", Toast.LENGTH_SHORT).show();
+            startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
+        } else {
+            if (!PositionManager.getInstance().getCurrentPositionName().isEmpty()) {
+                PositionManager.getInstance().getCurrentForecast();
+            }
+        }
     }
 
     @Override
@@ -206,6 +220,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 city.setText(newCity);
                 Log.d(TAG, newCity);
                 PositionManager.getInstance().setCurrentPosition(newCity);
+                PositionManager.getInstance().saveCurrPosition();
                 PositionManager.getInstance().getCurrentForecast();
             }
         }

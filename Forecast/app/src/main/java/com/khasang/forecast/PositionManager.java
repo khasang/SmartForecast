@@ -63,8 +63,22 @@ public class PositionManager {
         initPositions();
     }
 
+    // Пока заглушка, потом настрки сохранять при их смене в настройках
     public void saveSettings() {
-        dbManager.saveSettings(currStation, currPosition, temperatureMetric, speedMetric, pressureMetric);
+        saveCurrStation();
+        saveMetrics();
+    }
+
+    public void saveMetrics () {
+        dbManager.saveSettings(temperatureMetric, speedMetric, pressureMetric);
+    }
+
+    public void saveCurrPosition () {
+        dbManager.saveSettings(currPosition);
+    }
+
+    public void saveCurrStation () {
+        dbManager.saveSettings(currStation);
     }
 
     /**
@@ -96,13 +110,16 @@ public class PositionManager {
         PositionFactory positionFactory = new PositionFactory(mActivity.getApplicationContext());
         positionFactory.addCurrentPosition();
 
-        if (favorites != null) {
+        if (favorites.size() != 0) {
             for (HashMap.Entry<String, Coordinate> entry : favorites.entrySet()) {
                 positionFactory.addFavouritePosition(entry.getKey(), entry.getValue());
             }
-            positions = positionFactory.getPositions();
         }
-        currPosition = positions.get(dbManager.loadСurrentTown());
+        positions = positionFactory.getPositions();
+        String currPositionName = dbManager.loadСurrentTown();
+        if (!currPositionName.isEmpty()) {
+            currPosition = positions.get(currPositionName);
+        }
     }
 
     /**

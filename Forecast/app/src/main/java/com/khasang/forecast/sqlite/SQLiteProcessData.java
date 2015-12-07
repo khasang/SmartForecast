@@ -29,14 +29,6 @@ public class SQLiteProcessData {
         // TODO Перед релизом флаг deleteOldTables при создании SQLiteWork менять на false.
         this.sqLite = new SQLiteWork(context, "Forecast.db", false);
         dtFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        // TODO Дефолтные настройки. Сделать диалоговое окно для запроса нового имени города, если база пустая.
-        setDefaultValues();
-    }
-
-    void setDefaultValues() {
-        if (loadTownList() == null) {
-            saveTown("Москва", 55.75, 37.62);
-        }
     }
 
     // Сохранение города с координатами (перед сохранением списка нужно очистить старый)
@@ -56,12 +48,18 @@ public class SQLiteProcessData {
                     Double.toString(weather.getWindPower()), weather.getPrecipitation().name()});
     }
 
-    // Сохранение настроек.
-    public void saveSettings(WeatherStation currentStation, Position currPosition, PositionManager.TemperatureMetrics temperatureMetrics,
-                             PositionManager.SpeedMetrics speedMetrics, PositionManager.PressureMetrics pressureMetrics) {
+    // Сохранение настроек
+    public void saveSettings(WeatherStation currentStation) {
+        sqLite.queryExExec(SQLiteFields.QUERY_UPDATE_CURRSTATION_SETTING, new String[]{currentStation.getServiceType().name()});
+    }
 
-        sqLite.queryExExec(SQLiteFields.QUERY_UPDATE_SETTINGS, new String[]{currentStation.getServiceType().name(), currPosition.getLocationName(),
-                temperatureMetrics.name(), speedMetrics.name(), pressureMetrics.name()});
+    public void saveSettings(Position currPosition) {
+        sqLite.queryExExec(SQLiteFields.QUERY_UPDATE_CURRCITY_SETTING, new String[]{currPosition.getLocationName()});
+    }
+
+    public void saveSettings(PositionManager.TemperatureMetrics temperatureMetrics,
+                             PositionManager.SpeedMetrics speedMetrics, PositionManager.PressureMetrics pressureMetrics) {
+        sqLite.queryExExec(SQLiteFields.QUERY_UPDATE_METRICS_SETTINGS, new String[]{temperatureMetrics.name(), speedMetrics.name(), pressureMetrics.name()});
     }
 
     // Загрузка CurrentTown.
@@ -72,7 +70,7 @@ public class SQLiteProcessData {
                 return dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_TOWN));
             }
         }
-        return "Москва";
+        return "";
     }
 
     // Загрузка TemperatureMetrics.
@@ -139,12 +137,11 @@ public class SQLiteProcessData {
         double townLat = 0;
         double townLong = 0;
         String townName = "";
-        HashMap hashMap = null;
+        HashMap hashMap = new HashMap();
 
         Cursor dataset = sqLite.queryOpen(SQLiteFields.QUERY_SELECT_TOWNS, null);
         if (dataset != null && dataset.getCount() != 0) {
             if (dataset.moveToFirst()) {
-                hashMap = new HashMap();
                 do {
                     townName = dataset.getString(dataset.getColumnIndex(SQLiteFields.TOWN));
                     townLat = dataset.getDouble(dataset.getColumnIndex(SQLiteFields.LATITUDE));
