@@ -180,6 +180,7 @@ public class PositionManager {
 
     public void removePositions() {
         positions.clear();
+        dbManager.deleteTowns();
     }
 
     /**
