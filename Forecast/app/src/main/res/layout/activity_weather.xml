@@ -106,31 +106,23 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_marginTop="70dp"
             android:layout_below="@id/llMainInformation">
 
+            <TextView
+                android:id="@+id/wind"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ветер Ю 7м/с"
+                android:layout_gravity="right" />
 
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/wind"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Ветер Ю 7м/с"
-                    android:layout_gravity="right" />
-
-                <TextView
-                    android:id="@+id/humidity"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Влажность 93%"
-                    android:layout_gravity="right" />
-            </LinearLayout>
+            <TextView
+                android:id="@+id/humidity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Влажность 93%"
+                android:layout_gravity="right" />
 
         </LinearLayout>
     </LinearLayout>
@@ -168,7 +160,16 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="right"
         android:layout_alignParentBottom="true">
+
+        <TextView
+            android:id="@+id/timeStamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Обновлено"
+            android:layout_gravity="center" />
 
         <ImageButton
             android:id="@+id/syncBtn"
@@ -177,15 +178,7 @@
             android:src="@drawable/ic_refresh"
             android:background="@null"
             android:scaleType="fitCenter"
-            android:contentDescription="test"
-            android:layout_gravity="center" />
-
-        <TextView
-            android:id="@+id/timeStamp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:layout_gravity="center" />
+            android:contentDescription="test" />
 
     </LinearLayout>
 
