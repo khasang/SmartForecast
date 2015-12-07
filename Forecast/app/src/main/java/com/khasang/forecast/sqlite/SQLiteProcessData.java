@@ -65,9 +65,15 @@ public class SQLiteProcessData {
     // Загрузка CurrentTown.
     public String loadСurrentTown() {
         Cursor dataset = sqLite.queryOpen(SQLiteFields.QUERY_SELECT_SETTINGS, null);
-        if (dataset != null && dataset.getCount() != 0) {
-            if (dataset.moveToFirst()) {
-                return dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_TOWN));
+        try {
+            if (dataset != null && dataset.getCount() != 0) {
+                if (dataset.moveToFirst()) {
+                    return dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_TOWN));
+                }
+            }
+        } finally {
+            if (dataset != null) {
+                dataset.close();
             }
         }
         return "";
@@ -76,9 +82,15 @@ public class SQLiteProcessData {
     // Загрузка TemperatureMetrics.
     public PositionManager.TemperatureMetrics loadTemperatureMetrics() {
         Cursor dataset = sqLite.queryOpen(SQLiteFields.QUERY_SELECT_SETTINGS, null);
-        if (dataset != null && dataset.getCount() != 0) {
-            if (dataset.moveToFirst()) {
-                return PositionManager.TemperatureMetrics.valueOf(dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_TEMPIRATURE_METRICS)));
+        try {
+            if (dataset != null && dataset.getCount() != 0) {
+                if (dataset.moveToFirst()) {
+                    return PositionManager.TemperatureMetrics.valueOf(dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_TEMPIRATURE_METRICS)));
+                }
+            }
+        } finally {
+            if (dataset != null) {
+                dataset.close();
             }
         }
         // Значение по умолчанию.
@@ -88,9 +100,15 @@ public class SQLiteProcessData {
     // Загрузка SpeedMetrics.
     public PositionManager.SpeedMetrics loadSpeedMetrics() {
         Cursor dataset = sqLite.queryOpen(SQLiteFields.QUERY_SELECT_SETTINGS, null);
-        if (dataset != null && dataset.getCount() != 0) {
-            if (dataset.moveToFirst()) {
-                return PositionManager.SpeedMetrics.valueOf(dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_SPEED_METRICS)));
+        try {
+            if (dataset != null && dataset.getCount() != 0) {
+                if (dataset.moveToFirst()) {
+                    return PositionManager.SpeedMetrics.valueOf(dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_SPEED_METRICS)));
+                }
+            }
+        } finally {
+            if (dataset != null) {
+                dataset.close();
             }
         }
         // Значение по умолчанию.
@@ -100,9 +118,15 @@ public class SQLiteProcessData {
     // Загрузка PressureMetrics.  {HPA, MM_HG}
     public PositionManager.PressureMetrics loadPressureMetrics() {
         Cursor dataset = sqLite.queryOpen(SQLiteFields.QUERY_SELECT_SETTINGS, null);
-        if (dataset != null && dataset.getCount() != 0) {
-            if (dataset.moveToFirst()) {
-                return PositionManager.PressureMetrics.valueOf(dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_PRESSURE_METRICS)));
+        try {
+            if (dataset != null && dataset.getCount() != 0) {
+                if (dataset.moveToFirst()) {
+                    return PositionManager.PressureMetrics.valueOf(dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_PRESSURE_METRICS)));
+                }
+            }
+        } finally {
+            if (dataset != null) {
+                dataset.close();
             }
         }
         // Значение по умолчанию.
@@ -112,9 +136,15 @@ public class SQLiteProcessData {
     // Загрузка Station.
     public WeatherStationFactory.ServiceType loadStation() {
         Cursor dataset = sqLite.queryOpen(SQLiteFields.QUERY_SELECT_SETTINGS, null);
-        if (dataset != null && dataset.getCount() != 0) {
-            if (dataset.moveToFirst()) {
-                return WeatherStationFactory.ServiceType.valueOf(dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_STATION)));
+        try {
+            if (dataset != null && dataset.getCount() != 0) {
+                if (dataset.moveToFirst()) {
+                    return WeatherStationFactory.ServiceType.valueOf(dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_STATION)));
+                }
+            }
+        } finally {
+            if (dataset != null) {
+                dataset.close();
             }
         }
         // Значение по умолчанию.
@@ -144,16 +174,22 @@ public class SQLiteProcessData {
         HashMap hashMap = new HashMap();
 
         Cursor dataset = sqLite.queryOpen(SQLiteFields.QUERY_SELECT_TOWNS, null);
-        if (dataset != null && dataset.getCount() != 0) {
-            if (dataset.moveToFirst()) {
-                do {
-                    townName = dataset.getString(dataset.getColumnIndex(SQLiteFields.TOWN));
-                    townLat = dataset.getDouble(dataset.getColumnIndex(SQLiteFields.LATITUDE));
-                    townLong = dataset.getDouble(dataset.getColumnIndex(SQLiteFields.LONGTITUDE));
+        try {
+            if (dataset != null && dataset.getCount() != 0) {
+                if (dataset.moveToFirst()) {
+                    do {
+                        townName = dataset.getString(dataset.getColumnIndex(SQLiteFields.TOWN));
+                        townLat = dataset.getDouble(dataset.getColumnIndex(SQLiteFields.LATITUDE));
+                        townLong = dataset.getDouble(dataset.getColumnIndex(SQLiteFields.LONGTITUDE));
 
-                    Coordinate coordinate = new Coordinate(townLat, townLong);
-                    hashMap.put(townName, coordinate);
-                } while (dataset.moveToNext());
+                        Coordinate coordinate = new Coordinate(townLat, townLong);
+                        hashMap.put(townName, coordinate);
+                    } while (dataset.moveToNext());
+                }
+            }
+        } finally {
+            if (dataset != null) {
+                dataset.close();
             }
         }
         return hashMap;
@@ -176,26 +212,32 @@ public class SQLiteProcessData {
         Weather weather = null;
 
         Cursor dataset = sqLite.queryOpen(SQLiteFields.QUERY_SELECT_WEATHER, new String[]{serviceType.name(), cityName, dtFormat.format(date.getTime())});
-        if (dataset != null && dataset.getCount() != 0) {
-            if (dataset.moveToFirst()) {
-                TEMPIRATURE = dataset.getDouble(dataset.getColumnIndex(SQLiteFields.TEMPIRATURE));
-                TEMPIRATURE_MAX = dataset.getDouble(dataset.getColumnIndex(SQLiteFields.TEMPIRATURE_MAX));
-                TEMPIRATURE_MIN = dataset.getDouble(dataset.getColumnIndex(SQLiteFields.TEMPIRATURE_MIN));
-                PRESSURE = dataset.getDouble(dataset.getColumnIndex(SQLiteFields.PRESSURE));
-                HUMIDITY = dataset.getInt(dataset.getColumnIndex(SQLiteFields.HUMIDITY));
-                DESCRIPTION = dataset.getString(dataset.getColumnIndex(SQLiteFields.DESCRIPTION));
+        try {
+            if (dataset != null && dataset.getCount() != 0) {
+                if (dataset.moveToFirst()) {
+                    TEMPIRATURE = dataset.getDouble(dataset.getColumnIndex(SQLiteFields.TEMPIRATURE));
+                    TEMPIRATURE_MAX = dataset.getDouble(dataset.getColumnIndex(SQLiteFields.TEMPIRATURE_MAX));
+                    TEMPIRATURE_MIN = dataset.getDouble(dataset.getColumnIndex(SQLiteFields.TEMPIRATURE_MIN));
+                    PRESSURE = dataset.getDouble(dataset.getColumnIndex(SQLiteFields.PRESSURE));
+                    HUMIDITY = dataset.getInt(dataset.getColumnIndex(SQLiteFields.HUMIDITY));
+                    DESCRIPTION = dataset.getString(dataset.getColumnIndex(SQLiteFields.DESCRIPTION));
 
-                WIND_DIRECTION = dataset.getString(dataset.getColumnIndex(SQLiteFields.WIND_DIRECTION));
-                WIND_SPEED = dataset.getDouble(dataset.getColumnIndex(SQLiteFields.WIND_SPEED));
-                WIND = new Wind();
-                WIND.setDirection(WIND_DIRECTION);
-                WIND.setSpeed(WIND_SPEED);
+                    WIND_DIRECTION = dataset.getString(dataset.getColumnIndex(SQLiteFields.WIND_DIRECTION));
+                    WIND_SPEED = dataset.getDouble(dataset.getColumnIndex(SQLiteFields.WIND_SPEED));
+                    WIND = new Wind();
+                    WIND.setDirection(WIND_DIRECTION);
+                    WIND.setSpeed(WIND_SPEED);
 
-                PRECIPITATION_TYPE = dataset.getString(dataset.getColumnIndex(SQLiteFields.PRECIPITATION_TYPE));
-                PRECIPITATION = new Precipitation();
-                PRECIPITATION.setType(PRECIPITATION_TYPE);
+                    PRECIPITATION_TYPE = dataset.getString(dataset.getColumnIndex(SQLiteFields.PRECIPITATION_TYPE));
+                    PRECIPITATION = new Precipitation();
+                    PRECIPITATION.setType(PRECIPITATION_TYPE);
 
-                weather = new Weather(TEMPIRATURE, TEMPIRATURE_MIN, TEMPIRATURE_MAX, PRESSURE, HUMIDITY, WIND, PRECIPITATION, DESCRIPTION);
+                    weather = new Weather(TEMPIRATURE, TEMPIRATURE_MIN, TEMPIRATURE_MAX, PRESSURE, HUMIDITY, WIND, PRECIPITATION, DESCRIPTION);
+                }
+            }
+        } finally {
+            if (dataset != null) {
+                dataset.close();
             }
         }
         return weather;

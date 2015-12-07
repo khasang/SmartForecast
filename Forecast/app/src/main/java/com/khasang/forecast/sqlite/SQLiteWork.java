@@ -24,6 +24,12 @@ public class SQLiteWork {
         tablesCreate();
     }
 
+    public void checkOpenDatabase() {
+        if (sqlDatabase.isOpen()) {
+            sqlDatabase.close();
+        }
+    }
+
     public void checkTable(String tableName, String query) {
         try {
             if (!isTableExists(tableName)) {
@@ -41,20 +47,25 @@ public class SQLiteWork {
         if (tableName == null || sqlDatabase == null || !sqlDatabase.isOpen()) {
             return false;
         }
+
+        int count = 0;
         Cursor cursor = sqlDatabase.rawQuery(SQLiteFields.QUERY_OBJECTS_COUNT, new String[] {"table", tableName});
-        if (!cursor.moveToFirst()) {
-            return false;
+        try {
+            if (!cursor.moveToFirst()) {
+                return false;
+            }
+            count = cursor.getInt(0);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
         }
-        int count = cursor.getInt(0);
-        cursor.close();
         return count > 0;
     }
 
     public void queryExec(String query) {
         try {
-            if (sqlDatabase.isOpen()) {
-                sqlDatabase.close();
-            }
+            checkOpenDatabase();
             sqlDatabase = dbWork.getWritableDatabase();
             sqlDatabase.execSQL(query);
         } catch (Exception e) {
@@ -64,9 +75,7 @@ public class SQLiteWork {
 
     public void queryExExec(String sql, Object[] bindArgs) {
         try {
-            if (sqlDatabase.isOpen()) {
-                sqlDatabase.close();
-            }
+            checkOpenDatabase();
             sqlDatabase = dbWork.getWritableDatabase();
             sqlDatabase.execSQL(sql, bindArgs);
         } catch (Exception e) {
@@ -77,9 +86,7 @@ public class SQLiteWork {
     public Cursor queryOpen(String sql, String[] selectionArgs) {
         Cursor cursor = null;
         try {
-            if(sqlDatabase.isOpen()) {
-                sqlDatabase.close();
-            }
+            checkOpenDatabase();
             sqlDatabase = dbWork.getWritableDatabase();
             cursor = sqlDatabase.rawQuery(sql, selectionArgs);
         } catch(Exception e) {
