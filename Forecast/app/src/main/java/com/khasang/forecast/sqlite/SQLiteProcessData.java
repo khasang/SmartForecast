@@ -26,9 +26,12 @@ public class SQLiteProcessData {
     public SimpleDateFormat dtFormat;
 
     public SQLiteProcessData(Context context) {
-        // TODO Перед релизом флаг deleteOldTables при создании SQLiteWork менять на false.
-        this.sqLite = new SQLiteWork(context, "Forecast.db", false);
+        this.sqLite = new SQLiteWork(context, "Forecast.db");
         dtFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    }
+
+    public void closeDatabase() {
+        sqLite.closeDatabase();
     }
 
     // Сохранение города с координатами (перед сохранением списка нужно очистить старый)
@@ -207,8 +210,8 @@ public class SQLiteProcessData {
         String WIND_DIRECTION = "";
         String PRECIPITATION_TYPE = "";
         int HUMIDITY = 0;
-        Wind WIND;
-        Precipitation PRECIPITATION;
+        Wind WIND = null;
+        Precipitation PRECIPITATION = null;
         Weather weather = null;
 
         Cursor dataset = sqLite.queryOpen(SQLiteFields.QUERY_SELECT_WEATHER, new String[]{serviceType.name(), cityName, dtFormat.format(date.getTime())});
