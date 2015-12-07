@@ -97,18 +97,20 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         ForecastPageAdapter adapter = new ForecastPageAdapter(getSupportFragmentManager());
         pager.setAdapter(adapter);
 
+        city.setText("--/--");
+        temperature.setText("--/--");
+        precipitation.setText("--/--");
+        pressure.setText("--/--");
+        wind.setText("--/--");
+        humidity.setText("--/--");
+        timeStamp.setText("--/--");
         if (PositionManager.getInstance().getPositions().size() == 0) {
-            city.setText("--/--");
-            temperature.setText("--/--");
-            precipitation.setText("--/--");
-            pressure.setText("--/--");
-            wind.setText("--/--");
-            humidity.setText("--/--");
-            timeStamp.setText("--/--");
             Toast.makeText(this, "Для продолжения работы необходимо добавить город.", Toast.LENGTH_SHORT).show();
             startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
         } else {
-            PositionManager.getInstance().getCurrentForecast();
+            if (!PositionManager.getInstance().getCurrentPositionName().isEmpty()) {
+                PositionManager.getInstance().getCurrentForecast();
+            }
         }
     }
 
