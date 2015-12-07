@@ -104,37 +104,13 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/llRefresh"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginTop="70dp"
             android:layout_below="@id/llMainInformation">
 
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom">
 
-                <ImageButton
-                    android:id="@+id/syncBtn"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/ic_refresh"
-                    android:background="@null"
-                    android:scaleType="fitCenter"
-                    android:contentDescription="test"
-                    android:layout_gravity="center" />
-
-                <TextView
-                    android:id="@+id/timeStamp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:layout_gravity="center" />
-
-            </LinearLayout>
 
             <LinearLayout
                 android:orientation="vertical"
@@ -162,7 +138,6 @@
     <!-- Реализация фрагментов-->
     <LinearLayout
         android:id="@+id/llHourAndDayWeather"
-
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -185,6 +160,33 @@
             android:id="@+id/pager"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llRefresh"
+        android:layout_below="@id/llCurrentWeather"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="false">
+
+        <ImageButton
+            android:id="@+id/syncBtn"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_refresh"
+            android:background="@null"
+            android:scaleType="fitCenter"
+            android:contentDescription="test"
+            android:layout_gravity="center" />
+
+        <TextView
+            android:id="@+id/timeStamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_gravity="center" />
 
     </LinearLayout>
 
