@@ -162,7 +162,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        PositionManager.getInstance().removePositions();
                         CityPickerActivity.this.clearList();
                         recyclerAdapter.notifyDataSetChanged();
                     }
