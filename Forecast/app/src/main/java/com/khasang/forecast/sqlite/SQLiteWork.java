@@ -13,12 +13,14 @@ public class SQLiteWork {
     public SQLiteDatabase sqlDatabase;
     public SQLiteOpen dbWork;
 
-    public SQLiteWork(Context context, String dbName) {
+    public SQLiteWork(Context context, String dbName, Boolean deleteOldTables) {
         // инициализация класса обёртки
         dbWork = new SQLiteOpen(context, dbName);
         sqlDatabase = dbWork.getWritableDatabase();
-        // удаление таблиц, пока не устаканится их структура
-        // tablesDelete();
+        // удаление таблиц, использовать, если в структуру таблиц внесли изменения
+        if (deleteOldTables) {
+            tablesDelete();
+        }
         tablesCreate();
     }
 
@@ -26,6 +28,9 @@ public class SQLiteWork {
         try {
             if (!isTableExists(tableName)) {
                 queryExec(query);
+                if (tableName.equals(SQLiteFields.TABLE_SETTINGS)) {
+                    queryExExec(SQLiteFields.QUERY_INSERT_SETTINGS, new String[]{"OPEN_WEATHER_MAP", "Москва", "CELSIUS", "METER_PER_SECOND", "HPA"});
+                }
             }
         } catch (Exception e) {
             System.out.println("createTables ERROR " + e);

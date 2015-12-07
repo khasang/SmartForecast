@@ -1,6 +1,5 @@
 package com.khasang.forecast;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
@@ -9,11 +8,7 @@ import android.widget.Toast;
 import com.khasang.forecast.activities.WeatherActivity;
 import com.khasang.forecast.sqlite.SQLiteProcessData;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,35 +23,29 @@ public class PositionManager {
     public static final double KPA_TO_MM_HG = 1.33322;
     public static final double KM_TO_MILES = 0.62137;
     public static final double METER_TO_FOOT = 3.28083;
-    public static final String MY_PREFF = "MY_PREFF";
 
     private SharedPreferences preferences;
     private String[] positionsKey;
-    private SQLiteProcessData dbManager;
 
-    public enum TemperatureMetrics {KELVIN, CELSIUS, FAHRENHEIT}
+    public enum TemperatureMetrics {KELVIN, CELSIUS, FAHRENHEIT};
+    public enum SpeedMetrics {METER_PER_SECOND, FOOT_PER_SECOND, KM_PER_HOURS, MILES_PER_HOURS};
+    public enum PressureMetrics {HPA, MM_HG};
 
-    public enum SpeedMetrics {METER_PER_SECOND, FOOT_PER_SECOND, KM_PER_HOURS, MILES_PER_HOURS}
-
-    public enum PressureMetrics {HPA, MM_HG}
-
-    TemperatureMetrics settingsTemperatureMetrics = TemperatureMetrics.CELSIUS;
-    SpeedMetrics formatSpeedMetrics = SpeedMetrics.METER_PER_SECOND;
-    PressureMetrics formatPressureMetrics = PressureMetrics.HPA;
-
+    TemperatureMetrics temperatureMetric;
+    SpeedMetrics speedMetric;
+    PressureMetrics pressureMetric;
     private WeatherStation currStation;
     private Position currPosition;
     private HashMap<WeatherStationFactory.ServiceType, WeatherStation> stations;
     private volatile HashMap<String, Position> positions;
     private WeatherActivity mActivity;
+    private SQLiteProcessData dbManager;
 
     private static class ManagerHolder {
         private final static PositionManager instance = new PositionManager();
     }
 
-    private PositionManager() {
-
-    }
+    private PositionManager() { }
 
     public static PositionManager getInstance () {
         return ManagerHolder.instance;
@@ -66,12 +55,16 @@ public class PositionManager {
         this.mActivity = activity;
 
         dbManager = new SQLiteProcessData(mActivity.context);
-        settingsTemperatureMetrics = dbManager.loadTemperatureMetrics();
-        formatSpeedMetrics = dbManager.loadSpeedMetrics();
-        formatPressureMetrics = dbManager.loadPressureMetrics();
+        temperatureMetric = dbManager.loadTemperatureMetrics();
+        speedMetric = dbManager.loadSpeedMetrics();
+        pressureMetric = dbManager.loadPressureMetrics();
 
         initStations();
         initPositions();
+    }
+
+    public void saveSettings() {
+        dbManager.saveSettings(currStation, currPosition, temperatureMetric, speedMetric, pressureMetric);
     }
 
     /**
@@ -82,7 +75,7 @@ public class PositionManager {
         stations = wsf
                 .addOpenWeatherMap(mActivity.getString(R.string.service_name_open_weather_map))
                 .create();
-        currStation = stations.get(WeatherStationFactory.ServiceType.OPEN_WEATHER_MAP);
+        currStation = stations.get(dbManager.loadStation());
     }
 
     /**
@@ -90,10 +83,7 @@ public class PositionManager {
      */
     private void initPositions() {
         //loadPreferences();    Здесь загружать список городов
-        List<String> pos = new ArrayList<>();
-        pos.add("Moscow");
-        pos.add("Buenos Aires");
-        pos.add("Нижний Новгород");
+        HashMap<String, Coordinate> pos = dbManager.loadTownList();
         initPositions(pos);
     }
 
@@ -102,14 +92,17 @@ public class PositionManager {
      *
      * @param favorites коллекция {@link List} типа {@link String}, содержащий названия городов
      */
-    private void initPositions(List<String> favorites) {
+    private void initPositions(HashMap<String, Coordinate> favorites) {
         PositionFactory positionFactory = new PositionFactory(mActivity.getApplicationContext());
-        positionFactory.addCurrentPosition(stations.keySet());
-        for (String pos : favorites) {
-            positionFactory.addFavouritePosition(pos, stations.keySet());
+        positionFactory.addCurrentPosition();
+
+        if (favorites != null) {
+            for (HashMap.Entry<String, Coordinate> entry : favorites.entrySet()) {
+                positionFactory.addFavouritePosition(entry.getKey(), entry.getValue());
+            }
+            positions = positionFactory.getPositions();
         }
-        positions = positionFactory.getPositions();
-        currPosition = positions.get("Нижний Новгород");
+        currPosition = positions.get(dbManager.loadСurrentTown());
     }
 
     /**
@@ -119,8 +112,12 @@ public class PositionManager {
      * @param name объект типа {@link String}, содержащий название города
      */
     public void addPosition(String name) {
+        if (positionIsPresent(name)) {
+            Toast.makeText(mActivity, "Город уже присутствует в списке", Toast.LENGTH_SHORT).show();
+            return;
+        }
         PositionFactory positionFactory = new PositionFactory(mActivity, positions);
-        positionFactory.addFavouritePosition(name, stations.keySet());
+        positionFactory.addFavouritePosition(name, dbManager);
         positions = positionFactory.getPositions();
     }
 
@@ -173,129 +170,6 @@ public class PositionManager {
         if (positions.containsKey(name)) {
             currPosition = positions.get(name);
         }
-    }
-
-    /**
-     * Запись настроек выбора параметров и ключей
-     */
-    protected void savePreferences() {
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("temp", settingsTemperatureMetrics.toString());
-        editor.putString("speed", formatSpeedMetrics.toString());
-        editor.putString("pressure", formatPressureMetrics.toString());
-        int i = 0;
-        for (Map.Entry<String, Position> entry : positions.entrySet()) {
-            editor.putString("" + i++, entry.getKey());
-        }
-        editor.commit();
-    }
-
-    /**
-     * Чтение настроек выбора параметров и ключей, второе значение по умолчанию
-     */
-    private void loadPreferences() {
-        preferences = mActivity.getSharedPreferences(MY_PREFF, Activity.MODE_PRIVATE);
-        String temp = preferences.getString("temp", "KELVIN");
-        String speed = preferences.getString("speed", "METER_PER_SECOND");
-        String pressure = preferences.getString("pressure", "HPA");
-        positionsKey = new String[positions.size()];
-        for (int i = 0; i < positions.size(); i++) {
-            positionsKey[i] = preferences.getString("i", "");
-        }
-    }
-
-    /**
-     * Перегруженный метод, с помощью которого получаем сохраненные погодные данные от текущей станции, на текущую дату
-     *
-     * @return обьект типа {@link Weather}
-     */
-    public Weather getWeather() {
-        return getWeather(currStation.getServiceType());
-    }
-
-    /**
-     * Перегруженный метод, с помощью которого получаем сохраненные погодные данные от заданной станции
-     *
-     * @param stationType объект типа {@link com.khasang.forecast.WeatherStationFactory.ServiceType}, содержащий погодный сервис, с которого получены данные
-     * @return обьект типа {@link Weather}
-     */
-    public Weather getWeather(WeatherStationFactory.ServiceType stationType) {
-        return getWeather(stationType, GregorianCalendar.getInstance());
-    }
-
-    /**
-     * Перегруженный метод, с помощью которого получаем сохраненные погодные данные от заданной станции  на заданную дату
-     *
-     * @param stationType   объект типа {@link com.khasang.forecast.WeatherStationFactory.ServiceType}, содержащий погодный сервис, с которого получены данные
-     * @param necessaryDate объект типа {@link Calendar} - необходимо выбрать наиболее приближенные к этой дате погодные данные
-     * @return обьект типа {@link Weather}
-     */
-    public Weather getWeather(WeatherStationFactory.ServiceType stationType, Calendar necessaryDate) {
-        final Set<Calendar> dates = currPosition.getAllDates(stationType);
-        if (dates.size() == 0) {
-            return null;
-        }
-        final List<Calendar> sortedDates = new ArrayList<Calendar>(dates);
-        Collections.sort(sortedDates);
-        Calendar baseDate;
-        Calendar dateAtList = null;
-        for (int i = 0; i < sortedDates.size(); i++) {
-            baseDate = sortedDates.get(i);
-            if (necessaryDate.before(baseDate)) {
-                if (i == 0) {
-                    dateAtList = baseDate;
-                } else {
-                    Calendar prevDate = sortedDates.get(i - 1);
-                    long diff1 = baseDate.getTimeInMillis() - necessaryDate.getTimeInMillis();
-                    long diff2 = necessaryDate.getTimeInMillis() - prevDate.getTimeInMillis();
-                    if (diff1 < diff2) {
-                        dateAtList = baseDate;
-                    } else {
-                        dateAtList = prevDate;
-                    }
-                }
-                break;
-            }
-        }
-        if (dateAtList == null) {
-            dateAtList = sortedDates.get(sortedDates.size() - 1);
-        }
-        return currPosition.getWeather(stationType, dateAtList);
-    }
-
-    /**
-     * Метод, с помощью которого получаем сохраненные погодные данные от текущей станции  на сутки
-     *
-     * @return массив типа {@link Weather}
-     */
-    public Weather[] getHourlyWeather() {
-        final int HOUR_PERIOD = 4;
-        Calendar calendar = GregorianCalendar.getInstance();
-        calendar.add(Calendar.HOUR_OF_DAY, HOUR_PERIOD);
-        calendar.set(Calendar.MINUTE, 0);
-        Weather[] weather = new Weather[7];
-        for (int i = 0; i < 7; i++) {
-            weather[i] = getWeather(currStation.getServiceType(), calendar);
-            calendar.add(Calendar.HOUR_OF_DAY, HOUR_PERIOD);
-        }
-        return weather;
-    }
-
-    /**
-     * Метод, с помощью которого получаем сохраненные погодные данные от текущей станции  на неделю
-     *
-     * @return массив типа {@link Weather}
-     */
-    public Weather[] getWeeklyWeather() {
-        Weather[] weather = new Weather[7];
-        Calendar calendar = GregorianCalendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 12);
-        calendar.set(Calendar.MINUTE, 0);
-        for (int i = 0; i < 7; i++) {
-            weather[i] = getWeather(currStation.getServiceType(), calendar);
-            calendar.add(Calendar.DAY_OF_YEAR, 1);
-        }
-        return weather;
     }
 
     public boolean positionIsPresent(String name) {
@@ -410,7 +284,7 @@ public class PositionManager {
         HashMap.Entry<Calendar, Weather> firstEntry = (Map.Entry<Calendar, Weather>) weather.entrySet().iterator().next();
         Position position = getPosition(cityId);
         if (position != null) {
-            position.setWeather(serviceType, firstEntry.getKey(), firstEntry.getValue());
+            dbManager.saveWeather(serviceType, position.getLocationName(), firstEntry.getKey(), firstEntry.getValue());
         }
         if (currPosition.getCityID() == cityId && currStation.getServiceType() == serviceType) {
             mActivity.updateInterface(firstEntry.getKey(), formatWeather(firstEntry.getValue()));
@@ -428,7 +302,7 @@ public class PositionManager {
         Position position = getPosition(cityId);
         if (position != null) {
             for (Map.Entry<Calendar, Weather> entry : weather.entrySet()) {
-                position.setWeather(serviceType, entry.getKey(), entry.getValue());                 // Здесь заносим в базу
+                dbManager.saveWeather(serviceType, position.getLocationName(), entry.getKey(), entry.getValue());
             }
         }
         if (currPosition.getCityID() == cityId && currStation.getServiceType() == serviceType) {
@@ -450,7 +324,7 @@ public class PositionManager {
         Position position = getPosition(cityId);
         if (position != null) {
             for (Map.Entry<Calendar, Weather> entry : weather.entrySet()) {
-                position.setWeather(serviceType, entry.getKey(), entry.getValue());
+                dbManager.saveWeather(serviceType, position.getLocationName(), entry.getKey(), entry.getValue());
             }
         }
         if (currPosition.getCityID() == cityId && currStation.getServiceType() == serviceType) {
@@ -482,7 +356,7 @@ public class PositionManager {
      * @return температура в выбранной пользователем метрике
      */
     double formatTemperature(double temperature) {
-        switch (settingsTemperatureMetrics) {
+        switch (temperatureMetric) {
             case KELVIN:
                 break;
             case CELSIUS:
@@ -500,7 +374,7 @@ public class PositionManager {
      * @return скорость в выбранной пользователем метрике
      */
     double formatSpeed(double speed) {
-        switch (formatSpeedMetrics) {
+        switch (speedMetric) {
             case METER_PER_SECOND:
                 break;
             case FOOT_PER_SECOND:
@@ -520,7 +394,7 @@ public class PositionManager {
      * @return давление в выбранной пользователем метрике
      */
     double formatPressure(double pressure) {
-        switch (formatPressureMetrics) {
+        switch (pressureMetric) {
             case HPA:
                 break;
             case MM_HG:
