@@ -97,7 +97,19 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         ForecastPageAdapter adapter = new ForecastPageAdapter(getSupportFragmentManager());
         pager.setAdapter(adapter);
 
-        PositionManager.getInstance().getCurrentForecast();
+        if (PositionManager.getInstance().getPositions().size() == 0) {
+            city.setText("--/--");
+            temperature.setText("--/--");
+            precipitation.setText("--/--");
+            pressure.setText("--/--");
+            wind.setText("--/--");
+            humidity.setText("--/--");
+            timeStamp.setText("--/--");
+            Toast.makeText(this, "Для продолжения работы необходимо добавить город.", Toast.LENGTH_SHORT).show();
+            startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
+        } else {
+            PositionManager.getInstance().getCurrentForecast();
+        }
     }
 
     @Override
@@ -208,6 +220,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 city.setText(newCity);
                 Log.d(TAG, newCity);
                 PositionManager.getInstance().setCurrentPosition(newCity);
+                PositionManager.getInstance().saveCurrPosition();
                 PositionManager.getInstance().getCurrentForecast();
             } else {
                 //TODO Временная заглушка

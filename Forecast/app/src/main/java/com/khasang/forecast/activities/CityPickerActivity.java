@@ -181,7 +181,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     private void clearList () {
         PositionManager.getInstance().removePositions();
         cityList.clear();
-        Toast.makeText(this, "Удфлю все нафиг", Toast.LENGTH_SHORT).show();
     }
 
     private void showChooseCityDialog() {
