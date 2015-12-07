@@ -14,7 +14,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/holo_blue_bright"
+        android:background="@color/my_holo"
         android:paddingBottom="@dimen/activity_vertical_margin"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
@@ -127,6 +127,13 @@
         </LinearLayout>
     </LinearLayout>
 
+    <View
+        android:id="@+id/divider"
+        android:layout_below="@id/llCurrentWeather"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@android:color/black"/>
+
     <!-- Реализация фрагментов-->
     <LinearLayout
         android:id="@+id/llHourAndDayWeather"
@@ -134,15 +141,13 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="visible"
-        android:layout_below="@id/llCurrentWeather"
+        android:layout_below="@id/divider"
         >
 
         <android.support.design.widget.TabLayout
             android:id="@+id/sliding_tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabBackground="@color/my_holo_blue_bright"
-            app:tabIndicatorColor="@color/my_white"
             app:tabIndicatorHeight="7dp"
             app:tabGravity="fill"
             app:tabMaxWidth="0dp"

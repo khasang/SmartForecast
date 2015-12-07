@@ -68,7 +68,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         setTitle(getString(R.string.city_list));
         //TODO Проверить код кнопки HOME - цвет должен быть белый (не работает)
-        toolbar.setTitleTextColor(ContextCompat.getColor(this, android.R.color.white));
+        //toolbar.setTitleTextColor(ContextCompat.getColor(this, android.R.color.white));
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         cityList = new ArrayList<>();

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
@@ -93,9 +94,10 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         ForecastPageAdapter adapter = new ForecastPageAdapter(getSupportFragmentManager());
         pager.setAdapter(adapter);
         tabLayout.setupWithViewPager(pager);
+        tabLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.my_holo_alpha));
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_by_hour_24);
         tabLayout.getTabAt(1).setIcon(R.drawable.ic_by_date_24);
-
+        //tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(this, R.color.my_white));
 
         city.setText("--/--");
         temperature.setText("--/--");
