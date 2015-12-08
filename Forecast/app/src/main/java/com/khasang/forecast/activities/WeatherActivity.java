@@ -107,6 +107,9 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         if (PositionManager.getInstance().getPositions().size() == 0) {
             Toast.makeText(this, "Для продолжения работы необходимо добавить город.", Toast.LENGTH_SHORT).show();
             startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
+        } else if (!PositionManager.getInstance().positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {
+            Toast.makeText(this, "Для продолжения работы необходимо выбрать город.", Toast.LENGTH_SHORT).show();
+            startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
         } else {
             if (!PositionManager.getInstance().getCurrentPositionName().isEmpty()) {
                 PositionManager.getInstance().getCurrentForecast();
