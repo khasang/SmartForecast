@@ -7,12 +7,11 @@ import android.util.Log;
 import android.widget.Toast;
 
 
+import com.khasang.forecast.sqlite.SQLiteProcessData;
+
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by Роман on 26.11.2015.
@@ -39,7 +38,7 @@ public class PositionFactory {
         mContext = context;
     }
 
-    public void addCurrentPosition(Set<WeatherStationFactory.ServiceType> serviceType) {
+    public void addCurrentPosition() {
         Position p = new Position();
         // Получить название города
         // и
@@ -47,13 +46,10 @@ public class PositionFactory {
         // positions.add(p);
     }
 
-    public void addFavouritePosition(String name, Set<WeatherStationFactory.ServiceType> serviceTypes) {
+    public void addFavouritePosition(String name, SQLiteProcessData dbm) {
         Position p = new Position();
         p.setLocationName(name);
         p.setCityID(cityIdentificationCounter++);
-        for (WeatherStationFactory.ServiceType stationType : serviceTypes) {
-            p.addWeatherStation(stationType);
-        }
         // Через геокодер получить и занести координаты
         Geocoder geocoder = new Geocoder(mContext);
         List<Address> addresses;
@@ -71,9 +67,18 @@ public class PositionFactory {
             p.setCoordinate(coordinate);
             Log.i(TAG, "Coordinate of " + name + " lat: " + currentAddress.getLatitude() + ", lon: " + currentAddress.getLongitude());
             mPositions.put(name, p);
+            dbm.saveTown(name, coordinate.getLatitude(), coordinate.getLongitude());
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void addFavouritePosition(String name, Coordinate coordinates) {
+        Position position = new Position();
+        position.setLocationName(name);
+        position.setCityID(cityIdentificationCounter++);
+        position.setCoordinate(coordinates);
+        mPositions.put(name, position);
     }
 
     public HashMap<String, Position> getPositions() {

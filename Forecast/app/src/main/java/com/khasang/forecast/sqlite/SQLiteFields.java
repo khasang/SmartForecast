@@ -32,6 +32,7 @@ public class SQLiteFields {
     public static final String CURRENT_SPEED_METRICS = "CurrentSpeedMetrics";
     public static final String CURRENT_PRESSURE_METRICS = "CurrentPressureMetrics";
     public static final String CURRENT_STATION = "CurrentServiceType";
+    public static final String CURRENT_TOWN = "Town";
 
     public static final String QUERY_CREATE_TABLE_TOWNS  = "CREATE TABLE " + TABLE_TOWNS + " (" +
             ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -57,6 +58,7 @@ public class SQLiteFields {
     public static final String QUERY_CREATE_TABLE_SETTINGS = "CREATE TABLE " + TABLE_SETTINGS + " (" +
             ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
             CURRENT_STATION + " VARCHAR(30)," +
+            CURRENT_TOWN + " VARCHAR(30)," +
             CURRENT_TEMPIRATURE_METRICS + " VARCHAR(30)," +
             CURRENT_SPEED_METRICS + " VARCHAR(30)," +
             CURRENT_PRESSURE_METRICS + " VARCHAR(30))";
@@ -66,9 +68,11 @@ public class SQLiteFields {
     public static final String QUERY_DELETE_TABLE_SETTINGS = "DROP TABLE IF EXISTS " + TABLE_SETTINGS;
 
     public static final String QUERY_DELETE_DATA_WEATHER = "DELETE FROM " + TABLE_WEATHER;
-    public static final String QUERY_DELETE_OLD_DATA_WEATHER = "DELETE FROM " + TABLE_WEATHER + " WHERE STATION_NAME = ? and TOWN = ? and " + DATE + " < date( ? )";
+    public static final String QUERY_DELETE_OLD_DATA_WEATHER = "DELETE FROM " + TABLE_WEATHER + " WHERE " + STATION_NAME + " = ? and " + TOWN + " = ? and " + DATE + " < date( ? )";
 
     public static final String QUERY_DELETE_DATA_TOWNS = "DELETE FROM " + TABLE_TOWNS;
+    public static final String QUERY_DELETE_DATA_TOWN = "DELETE FROM " + TABLE_TOWNS + " WHERE " + TOWN + " = ? ";
+
     public static final String QUERY_DELETE_DATA_SETTINGS = "DELETE FROM " + TABLE_SETTINGS;
 
     public static final String QUERY_OBJECTS_COUNT = "SELECT COUNT(*) FROM SQLITE_MASTER WHERE TYPE = ? AND NAME = ?";
@@ -101,10 +105,25 @@ public class SQLiteFields {
 
     public static final String QUERY_INSERT_SETTINGS = "INSERT INTO " + TABLE_SETTINGS + " (" +
             CURRENT_STATION + "," +
+            CURRENT_TOWN + "," +
             CURRENT_TEMPIRATURE_METRICS + "," +
             CURRENT_SPEED_METRICS + "," +
             CURRENT_PRESSURE_METRICS + ") " +
-            " VALUES ( ? , ? , ? , ? )";
+            " VALUES ( ? , ? , ? , ? , ? )";
+
+    public static final String QUERY_UPDATE_CURRCITY_SETTING = "UPDATE " + TABLE_SETTINGS + " SET " +
+            CURRENT_TOWN + " = ? " +
+            " WHERE " + ID + " = 1";
+
+    public static final String QUERY_UPDATE_CURRSTATION_SETTING = "UPDATE " + TABLE_SETTINGS + " SET " +
+            CURRENT_STATION + " = ? " +
+            " WHERE " + ID + " = 1";
+
+    public static final String QUERY_UPDATE_METRICS_SETTINGS = "UPDATE " + TABLE_SETTINGS + " SET " +
+            CURRENT_TEMPIRATURE_METRICS + " = ? ," +
+            CURRENT_SPEED_METRICS + " = ? ," +
+            CURRENT_PRESSURE_METRICS + " = ? " +
+            " WHERE " + ID + " = 1";
 
     public static final String QUERY_SELECT_SETTINGS =
             "SELECT * FROM " + TABLE_SETTINGS +

@@ -2,8 +2,10 @@ package com.khasang.forecast.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
@@ -12,12 +14,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.khasang.forecast.Position;
 import com.khasang.forecast.PositionManager;
 import com.khasang.forecast.R;
 import com.khasang.forecast.Weather;
@@ -36,23 +36,23 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     /**
      * ViewPager для отображения нижних вкладок прогноза: по часам и по дням
      */
+    private TabLayout tabLayout;
     private ViewPager pager;
 
     String TAG = this.getClass().getSimpleName();
 
     private TextView city;
     private TextView temperature;
-    private TextView precipitation;
+    private TextView description;
     private TextView pressure;
     private TextView wind;
     private TextView humidity;
     private TextView timeStamp;
     private ImageButton syncBtn;
     private ImageButton cityPickerBtn;
-    private ImageButton hourForecastBtn;
-    private ImageButton dayForecastBtn;
 
     private Animation animationRotateCenter;
+    private Animation animScale;
 
     private final int CHOOSE_CITY = 1;
     public Context context;
@@ -69,35 +69,60 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
         city = (TextView) findViewById(R.id.city);
         temperature = (TextView) findViewById(R.id.temperature);
-        precipitation = (TextView) findViewById(R.id.precipitation);
+        description = (TextView) findViewById(R.id.precipitation);
         pressure = (TextView) findViewById(R.id.pressure);
         wind = (TextView) findViewById(R.id.wind);
         humidity = (TextView) findViewById(R.id.humidity);
         timeStamp = (TextView) findViewById(R.id.timeStamp);
         syncBtn = (ImageButton) findViewById(R.id.syncBtn);
         cityPickerBtn = (ImageButton) findViewById(R.id.cityPickerBnt);
-        hourForecastBtn = (ImageButton) findViewById(R.id.hourForecastBtn);
-        dayForecastBtn = (ImageButton) findViewById(R.id.dayForecastBtn);
-
 
         /** Анимация кнопки */
-        animationRotateCenter = AnimationUtils.loadAnimation(
-                this, R.anim.rotate_center);
+        animationRotateCenter = AnimationUtils.loadAnimation(this, R.anim.rotate_center);
+        animScale = AnimationUtils.loadAnimation(this, R.anim.scale);
 
         /** Слушатели нажатий кнопкок */
         syncBtn.setOnClickListener(this);
+        city.setOnClickListener(this);
         cityPickerBtn.setOnClickListener(this);
-        hourForecastBtn.setOnClickListener(this);
-        dayForecastBtn.setOnClickListener(this);
 
         /**
          * Код для фрагментов
          */
+        tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         pager = (ViewPager) findViewById(R.id.pager);
         ForecastPageAdapter adapter = new ForecastPageAdapter(getSupportFragmentManager());
         pager.setAdapter(adapter);
+        tabLayout.setupWithViewPager(pager);
+        tabLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.my_holo_alpha));
+        tabLayout.getTabAt(0).setIcon(R.drawable.ic_by_hour_24);
+        tabLayout.getTabAt(1).setIcon(R.drawable.ic_by_date_24);
+        //tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(this, R.color.my_white));
 
-        PositionManager.getInstance().getCurrentForecast();
+        city.setText("--/--");
+        temperature.setText("--/--");
+        description.setText("--/--");
+        pressure.setText("--/--");
+        wind.setText("--/--");
+        humidity.setText("--/--");
+        timeStamp.setText("--/--");
+        if (PositionManager.getInstance().getPositions().size() == 0) {
+            Toast.makeText(this, "Для продолжения работы необходимо добавить город.", Toast.LENGTH_SHORT).show();
+            startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
+        } else if (!PositionManager.getInstance().positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {
+            Toast.makeText(this, "Для продолжения работы необходимо выбрать город.", Toast.LENGTH_SHORT).show();
+            startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
+        } else {
+            if (!PositionManager.getInstance().getCurrentPositionName().isEmpty()) {
+                PositionManager.getInstance().getCurrentForecast();
+            }
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        PositionManager.getInstance().saveSettings();
     }
 
     /**
@@ -110,18 +135,13 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 syncBtn.startAnimation(animationRotateCenter);
                 PositionManager.getInstance().getCurrentForecast();
                 break;
-            case R.id.cityPickerBnt:
-                //startActivity(new Intent(this, CityPickerActivity.class));
+            case R.id.city:
                 startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
                 break;
-            case R.id.hourForecastBtn:
-                pager.setCurrentItem(0);
-                break;
-            case R.id.dayForecastBtn:
-                pager.setCurrentItem(1);
+            case R.id.cityPickerBnt:
+                startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
                 break;
         }
-        //onActivityResult()
     }
 
     /**
@@ -144,7 +164,11 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         city.setText(PositionManager.getInstance().getCurrentPositionName()); // отображаем имя текущей локации
         temperature.setText(String.format("%.0f°C", wCurent.getTemperature()));
 
-        precipitation.setText(String.format("%s", wCurent.getPrecipitation()));
+        description.setText(String.format("%s", wCurent.getDescription()
+                .substring(0, 1)
+                .toUpperCase() + wCurent
+                .getDescription()
+                .substring(1)));
 
         pressure.setText(String.format("%s %.0f %s",
                 getString(R.string.pressure),
@@ -186,27 +210,21 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        int size = PositionManager.getInstance().getPositions().size();
-        if (size == 0) {
-            city.setText("--/--");
-            temperature.setText("--/--");
-            precipitation.setText("--/--");
-            pressure.setText("--/--");
-            wind.setText("--/--");
-            humidity.setText("--/--");
-            timeStamp.setText("--/--");
-        }
-        else if (requestCode == CHOOSE_CITY) {
+        if (requestCode == CHOOSE_CITY) {
             if (resultCode == RESULT_OK) {
                 String newCity = data.getStringExtra(CityPickerActivity.CITY_PICKER_TAG);
                 city.setText(newCity);
                 Log.d(TAG, newCity);
                 PositionManager.getInstance().setCurrentPosition(newCity);
+                PositionManager.getInstance().saveCurrPosition();
                 PositionManager.getInstance().getCurrentForecast();
+                syncBtn.setVisibility(View.VISIBLE);
             } else {
-                //TODO Временная заглушка
-                //city.setText(""); // стираем текст
+                if (!PositionManager.getInstance().positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {
+                    syncBtn.setVisibility(View.GONE);
+                }
             }
         }
     }
 }
+

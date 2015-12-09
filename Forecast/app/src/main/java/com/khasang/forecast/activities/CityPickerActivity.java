@@ -3,6 +3,7 @@ package com.khasang.forecast.activities;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,6 +23,8 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.khasang.forecast.PositionManager;
@@ -38,7 +42,7 @@ import java.util.Set;
  *
  * Activity для выбора местоположения
  */
-public class CityPickerActivity extends AppCompatActivity implements View.OnClickListener {
+public class CityPickerActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
     String TAG = "MyTAG";
     public final static String CITY_PICKER_TAG = "com.khasang.forecast.activities.CityPickerActivity";
 
@@ -64,12 +68,12 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         setTitle(getString(R.string.city_list));
         //TODO Проверить код кнопки HOME - цвет должен быть белый (не работает)
-        toolbar.setTitleTextColor(ContextCompat.getColor(this, android.R.color.white));
+        //toolbar.setTitleTextColor(ContextCompat.getColor(this, android.R.color.white));
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         cityList = new ArrayList<>();
 
-        recyclerAdapter = new RecyclerAdapter(cityList, this);
+        recyclerAdapter = new RecyclerAdapter(cityList, this, this);
         recyclerView.setAdapter(recyclerAdapter);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -90,6 +94,24 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         fabBtn.setOnClickListener(this);
         createItemList();
         Log.d(TAG, String.valueOf(PositionManager.getInstance().getPositions()));
+
+        ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = recyclerView.getChildAdapterPosition(viewHolder.itemView) - 1;
+                PositionManager.getInstance().removePosition(cityList.get(position));
+                cityList.remove(position);
+                recyclerAdapter.notifyDataSetChanged();
+            }
+        };
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
     // Вспомогательные методы
@@ -181,7 +203,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     private void clearList () {
         PositionManager.getInstance().removePositions();
         cityList.clear();
-        Toast.makeText(this, "Удфлю все нафиг", Toast.LENGTH_SHORT).show();
     }
 
     private void showChooseCityDialog() {
@@ -217,5 +238,24 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         menuInflater.inflate(R.menu.menu_activity_city_picker, menu);
         menu.findItem(R.id.clear_favorite).setVisible(true);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        switch (v.getId()) {
+            case R.id.recycler_item:
+                final int position = recyclerView.getChildAdapterPosition(v);
+                TextView thisCity = (TextView) recyclerView.getChildAt(position).findViewById(R.id.cityTW);
+                String cityName = String.valueOf(thisCity.getText());
+                Log.i(TAG, "OnLongClick: город - " + cityName);
+
+                //TODO реализовать удаление города через Context Menu
+    /*            Toast.makeText(this, "click on " + thisCity.getText(), Toast.LENGTH_SHORT).show();
+                cityList.remove(cityName);
+                recyclerAdapter.notifyDataSetChanged();
+                PositionManager.getInstance().removePosition(cityName);*/
+
+        }
+    return true;
     }
 }
