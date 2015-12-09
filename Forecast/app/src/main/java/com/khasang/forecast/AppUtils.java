@@ -9,14 +9,14 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-/** Вспомогательный класс, служащий для преобразования получаемых данных.
+/**
+ * Вспомогательный класс, служащий для преобразования получаемых данных.
  * <p>Реализованы методы
  * <ul>
- *     <li>{@link #convertToWeather(OpenWeatherMapResponse)}</li>
- *     <li>{@link #convertToHourlyWeather(OpenWeatherMapResponse)}</li>
- *     <li>{@link #convertToDailyWeather(DailyResponse)}</li>
+ * <li>{@link #convertToWeather(OpenWeatherMapResponse)}</li>
+ * <li>{@link #convertToHourlyWeather(OpenWeatherMapResponse)}</li>
+ * <li>{@link #convertToDailyWeather(DailyResponse)}</li>
  * </ul>
- *
  */
 
 public class AppUtils {
@@ -24,6 +24,7 @@ public class AppUtils {
     /**
      * Метод для конвертирования ответа от API в коллекцию типа {@link Map}<{@link Calendar}, {@link Weather}>
      * для запроса текущего прогноза погоды.
+     *
      * @param response объект типа {@link OpenWeatherMapResponse}, содержащий ответ от API.
      */
     public static Map<Calendar, Weather> convertToWeather(OpenWeatherMapResponse response) {
@@ -33,7 +34,7 @@ public class AppUtils {
         weather.setTemperature(response.getMain().getTemp());
         weather.setHumidity(response.getMain().getHumidity());
         weather.setPressure(response.getMain().getPressure());
-        setPrecipitationType(response.getWeather().get(0).getMain(), weather);
+        setPrecipitationType(response.getWeather().get(0).getId(), weather);
         double speed = response.getWind().getSpeed();
         double deg = response.getWind().getDeg();
         setWindDirectionAndSpeed(weather, speed, deg);
@@ -49,6 +50,7 @@ public class AppUtils {
     /**
      * Метод для конвертирования ответа от API в коллекцию типа {@link Map}<{@link Calendar}, {@link Weather}>
      * для запроса почасового прогноза погоды.
+     *
      * @param response объект типа {@link OpenWeatherMapResponse}, содержащий ответ от API.
      */
     public static Map<Calendar, Weather> convertToHourlyWeather(OpenWeatherMapResponse response) {
@@ -62,7 +64,7 @@ public class AppUtils {
             double speed = forecast.getWind().getSpeed();
             double deg = forecast.getWind().getDeg();
             setWindDirectionAndSpeed(weather, speed, deg);
-            setPrecipitationType(forecast.getWeather().get(0).getMain(), weather);
+            setPrecipitationType(forecast.getWeather().get(0).getId(), weather);
             String description = null;
             for (com.khasang.forecast.models.Weather descr : forecast.getWeather()) {
                 description = descr.getDescription();
@@ -76,6 +78,7 @@ public class AppUtils {
     /**
      * Метод для конвертирования ответа от API в коллекцию типа {@link Map}<{@link Calendar}, {@link Weather}>
      * для запроса прогноза погоды по дням.
+     *
      * @param response объект типа {@link DailyResponse}, содержащий ответ от API.
      */
     public static Map<Calendar, Weather> convertToDailyWeather(DailyResponse response) {
@@ -89,7 +92,7 @@ public class AppUtils {
             double speed = forecast.getSpeed();
             double deg = forecast.getDeg();
             setWindDirectionAndSpeed(weather, speed, deg);
-            setPrecipitationType(forecast.getWeather().get(0).getMain(), weather);
+            setPrecipitationType(forecast.getWeather().get(0).getId(), weather);
             String description = null;
             for (com.khasang.forecast.models.Weather descr : forecast.getWeather()) {
                 description = descr.getDescription();
@@ -103,9 +106,10 @@ public class AppUtils {
     /**
      * Метод преобразует градусы направления ветра в перечисление типа Wind.Direction,
      * а так же устанавливает свойства для класса {@link Weather}.
+     *
      * @param weather объект типа {@link Weather}.
-     * @param speed скорость ветра в м/с.
-     * @param deg направление ветра в градусах.
+     * @param speed   скорость ветра в м/с.
+     * @param deg     направление ветра в градусах.
      */
     private static void setWindDirectionAndSpeed(Weather weather, double speed, double deg) {
         if ((deg >= 0 && deg <= 22.5) || (deg > 337.5 && deg <= 360)) {
@@ -129,6 +133,7 @@ public class AppUtils {
 
     /**
      * Метод, преобразующий UNIX-время в объект типа {@link Calendar}.
+     *
      * @param unixTime UNIX-время.
      */
     private static Calendar unixToCalendar(long unixTime) {
@@ -140,7 +145,8 @@ public class AppUtils {
     /**
      * Метод преобразует полученный тип осадков в перечисление типа Precipitation.Type, а так же
      * устанавливает свойства для класса {@link Weather}.
-     * @param type строка, приходящая как тип осадков.
+     *
+     * @param type    строка, приходящая как тип осадков.
      * @param weather объект типа {@link Weather}.
      */
     private static void setPrecipitationType(String type, Weather weather) {
@@ -172,6 +178,35 @@ public class AppUtils {
             case "Additional":
                 weather.setPrecipitation(Precipitation.Type.ADDITIONAL);
                 break;
+        }
+    }
+
+    /**
+     * Метод преобразует полученный тип осадков в перечисление типа Precipitation.Type, а так же
+     * устанавливает свойства для класса {@link Weather}.
+     *
+     * @param id      идентификатор типа осадков.
+     * @param weather объект типа {@link Weather}.
+     */
+    private static void setPrecipitationType(int id, Weather weather) {
+        if (id >= 200 && id < 300) {
+            weather.setPrecipitation(Precipitation.Type.THUNDERSTORM);
+        } else if (id >= 300 && id < 400) {
+            weather.setPrecipitation(Precipitation.Type.DRIZZLE);
+        } else if (id >= 500 && id < 600) {
+            weather.setPrecipitation(Precipitation.Type.RAIN);
+        } else if (id >= 600 && id < 700) {
+            weather.setPrecipitation(Precipitation.Type.SNOW);
+        } else if (id >= 700 && id < 800) {
+            weather.setPrecipitation(Precipitation.Type.ATMOSPHERE);
+        } else if (id == 800) {
+            weather.setPrecipitation(Precipitation.Type.CLEAR);
+        } else if (id > 800 && id < 805) {
+            weather.setPrecipitation(Precipitation.Type.CLOUDS);
+        } else if (id >= 900 && id < 910) {
+            weather.setPrecipitation(Precipitation.Type.EXTREME);
+        } else if (id >= 951 && id < 963) {
+            weather.setPrecipitation(Precipitation.Type.ADDITIONAL);
         }
     }
 }
