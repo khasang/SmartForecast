@@ -114,7 +114,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
         } else {
             if (!PositionManager.getInstance().getCurrentPositionName().isEmpty()) {
-                PositionManager.getInstance().getCurrentForecast();
+                PositionManager.getInstance().updateWeather();
             }
         }
     }
@@ -133,7 +133,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         switch (v.getId()) {
             case R.id.syncBtn:
                 syncBtn.startAnimation(animationRotateCenter);
-                PositionManager.getInstance().getCurrentForecast();
+                PositionManager.getInstance().updateWeather();
                 break;
             case R.id.city:
                 startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
@@ -189,14 +189,11 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 getString(R.string.timeStamp),
                 hours,
                 minutes));
-
-        PositionManager.getInstance().getHourlyForecast();
     }
 
     //TODO Реализовать метод получения прогноза по часам
     public void updateHourForecast(Map<Calendar, Weather> hourlyForecast) {
         ((ForecastPageAdapter) pager.getAdapter()).setHourForecast(hourlyForecast);
-        PositionManager.getInstance().getDailyForecast();
     }
 
     //TODO Реализовать метод получения прогноза по дням
@@ -217,7 +214,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 Log.d(TAG, newCity);
                 PositionManager.getInstance().setCurrentPosition(newCity);
                 PositionManager.getInstance().saveCurrPosition();
-                PositionManager.getInstance().getCurrentForecast();
+                PositionManager.getInstance().updateWeather();
                 syncBtn.setVisibility(View.VISIBLE);
             } else {
                 if (!PositionManager.getInstance().positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {

@@ -198,63 +198,6 @@ public class PositionManager {
     }
 
     /**
-     * Метод, вызывемый активити, для обновления текущей погоды от текущей погодной станции
-     * @return weather  обьект типа {@link Weather}, содержащий погодные характеристики на ближайшую дату
-     */
-    public Weather getCurrentForecast() {
-        // TODO: currPosition == null
-//        if (!positionIsPresent(currPosition.getLocationName())) {
-        if (currPosition == null || !positionIsPresent(currPosition.getLocationName())) {
-            Toast.makeText(mActivity, "Ошибка обновления погоды.\nГород отсутствует в списке локаций.", Toast.LENGTH_SHORT).show();
-            return null;
-        }
-        if (isNetworkAvailable(mActivity)) {
-            currStation.updateWeather(currPosition.getCityID(), currPosition.getCoordinate());
-        } else {
-            Toast.makeText(mActivity, "Ошибка обновления погоды.\nСеть недоступна.", Toast.LENGTH_SHORT).show();
-        }
-        return dbManager.loadWeather(currStation.serviceType, currPosition.getLocationName(), Calendar.getInstance());
-    }
-
-    /**
-     * Метод, вызывемый активити, для обновления погоды на сутки
-     *
-     * @return контейнер, содержит погоду на ближайшие часы, типа {@link Map} содержащий обьекты класса {@link Weather}, передаваемые в качестве значения контейнера. Ключем контейнера является дата прогноза (объект класса {@link Calendar}).
-     */
-    public Map<Calendar, Weather> getHourlyForecast() {
-        if (!positionIsPresent(currPosition.getLocationName())) {
-            Toast.makeText(mActivity, "Ошибка обновления погоды.\nГород отсутствует в списке локаций.", Toast.LENGTH_SHORT).show();
-            return null;
-        }
-        if (isNetworkAvailable(mActivity)) {
-            currStation.updateHourlyWeather(currPosition.getCityID(), currPosition.getCoordinate());
-        } else {
-            Toast.makeText(mActivity, "Ошибка обновления погоды.\nСеть недоступна.", Toast.LENGTH_SHORT).show();
-        }
-        return null;
-    }
-
-    /**
-     * Метод, вызывемый активити, для обновления погоды на неделю
-     *
-     * @return контейнер, содержит погоду на ближайшие даты, типа {@link Map} содержащий обьекты класса {@link Weather}, передаваемые в качестве значения контейнера. Ключем контейнера является дата прогноза (объект класса {@link Calendar}).
-     */
-    public Map<Calendar, Weather> getDailyForecast() {
-        // TODO: currPosition == null
-//        if (!positionIsPresent(currPosition.getLocationName())) {
-        if (currPosition == null || !positionIsPresent(currPosition.getLocationName())) {
-            Toast.makeText(mActivity, "Ошибка обновления погоды.\nГород отсутствует в списке локаций.", Toast.LENGTH_SHORT).show();
-            return null;
-        }
-        if (isNetworkAvailable(mActivity)) {
-            currStation.updateWeeklyWeather(currPosition.getCityID(), currPosition.getCoordinate());
-        } else {
-            Toast.makeText(mActivity, "Ошибка обновления погоды.\nСеть недоступна.", Toast.LENGTH_SHORT).show();
-        }
-        return null;    // Возвращать ближайшую погоду
-    }
-
-    /**
      * Пролучение локации из списка локаций
      *
      * @param name объект типа {@link String}, хранящий название населенного пункта
@@ -295,6 +238,24 @@ public class PositionManager {
     }
 
     /**
+     * Метод, вызывемый активити, для обновления текущей погоды от текущей погодной станции
+     * @return weather  обьект типа {@link Weather}, содержащий погодные характеристики на ближайшую дату
+     */
+    public void updateWeather () {
+        if (currPosition == null || !positionIsPresent(currPosition.getLocationName())) {
+            Toast.makeText(mActivity, "Ошибка обновления погоды.\nГород отсутствует в списке локаций.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (isNetworkAvailable(mActivity)) {
+            currStation.updateWeather(currPosition.getCityID(), currPosition.getCoordinate());
+            currStation.updateHourlyWeather(currPosition.getCityID(), currPosition.getCoordinate());
+            currStation.updateWeeklyWeather(currPosition.getCityID(), currPosition.getCoordinate());
+        } else {
+            Toast.makeText(mActivity, "Ошибка обновления погоды.\nСеть недоступна.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
      * Метод для обновления погодных данных. Вызывается погодным сервисом, когда он получает актуальные данные
      *
      * @param cityId      внутренний идентификатор города, передается в погодную станцию во время запроса погоды
@@ -311,6 +272,7 @@ public class PositionManager {
         if (currPosition.getCityID() == cityId && currStation.getServiceType() == serviceType) {
             mActivity.updateInterface(firstEntry.getKey(), formatWeather(firstEntry.getValue()));
         }
+    //    dbManager.loadWeather(currStation.serviceType, currPosition.getLocationName(), Calendar.getInstance());
     }
 
     /**
