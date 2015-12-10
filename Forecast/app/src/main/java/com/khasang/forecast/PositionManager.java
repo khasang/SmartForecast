@@ -1,7 +1,6 @@
 package com.khasang.forecast;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.widget.Toast;
 
@@ -24,9 +23,6 @@ public class PositionManager {
     public static final double KM_TO_MILES = 0.62137;
     public static final double METER_TO_FOOT = 3.28083;
 
-    private SharedPreferences preferences;
-    private String[] positionsKey;
-
     public enum TemperatureMetrics {KELVIN, CELSIUS, FAHRENHEIT};
     public enum SpeedMetrics {METER_PER_SECOND, FOOT_PER_SECOND, KM_PER_HOURS, MILES_PER_HOURS};
     public enum PressureMetrics {HPA, MM_HG};
@@ -40,12 +36,15 @@ public class PositionManager {
     private volatile HashMap<String, Position> positions;
     private WeatherActivity mActivity;
     private SQLiteProcessData dbManager;
+    private boolean lastResponseIsFailure;
 
     private static class ManagerHolder {
         private final static PositionManager instance = new PositionManager();
     }
 
-    private PositionManager() { }
+    private PositionManager() {
+        lastResponseIsFailure = false;
+    }
 
     public static PositionManager getInstance () {
         return ManagerHolder.instance;
@@ -303,6 +302,7 @@ public class PositionManager {
      * @param weather     обьект типа {@link Weather}, содержащий погодные характеристики
      */
     public void onResponseReceived(int cityId, WeatherStationFactory.ServiceType serviceType, Map<Calendar, Weather> weather) {
+        lastResponseIsFailure = false;
         HashMap.Entry<Calendar, Weather> firstEntry = (Map.Entry<Calendar, Weather>) weather.entrySet().iterator().next();
         Position position = getPosition(cityId);
         if (position != null) {
@@ -321,6 +321,7 @@ public class PositionManager {
      * @param weather контейнер типа {@link Map} содержащий обьекты класса {@link Weather}, передаваемые в качестве значения контейнера. Ключем контейнера является дата полученного запроса (объект класса {@link Calendar})
      */
     public void onHourlyResponseReceived(int cityId, WeatherStationFactory.ServiceType serviceType, Map<Calendar, Weather> weather) {
+        lastResponseIsFailure = false;
         Position position = getPosition(cityId);
         if (position != null) {
             for (Map.Entry<Calendar, Weather> entry : weather.entrySet()) {
@@ -343,6 +344,7 @@ public class PositionManager {
      * @param weather контейнер типа {@link Map} содержащий обьекты класса {@link Weather}, передаваемые в качестве значения контейнера. Ключем контейнера является дата полученного запроса (объект класса {@link Calendar})
      */
     public void onDaylyResponseReceived(int cityId, WeatherStationFactory.ServiceType serviceType, Map<Calendar, Weather> weather) {
+        lastResponseIsFailure = false;
         Position position = getPosition(cityId);
         if (position != null) {
             for (Map.Entry<Calendar, Weather> entry : weather.entrySet()) {
@@ -354,6 +356,13 @@ public class PositionManager {
                 entry.setValue(formatWeather(entry.getValue()));
             }
             mActivity.updateDayForecast(weather);
+        }
+    }
+
+    public void onFailureResponse(int cityID, String weatherStationName) {
+        if (!lastResponseIsFailure) {
+            Toast.makeText(mActivity, "Ошибка обновления погоды со станции " + weatherStationName, Toast.LENGTH_SHORT).show();
+            lastResponseIsFailure = true;
         }
     }
 
