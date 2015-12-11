@@ -250,7 +250,7 @@ public class PositionManager {
             currStation.updateHourlyWeather(currPosition.getCityID(), currPosition.getCoordinate());
             currStation.updateWeeklyWeather(currPosition.getCityID(), currPosition.getCoordinate());
         } else {
-            mActivity.updateInterface(WeatherStation.ResponseType.CURRENT, dbManager.loadWeather(currStation.getServiceType(), currPosition.getLocationName(), Calendar.getInstance()));
+            mActivity.updateInterface(WeatherStation.ResponseType.CURRENT, getCurrentWeatherFromDB(currStation.getServiceType(), currPosition.getLocationName(), Calendar.getInstance()));
             // TODO добавить возврат погоды на день и неделю
             Toast.makeText(mActivity, R.string.update_error_net_not_availble, Toast.LENGTH_SHORT).show();
         }
@@ -269,6 +269,9 @@ public class PositionManager {
         Position position = getPosition(cityId);
         if (position != null) {
             for (Map.Entry<Calendar, Weather> entry : weather.entrySet()) {
+                if (rType == WeatherStation.ResponseType.CURRENT){
+                    dbManager.deleteOldWeather(serviceType, position.getLocationName(), entry.getKey());
+                }
                 dbManager.saveWeather(serviceType, position.getLocationName(), entry.getKey(), entry.getValue());
             }
         }
@@ -285,8 +288,12 @@ public class PositionManager {
             Toast.makeText(mActivity, mActivity.getString(R.string.update_error_from) + weatherStationName, Toast.LENGTH_SHORT).show();
             lastResponseIsFailure = true;
             //  Вернуть это в интерфейс ближайшую погоду
-            mActivity.updateInterface(WeatherStation.ResponseType.CURRENT, dbManager.loadWeather(sType, getPosition(cityID).getLocationName(),Calendar.getInstance()));
+            mActivity.updateInterface(WeatherStation.ResponseType.CURRENT, getCurrentWeatherFromDB(sType, getPosition(cityID).getLocationName(),Calendar.getInstance()));
         }
+    }
+
+    private HashMap<Calendar, Weather> getCurrentWeatherFromDB(WeatherStationFactory.ServiceType sType, String locationName, Calendar date) {
+        return dbManager.loadWeather(sType, locationName, date);
     }
 
     //region Вспомогательные методы
