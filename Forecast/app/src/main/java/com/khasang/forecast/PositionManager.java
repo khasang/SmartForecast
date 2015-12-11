@@ -288,13 +288,23 @@ public class PositionManager {
             Toast.makeText(mActivity, mActivity.getString(R.string.update_error_from) + weatherStationName, Toast.LENGTH_SHORT).show();
             lastResponseIsFailure = true;
             //  Вернуть это в интерфейс ближайшую погоду
-            mActivity.updateInterface(WeatherStation.ResponseType.CURRENT, getCurrentWeatherFromDB(sType, getPosition(cityID).getLocationName(),Calendar.getInstance()));
+            HashMap<Calendar, Weather> forecast = getCurrentWeatherFromDB(sType, getPosition(cityID).getLocationName(), Calendar.getInstance());
+            if (forecast != null && forecast.size() != 0) {
+                mActivity.updateInterface(WeatherStation.ResponseType.CURRENT, forecast);
+            }
         }
     }
 
     private HashMap<Calendar, Weather> getCurrentWeatherFromDB(WeatherStationFactory.ServiceType sType, String locationName, Calendar date) {
         return dbManager.loadWeather(sType, locationName, date);
     }
+
+    private HashMap<Calendar, Weather> getHourlyWeatherFromDB(WeatherStationFactory.ServiceType sType, String locationName, Calendar date) {
+
+        return dbManager.loadWeather(sType, locationName, date);
+    }
+
+
 
     //region Вспомогательные методы
     /**
