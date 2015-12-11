@@ -18,6 +18,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.khasang.forecast.LockableViewPager;
 import com.khasang.forecast.PositionManager;
 import com.khasang.forecast.R;
 import com.khasang.forecast.Weather;
@@ -37,7 +38,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
      * ViewPager для отображения нижних вкладок прогноза: по часам и по дням
      */
     private TabLayout tabLayout;
-    private ViewPager pager;
+    private LockableViewPager pager;
 
     String TAG = this.getClass().getSimpleName();
 
@@ -90,14 +91,14 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
          * Код для фрагментов
          */
         tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
-        pager = (ViewPager) findViewById(R.id.pager);
+        pager = (LockableViewPager) findViewById(R.id.pager);
         ForecastPageAdapter adapter = new ForecastPageAdapter(getSupportFragmentManager());
         pager.setAdapter(adapter);
         tabLayout.setupWithViewPager(pager);
         tabLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.my_holo_alpha));
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_by_hour_24);
         tabLayout.getTabAt(1).setIcon(R.drawable.ic_by_date_24);
-        //tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(this, R.color.my_white));
+        pager.setSwipeable(false);
 
         city.setText("--/--");
         temperature.setText("--/--");
