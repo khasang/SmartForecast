@@ -57,7 +57,7 @@ public class PositionFactory {
             addresses = geocoder.getFromLocationName(name, 3);
             if (addresses.size() == 0){
                 Log.i(TAG, "Coordinates not found");
-                Toast.makeText(mContext, "Координаты местоположения " + name + " не обнаружены.\nЛокация не добавлена", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, String.format(mContext.getString(R.string.coordinates_not_found), name), Toast.LENGTH_SHORT).show();
                 return;
             }
             Address currentAddress = addresses.get(0);
