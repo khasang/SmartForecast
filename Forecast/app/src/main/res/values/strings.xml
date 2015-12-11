@@ -2,27 +2,32 @@
     <string name="app_name">Forecast</string>
     <string name="service_name_open_weather_map">OpenWeatherMap</string>
 
-    <string name="city_list">Список городов</string>
+    <string name="city_list">List of cities</string>
 
-    <string name="pressure">Давление</string>
-    <string name="wind">Ветер</string>
-    <string name="humidity">Влажность</string>
-    <string name="timeStamp">Обновлено</string>
-    <string name="pressure_measure">мм рт/ст</string>
-    <string name="wind_measure"><![CDATA[<sup><small>м</small></sup>/<small>c</small>]]></string>
+    <string name="pressure">Pressure</string>
+    <string name="wind">Wind</string>
+    <string name="humidity">Humidity</string>
+    <string name="timeStamp">Updated</string>
+    <string name="pressure_measure">mmHg</string>
+    <string name="wind_measure"><![CDATA[<sup><small>m</small></sup>/<small>s</small>]]></string>
 
-    <string name="clear_sky">Ясно</string> 
-    <string name="few_clouds">Небольшая облачность</string>
-    <string name="scattered_clouds">Облачно</string> 
-    <string name="broken_clouds">Облачно с прояснениями</string> 
-    <string name="shower_rain">Ливень</string> 
-    <string name="rain">Дождь</string> 
-    <string name="thunderstorm">Гроза</string> 
-    <string name="snow">Снег</string> 
-    <string name="mist">Туман</string>
+    <string name="clear_sky">Clear sky</string> 
+    <string name="few_clouds">Partly cloudy</string>
+    <string name="scattered_clouds">Cloudy</string> 
+    <string name="broken_clouds">Cloudy with clearings</string> 
+    <string name="shower_rain">Heavy rain</string> 
+    <string name="rain">Rain</string> 
+    <string name="thunderstorm">Thunderstorm</string> 
+    <string name="snow">Snow</string> 
+    <string name="mist">Mist</string>
 
     <string name="choose_city_label"></string>
-    <string name="clear_favorite">Удалить все города</string>
+    <string name="clear_favorite">To remove all cities</string>
+    <string name="city_exist">The city is already present at the list</string>
+    <string name="update_error_location_not_found">Error of updating of weather.\nThe city is absent in the list of locations.</string>
+    <string name="update_error_net_not_availble">Error of updating of weather.\nThe network is inaccessible.</string>
+    <string name="update_error_from">"Error of updating of weather from station "</string>
+    <string name="coordinates_not_found">Coordinates of location %1$s aren\'t found.\nThe location isn\'t added</string>
 
 
 </resources>

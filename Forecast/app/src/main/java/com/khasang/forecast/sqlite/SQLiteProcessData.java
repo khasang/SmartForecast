@@ -12,6 +12,7 @@ import com.khasang.forecast.WeatherStation;
 import com.khasang.forecast.WeatherStationFactory;
 import com.khasang.forecast.Wind;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -199,50 +200,64 @@ public class SQLiteProcessData {
     }
 
     // Загрузка погоды.
-    public Weather loadWeather(WeatherStationFactory.ServiceType serviceType, String cityName, Calendar date) {
+    public HashMap<Calendar, Weather> loadWeather(WeatherStationFactory.ServiceType serviceType, String cityName, Calendar date) {
 
-        double TEMPIRATURE = 0;
-        double TEMPIRATURE_MAX = 0;
-        double TEMPIRATURE_MIN = 0;
-        double PRESSURE = 0;
-        double WIND_SPEED = 0;
-        String DESCRIPTION = "";
-        String WIND_DIRECTION = "";
-        String PRECIPITATION_TYPE = "";
-        int HUMIDITY = 0;
-        Wind WIND = null;
-        Precipitation PRECIPITATION = null;
+        double tempirature = 0;
+        double tempirature_max = 0;
+        double tempirature_min = 0;
+        double pressure = 0;
+        double wind_speed = 0;
+        String description = "";
+        String wind_direction = "";
+        String precipitation_type = "";
+        int humidity = 0;
+        Wind wind = null;
+        Precipitation precipitation = null;
         Weather weather = null;
+        HashMap hashMap = null;
+        Calendar weatherDate = null;
+        String wDate;
 
         Cursor dataset = sqLite.queryOpen(SQLiteFields.QUERY_SELECT_WEATHER, new String[]{serviceType.name(), cityName, dtFormat.format(date.getTime())});
         try {
             if (dataset != null && dataset.getCount() != 0) {
                 if (dataset.moveToFirst()) {
-                    TEMPIRATURE = dataset.getDouble(dataset.getColumnIndex(SQLiteFields.TEMPIRATURE));
-                    TEMPIRATURE_MAX = dataset.getDouble(dataset.getColumnIndex(SQLiteFields.TEMPIRATURE_MAX));
-                    TEMPIRATURE_MIN = dataset.getDouble(dataset.getColumnIndex(SQLiteFields.TEMPIRATURE_MIN));
-                    PRESSURE = dataset.getDouble(dataset.getColumnIndex(SQLiteFields.PRESSURE));
-                    HUMIDITY = dataset.getInt(dataset.getColumnIndex(SQLiteFields.HUMIDITY));
-                    DESCRIPTION = dataset.getString(dataset.getColumnIndex(SQLiteFields.DESCRIPTION));
+                    wDate = dataset.getString(dataset.getColumnIndex(SQLiteFields.DATE));
+                    weatherDate = Calendar.getInstance();
+                    weatherDate.setTime(dtFormat.parse(wDate));
 
-                    WIND_DIRECTION = dataset.getString(dataset.getColumnIndex(SQLiteFields.WIND_DIRECTION));
-                    WIND_SPEED = dataset.getDouble(dataset.getColumnIndex(SQLiteFields.WIND_SPEED));
-                    WIND = new Wind();
-                    WIND.setDirection(WIND_DIRECTION);
-                    WIND.setSpeed(WIND_SPEED);
+                    tempirature = dataset.getDouble(dataset.getColumnIndex(SQLiteFields.TEMPIRATURE));
+                    tempirature_max = dataset.getDouble(dataset.getColumnIndex(SQLiteFields.TEMPIRATURE_MAX));
+                    tempirature_min = dataset.getDouble(dataset.getColumnIndex(SQLiteFields.TEMPIRATURE_MIN));
+                    pressure = dataset.getDouble(dataset.getColumnIndex(SQLiteFields.PRESSURE));
+                    humidity = dataset.getInt(dataset.getColumnIndex(SQLiteFields.HUMIDITY));
+                    description = dataset.getString(dataset.getColumnIndex(SQLiteFields.DESCRIPTION));
 
-                    PRECIPITATION_TYPE = dataset.getString(dataset.getColumnIndex(SQLiteFields.PRECIPITATION_TYPE));
-                    PRECIPITATION = new Precipitation();
-                    PRECIPITATION.setType(PRECIPITATION_TYPE);
+                    wind_direction = dataset.getString(dataset.getColumnIndex(SQLiteFields.WIND_DIRECTION));
+                    wind_speed = dataset.getDouble(dataset.getColumnIndex(SQLiteFields.WIND_SPEED));
+                    wind = new Wind();
+                    wind.setDirection(wind_direction);
+                    wind.setSpeed(wind_speed);
 
-                    weather = new Weather(TEMPIRATURE, TEMPIRATURE_MIN, TEMPIRATURE_MAX, PRESSURE, HUMIDITY, WIND, PRECIPITATION, DESCRIPTION);
+                    precipitation_type = dataset.getString(dataset.getColumnIndex(SQLiteFields.PRECIPITATION_TYPE));
+                    precipitation = new Precipitation();
+                    precipitation.setType(precipitation_type);
+
+                    weather = new Weather(tempirature, tempirature_min, tempirature_max, pressure, humidity, wind, precipitation, description);
                 }
             }
+        } catch (ParseException e) {
+            e.printStackTrace();
         } finally {
             if (dataset != null) {
                 dataset.close();
             }
         }
-        return weather;
+
+        if (weather != null) {
+            hashMap = new HashMap();
+            hashMap.put(weatherDate, weather);
+        }
+        return hashMap;
     }
 }

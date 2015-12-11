@@ -7,6 +7,8 @@ package com.khasang.forecast;
 public abstract class WeatherStation {
     String weatherStationName;
 
+    public enum ResponseType {CURRENT, HOURLY, DAILY};
+
     WeatherStationFactory.ServiceType serviceType;
 
     public WeatherStationFactory.ServiceType getServiceType() {

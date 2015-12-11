@@ -1,7 +1,5 @@
 package com.khasang.forecast;
 
-import android.util.Log;
-
 import com.khasang.forecast.models.DailyResponse;
 import com.khasang.forecast.models.OpenWeatherMapResponse;
 import com.squareup.okhttp.HttpUrl;
@@ -40,7 +38,7 @@ public class OpenWeatherMap extends WeatherStation {
      * Выбранные пользователем языковые настройки устройства для того, чтобы получить
      * локализованный ответ от API.
      */
-    public static final String SYSTEM_LANGUAGE = Locale.getDefault().getLanguage();
+    private String systemLanguage = Locale.getDefault().getLanguage();
 
     /** Количество 3-х часовых интервалов для запроса к API. */
     private static final int TIME_PERIOD = 8;
@@ -73,7 +71,7 @@ public class OpenWeatherMap extends WeatherStation {
             public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
                 Request request = chain.request();
                 HttpUrl httpUrl = request.httpUrl().newBuilder()
-                        .addQueryParameter("lang", SYSTEM_LANGUAGE)
+                        .addQueryParameter("lang", systemLanguage)
                         .addQueryParameter("appid", APP_ID)
                         .build();
                 request = request.newBuilder().url(httpUrl).build();
@@ -106,15 +104,17 @@ public class OpenWeatherMap extends WeatherStation {
         call.enqueue(new Callback<OpenWeatherMapResponse>() {
             @Override
             public void onResponse(Response<OpenWeatherMapResponse> response, Retrofit retrofit) {
-                PositionManager.getInstance().onResponseReceived(cityID,
+                PositionManager.getInstance().onResponseReceived(
+                        ResponseType.CURRENT,
+                        cityID,
                         serviceType,
                         AppUtils.convertToWeather(response.body()));
             }
 
             @Override
             public void onFailure(Throwable t) {
-                //TODO handle execution failure.
-                Log.e(TAG, "updateWeather, onFailure: ", t);
+                PositionManager.getInstance().onFailureResponse(cityID, getWeatherStationName(), getServiceType());
+                //Log.e(TAG, "updateWeather, onFailure: ", t);
             }
         });
     }
@@ -134,15 +134,17 @@ public class OpenWeatherMap extends WeatherStation {
         call.enqueue(new Callback<OpenWeatherMapResponse>() {
             @Override
             public void onResponse(Response<OpenWeatherMapResponse> response, Retrofit retrofit) {
-                PositionManager.getInstance().onHourlyResponseReceived(cityID,
+                PositionManager.getInstance().onResponseReceived(
+                        ResponseType.HOURLY,
+                        cityID,
                         serviceType,
                         AppUtils.convertToHourlyWeather(response.body()));
             }
 
             @Override
             public void onFailure(Throwable t) {
-                //TODO handle execution failure.
-                Log.e(TAG, "updateHourlyWeather, onFailure: ", t);
+                PositionManager.getInstance().onFailureResponse(cityID, getWeatherStationName(), getServiceType());
+                //Log.e(TAG, "updateHourlyWeather, onFailure: ", t);
             }
         });
     }
@@ -161,15 +163,17 @@ public class OpenWeatherMap extends WeatherStation {
         call.enqueue(new Callback<DailyResponse>() {
             @Override
             public void onResponse(Response<DailyResponse> response, Retrofit retrofit) {
-                PositionManager.getInstance().onDaylyResponseReceived(cityID,
+                PositionManager.getInstance().onResponseReceived(
+                        ResponseType.DAILY,
+                        cityID,
                         serviceType,
                         AppUtils.convertToDailyWeather(response.body()));
             }
 
             @Override
             public void onFailure(Throwable t) {
-                //TODO handle execution failure.
-                Log.e(TAG, "updateWeeklyWeather, onFailure: ", t);
+                PositionManager.getInstance().onFailureResponse(cityID, getWeatherStationName(), getServiceType());
+                //Log.e(TAG, "updateWeeklyWeather, onFailure: ", t);
             }
         });
     }
