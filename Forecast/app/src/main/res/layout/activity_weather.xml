@@ -10,8 +10,8 @@
     tools:context=".activities.WeatherActivity">
 
     <android.support.v4.widget.SwipeRefreshLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/swipe_container"
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="5"
@@ -22,126 +22,124 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin">
 
-   <!-- <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-
-        >-->
-
-        <RelativeLayout
-            android:id="@+id/llCurrentWeather"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="0dp">
+            android:layout_height="match_parent"
+            android:fillViewport="true">
 
-            <LinearLayout
-                android:id="@+id/llCityName"
+            <RelativeLayout
+                android:id="@+id/llCurrentWeather"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true">
-
-                <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:layout_weight="0"
-                    android:background="@null"
-                    android:src="@drawable/arrow_left"
-                    android:visibility="gone"/>
+                android:layout_height="match_parent">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical|center_horizontal"
-                    android:orientation="horizontal"
-                    android:weightSum="0">
-
-                    <TextView
-                        android:id="@+id/city"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical|center_horizontal"
-                        android:text="Moscow"
-                        android:textAppearance="?android:attr/textAppearanceMedium"/>
+                    android:id="@+id/llCityName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true">
 
                     <ImageButton
-                        android:id="@+id/cityPickerBnt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_weight="0"
+                        android:background="@null"
+                        android:src="@drawable/arrow_left"
+                        android:visibility="gone"/>
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="15dp"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:orientation="horizontal"
+                        android:weightSum="0">
+
+                        <TextView
+                            android:id="@+id/city"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical|center_horizontal"
+                            android:text="Moscow"
+                            android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+                        <ImageButton
+                            android:id="@+id/cityPickerBnt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="15dp"
+                            android:background="@null"
+                            android:src="@drawable/ic_location_city"/>
+                    </LinearLayout>
+
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:layout_weight="0"
                         android:background="@null"
-                        android:src="@drawable/ic_location_city"/>
+                        android:src="@drawable/arrow_right"
+                        android:visibility="gone"/>
                 </LinearLayout>
 
-                <ImageButton
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/llMainInformation"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:layout_weight="0"
-                    android:background="@null"
-                    android:src="@drawable/arrow_right"
-                    android:visibility="gone"/>
-            </LinearLayout>
+                    android:layout_centerInParent="true"
+                    android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/llMainInformation"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/temperature"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal|center_vertical"
+                        android:text="1°C"
+                        android:textSize="90sp"
+                        android:textStyle="bold"/>
 
-                <TextView
-                    android:id="@+id/temperature"
-                    android:layout_width="wrap_content"
+                    <TextView
+                        android:id="@+id/precipitation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal|center_vertical"
+                        android:text="Облачно"/>
+
+                    <TextView
+                        android:id="@+id/pressure"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal|center_vertical"
+                        android:text="4°/2° Ощущение -6°"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal|center_vertical"
-                    android:text="1°C"
-                    android:textSize="90sp"
-                    android:textStyle="bold"/>
+                    android:layout_alignParentBottom="true"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/precipitation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal|center_vertical"
-                    android:text="Облачно"/>
+                    <TextView
+                        android:id="@+id/wind"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:text="Ветер Ю 7м/с"/>
 
-                <TextView
-                    android:id="@+id/pressure"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal|center_vertical"
-                    android:text="4°/2° Ощущение -6°"/>
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/humidity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:text="Влажность 93%"/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:orientation="vertical">
+                </LinearLayout>
 
-                <TextView
-                    android:id="@+id/wind"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:text="Ветер Ю 7м/с"/>
+            </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/humidity"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:text="Влажность 93%"/>
-
-            </LinearLayout>
-
-        </RelativeLayout>
-
-    <!--</ScrollView>-->
+        </ScrollView>
 
     </android.support.v4.widget.SwipeRefreshLayout>
-
 
 
     <!-- Реализация фрагментов-->
@@ -199,8 +197,8 @@
             android:id="@+id/pager"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/sliding_tabs"
-            android:layout_above="@id/llRefresh"/>
+            android:layout_above="@id/llRefresh"
+            android:layout_below="@id/sliding_tabs"/>
 
     </RelativeLayout>
 

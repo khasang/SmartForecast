@@ -91,6 +91,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
+
         /** Анимация кнопки */
         animationRotateCenter = AnimationUtils.loadAnimation(this, R.anim.rotate_center);
         animScale = AnimationUtils.loadAnimation(this, R.anim.scale);
