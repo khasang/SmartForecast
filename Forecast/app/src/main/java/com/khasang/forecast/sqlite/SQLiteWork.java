@@ -41,22 +41,22 @@ public class SQLiteWork {
         }
     }
 
-    public void queryExExec(String sql, Object[] bindArgs) {
+    public void queryExExec(String query, Object[] bindArgs) {
         try {
             checkOpenDatabase();
             sqlDatabase = dbWork.getWritableDatabase();
-            sqlDatabase.execSQL(sql, bindArgs);
+            sqlDatabase.execSQL(query, bindArgs);
         } catch (Exception e) {
             System.out.println("queryExExec ERROR " + e);
         }
     }
 
-    public Cursor queryOpen(String sql, String[] selectionArgs) {
+    public Cursor queryOpen(String query, String[] bindArgs) {
         Cursor cursor = null;
         try {
             checkOpenDatabase();
             sqlDatabase = dbWork.getWritableDatabase();
-            cursor = sqlDatabase.rawQuery(sql, selectionArgs);
+            cursor = sqlDatabase.rawQuery(query, bindArgs);
         } catch(Exception e) {
             System.out.println("queryOpen ERROR " + e);
         }

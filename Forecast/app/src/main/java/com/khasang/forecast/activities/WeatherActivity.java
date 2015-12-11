@@ -22,10 +22,12 @@ import com.khasang.forecast.LockableViewPager;
 import com.khasang.forecast.PositionManager;
 import com.khasang.forecast.R;
 import com.khasang.forecast.Weather;
+import com.khasang.forecast.WeatherStation;
 import com.khasang.forecast.adapters.ForecastPageAdapter;
 import com.khasang.forecast.sqlite.SQLiteProcessData;
 
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -115,7 +117,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
         } else {
             if (!PositionManager.getInstance().getCurrentPositionName().isEmpty()) {
-                PositionManager.getInstance().getCurrentForecast();
+                PositionManager.getInstance().updateWeather();
             }
         }
     }
@@ -134,7 +136,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         switch (v.getId()) {
             case R.id.syncBtn:
                 syncBtn.startAnimation(animationRotateCenter);
-                PositionManager.getInstance().getCurrentForecast();
+                PositionManager.getInstance().updateWeather();
                 break;
             case R.id.city:
                 startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
@@ -148,7 +150,30 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     /**
      * Обновление интерфейса Activity
      */
-    public void updateInterface(Calendar date, Weather wCurent) {
+    public void updateInterface(WeatherStation.ResponseType responseType, Map<Calendar, Weather> forecast) {
+// Calendar date, Weather wCurent
+        //TODO нужно перепроверить
+        if (forecast == null || forecast.size() == 0) {
+            Log.i(TAG, "Weather is null!");
+            return;
+        }
+        switch (responseType) {
+            case CURRENT:
+                HashMap.Entry<Calendar, Weather> firstEntry = (Map.Entry<Calendar, Weather>) forecast.entrySet().iterator().next();
+                updateCurrentWeather(firstEntry.getKey(), firstEntry.getValue());
+                break;
+            case HOURLY:
+                ((ForecastPageAdapter) pager.getAdapter()).setHourForecast(forecast);
+                break;
+            case DAILY:
+                ((ForecastPageAdapter) pager.getAdapter()).setDayForecast(forecast);
+                break;
+            default:
+                Log.i(TAG, "Принят необрабатываемый проноз");
+        }
+    }
+
+    public void updateCurrentWeather(Calendar date, Weather wCurent) {
 
         //TODO нужно перепроверить
         if (wCurent == null) {
@@ -190,19 +215,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 getString(R.string.timeStamp),
                 hours,
                 minutes));
-
-        PositionManager.getInstance().getHourlyForecast();
-    }
-
-    //TODO Реализовать метод получения прогноза по часам
-    public void updateHourForecast(Map<Calendar, Weather> hourlyForecast) {
-        ((ForecastPageAdapter) pager.getAdapter()).setHourForecast(hourlyForecast);
-        PositionManager.getInstance().getDailyForecast();
-    }
-
-    //TODO Реализовать метод получения прогноза по дням
-    public void updateDayForecast(Map<Calendar, Weather> weeklyForecast) {
-        ((ForecastPageAdapter) pager.getAdapter()).setDayForecast(weeklyForecast);
     }
 
     /**
@@ -218,7 +230,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 Log.d(TAG, newCity);
                 PositionManager.getInstance().setCurrentPosition(newCity);
                 PositionManager.getInstance().saveCurrPosition();
-                PositionManager.getInstance().getCurrentForecast();
+                PositionManager.getInstance().updateWeather();
                 syncBtn.setVisibility(View.VISIBLE);
             } else {
                 if (!PositionManager.getInstance().positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {

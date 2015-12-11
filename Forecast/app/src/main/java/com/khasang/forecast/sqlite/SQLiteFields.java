@@ -80,7 +80,7 @@ public class SQLiteFields {
 
     public static final String QUERY_SELECT_WEATHER =
             "SELECT * FROM " + TABLE_WEATHER +
-            " WHERE " + STATION_NAME + " = ? and " + TOWN + " = ? and " + DATE + " = (SELECT MAX(" + DATE + ") FROM " + TABLE_WEATHER + " WHERE " + DATE + " <= ? )";
+            " WHERE " + STATION_NAME + " = ? and " + TOWN + " = ? and " + DATE + " = (SELECT MAX(" + DATE + ") FROM " + TABLE_WEATHER + " WHERE " + DATE + " < ? )";
 
     public static final String QUERY_INSERT_TOWN = "INSERT INTO " + TABLE_TOWNS + " (" +
             TOWN + "," +
