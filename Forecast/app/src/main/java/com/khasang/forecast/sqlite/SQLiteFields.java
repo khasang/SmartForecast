@@ -78,9 +78,17 @@ public class SQLiteFields {
     public static final String QUERY_OBJECTS_COUNT = "SELECT COUNT(*) FROM SQLITE_MASTER WHERE TYPE = ? AND NAME = ?";
     public static final String QUERY_SELECT_TOWNS = "SELECT * FROM " + TABLE_TOWNS;
 
+    /*
     public static final String QUERY_SELECT_WEATHER =
             "SELECT * FROM " + TABLE_WEATHER +
             " WHERE " + STATION_NAME + " = ? and " + TOWN + " = ? and " + DATE + " = (SELECT MAX(" + DATE + ") FROM " + TABLE_WEATHER + " WHERE " + DATE + " < ? )";
+    */
+
+    public static final String QUERY_SELECT_WEATHER =
+            "SELECT * FROM " + TABLE_WEATHER +
+            " WHERE " + STATION_NAME + " = ? and " + TOWN + " = ? " +
+            " ORDER BY ABS( CAST(strftime('%s', " + DATE + ") AS int) - CAST(strftime('%s', ?) AS int) ) " +
+            " ASC LIMIT 1";
 
     public static final String QUERY_INSERT_TOWN = "INSERT INTO " + TABLE_TOWNS + " (" +
             TOWN + "," +
