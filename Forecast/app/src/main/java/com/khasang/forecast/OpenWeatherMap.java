@@ -161,7 +161,7 @@ public class OpenWeatherMap extends WeatherStation {
         call.enqueue(new Callback<DailyResponse>() {
             @Override
             public void onResponse(Response<DailyResponse> response, Retrofit retrofit) {
-                PositionManager.getInstance().onDaylyResponseReceived(cityID,
+                PositionManager.getInstance().onDailyResponseReceived(cityID,
                         serviceType,
                         AppUtils.convertToDailyWeather(response.body()));
             }

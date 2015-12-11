@@ -239,7 +239,6 @@ public class PositionManager {
 
     /**
      * Метод, вызывемый активити, для обновления текущей погоды от текущей погодной станции
-     * @return weather  обьект типа {@link Weather}, содержащий погодные характеристики на ближайшую дату
      */
     public void updateWeather () {
         if (currPosition == null || !positionIsPresent(currPosition.getLocationName())) {
@@ -251,6 +250,7 @@ public class PositionManager {
             currStation.updateHourlyWeather(currPosition.getCityID(), currPosition.getCoordinate());
             currStation.updateWeeklyWeather(currPosition.getCityID(), currPosition.getCoordinate());
         } else {
+ //           dbManager.loadWeather(currStation.serviceType, currPosition.getLocationName(), Calendar.getInstance()); // Вернуть это в интерфейс (ближайшая погода)
             Toast.makeText(mActivity, R.string.update_error_net_not_availble, Toast.LENGTH_SHORT).show();
         }
     }
@@ -270,9 +270,10 @@ public class PositionManager {
             dbManager.saveWeather(serviceType, position.getLocationName(), firstEntry.getKey(), firstEntry.getValue());
         }
         if (currPosition.getCityID() == cityId && currStation.getServiceType() == serviceType) {
-            mActivity.updateInterface(firstEntry.getKey(), formatWeather(firstEntry.getValue()));
+            firstEntry.setValue(formatWeather(firstEntry.getValue()));
+            mActivity.updateInterface(WeatherStation.ResponseType.CURRENT, weather);
         }
-    //    dbManager.loadWeather(currStation.serviceType, currPosition.getLocationName(), Calendar.getInstance());
+    //
     }
 
     /**
@@ -294,7 +295,7 @@ public class PositionManager {
             for (Map.Entry<Calendar, Weather> entry : weather.entrySet()) {
                 entry.setValue(formatWeather(entry.getValue()));                                    //Есди позиция и станция теккущие
             }                                                                                       //Преобразуем погодные данные в нужные метрики
-            mActivity.updateHourForecast(weather);                                                  //Отправляем данные в интерфейс
+            mActivity.updateInterface(WeatherStation.ResponseType.HOURLY, weather);                 //Отправляем данные в интерфейс
         }
     }
 
@@ -305,7 +306,7 @@ public class PositionManager {
      * @param serviceType станция, от которой пришел прогноз погоды
      * @param weather контейнер типа {@link Map} содержащий обьекты класса {@link Weather}, передаваемые в качестве значения контейнера. Ключем контейнера является дата полученного запроса (объект класса {@link Calendar})
      */
-    public void onDaylyResponseReceived(int cityId, WeatherStationFactory.ServiceType serviceType, Map<Calendar, Weather> weather) {
+    public void onDailyResponseReceived(int cityId, WeatherStationFactory.ServiceType serviceType, Map<Calendar, Weather> weather) {
         lastResponseIsFailure = false;
         Position position = getPosition(cityId);
         if (position != null) {
@@ -317,7 +318,7 @@ public class PositionManager {
             for (Map.Entry<Calendar, Weather> entry : weather.entrySet()) {
                 entry.setValue(formatWeather(entry.getValue()));
             }
-            mActivity.updateDayForecast(weather);
+            mActivity.updateInterface(WeatherStation.ResponseType.DAILY, weather);
         }
     }
 
@@ -325,6 +326,7 @@ public class PositionManager {
         if (!lastResponseIsFailure) {
             Toast.makeText(mActivity, mActivity.getString(R.string.update_error_from) + weatherStationName, Toast.LENGTH_SHORT).show();
             lastResponseIsFailure = true;
+ //           mActivity.updateCurrentWeather (dbManager.loadWeather(currStation.serviceType, currPosition.getLocationName(), Calendar.getInstance())) // Вернуть это в интерфейс (ближайшая погода)
         }
     }
 
