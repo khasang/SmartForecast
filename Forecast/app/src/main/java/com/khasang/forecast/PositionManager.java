@@ -129,7 +129,7 @@ public class PositionManager {
      */
     public void addPosition(String name) {
         if (positionIsPresent(name)) {
-            Toast.makeText(mActivity, "Город уже присутствует в списке", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, R.string.city_exist, Toast.LENGTH_SHORT).show();
             return;
         }
         PositionFactory positionFactory = new PositionFactory(mActivity, positions);
@@ -243,7 +243,7 @@ public class PositionManager {
      */
     public void updateWeather () {
         if (currPosition == null || !positionIsPresent(currPosition.getLocationName())) {
-            Toast.makeText(mActivity, "Ошибка обновления погоды.\nГород отсутствует в списке локаций.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, R.string.update_error_location_not_found, Toast.LENGTH_SHORT).show();
             return;
         }
         if (isNetworkAvailable(mActivity)) {
@@ -251,7 +251,7 @@ public class PositionManager {
             currStation.updateHourlyWeather(currPosition.getCityID(), currPosition.getCoordinate());
             currStation.updateWeeklyWeather(currPosition.getCityID(), currPosition.getCoordinate());
         } else {
-            Toast.makeText(mActivity, "Ошибка обновления погоды.\nСеть недоступна.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, R.string.update_error_net_not_availble, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -323,7 +323,7 @@ public class PositionManager {
 
     public void onFailureResponse(int cityID, String weatherStationName) {
         if (!lastResponseIsFailure) {
-            Toast.makeText(mActivity, "Ошибка обновления погоды со станции " + weatherStationName, Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, mActivity.getString(R.string.update_error_from) + weatherStationName, Toast.LENGTH_SHORT).show();
             lastResponseIsFailure = true;
         }
     }
