@@ -4,9 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.util.AttributeSet;
@@ -27,13 +29,14 @@ import com.khasang.forecast.sqlite.SQLiteProcessData;
 
 import java.util.Calendar;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * Данные которые необходимо отображать в WeatherActivity (для первого релиза):
  * город, температура, давление, влажность, ветер, временная метка.
  */
 
-public class WeatherActivity extends AppCompatActivity implements View.OnClickListener{
+public class WeatherActivity extends AppCompatActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener{
     /**
      * ViewPager для отображения нижних вкладок прогноза: по часам и по дням
      */
@@ -58,6 +61,8 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     private final int CHOOSE_CITY = 1;
     public Context context;
 
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -78,6 +83,14 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         syncBtn = (ImageButton) findViewById(R.id.syncBtn);
         cityPickerBtn = (ImageButton) findViewById(R.id.cityPickerBnt);
 
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+
+        mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
         /** Анимация кнопки */
         animationRotateCenter = AnimationUtils.loadAnimation(this, R.anim.rotate_center);
         animScale = AnimationUtils.loadAnimation(this, R.anim.scale);
@@ -227,5 +240,18 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             }
         }
     }
+
+    @Override
+    public void onRefresh() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mSwipeRefreshLayout.setRefreshing(false);
+                Random rand = new Random();
+                PositionManager.getInstance().getCurrentForecast();
+            }
+        }, 4000);
+    }
+
 }
 
