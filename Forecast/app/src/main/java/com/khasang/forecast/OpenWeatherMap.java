@@ -115,7 +115,7 @@ public class OpenWeatherMap extends WeatherStation {
 
             @Override
             public void onFailure(Throwable t) {
-                PositionManager.getInstance().onFailureResponse(cityID, getWeatherStationName());
+                PositionManager.getInstance().onFailureResponse(cityID, getWeatherStationName(), getServiceType());
                 //Log.e(TAG, "updateWeather, onFailure: ", t);
             }
         });
@@ -145,7 +145,7 @@ public class OpenWeatherMap extends WeatherStation {
 
             @Override
             public void onFailure(Throwable t) {
-                PositionManager.getInstance().onFailureResponse(cityID, getWeatherStationName());
+                PositionManager.getInstance().onFailureResponse(cityID, getWeatherStationName(), getServiceType());
                 //Log.e(TAG, "updateHourlyWeather, onFailure: ", t);
             }
         });
@@ -174,7 +174,7 @@ public class OpenWeatherMap extends WeatherStation {
 
             @Override
             public void onFailure(Throwable t) {
-                PositionManager.getInstance().onFailureResponse(cityID, getWeatherStationName());
+                PositionManager.getInstance().onFailureResponse(cityID, getWeatherStationName(), getServiceType());
                 //Log.e(TAG, "updateWeeklyWeather, onFailure: ", t);
             }
         });

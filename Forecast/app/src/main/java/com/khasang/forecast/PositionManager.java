@@ -250,7 +250,8 @@ public class PositionManager {
             currStation.updateHourlyWeather(currPosition.getCityID(), currPosition.getCoordinate());
             currStation.updateWeeklyWeather(currPosition.getCityID(), currPosition.getCoordinate());
         } else {
- //           dbManager.loadWeather(currStation.serviceType, currPosition.getLocationName(), Calendar.getInstance()); // Вернуть это в интерфейс (ближайшая погода)
+            mActivity.updateInterface(WeatherStation.ResponseType.CURRENT, dbManager.loadWeather(currStation.getServiceType(), currPosition.getLocationName(), Calendar.getInstance()));
+            // TODO добавить возврат погоды на день и неделю
             Toast.makeText(mActivity, R.string.update_error_net_not_availble, Toast.LENGTH_SHORT).show();
         }
     }
@@ -279,12 +280,12 @@ public class PositionManager {
         }
     }
 
-    public void onFailureResponse(int cityID, String weatherStationName) {
+    public void onFailureResponse(int cityID, String weatherStationName, WeatherStationFactory.ServiceType sType) {
         if (!lastResponseIsFailure) {
             Toast.makeText(mActivity, mActivity.getString(R.string.update_error_from) + weatherStationName, Toast.LENGTH_SHORT).show();
             lastResponseIsFailure = true;
- //           mActivity.updateCurrentWeather (dbManager.loadWeather(currStation.serviceType, currPosition.getLocationName(), Calendar.getInstance()))
- //  Вернуть это в интерфейс ближайшую погоду
+            //  Вернуть это в интерфейс ближайшую погоду
+            mActivity.updateInterface(WeatherStation.ResponseType.CURRENT, dbManager.loadWeather(sType, getPosition(cityID).getLocationName(),Calendar.getInstance()));
         }
     }
 
