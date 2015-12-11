@@ -27,6 +27,7 @@
     <string name="update_error_location_not_found">Ошибка обновления погоды.\nГород отсутствует в списке локаций.</string>
     <string name="update_error_net_not_availble">Ошибка обновления погоды.\nСеть недоступна.</string>
     <string name="update_error_from">"Ошибка обновления погоды со станции "</string>
+    <string name="coordinates_not_found">Координаты местоположения %1$s не обнаружены.\nЛокация не добавлена</string>
 
 
 </resources>
