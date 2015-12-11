@@ -8,7 +8,7 @@
     <string name="wind">Ветер</string>
     <string name="humidity">Влажность</string>
     <string name="timeStamp">Обновлено</string>
-    <string name="pressure_measure">мм рт/ст</string>
+    <string name="pressure_measure">мм рт.ст.</string>
     <string name="wind_measure"><![CDATA[<sup><small>м</small></sup>/<small>c</small>]]></string>
 
     <string name="clear_sky">Ясно</string> 

@@ -9,7 +9,7 @@
     <string name="humidity">Humidity</string>
     <string name="timeStamp">Updated</string>
     <string name="pressure_measure">mmHg</string>
-    <string name="wind_measure"><![CDATA[<sup><small>м</small></sup>/<small>c</small>]]></string>
+    <string name="wind_measure"><![CDATA[<sup><small>m</small></sup>/<small>s</small>]]></string>
 
     <string name="clear_sky">Clear sky</string> 
     <string name="few_clouds">Partly cloudy</string>
@@ -27,7 +27,7 @@
     <string name="update_error_location_not_found">Error of updating of weather.\nThe city is absent in the list of locations.</string>
     <string name="update_error_net_not_availble">Error of updating of weather.\nThe network is inaccessible.</string>
     <string name="update_error_from">"Error of updating of weather from station "</string>
-    <string name="coordinates_not_found">Coordinates of location %1$s aren't found.\nThe location isn't added</string>
+    <string name="coordinates_not_found">Coordinates of location %1$s aren\'t found.\nThe location isn\'t added</string>
 
 
 </resources>

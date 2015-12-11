@@ -9,7 +9,7 @@
     <string name="humidity">die Feuchtigkeit</string>
     <string name="timeStamp">erneuert</string>
     <string name="pressure_measure">mmHg</string>
-    <string name="wind_measure"><![CDATA[<sup><small>м</small></sup>/<small>c</small>]]></string>
+    <string name="wind_measure"><![CDATA[<sup><small>m</small></sup>/<small>s</small>]]></string>
 
     <string name="clear_sky">Klar</string> 
     <string name="few_clouds">Die kleine Bewölktheit</string>
