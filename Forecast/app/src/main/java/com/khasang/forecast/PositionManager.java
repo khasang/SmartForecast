@@ -258,32 +258,12 @@ public class PositionManager {
     /**
      * Метод для обновления погодных данных. Вызывается погодным сервисом, когда он получает актуальные данные
      *
+     * @param rType       переменая типа {@link com.khasang.forecast.WeatherStation.ResponseType}, характеризующая тип ответа (текущий прогноз, прогноз на день или неделю)
      * @param cityId      внутренний идентификатор города, передается в погодную станцию во время запроса погоды
      * @param serviceType идентификатор погодного сервиса
      * @param weather     обьект типа {@link Weather}, содержащий погодные характеристики
      */
-    public void onResponseReceived(int cityId, WeatherStationFactory.ServiceType serviceType, Map<Calendar, Weather> weather) {
-        lastResponseIsFailure = false;
-        HashMap.Entry<Calendar, Weather> firstEntry = (Map.Entry<Calendar, Weather>) weather.entrySet().iterator().next();
-        Position position = getPosition(cityId);
-        if (position != null) {
-            dbManager.saveWeather(serviceType, position.getLocationName(), firstEntry.getKey(), firstEntry.getValue());
-        }
-        if (currPosition.getCityID() == cityId && currStation.getServiceType() == serviceType) {
-            firstEntry.setValue(formatWeather(firstEntry.getValue()));
-            mActivity.updateInterface(WeatherStation.ResponseType.CURRENT, weather);
-        }
-    //
-    }
-
-    /**
-     * Метод, в который приходит ответ от станции на запрос погоды на сутки
-     *
-     * @param cityId внутренний идентификатор города, однозначно указывающая на локацию в списке
-     * @param serviceType станция, от которой пришел прогноз погоды
-     * @param weather контейнер типа {@link Map} содержащий обьекты класса {@link Weather}, передаваемые в качестве значения контейнера. Ключем контейнера является дата полученного запроса (объект класса {@link Calendar})
-     */
-    public void onHourlyResponseReceived(int cityId, WeatherStationFactory.ServiceType serviceType, Map<Calendar, Weather> weather) {
+    public void onResponseReceived(WeatherStation.ResponseType rType, int cityId, WeatherStationFactory.ServiceType serviceType, Map<Calendar, Weather> weather) {
         lastResponseIsFailure = false;
         Position position = getPosition(cityId);
         if (position != null) {
@@ -295,30 +275,7 @@ public class PositionManager {
             for (Map.Entry<Calendar, Weather> entry : weather.entrySet()) {
                 entry.setValue(formatWeather(entry.getValue()));                                    //Есди позиция и станция теккущие
             }                                                                                       //Преобразуем погодные данные в нужные метрики
-            mActivity.updateInterface(WeatherStation.ResponseType.HOURLY, weather);                 //Отправляем данные в интерфейс
-        }
-    }
-
-    /**
-     * Метод, в который приходит ответ от станции на недельный запрос погоды
-     *
-     * @param cityId внутренний идентификатор города, однозначно указывающая на локацию в списке
-     * @param serviceType станция, от которой пришел прогноз погоды
-     * @param weather контейнер типа {@link Map} содержащий обьекты класса {@link Weather}, передаваемые в качестве значения контейнера. Ключем контейнера является дата полученного запроса (объект класса {@link Calendar})
-     */
-    public void onDailyResponseReceived(int cityId, WeatherStationFactory.ServiceType serviceType, Map<Calendar, Weather> weather) {
-        lastResponseIsFailure = false;
-        Position position = getPosition(cityId);
-        if (position != null) {
-            for (Map.Entry<Calendar, Weather> entry : weather.entrySet()) {
-                dbManager.saveWeather(serviceType, position.getLocationName(), entry.getKey(), entry.getValue());
-            }
-        }
-        if (currPosition.getCityID() == cityId && currStation.getServiceType() == serviceType) {
-            for (Map.Entry<Calendar, Weather> entry : weather.entrySet()) {
-                entry.setValue(formatWeather(entry.getValue()));
-            }
-            mActivity.updateInterface(WeatherStation.ResponseType.DAILY, weather);
+            mActivity.updateInterface(rType, weather);                 //Отправляем данные в интерфейс
         }
     }
 
@@ -326,7 +283,8 @@ public class PositionManager {
         if (!lastResponseIsFailure) {
             Toast.makeText(mActivity, mActivity.getString(R.string.update_error_from) + weatherStationName, Toast.LENGTH_SHORT).show();
             lastResponseIsFailure = true;
- //           mActivity.updateCurrentWeather (dbManager.loadWeather(currStation.serviceType, currPosition.getLocationName(), Calendar.getInstance())) // Вернуть это в интерфейс (ближайшая погода)
+ //           mActivity.updateCurrentWeather (dbManager.loadWeather(currStation.serviceType, currPosition.getLocationName(), Calendar.getInstance()))
+ //  Вернуть это в интерфейс ближайшую погоду
         }
     }
 
