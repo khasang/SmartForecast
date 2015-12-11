@@ -191,7 +191,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
     // Вспомогательный метод для добавления города в список
     private void addItem(String city) {
-        city = city.toLowerCase();
+        city = city.trim().toLowerCase();
         city = city.substring(0, 1).toUpperCase() + city.substring(1);
         if (!PositionManager.getInstance().positionIsPresent(city)) {
             PositionManager.getInstance().addPosition(city);
