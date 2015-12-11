@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">Прогноз</string>
+    <string name="service_name_open_weather_map">OpenWeatherMap</string>
+
+    <string name="city_list">Список городов</string>
+
+    <string name="pressure">Давление</string>
+    <string name="wind">Ветер</string>
+    <string name="humidity">Влажность</string>
+    <string name="timeStamp">Обновлено</string>
+    <string name="pressure_measure">мм рт/ст</string>
+    <string name="wind_measure"><![CDATA[<sup><small>м</small></sup>/<small>c</small>]]></string>
+
+    <string name="clear_sky">Ясно</string> 
+    <string name="few_clouds">Небольшая облачность</string>
+    <string name="scattered_clouds">Облачно</string> 
+    <string name="broken_clouds">Облачно с прояснениями</string> 
+    <string name="shower_rain">Ливень</string> 
+    <string name="rain">Дождь</string> 
+    <string name="thunderstorm">Гроза</string> 
+    <string name="snow">Снег</string> 
+    <string name="mist">Туман</string>
+
+    <string name="choose_city_label"></string>
+    <string name="clear_favorite">Удалить все города</string>
+    <string name="city_exist">Город уже присутствует в списке</string>
+    <string name="update_error_location_not_found">Ошибка обновления погоды.\nГород отсутствует в списке локаций.</string>
+    <string name="update_error_net_not_availble">Ошибка обновления погоды.\nСеть недоступна.</string>
+    <string name="update_error_from">"Ошибка обновления погоды со станции "</string>
+    <string name="coordinates_not_found">Координаты местоположения %1$s не обнаружены.\nЛокация не добавлена</string>
+
+
+</resources>
