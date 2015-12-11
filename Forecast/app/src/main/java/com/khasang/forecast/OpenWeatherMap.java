@@ -106,15 +106,17 @@ public class OpenWeatherMap extends WeatherStation {
         call.enqueue(new Callback<OpenWeatherMapResponse>() {
             @Override
             public void onResponse(Response<OpenWeatherMapResponse> response, Retrofit retrofit) {
-                PositionManager.getInstance().onResponseReceived(cityID,
+                PositionManager.getInstance().onResponseReceived(
+                        ResponseType.CURRENT,
+                        cityID,
                         serviceType,
                         AppUtils.convertToWeather(response.body()));
             }
 
             @Override
             public void onFailure(Throwable t) {
-                //TODO handle execution failure.
-                Log.e(TAG, "updateWeather, onFailure: ", t);
+                PositionManager.getInstance().onFailureResponse(cityID, getWeatherStationName());
+                //Log.e(TAG, "updateWeather, onFailure: ", t);
             }
         });
     }
@@ -134,15 +136,17 @@ public class OpenWeatherMap extends WeatherStation {
         call.enqueue(new Callback<OpenWeatherMapResponse>() {
             @Override
             public void onResponse(Response<OpenWeatherMapResponse> response, Retrofit retrofit) {
-                PositionManager.getInstance().onHourlyResponseReceived(cityID,
+                PositionManager.getInstance().onResponseReceived(
+                        ResponseType.HOURLY,
+                        cityID,
                         serviceType,
                         AppUtils.convertToHourlyWeather(response.body()));
             }
 
             @Override
             public void onFailure(Throwable t) {
-                //TODO handle execution failure.
-                Log.e(TAG, "updateHourlyWeather, onFailure: ", t);
+                PositionManager.getInstance().onFailureResponse(cityID, getWeatherStationName());
+                //Log.e(TAG, "updateHourlyWeather, onFailure: ", t);
             }
         });
     }
@@ -161,15 +165,17 @@ public class OpenWeatherMap extends WeatherStation {
         call.enqueue(new Callback<DailyResponse>() {
             @Override
             public void onResponse(Response<DailyResponse> response, Retrofit retrofit) {
-                PositionManager.getInstance().onDailyResponseReceived(cityID,
+                PositionManager.getInstance().onResponseReceived(
+                        ResponseType.DAILY,
+                        cityID,
                         serviceType,
                         AppUtils.convertToDailyWeather(response.body()));
             }
 
             @Override
             public void onFailure(Throwable t) {
-                //TODO handle execution failure.
-                Log.e(TAG, "updateWeeklyWeather, onFailure: ", t);
+                PositionManager.getInstance().onFailureResponse(cityID, getWeatherStationName());
+                //Log.e(TAG, "updateWeeklyWeather, onFailure: ", t);
             }
         });
     }
