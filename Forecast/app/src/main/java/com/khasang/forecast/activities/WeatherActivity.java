@@ -178,7 +178,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
         wind.setText(Html.fromHtml(String.format("%s %s %.0f%s",
                 getString(R.string.wind),
-                wCurent.getWindDirection(),
+                wCurent.getWindDirection().getDirectionString(),
                 wCurent.getWindPower(),
                 getString(R.string.wind_measure))));
 
