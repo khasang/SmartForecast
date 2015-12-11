@@ -131,7 +131,8 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
         } else {
             if (!PositionManager.getInstance().getCurrentPositionName().isEmpty()) {
-                PositionManager.getInstance().updateWeather();
+                //PositionManager.getInstance().updateWeather();
+                onRefresh();
             }
         }
     }
@@ -149,8 +150,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.syncBtn:
-                syncBtn.startAnimation(animationRotateCenter);
-                PositionManager.getInstance().updateWeather();
+                onRefresh();
                 break;
             case R.id.city:
                 startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
@@ -189,11 +189,16 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
     public void updateCurrentWeather(Calendar date, Weather wCurent) {
 
+
         //TODO нужно перепроверить
         if (wCurent == null) {
             Log.i(TAG, "Weather is null!");
             return;
         }
+
+        /** Анимация обновления - Start */
+        mSwipeRefreshLayout.setRefreshing(true);
+
         /** Получаем текущее время
          * TODO minutes в формате 13:04, сейчас выводит 13:4
          * TODO UPDATE Check fixes
@@ -229,6 +234,9 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 getString(R.string.timeStamp),
                 hours,
                 minutes));
+
+        /** Анимация обновления - Stop */
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     /**
@@ -239,12 +247,15 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CHOOSE_CITY) {
             if (resultCode == RESULT_OK) {
+                /** Анимация обновления - Start */
+                mSwipeRefreshLayout.setRefreshing(true);
                 String newCity = data.getStringExtra(CityPickerActivity.CITY_PICKER_TAG);
                 city.setText(newCity);
                 Log.d(TAG, newCity);
                 PositionManager.getInstance().setCurrentPosition(newCity);
                 PositionManager.getInstance().saveCurrPosition();
-                PositionManager.getInstance().updateWeather();
+                //PositionManager.getInstance().updateWeather();
+                onRefresh();
                 syncBtn.setVisibility(View.VISIBLE);
             } else {
                 if (!PositionManager.getInstance().positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {
@@ -259,11 +270,11 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                mSwipeRefreshLayout.setRefreshing(false);
-                Random rand = new Random();
-                PositionManager.getInstance().getCurrentForecast();
+                syncBtn.startAnimation(animationRotateCenter);
+                PositionManager.getInstance().updateWeather();
             }
-        }, 4000);
+        }, 1000);
+        syncBtn.clearAnimation();
     }
 
 }

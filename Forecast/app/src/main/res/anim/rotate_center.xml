@@ -12,6 +12,7 @@
         android:toDegrees="180" />-->
 
     <rotate
+        android:repeatCount="1"
         android:duration="300"
         android:fromDegrees="0"
         android:pivotX="50%"
