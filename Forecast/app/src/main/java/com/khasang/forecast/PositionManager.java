@@ -8,6 +8,7 @@ import com.khasang.forecast.activities.WeatherActivity;
 import com.khasang.forecast.sqlite.SQLiteProcessData;
 
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -250,8 +251,9 @@ public class PositionManager {
             currStation.updateHourlyWeather(currPosition.getCityID(), currPosition.getCoordinate());
             currStation.updateWeeklyWeather(currPosition.getCityID(), currPosition.getCoordinate());
         } else {
-            mActivity.updateInterface(WeatherStation.ResponseType.CURRENT, dbManager.loadWeather(currStation.getServiceType(), currPosition.getLocationName(), Calendar.getInstance()));
-            // TODO добавить возврат погоды на день и неделю
+            mActivity.updateInterface(WeatherStation.ResponseType.CURRENT, getCurrentWeatherFromDB(currStation.getServiceType(), currPosition.getLocationName(), Calendar.getInstance()));
+            mActivity.updateInterface(WeatherStation.ResponseType.HOURLY, getHourlyWeatherFromDB(currStation.getServiceType(), currPosition.getLocationName(), Calendar.getInstance()));
+            mActivity.updateInterface(WeatherStation.ResponseType.DAILY, getDailyWeatherFromDB(currStation.getServiceType(), currPosition.getLocationName(), Calendar.getInstance()));
             Toast.makeText(mActivity, R.string.update_error_net_not_availble, Toast.LENGTH_SHORT).show();
         }
     }
@@ -269,6 +271,9 @@ public class PositionManager {
         Position position = getPosition(cityId);
         if (position != null) {
             for (Map.Entry<Calendar, Weather> entry : weather.entrySet()) {
+                if (rType == WeatherStation.ResponseType.CURRENT){
+                    dbManager.deleteOldWeather(serviceType, position.getLocationName(), entry.getKey());
+                }
                 dbManager.saveWeather(serviceType, position.getLocationName(), entry.getKey(), entry.getValue());
             }
         }
@@ -285,8 +290,52 @@ public class PositionManager {
             Toast.makeText(mActivity, mActivity.getString(R.string.update_error_from) + weatherStationName, Toast.LENGTH_SHORT).show();
             lastResponseIsFailure = true;
             //  Вернуть это в интерфейс ближайшую погоду
-            mActivity.updateInterface(WeatherStation.ResponseType.CURRENT, dbManager.loadWeather(sType, getPosition(cityID).getLocationName(),Calendar.getInstance()));
+            mActivity.updateInterface(WeatherStation.ResponseType.CURRENT, getCurrentWeatherFromDB(sType, getPosition(cityID).getLocationName(), Calendar.getInstance()));
+            mActivity.updateInterface(WeatherStation.ResponseType.HOURLY, getHourlyWeatherFromDB(sType, getPosition(cityID).getLocationName(), Calendar.getInstance()));
+            mActivity.updateInterface(WeatherStation.ResponseType.DAILY, getDailyWeatherFromDB(sType, getPosition(cityID).getLocationName(), Calendar.getInstance()));
         }
+    }
+
+    private HashMap<Calendar, Weather> getCurrentWeatherFromDB(WeatherStationFactory.ServiceType sType, String locationName, Calendar date) {
+        return dbManager.loadWeather(sType, locationName, date);
+    }
+
+    private HashMap<Calendar, Weather> getHourlyWeatherFromDB(WeatherStationFactory.ServiceType sType, String locationName, Calendar date) {
+        final int HOUR_PERIOD = 3;
+        final int FORECASTS_COUNT = 8;
+        Calendar calendar = date;
+        calendar.add(Calendar.HOUR_OF_DAY, HOUR_PERIOD);
+        calendar.set(Calendar.MINUTE, 0);
+        HashMap <Calendar, Weather> forecast = new HashMap<>();
+        for (int i = 1; i < FORECASTS_COUNT; i++) {
+            HashMap<Calendar, Weather> temp = dbManager.loadWeather(sType, locationName, calendar);
+            if (temp == null || temp.size() == 0) {
+                return null;
+            }
+            forecast.putAll(temp);
+            calendar.add(Calendar.HOUR_OF_DAY, HOUR_PERIOD);
+        }
+        return forecast;
+    }
+
+
+    private HashMap<Calendar, Weather> getDailyWeatherFromDB(WeatherStationFactory.ServiceType sType, String locationName, Calendar date) {
+        final int DAY_PERIOD = 1;
+        final int FORECASTS_COUNT = 7;
+        Calendar calendar = date;
+        calendar.add(Calendar.DAY_OF_YEAR, DAY_PERIOD);
+        calendar.set(Calendar.HOUR_OF_DAY, 12);
+        calendar.set(Calendar.MINUTE, 0);
+        HashMap <Calendar, Weather> forecast = new HashMap<>();
+        for (int i = 1; i < FORECASTS_COUNT; i++) {
+            HashMap<Calendar, Weather> temp = dbManager.loadWeather(sType, locationName, calendar);
+            if (temp == null || temp.size() == 0) {
+                return null;
+            }
+            forecast.putAll(temp);
+            calendar.add(Calendar.DAY_OF_YEAR, DAY_PERIOD);
+        }
+        return forecast;
     }
 
     //region Вспомогательные методы

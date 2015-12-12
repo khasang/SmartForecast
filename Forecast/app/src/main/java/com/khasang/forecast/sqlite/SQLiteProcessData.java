@@ -42,9 +42,6 @@ public class SQLiteProcessData {
 
     // Сохранение погоды, удаление старой погоды.
     public void saveWeather(WeatherStationFactory.ServiceType serviceType, String townName, Calendar date, Weather weather) {
-
-        deleteOldWeather(serviceType, townName, date);
-
         sqLite.queryExExec(SQLiteFields.QUERY_INSERT_WEATHER, new String[]
             {serviceType.name(), townName, dtFormat.format(date.getTime()), Double.toString(weather.getTemperature()), Double.toString(weather.getTemp_max()),
                     Double.toString(weather.getTemp_min()), Double.toString(weather.getPressure()),
