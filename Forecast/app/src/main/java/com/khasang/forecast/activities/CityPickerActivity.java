@@ -28,6 +28,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.khasang.forecast.PlaceProvider;
@@ -49,7 +50,7 @@ import java.util.Set;
  * Activity для выбора местоположения
  */
 public class CityPickerActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
-    String TAG = "MyTAG";
+    private String TAG = this.getClass().getSimpleName();
     public final static String CITY_PICKER_TAG = "com.khasang.forecast.activities.CityPickerActivity";
 
     RecyclerView recyclerView;
@@ -200,6 +201,10 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
     // Вспомогательный метод для добавления города в список
     private void addItem(String city) {
+        if (city.length() <= 0) {
+            Log.w(TAG, "Имя города менее одного символа");
+            return;
+        }
         city = city.trim().toLowerCase();
         city = city.substring(0, 1).toUpperCase() + city.substring(1);
         if (!PositionManager.getInstance().positionIsPresent(city)) {

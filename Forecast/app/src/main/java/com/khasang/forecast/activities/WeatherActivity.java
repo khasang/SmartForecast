@@ -41,7 +41,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     private TabLayout tabLayout;
     private LockableViewPager pager;
 
-    String TAG = this.getClass().getSimpleName();
+    private String TAG = this.getClass().getSimpleName();
 
     private TextView city;
     private TextView temperature;
@@ -112,13 +112,8 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         tabLayout.getTabAt(1).setIcon(R.drawable.ic_by_date_24);
         pager.setSwipeable(false);
 
-        city.setText("--/--");
+
         temperature.setText("--/--");
-        description.setText("--/--");
-        pressure.setText("--/--");
-        wind.setText("--/--");
-        humidity.setText("--/--");
-        timeStamp.setText("--/--");
         if (PositionManager.getInstance().getPositions().size() == 0) {
             Toast.makeText(this, "Для продолжения работы необходимо добавить город.", Toast.LENGTH_SHORT).show();
             startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
@@ -131,6 +126,16 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 onRefresh();
             }
         }
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+/*        if (city.length() <= 0) {
+            cityPickerBtn.setVisibility(View.GONE);
+        } else {
+            cityPickerBtn.setVisibility(View.VISIBLE);
+        }*/
     }
 
     @Override
@@ -161,10 +166,11 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
      * Обновление интерфейса Activity
      */
     public void updateInterface(WeatherStation.ResponseType responseType, Map<Calendar, Weather> forecast) {
+        stopRefresh();
 
         if (forecast == null || forecast.size() == 0) {
             Log.i(TAG, "Weather is null!");
-            stopRefresh();
+
             return;
         }
         switch (responseType) {
@@ -194,7 +200,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         }
 
         /** Анимация обновления - Start */
-        mSwipeRefreshLayout.setRefreshing(true);
+        //mSwipeRefreshLayout.setRefreshing(true);
 
         /** Получаем текущее время */
         int hours = date.get(Calendar.HOUR_OF_DAY);
@@ -230,7 +236,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 minutes));
 
         /** Анимация обновления - Stop */
-        mSwipeRefreshLayout.setRefreshing(false);
+        //mSwipeRefreshLayout.setRefreshing(false);
     }
 
     /**
@@ -254,6 +260,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             } else {
                 if (!PositionManager.getInstance().positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {
                     syncBtn.setVisibility(View.GONE);
+                    stopRefresh();
                 }
             }
         }
