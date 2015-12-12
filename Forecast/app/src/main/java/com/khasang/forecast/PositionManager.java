@@ -251,18 +251,9 @@ public class PositionManager {
             currStation.updateHourlyWeather(currPosition.getCityID(), currPosition.getCoordinate());
             currStation.updateWeeklyWeather(currPosition.getCityID(), currPosition.getCoordinate());
         } else {
-            HashMap<Calendar, Weather> forecast = getCurrentWeatherFromDB(currStation.getServiceType(), currPosition.getLocationName(), Calendar.getInstance());
-            if (forecast != null && forecast.size() != 0) {
-                mActivity.updateInterface(WeatherStation.ResponseType.CURRENT, forecast);
-            }
-            forecast = getHourlyWeatherFromDB(currStation.getServiceType(), currPosition.getLocationName(), Calendar.getInstance());
-            if (forecast != null && forecast.size() != 0) {
-                mActivity.updateInterface(WeatherStation.ResponseType.HOURLY, forecast);
-            }
-            forecast = getDailyWeatherFromDB(currStation.getServiceType(), currPosition.getLocationName(), Calendar.getInstance());
-            if (forecast != null && forecast.size() != 0) {
-                mActivity.updateInterface(WeatherStation.ResponseType.DAILY, forecast);
-            }
+            mActivity.updateInterface(WeatherStation.ResponseType.CURRENT, getCurrentWeatherFromDB(currStation.getServiceType(), currPosition.getLocationName(), Calendar.getInstance()));
+            mActivity.updateInterface(WeatherStation.ResponseType.HOURLY, getHourlyWeatherFromDB(currStation.getServiceType(), currPosition.getLocationName(), Calendar.getInstance()));
+            mActivity.updateInterface(WeatherStation.ResponseType.DAILY, getDailyWeatherFromDB(currStation.getServiceType(), currPosition.getLocationName(), Calendar.getInstance()));
             Toast.makeText(mActivity, R.string.update_error_net_not_availble, Toast.LENGTH_SHORT).show();
         }
     }
@@ -299,18 +290,9 @@ public class PositionManager {
             Toast.makeText(mActivity, mActivity.getString(R.string.update_error_from) + weatherStationName, Toast.LENGTH_SHORT).show();
             lastResponseIsFailure = true;
             //  Вернуть это в интерфейс ближайшую погоду
-            HashMap<Calendar, Weather> forecast = getCurrentWeatherFromDB(sType, getPosition(cityID).getLocationName(), Calendar.getInstance());
-            if (forecast != null && forecast.size() != 0) {
-                mActivity.updateInterface(WeatherStation.ResponseType.CURRENT, forecast);
-            }
-            forecast = getHourlyWeatherFromDB(sType, getPosition(cityID).getLocationName(), Calendar.getInstance());
-            if (forecast != null && forecast.size() != 0) {
-                mActivity.updateInterface(WeatherStation.ResponseType.HOURLY, forecast);
-            }
-            forecast = getDailyWeatherFromDB(sType, getPosition(cityID).getLocationName(), Calendar.getInstance());
-            if (forecast != null && forecast.size() != 0) {
-                mActivity.updateInterface(WeatherStation.ResponseType.DAILY, forecast);
-            }
+            mActivity.updateInterface(WeatherStation.ResponseType.CURRENT, getCurrentWeatherFromDB(sType, getPosition(cityID).getLocationName(), Calendar.getInstance()));
+            mActivity.updateInterface(WeatherStation.ResponseType.HOURLY, getHourlyWeatherFromDB(sType, getPosition(cityID).getLocationName(), Calendar.getInstance()));
+            mActivity.updateInterface(WeatherStation.ResponseType.DAILY, getDailyWeatherFromDB(sType, getPosition(cityID).getLocationName(), Calendar.getInstance()));
         }
     }
 
