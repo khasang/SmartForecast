@@ -21,10 +21,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -34,6 +36,7 @@ import com.khasang.forecast.R;
 import com.khasang.forecast.adapters.RecyclerAdapter;
 import com.khasang.forecast.adapters.etc.HidingScrollListener;
 import com.khasang.forecast.adapters.GooglePlacesAutocompleteAdapter;
+import com.khasang.forecast.view.DelayedAutoCompleteTextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -216,8 +219,17 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     private void showChooseCityDialog() {
         final View view = getLayoutInflater().inflate(R.layout.choose_city_dialog, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        final AutoCompleteTextView chooseCity = (AutoCompleteTextView) view.findViewById(R.id.editTextCityName);
+        final DelayedAutoCompleteTextView chooseCity = (DelayedAutoCompleteTextView) view.findViewById(R.id.editTextCityName);
         chooseCity.setAdapter(new GooglePlacesAutocompleteAdapter(this, R.layout.autocomplete_city_textview_item));
+        chooseCity.setLoadingIndicator((ProgressBar) view.findViewById(R.id.autocomplete_progressbar));
+        chooseCity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String description = (String) parent.getItemAtPosition(position);
+                String city = description.split(", ")[0];
+                chooseCity.setText(city);
+            }
+        });
         builder.setTitle("Введите название города")
                 .setView(view)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {

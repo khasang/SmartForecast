@@ -27,13 +27,16 @@ import java.util.ArrayList;
 public class PlaceProvider {
     private final static String TAG = PlaceProvider.class.getSimpleName();
     private final static String PLACE_API_BASE_URL = "https://maps.googleapis.com/maps/api/place/autocomplete/json";
-    private final static String API_KEY = "AIzaSyBSW2y4MeIl9qkmTXVWy27VTLieAytOWYw";
+    private final static String API_KEY = "AIzaSyBR70pjZmykrJsIG9eNHzKKzX0WDZVddQc";
+    ArrayList resultList = null;
 
-    public static ArrayList autocomplete(String input){
-        final ArrayList resultList = null;
+    public ArrayList autocomplete(String input){
+
         try {
             String URL = PLACE_API_BASE_URL + "?key="
-                    + API_KEY + "&input=" + URLEncoder.encode(input, "utf8");
+                    + API_KEY + "&input="
+                    + URLEncoder.encode(input, "utf8")
+                    + "&types=(cities)";
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
                     .url(URL)
@@ -52,7 +55,9 @@ public class PlaceProvider {
                     try {
                         JSONObject jsonObject = new JSONObject(jsonData);
                         JSONArray jsonArray = jsonObject.getJSONArray("predictions");
+                        resultList = new ArrayList(jsonArray.length());
                         for (int i = 0; i < jsonArray.length(); i++) {
+                            Log.i(TAG, jsonArray.getJSONObject(i).getString("description"));
                             resultList.add(jsonArray.getJSONObject(i).getString("description"));
                         }
                     } catch (JSONException e) {

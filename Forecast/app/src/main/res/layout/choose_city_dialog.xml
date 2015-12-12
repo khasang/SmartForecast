@@ -1,23 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!--<EditText-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:id="@+id/editTextCityName"-->
-        <!--android:hint="@string/choose_city_label"-->
-        <!--android:layout_margin="20dp"/>-->
-    <AutoCompleteTextView
+    <com.khasang.forecast.view.DelayedAutoCompleteTextView
         android:id="@+id/editTextCityName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
+        android:paddingRight="52dp"
         android:hint="@string/choose_city_label"
-        android:ems="10">
+        android:ems="10"
+        android:imeOptions="flagNoExtractUi|actionSearch">
         <requestFocus/>
-    </AutoCompleteTextView>
-</LinearLayout>
+    </com.khasang.forecast.view.DelayedAutoCompleteTextView>
+
+    <ProgressBar
+        android:id="@+id/autocomplete_progressbar"
+        style="?android:attr/progressBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|right"
+        android:layout_marginRight="16dp"
+        android:visibility="gone"/>
+
+</FrameLayout>
