@@ -2,6 +2,7 @@ package com.khasang.forecast.sqlite;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -58,11 +59,24 @@ public class SQLiteOpen extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion != newVersion) {
-            db.setVersion(newVersion);
-            db.execSQL(SQLiteFields.QUERY_DELETE_TABLE_TOWNS);
-            db.execSQL(SQLiteFields.QUERY_DELETE_TABLE_WEATHER);
-            db.execSQL(SQLiteFields.QUERY_DELETE_TABLE_SETTINGS);
+
+            try {
+                db.beginTransaction();
+
+                db.execSQL(SQLiteFields.QUERY_DELETE_TABLE_TOWNS);
+                db.execSQL(SQLiteFields.QUERY_DELETE_TABLE_WEATHER);
+                db.execSQL(SQLiteFields.QUERY_DELETE_TABLE_SETTINGS);
+
+                onCreate(db);
+
+                db.setVersion(newVersion);
+                db.setTransactionSuccessful();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } finally {
+                db.endTransaction();
+            }
         }
-        onCreate(db);
+
     }
 }
