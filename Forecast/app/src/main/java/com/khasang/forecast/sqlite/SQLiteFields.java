@@ -36,14 +36,14 @@ public class SQLiteFields {
 
     public static final String QUERY_CREATE_TABLE_TOWNS  = "CREATE TABLE " + TABLE_TOWNS + " (" +
             ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-            TOWN + " VARCHAR(30)," +
+            TOWN + " VARCHAR(255)," +
             LATITUDE + " VARCHAR(30)," +
             LONGTITUDE + " VARCHAR(30))";
 
     public static final String QUERY_CREATE_TABLE_WEATHER = "CREATE TABLE " + TABLE_WEATHER + " (" +
             ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
             STATION_NAME + " VARCHAR(30)," +
-            TOWN + " VARCHAR(30)," +
+            TOWN + " VARCHAR(255)," +
             DATE + " DATETIME," +
             TEMPIRATURE + " VARCHAR(10)," +
             TEMPIRATURE_MAX + " VARCHAR(10)," +
@@ -58,7 +58,7 @@ public class SQLiteFields {
     public static final String QUERY_CREATE_TABLE_SETTINGS = "CREATE TABLE " + TABLE_SETTINGS + " (" +
             ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
             CURRENT_STATION + " VARCHAR(30)," +
-            CURRENT_TOWN + " VARCHAR(30)," +
+            CURRENT_TOWN + " VARCHAR(255)," +
             CURRENT_TEMPIRATURE_METRICS + " VARCHAR(30)," +
             CURRENT_SPEED_METRICS + " VARCHAR(30)," +
             CURRENT_PRESSURE_METRICS + " VARCHAR(30))";
