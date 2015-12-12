@@ -2,16 +2,13 @@ package com.khasang.forecast.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -26,12 +23,11 @@ import com.khasang.forecast.R;
 import com.khasang.forecast.Weather;
 import com.khasang.forecast.WeatherStation;
 import com.khasang.forecast.adapters.ForecastPageAdapter;
-import com.khasang.forecast.sqlite.SQLiteProcessData;
 
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
+
 
 /**
  * Данные которые необходимо отображать в WeatherActivity (для первого релиза):
@@ -165,10 +161,10 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
      * Обновление интерфейса Activity
      */
     public void updateInterface(WeatherStation.ResponseType responseType, Map<Calendar, Weather> forecast) {
-// Calendar date, Weather wCurent
-        //TODO нужно перепроверить
+
         if (forecast == null || forecast.size() == 0) {
             Log.i(TAG, "Weather is null!");
+            stopRefresh();
             return;
         }
         switch (responseType) {
@@ -200,10 +196,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         /** Анимация обновления - Start */
         mSwipeRefreshLayout.setRefreshing(true);
 
-        /** Получаем текущее время
-         * TODO minutes в формате 13:04, сейчас выводит 13:4
-         * TODO UPDATE Check fixes
-         * */
+        /** Получаем текущее время */
         int hours = date.get(Calendar.HOUR_OF_DAY);
         int minutes = date.get(Calendar.MINUTE);
 
