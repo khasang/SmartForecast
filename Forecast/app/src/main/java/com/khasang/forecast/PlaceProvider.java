@@ -28,10 +28,11 @@ public class PlaceProvider {
     private final static String TAG = PlaceProvider.class.getSimpleName();
     private final static String PLACE_API_BASE_URL = "https://maps.googleapis.com/maps/api/place/autocomplete/json";
     private final static String API_KEY = "AIzaSyBR70pjZmykrJsIG9eNHzKKzX0WDZVddQc";
+
+
     ArrayList resultList = null;
 
     public ArrayList autocomplete(String input){
-
         try {
             String URL = PLACE_API_BASE_URL + "?key="
                     + API_KEY + "&input="
