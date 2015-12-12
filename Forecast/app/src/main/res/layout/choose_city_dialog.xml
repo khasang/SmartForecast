@@ -5,10 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditText
+    <!--<EditText-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/editTextCityName"-->
+        <!--android:hint="@string/choose_city_label"-->
+        <!--android:layout_margin="20dp"/>-->
+    <AutoCompleteTextView
+        android:id="@+id/editTextCityName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editTextCityName"
-        android:hint="@string/choose_city_label"/>
-
+        android:layout_margin="20dp"
+        android:hint="@string/choose_city_label"
+        android:ems="10">
+        <requestFocus/>
+    </AutoCompleteTextView>
 </LinearLayout>

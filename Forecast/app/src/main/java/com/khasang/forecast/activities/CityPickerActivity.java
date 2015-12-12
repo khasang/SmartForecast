@@ -1,9 +1,10 @@
 package com.khasang.forecast.activities;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -20,17 +21,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.khasang.forecast.PlaceProvider;
 import com.khasang.forecast.PositionManager;
 import com.khasang.forecast.R;
 import com.khasang.forecast.adapters.RecyclerAdapter;
 import com.khasang.forecast.adapters.etc.HidingScrollListener;
+import com.khasang.forecast.adapters.GooglePlacesAutocompleteAdapter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -52,6 +55,8 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
     private Toolbar toolbar;
     private ImageButton fabBtn;
+    private PlaceProvider mPlaceProvider;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +74,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         setTitle(getString(R.string.city_list));
         //TODO Проверить код кнопки HOME - цвет должен быть белый (не работает)
         //toolbar.setTitleTextColor(ContextCompat.getColor(this, android.R.color.white));
+
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         cityList = new ArrayList<>();
@@ -210,7 +216,8 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     private void showChooseCityDialog() {
         final View view = getLayoutInflater().inflate(R.layout.choose_city_dialog, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        final EditText chooseCity = (EditText) view.findViewById(R.id.editTextCityName);
+        final AutoCompleteTextView chooseCity = (AutoCompleteTextView) view.findViewById(R.id.editTextCityName);
+        chooseCity.setAdapter(new GooglePlacesAutocompleteAdapter(this, R.layout.autocomplete_city_textview_item));
         builder.setTitle("Введите название города")
                 .setView(view)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -260,4 +267,20 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         }
     return true;
     }
+
+//    public static class ErrorDialogFragment extends DialogFragment {
+//        public ErrorDialogFragment(){}
+//
+//        @Override
+//        public Dialog onCreateDialog(Bundle savedInstanceState) {
+//            int errorCode = this.getArguments().getInt(PlaceProvider.DIALOG_ERROR);
+//            return GoogleApiAvailability.getInstance().getErrorDialog(
+//                    this.getActivity(), errorCode, PlaceProvider.REQUEST_RESOLVE_ERROR);
+//        }
+//
+//        @Override
+//        public void onDismiss(DialogInterface dialog) {
+//            ((CityPickerActivity)getActivity()).mPlaceProvider.onDialogDismissed();
+//        }
+//    }
 }
