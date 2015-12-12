@@ -30,7 +30,6 @@
 
         <activity android:name=".activities.CityPickerActivity"
             android:screenOrientation="portrait"/>
-
     </application>
 
 </manifest>
