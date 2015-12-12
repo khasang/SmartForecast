@@ -183,7 +183,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 ((ForecastPageAdapter) pager.getAdapter()).setDayForecast(forecast);
                 break;
             default:
-                Log.i(TAG, "Принят необрабатываемый проноз");
+                Log.i(TAG, "Принят необрабатываемый прогноз");
         }
     }
 
@@ -193,6 +193,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         //TODO нужно перепроверить
         if (wCurent == null) {
             Log.i(TAG, "Weather is null!");
+            stopRefresh();
             return;
         }
 
@@ -274,6 +275,14 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 PositionManager.getInstance().updateWeather();
             }
         }, 1000);
+        syncBtn.clearAnimation();
+    }
+
+    /**
+     * Останавливаем анимацию
+     */
+    public void stopRefresh() {
+        mSwipeRefreshLayout.setRefreshing(false);
         syncBtn.clearAnimation();
     }
 
