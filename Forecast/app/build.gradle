@@ -17,6 +17,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    repositories {
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+    }
 }
 
 dependencies {
@@ -31,4 +34,5 @@ dependencies {
     compile "com.android.support:recyclerview-v7:23.1.1"
     compile 'com.android.support:design:23.1.1'
     compile 'jp.wasabeef:recyclerview-animators:2.1.0'
+    compile 'com.github.gabrielemariotti.recyclerview:recyclerview-animators:0.3.0-SNAPSHOT@aar'
 }

@@ -1,14 +1,17 @@
 package com.khasang.forecast.activities;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
@@ -25,10 +28,13 @@ import com.khasang.forecast.R;
 import com.khasang.forecast.Weather;
 import com.khasang.forecast.WeatherStation;
 import com.khasang.forecast.adapters.ForecastPageAdapter;
+import com.khasang.forecast.fragments.CommonForecastFragment;
 
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+
+import it.gmariotti.recyclerview.itemanimator.SlideInOutLeftItemAnimator;
 
 
 /**
@@ -66,11 +72,14 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     private Animation flip;
     private Animation animTrans;
     private Animation animTrans_plus1;
+    private Animation fallingUp;
 
     private final int CHOOSE_CITY = 1;
     public Context context;
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
+
+    private FragmentTransaction transaction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +92,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         PositionManager.getInstance().initManager(this);
 
         city = (TextView) findViewById(R.id.city);
+        cityPickerBtn = (ImageButton) findViewById(R.id.cityPickerBnt);
         temperature = (TextView) findViewById(R.id.temperature);
         description = (TextView) findViewById(R.id.precipitation);
         pressure = (TextView) findViewById(R.id.pressure);
@@ -90,8 +100,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         humidity = (TextView) findViewById(R.id.humidity);
         timeStamp = (TextView) findViewById(R.id.timeStamp);
         syncBtn = (ImageButton) findViewById(R.id.syncBtn);
-        cityPickerBtn = (ImageButton) findViewById(R.id.cityPickerBnt);
-        llMainInformation = (LinearLayout) findViewById(R.id.llMainInformation);
+        //llMainInformation = (LinearLayout) findViewById(R.id.llMainInformation);
 
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
@@ -112,6 +121,8 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         flip = AnimationUtils.loadAnimation(this, R.anim.flip);
         animTrans = AnimationUtils.loadAnimation(this, R.anim.translate);
         animTrans_plus1 = AnimationUtils.loadAnimation(this, R.anim.translate_plus1);
+        fallingUp = AnimationUtils.loadAnimation(this, R.anim.falling_up);
+
 
         syncBtn.startAnimation(animationRotateCenter);
         wind.startAnimation(animTrans);
@@ -299,6 +310,13 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         //llMainInformation.setAnimation(flip);
         wind.startAnimation(animTrans);
         humidity.startAnimation(animTrans_plus1);
+        timeStamp.startAnimation(fallingUp);
+        transaction = getSupportFragmentManager().beginTransaction();
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_in_left);
+
+
+        Fragment frag1 = getFragmentManager().findFragmentByTag("dayforecast");
 
 
         new Handler().postDelayed(new Runnable() {
