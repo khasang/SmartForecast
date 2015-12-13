@@ -45,6 +45,8 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
         int iconId = dataset.get(position).getPrecipitation().getIconResId();
         holder.ivWeatherIcon.setImageResource(iconId == 0 ? R.mipmap.ic_launcher : iconId);
+
+
     }
 
     @Override

@@ -1,8 +1,10 @@
 package com.khasang.forecast.fragments;
 
+import android.animation.Animator;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -57,6 +59,8 @@ public abstract class CommonForecastFragment extends Fragment {
         View v = inflater.inflate(R.layout.recycler_view_frag, container, false);
 
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
+        RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
+        recyclerView.setItemAnimator(itemAnimator);
 
         layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, true);
         recyclerView.setLayoutManager(layoutManager);

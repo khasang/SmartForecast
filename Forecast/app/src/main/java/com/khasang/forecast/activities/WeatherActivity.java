@@ -43,7 +43,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     private TabLayout tabLayout;
     private LockableViewPager pager;
 
-    private String TAG = this.getClass().getSimpleName();
+    private final String TAG = this.getClass().getSimpleName();
 
     private TextView city;
     private TextView temperature;
@@ -137,10 +137,10 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
         temperature.setText("--/--");
         if (PositionManager.getInstance().getPositions().size() == 0) {
-            Toast.makeText(this, "Для продолжения работы необходимо добавить город.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.msg_add_city, Toast.LENGTH_SHORT).show();
             startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
         } else if (!PositionManager.getInstance().positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {
-            Toast.makeText(this, "Для продолжения работы необходимо выбрать город.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.msg_choose_city, Toast.LENGTH_SHORT).show();
             startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
         } else {
             if (!PositionManager.getInstance().getCurrentPositionName().isEmpty()) {
@@ -286,7 +286,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     public void onRefresh() {
         if (!PositionManager.getInstance().positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {
             Log.i(TAG, "There is nothing to refresh");
-            Toast.makeText(WeatherActivity.this, "Ошибка обновления.\nГород отсутствует в списке локаций",Toast.LENGTH_SHORT).show();
+            Toast.makeText(WeatherActivity.this, R.string.msg_no_city,Toast.LENGTH_SHORT).show();
             stopRefresh();
             return;
         }

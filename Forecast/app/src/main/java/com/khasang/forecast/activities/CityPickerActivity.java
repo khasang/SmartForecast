@@ -50,7 +50,7 @@ import java.util.Set;
  * Activity для выбора местоположения
  */
 public class CityPickerActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
-    private String TAG = this.getClass().getSimpleName();
+    private final String TAG = this.getClass().getSimpleName();
     public final static String CITY_PICKER_TAG = "com.khasang.forecast.activities.CityPickerActivity";
 
     RecyclerView recyclerView;
@@ -167,16 +167,16 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 break;
             case R.id.clear_favorite:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage("Вы действительно хотите очистить список городов?");
+                builder.setMessage(R.string.msg_clear_city_list);
                 builder.setCancelable(false);
-                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(R.string.btn_yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         CityPickerActivity.this.clearList();
                         recyclerAdapter.notifyDataSetChanged();
                     }
                 });
-                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton(R.string.btn_no, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -235,9 +235,9 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 chooseCity.setText(city);
             }
         });
-        builder.setTitle("Введите название города")
+        builder.setTitle(R.string.title_choose_city)
                 .setView(view)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String positionName = chooseCity.getText().toString();
@@ -248,7 +248,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                         }
                     }
                 })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
