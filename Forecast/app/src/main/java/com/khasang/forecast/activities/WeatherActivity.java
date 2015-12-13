@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,8 +55,17 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     private ImageButton syncBtn;
     private ImageButton cityPickerBtn;
 
+    private LinearLayout llMainInformation;
+
     private Animation animationRotateCenter;
     private Animation animScale;
+    private Animation fallingDown;
+    private Animation fallingDown_plus1;
+    private Animation fallingDownAlpha;
+    private Animation fallingDownAlpha_plus1;
+    private Animation flip;
+    private Animation animTrans;
+    private Animation animTrans_plus1;
 
     private final int CHOOSE_CITY = 1;
     public Context context;
@@ -80,6 +91,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         timeStamp = (TextView) findViewById(R.id.timeStamp);
         syncBtn = (ImageButton) findViewById(R.id.syncBtn);
         cityPickerBtn = (ImageButton) findViewById(R.id.cityPickerBnt);
+        llMainInformation = (LinearLayout) findViewById(R.id.llMainInformation);
 
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
@@ -90,9 +102,20 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
-        /** Анимация кнопки */
+        /** Анимация объектов */
         animationRotateCenter = AnimationUtils.loadAnimation(this, R.anim.rotate_center);
         animScale = AnimationUtils.loadAnimation(this, R.anim.scale);
+        fallingDown = AnimationUtils.loadAnimation(this, R.anim.falling_down);
+        fallingDown_plus1 = AnimationUtils.loadAnimation(this, R.anim.falling_down_plus1);
+        fallingDownAlpha = AnimationUtils.loadAnimation(this, R.anim.falling_down_alpha);
+        fallingDownAlpha_plus1 = AnimationUtils.loadAnimation(this, R.anim.falling_down_alpha_plus1);
+        flip = AnimationUtils.loadAnimation(this, R.anim.flip);
+        animTrans = AnimationUtils.loadAnimation(this, R.anim.translate);
+        animTrans_plus1 = AnimationUtils.loadAnimation(this, R.anim.translate_plus1);
+
+        syncBtn.startAnimation(animationRotateCenter);
+        wind.startAnimation(animTrans);
+        humidity.startAnimation(animTrans);
 
         /** Слушатели нажатий кнопкок */
         syncBtn.setOnClickListener(this);
@@ -111,7 +134,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_by_hour_24);
         tabLayout.getTabAt(1).setIcon(R.drawable.ic_by_date_24);
         pager.setSwipeable(false);
-
 
         temperature.setText("--/--");
         if (PositionManager.getInstance().getPositions().size() == 0) {
@@ -191,16 +213,13 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
     public void updateCurrentWeather(Calendar date, Weather wCurent) {
 
-
-        //TODO нужно перепроверить
         if (wCurent == null) {
             Log.i(TAG, "Weather is null!");
-            stopRefresh();
             return;
         }
 
         /** Анимация обновления - Start */
-        //mSwipeRefreshLayout.setRefreshing(true);
+        mSwipeRefreshLayout.setRefreshing(true);
 
         /** Получаем текущее время */
         int hours = date.get(Calendar.HOUR_OF_DAY);
@@ -235,8 +254,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 hours,
                 minutes));
 
-        /** Анимация обновления - Stop */
-        //mSwipeRefreshLayout.setRefreshing(false);
     }
 
     /**
@@ -247,8 +264,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CHOOSE_CITY) {
             if (resultCode == RESULT_OK) {
-                /** Анимация обновления - Start */
-                mSwipeRefreshLayout.setRefreshing(true);
                 String newCity = data.getStringExtra(CityPickerActivity.CITY_PICKER_TAG);
                 city.setText(newCity);
                 Log.d(TAG, newCity);
@@ -259,23 +274,43 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 syncBtn.setVisibility(View.VISIBLE);
             } else {
                 if (!PositionManager.getInstance().positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {
-                    syncBtn.setVisibility(View.GONE);
                     stopRefresh();
+                    syncBtn.setVisibility(View.GONE);
                 }
             }
         }
     }
 
+    /** Анимация обновления */
     @Override
     public void onRefresh() {
+        if (!PositionManager.getInstance().positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {
+            Log.i(TAG, "There is nothing to refresh");
+            Toast.makeText(WeatherActivity.this, "Ошибка обновления.\nГород отсутствует в списке локаций",Toast.LENGTH_SHORT).show();
+            stopRefresh();
+            return;
+        }
+
+        city.startAnimation(fallingDown);
+        cityPickerBtn.startAnimation(fallingDown_plus1);
+        temperature.startAnimation(flip);
+        description.startAnimation(fallingDownAlpha);
+        pressure.startAnimation(fallingDownAlpha_plus1);
+        //llMainInformation.setAnimation(flip);
+        wind.startAnimation(animTrans);
+        humidity.startAnimation(animTrans_plus1);
+
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                syncBtn.startAnimation(animationRotateCenter);
+                Log.i(TAG, "Start animation");
                 PositionManager.getInstance().updateWeather();
             }
         }, 1000);
-        syncBtn.clearAnimation();
+        //syncBtn.clearAnimation();
+        syncBtn.startAnimation(animationRotateCenter);
+
     }
 
     /**
@@ -283,7 +318,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
      */
     public void stopRefresh() {
         mSwipeRefreshLayout.setRefreshing(false);
-        syncBtn.clearAnimation();
+        //syncBtn.clearAnimation();
     }
 
 }
