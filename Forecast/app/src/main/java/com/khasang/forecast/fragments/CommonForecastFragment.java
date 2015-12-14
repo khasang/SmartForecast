@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -38,12 +39,26 @@ public abstract class CommonForecastFragment extends Fragment {
     protected ArrayList<String> sDate;
     protected ArrayList<Weather> weathers;
 
-    public void setDatas(Map<Calendar, Weather> forecasts) {
+    public void setDatasAndAnimate(Map<Calendar, Weather> forecasts) {
         this.forecasts = forecasts;
         sDate.clear();
         weathers.clear();
         updateForecasts();
         adapter.notifyDataSetChanged();
+        animate();
+    }
+
+    public void animate() {
+        View view = getView();
+        view.setAlpha(0.2f);
+        view.setScaleX(0.3f);
+        view.setScaleY(0.3f);
+        ViewCompat.animate(view)
+                .alpha(1.0f)
+                .scaleX(1f)
+                .scaleY(1f)
+                .setDuration(500)
+                .start();
     }
 
     @Override
