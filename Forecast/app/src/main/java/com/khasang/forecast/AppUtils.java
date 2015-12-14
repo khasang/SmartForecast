@@ -20,7 +20,10 @@ import java.util.Map;
  */
 
 public class AppUtils {
-
+    public static final double KELVIN_CELSIUS_DELTA = 273.15;
+    public static final double KPA_TO_MM_HG = 1.33322;
+    public static final double KM_TO_MILES = 0.62137;
+    public static final double METER_TO_FOOT = 3.28083;
     /**
      * Метод для конвертирования ответа от API в коллекцию типа {@link Map}<{@link Calendar}, {@link Weather}>
      * для запроса текущего прогноза погоды.
@@ -208,5 +211,141 @@ public class AppUtils {
         } else if (id >= 951 && id < 963) {
             weather.setPrecipitation(Precipitation.Type.ADDITIONAL);
         }
+    }
+
+    /**
+     * Метод для преобразования погодных характеристик в заданные пользователями метрики
+     *
+     * @param weather обьект класса {@link Weather}, в котором нужно привести погодные характеристики к заданным метрикам
+     * @return обьект класса {@link Weather} с преобразованными погодными характеристиками
+     */
+    public static Weather formatWeather(Weather weather, PositionManager.TemperatureMetrics temperatureMetric, PositionManager.SpeedMetrics speedMetric, PositionManager.PressureMetrics pressureMetric) {
+        weather.setTemperature(formatTemperature(weather.getTemperature(),temperatureMetric));
+        weather.setPressure(formatPressure(weather.getPressure(), pressureMetric));
+        weather.setWind(weather.getWindDirection(), formatSpeed(weather.getWindPower(), speedMetric));
+        return weather;
+    }
+
+    /**
+     * Метод для преобразования температуры в заданную пользователем метрику
+     *
+     * @param temperature температура на входе (в Кельвинах)
+     * @param temperatureMetric
+     * @return температура в выбранной пользователем метрике
+     */
+    public static double formatTemperature(double temperature, PositionManager.TemperatureMetrics temperatureMetric) {
+        switch (temperatureMetric) {
+            case KELVIN:
+                break;
+            case CELSIUS:
+                return kelvinToCelsius(temperature);
+            case FAHRENHEIT:
+                return kelvinToFahrenheit(temperature);
+        }
+        return temperature;
+    }
+
+    /**
+     * Метод для преобразования скорости ветра в заданную пользователем метрику
+     *
+     * @param speed преобразуемая скорость
+     * @param speedMetric
+     * @return скорость в выбранной пользователем метрике
+     */
+    public static double formatSpeed(double speed, PositionManager.SpeedMetrics speedMetric) {
+        switch (speedMetric) {
+            case METER_PER_SECOND:
+                break;
+            case FOOT_PER_SECOND:
+                return meterInSecondToFootInSecond(speed);
+            case KM_PER_HOURS:
+                return meterInSecondToKmInHours(speed);
+            case MILES_PER_HOURS:
+                return meterInSecondToMilesInHour(speed);
+        }
+        return speed;
+    }
+
+    /**
+     * Метод для преобразования давления в заданную пользователем метрику
+     *
+     * @param pressure преобразуемое давление
+     * @param pressureMetric
+     * @return давление в выбранной пользователем метрике
+     */
+    public static double formatPressure(double pressure, PositionManager.PressureMetrics pressureMetric) {
+        switch (pressureMetric) {
+            case HPA:
+                break;
+            case MM_HG:
+                return kpaToMmHg(pressure);
+        }
+        return pressure;
+    }
+
+    /**
+     * Метод для преобразования температуры из Кельвинов в Цельсии
+     *
+     * @param temperature температура в Кельвинах
+     * @return температура в Цельсиях
+     */
+    public static double kelvinToCelsius(double temperature) {
+        double celsiusTemperature = temperature - KELVIN_CELSIUS_DELTA;
+        return celsiusTemperature;
+    }
+
+    /**
+     * Метод для преобразования температуры из Кельвина в Фаренгейт
+     *
+     * @param temperature температура в Кельвинах
+     * @return температура в Фаренгейтах
+     */
+    public static double kelvinToFahrenheit(double temperature) {
+        double fahrenheitTemperature = (kelvinToCelsius(temperature) * 9 / 5) + 32;
+        return fahrenheitTemperature;
+    }
+
+    /**
+     * Метод для преобразования скорости ветра из метров в секунду в футы в секунду
+     *
+     * @param speed скорость ветра в метрах в секунду
+     * @return скорость ветра в футах в секунду
+     */
+    public static double meterInSecondToFootInSecond(double speed) {
+        double footInSecond = speed * METER_TO_FOOT;
+        return footInSecond;
+    }
+
+    /**
+     * Метод для преобразования скорости ветра из метров в секунду в километры в час
+     *
+     * @param speed скорость ветра в метрах в секунду
+     * @return скорость ветра в километрах в час
+     */
+    public static double meterInSecondToKmInHours(double speed) {
+        double kmInHours = speed * 3.6;
+        return kmInHours;
+    }
+
+    /**
+     * Метод для преобразования скорости ветра из метров в секунду в мили в час
+     *
+     * @param speed скорость ветра в метрах в секунду
+     * @return скорость ветра в милях в час
+     */
+    public static double meterInSecondToMilesInHour(double speed) {
+        double milesInHours = meterInSecondToKmInHours(speed) * KM_TO_MILES;
+        return milesInHours;
+    }
+
+    /**
+     * Метод для преобразования давления из килопаскалей в мм.рт.ст.
+     *
+     * @param pressure давление в килопаскалях
+     * @return давление в мм.рт.ст.
+     */
+    public static double kpaToMmHg(double pressure) {
+        double mmHg = pressure / KPA_TO_MM_HG;
+        return mmHg;
     }
 }

@@ -3,6 +3,7 @@ package com.khasang.forecast.sqlite;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.Coordinate;
 import com.khasang.forecast.Position;
 import com.khasang.forecast.PositionManager;
@@ -197,7 +198,7 @@ public class SQLiteProcessData {
     }
 
     // Загрузка погоды.
-    public HashMap<Calendar, Weather> loadWeather(WeatherStationFactory.ServiceType serviceType, String cityName, Calendar date) {
+    public HashMap<Calendar, Weather> loadWeather(WeatherStationFactory.ServiceType serviceType, String cityName, Calendar date, PositionManager.TemperatureMetrics tm, PositionManager.SpeedMetrics sm, PositionManager.PressureMetrics pm) {
 
         double tempirature = 0;
         double tempirature_max = 0;
@@ -253,7 +254,7 @@ public class SQLiteProcessData {
 
         if (weather != null) {
             hashMap = new HashMap();
-            hashMap.put(weatherDate, weather);
+            hashMap.put(weatherDate, AppUtils.formatWeather(weather, tm, sm, pm));
         }
         return hashMap;
     }
