@@ -146,6 +146,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_by_hour_24);
         tabLayout.getTabAt(1).setIcon(R.drawable.ic_by_date_24);
         pager.setSwipeable(false);
+        pager.addOnPageChangeListener(adapter);
 
         temperature.setText("--/--");
         if (PositionManager.getInstance().getPositions().size() == 0) {
