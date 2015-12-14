@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.khasang.forecast.R;
 import com.khasang.forecast.Weather;
@@ -34,17 +35,26 @@ public abstract class CommonForecastFragment extends Fragment {
     protected Map<Calendar, Weather> forecasts;
 
     protected RecyclerView recyclerView;
+    protected TextView tvEmptyList;
     protected RecyclerView.LayoutManager layoutManager;
     protected CustomAdapter adapter;
     protected ArrayList<String> sDate;
     protected ArrayList<Weather> weathers;
 
     public void setDatasAndAnimate(Map<Calendar, Weather> forecasts) {
-        this.forecasts = forecasts;
-        sDate.clear();
-        weathers.clear();
-        updateForecasts();
-        adapter.notifyDataSetChanged();
+        if (null == forecasts) {
+            tvEmptyList.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        } else {
+            tvEmptyList.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+            this.forecasts = forecasts;
+            sDate.clear();
+            weathers.clear();
+            updateForecasts();
+            adapter.notifyDataSetChanged();
+        }
+
         animate();
     }
 
@@ -80,6 +90,7 @@ public abstract class CommonForecastFragment extends Fragment {
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
         recyclerView.setItemAnimator(itemAnimator);
 
+        tvEmptyList = (TextView) v.findViewById(R.id.tvEmptyList);
 
         layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, true);
         recyclerView.setLayoutManager(layoutManager);
