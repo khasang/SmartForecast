@@ -1,17 +1,14 @@
 package com.khasang.forecast.activities;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
@@ -28,13 +25,10 @@ import com.khasang.forecast.R;
 import com.khasang.forecast.Weather;
 import com.khasang.forecast.WeatherStation;
 import com.khasang.forecast.adapters.ForecastPageAdapter;
-import com.khasang.forecast.fragments.CommonForecastFragment;
 
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
-
-import it.gmariotti.recyclerview.itemanimator.SlideInOutLeftItemAnimator;
 
 
 /**
@@ -77,7 +71,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     private final int CHOOSE_CITY = 1;
     public Context context;
 
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,10 +95,10 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         //llMainInformation = (LinearLayout) findViewById(R.id.llMainInformation);
 
 
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
-        mSwipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+        swipeRefreshLayout.setOnRefreshListener(this);
 
-        mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+        swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
@@ -231,9 +225,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             return;
         }
 
-        /** Анимация обновления - Start */
-//        mSwipeRefreshLayout.setRefreshing(true);
-
         /** Получаем текущее время */
         int hours = date.get(Calendar.HOUR_OF_DAY);
         int minutes = date.get(Calendar.MINUTE);
@@ -306,6 +297,19 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             return;
         }
 
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.i(TAG, "Start animation");
+                allAnimation();
+                PositionManager.getInstance().updateWeather();
+            }
+        }, 1000);
+        swipeRefreshLayout.setRefreshing(true);
+    }
+
+    /** Проигрываение анимации всех объектов activity */
+    private void allAnimation() {
         city.startAnimation(fallingDown);
         cityPickerBtn.startAnimation(fallingDown_plus1);
         temperature.startAnimation(flip);
@@ -315,27 +319,15 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         wind.startAnimation(animTrans);
         humidity.startAnimation(animTrans_plus1);
         timeStamp.startAnimation(fallingUp);
-
-        Fragment frag1 = getFragmentManager().findFragmentByTag("dayforecast");
-
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Log.i(TAG, "Start animation");
-                PositionManager.getInstance().updateWeather();
-            }
-        }, 1000);
-        //syncBtn.clearAnimation();
         syncBtn.startAnimation(animationRotateCenter);
-        mSwipeRefreshLayout.setRefreshing(true);
     }
+
 
     /**
      * Останавливаем анимацию
      */
     public void stopRefresh() {
-        mSwipeRefreshLayout.setRefreshing(false);
+        swipeRefreshLayout.setRefreshing(false);
         //syncBtn.clearAnimation();
     }
 
