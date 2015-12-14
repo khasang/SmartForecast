@@ -42,7 +42,7 @@ import it.gmariotti.recyclerview.itemanimator.SlideInOutLeftItemAnimator;
  * город, температура, давление, влажность, ветер, временная метка.
  */
 
-public class WeatherActivity extends AppCompatActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener{
+public class WeatherActivity extends AppCompatActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
     /**
      * ViewPager для отображения нижних вкладок прогноза: по часам и по дням
      */
@@ -78,8 +78,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     public Context context;
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
-
-    private FragmentTransaction transaction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,6 +121,9 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         animTrans_plus1 = AnimationUtils.loadAnimation(this, R.anim.translate_plus1);
         fallingUp = AnimationUtils.loadAnimation(this, R.anim.falling_up);
 
+        getSupportFragmentManager().beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_in_left);
 
         syncBtn.startAnimation(animationRotateCenter);
         wind.startAnimation(animTrans);
@@ -162,7 +163,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
 /*        if (city.length() <= 0) {
             cityPickerBtn.setVisibility(View.GONE);
@@ -230,7 +231,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         }
 
         /** Анимация обновления - Start */
-        mSwipeRefreshLayout.setRefreshing(true);
+//        mSwipeRefreshLayout.setRefreshing(true);
 
         /** Получаем текущее время */
         int hours = date.get(Calendar.HOUR_OF_DAY);
@@ -292,12 +293,14 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    /** Анимация обновления */
+    /**
+     * Анимация обновления
+     */
     @Override
     public void onRefresh() {
         if (!PositionManager.getInstance().positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {
             Log.i(TAG, "There is nothing to refresh");
-            Toast.makeText(WeatherActivity.this, R.string.msg_no_city,Toast.LENGTH_SHORT).show();
+            Toast.makeText(WeatherActivity.this, R.string.msg_no_city, Toast.LENGTH_SHORT).show();
             stopRefresh();
             return;
         }
@@ -311,10 +314,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         wind.startAnimation(animTrans);
         humidity.startAnimation(animTrans_plus1);
         timeStamp.startAnimation(fallingUp);
-        transaction = getSupportFragmentManager().beginTransaction();
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_in_left);
-
 
         Fragment frag1 = getFragmentManager().findFragmentByTag("dayforecast");
 
@@ -328,7 +327,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         }, 1000);
         //syncBtn.clearAnimation();
         syncBtn.startAnimation(animationRotateCenter);
-
+        mSwipeRefreshLayout.setRefreshing(true);
     }
 
     /**
