@@ -42,8 +42,6 @@ public class SplashScreenActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        DrawUtils.getInstance().init(this);
-
         Intent intent = new Intent(this, WeatherActivity.class);
         startActivity(intent);
         finish();

@@ -87,8 +87,8 @@ public abstract class CommonForecastFragment extends Fragment {
         View v = inflater.inflate(R.layout.recycler_view_frag, container, false);
 
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
-        RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
-        recyclerView.setItemAnimator(itemAnimator);
+//        RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
+//        recyclerView.setItemAnimator(itemAnimator);
 
         tvEmptyList = (TextView) v.findViewById(R.id.tvEmptyList);
 
