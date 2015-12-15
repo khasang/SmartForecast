@@ -106,12 +106,12 @@ public abstract class CommonForecastFragment extends Fragment {
         return v;
     }
 
-    @Override
-    public void onResume(){
-        super.onResume();
-        Log.i(TAG, "OnResume");
-        AlphaAnimatorAdapter animatorAdapter = new AlphaAnimatorAdapter(adapter, recyclerView);
-        recyclerView.setAdapter(animatorAdapter);
-    }
+//    @Override
+//    public void onResume(){
+//        super.onResume();
+//        Log.i(TAG, "OnResume");
+//        AlphaAnimatorAdapter animatorAdapter = new AlphaAnimatorAdapter(adapter, recyclerView);
+//        recyclerView.setAdapter(animatorAdapter);
+//    }
 
 }

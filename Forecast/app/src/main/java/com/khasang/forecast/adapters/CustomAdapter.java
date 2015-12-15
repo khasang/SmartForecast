@@ -58,7 +58,8 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 // TODO: добавить заполнение иконки и т.д.
         String dayOfWeek = dateTimeList.get(position);
         holder.tvDayOfWeekOrTime.setText(dayOfWeek);
-        String tvTemperature = String.format("%+d", ((int) (dataset.get(position).getTemperature() + 0.5)));
+        int res = (int) (dataset.get(position).getTemperature() + 0.5);
+        String tvTemperature = String.format(res == 0 ? "%d" : "%+d", res);
         holder.tvTemperature.setText(tvTemperature);
 
         int iconId = dataset.get(position).getPrecipitation().getIconResId();
