@@ -1,6 +1,7 @@
 package com.khasang.forecast.activities;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
@@ -8,10 +9,14 @@ import android.location.LocationManager;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 
+import com.khasang.forecast.DrawUtils;
 import com.khasang.forecast.PositionManager;
 import com.khasang.forecast.R;
 import com.khasang.forecast.location.*;
@@ -36,6 +41,8 @@ public class SplashScreenActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        DrawUtils.getInstance().init(this);
 
         Intent intent = new Intent(this, WeatherActivity.class);
         startActivity(intent);
