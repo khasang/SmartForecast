@@ -97,10 +97,10 @@ public abstract class CommonForecastFragment extends Fragment {
 
         adapter = new CustomAdapter(sDate, weathers);
 
-        AlphaAnimatorAdapter animatorAdapter = new AlphaAnimatorAdapter(adapter, recyclerView);
+        /*AlphaAnimatorAdapter animatorAdapter = new AlphaAnimatorAdapter(adapter, recyclerView);
+        recyclerView.setAdapter(animatorAdapter);*/
 
-        recyclerView.setAdapter(animatorAdapter);
-        //recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(adapter);
 
 
         return v;
