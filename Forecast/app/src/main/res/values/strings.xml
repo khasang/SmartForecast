@@ -40,6 +40,6 @@
     <string name="error_empty_location_name">Необходимо ввести название местоположения</string>
     <string name="CELSIUS">°C</string>
     <string name="FAHRENHEIT">°F</string>
-    <string name="KELVIN"> K</string>
+    <string name="KELVIN">" K"</string>
 
 </resources>

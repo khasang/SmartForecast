@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.LockableViewPager;
 import com.khasang.forecast.PositionManager;
 import com.khasang.forecast.R;
@@ -182,7 +183,8 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     /**
      * Обработчик нажатия объектов
      */
-    int temp_flag = 1;
+    int temperatureUnit = AppUtils.FAHRENHEIT_UNIT;
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -196,32 +198,20 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
                 break;
             case R.id.temperature:
-                //temp_flag++;
-                switch (temp_flag) {
-                    case  1:
-                        Log.i(TAG, "FAHRENHEIT");
+
+                switch (temperatureUnit) {
+                    case AppUtils.FAHRENHEIT_UNIT:
                         temp_measure = getString(R.string.FAHRENHEIT);
-                        PositionManager.getInstance().updateWeather();
-                        temp_flag++;
                         break;
-                    case 2:
-                        Log.i(TAG, "KELVIN");
+                    case AppUtils.KELVIN_UNIT:
                         temp_measure = getString(R.string.KELVIN);
-                        PositionManager.getInstance().updateWeather();
-                        temp_flag++;
-                        break;
-                    case 3:
-                        Log.i(TAG, "CELSIUS");
-                        temp_measure = getString(R.string.CELSIUS);
-                        PositionManager.getInstance().updateWeather();
-                        temp_flag = 1;
                         break;
                     default:
-                        Log.i(TAG, "CELSIUS");
                         temp_measure = getString(R.string.CELSIUS);
-                        PositionManager.getInstance().updateWeather();
-                        break;
                 }
+                temperatureUnit = ++temperatureUnit % 3;
+
+                PositionManager.getInstance().updateWeather();
         }
     }
 
