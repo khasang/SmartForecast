@@ -37,9 +37,10 @@
     <string name="title_choose_city">Enter the name of the city</string>
     <string name="btn_ok">OK</string>
     <string name="btn_cancel">Cancel</string>
-    <string name="error_empty_location_name">Необходимо ввести название местоположения</string>
+    <string name="error_empty_location_name">You must enter the name of the location</string>
     <string name="CELSIUS">°C</string>
     <string name="FAHRENHEIT">°F</string>
     <string name="KELVIN">" K"</string>
+    <string name="infoTV">Add a city \nto display the weather forecast.</string>
 
 </resources>

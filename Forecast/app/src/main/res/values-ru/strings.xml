@@ -38,6 +38,7 @@
     <string name="btn_ok">OK</string>
     <string name="btn_cancel">Отмена</string>
     <string name="error_empty_location_name">Необходимо ввести название местоположения</string>
+    <string name="infoTV">Добавьте город, \nдля отображения прогноза погоды.</string>
 
 
 </resources>

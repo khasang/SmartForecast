@@ -27,6 +27,8 @@ import java.util.ArrayList;
  * и конкретнкую дату
  */
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder>{
+    private final String TAG = this.getClass().getSimpleName();
+
     private final DrawUtils utils;
     private ArrayList<String> dateTimeList;
     private ArrayList<Weather> dataset;
@@ -55,16 +57,28 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-// TODO: добавить заполнение иконки и т.д.
         String dayOfWeek = dateTimeList.get(position);
         holder.tvDayOfWeekOrTime.setText(dayOfWeek);
         int res = (int) (dataset.get(position).getTemperature() + 0.5);
         String tvTemperature = String.format(res == 0 ? "%d" : "%+d", res);
         holder.tvTemperature.setText(tvTemperature);
 
-        int iconId = dataset.get(position).getPrecipitation().getIconResId();
+        int iconId = dataset.get(position).getPrecipitation().getIconResId(isDayFromString(dayOfWeek));
         holder.ivWeatherIcon.setImageResource(iconId == 0 ? R.mipmap.ic_launcher : iconId);
 
+    }
+
+
+    /** Определение времени суток */
+    private boolean isDayFromString(String timeString) {
+        timeString = timeString.substring(0, 2);
+        try {
+            int time = Integer.parseInt(timeString);
+            if (time >= 21 || time < 6)return false;
+            return true;
+        } catch(NumberFormatException nfe) {
+            return true;
+        }
     }
 
     @Override
