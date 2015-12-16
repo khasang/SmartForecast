@@ -20,10 +20,6 @@ import java.util.Map;
  */
 
 public class AppUtils {
-    public static final int FAHRENHEIT_UNIT = 0;
-    public static final int KELVIN_UNIT = 1;
-    public static final int CELSIUS_UNIT = 2;
-
     public static final double KELVIN_CELSIUS_DELTA = 273.15;
     public static final double KPA_TO_MM_HG = 1.33322;
     public static final double KM_TO_MILES = 0.62137;

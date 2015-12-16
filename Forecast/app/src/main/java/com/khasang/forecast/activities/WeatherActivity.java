@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.LockableViewPager;
+import com.khasang.forecast.Position;
 import com.khasang.forecast.PositionManager;
 import com.khasang.forecast.R;
 import com.khasang.forecast.Weather;
@@ -183,7 +184,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     /**
      * Обработчик нажатия объектов
      */
-    int temperatureUnit = AppUtils.FAHRENHEIT_UNIT;
 
     @Override
     public void onClick(View v) {
@@ -198,19 +198,17 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
                 break;
             case R.id.temperature:
-
-                switch (temperatureUnit) {
-                    case AppUtils.FAHRENHEIT_UNIT:
+                switch (PositionManager.getInstance().changeTemperatureMetric()) {
+                    case FAHRENHEIT:
                         temp_measure = getString(R.string.FAHRENHEIT);
                         break;
-                    case AppUtils.KELVIN_UNIT:
+                    case KELVIN:
                         temp_measure = getString(R.string.KELVIN);
                         break;
+                    case CELSIUS:
                     default:
                         temp_measure = getString(R.string.CELSIUS);
                 }
-                temperatureUnit = ++temperatureUnit % 3;
-
                 PositionManager.getInstance().updateWeather();
         }
     }

@@ -18,9 +18,21 @@ import java.util.Set;
  */
 
 public class PositionManager {
-    public enum TemperatureMetrics {KELVIN, CELSIUS, FAHRENHEIT};
-    public enum SpeedMetrics {METER_PER_SECOND, FOOT_PER_SECOND, KM_PER_HOURS, MILES_PER_HOURS};
-    public enum PressureMetrics {HPA, MM_HG};
+    public enum TemperatureMetrics {
+        KELVIN {
+            public TemperatureMetrics change() {return CELSIUS;}
+        },
+        CELSIUS{
+            public TemperatureMetrics change() {return FAHRENHEIT;}
+        },
+        FAHRENHEIT{
+            public TemperatureMetrics change() {return KELVIN;}
+        };
+        public abstract TemperatureMetrics change();
+    }
+    public enum SpeedMetrics {METER_PER_SECOND, FOOT_PER_SECOND, KM_PER_HOURS, MILES_PER_HOURS}
+    public enum PressureMetrics {HPA, MM_HG}
+
 
     TemperatureMetrics temperatureMetric;
     SpeedMetrics speedMetric;
@@ -230,6 +242,11 @@ public class PositionManager {
             }
         }
         return null;
+    }
+
+    public TemperatureMetrics changeTemperatureMetric () {
+        temperatureMetric = temperatureMetric.change();
+        return temperatureMetric;
     }
 
     /**
