@@ -88,7 +88,17 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
         PositionManager.getInstance().initManager(this);
 
-        temp_measure = getString(R.string.CELSIUS);
+        switch (PositionManager.getInstance().getTemperatureMetric()) {
+            case FAHRENHEIT:
+                temp_measure = getString(R.string.FAHRENHEIT);
+                break;
+            case KELVIN:
+                temp_measure = getString(R.string.KELVIN);
+                break;
+            case CELSIUS:
+            default:
+                temp_measure = getString(R.string.CELSIUS);
+        }
 
         city = (TextView) findViewById(R.id.city);
         cityPickerBtn = (ImageButton) findViewById(R.id.cityPickerBnt);

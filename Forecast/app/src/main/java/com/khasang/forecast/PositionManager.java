@@ -244,6 +244,10 @@ public class PositionManager {
         return null;
     }
 
+    public TemperatureMetrics getTemperatureMetric() {
+        return temperatureMetric;
+    }
+
     public TemperatureMetrics changeTemperatureMetric () {
         temperatureMetric = temperatureMetric.change();
         return temperatureMetric;
