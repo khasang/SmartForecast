@@ -43,6 +43,9 @@ public class SQLiteProcessData {
 
     // Сохранение погоды, удаление старой погоды.
     public void saveWeather(WeatherStationFactory.ServiceType serviceType, String townName, Calendar date, Weather weather) {
+
+        deleteDoubleWeather(serviceType, townName, date);
+
         sqLite.queryExExec(SQLiteFields.QUERY_INSERT_WEATHER, new String[]
             {serviceType.name(), townName, dtFormat.format(date.getTime()), Double.toString(weather.getTemperature()), Double.toString(weather.getTemp_max()),
                     Double.toString(weather.getTemp_min()), Double.toString(weather.getPressure()),
@@ -153,18 +156,26 @@ public class SQLiteProcessData {
         return WeatherStationFactory.ServiceType.OPEN_WEATHER_MAP;
     }
 
-    // Очистка таблицы от погоды, которая старше текущего дня.
+    // Очистка таблицы от данных, старше определенной даты.
     public void deleteOldWeather(WeatherStationFactory.ServiceType serviceType, String cityName, Calendar date) {
         sqLite.queryExExec(SQLiteFields.QUERY_DELETE_OLD_DATA_WEATHER, new String[]{serviceType.name(), cityName, dtFormat.format(date.getTime())});
     }
 
-    // Очистка таблицы городов.
-    public void deleteTowns() {
-        sqLite.queryExec(SQLiteFields.QUERY_DELETE_DATA_TOWNS);
+    // Очистка таблицы от старых данных, чтобы не было дублей.
+    public void deleteDoubleWeather(WeatherStationFactory.ServiceType serviceType, String cityName, Calendar date) {
+        sqLite.queryExExec(SQLiteFields.QUERY_DELETE_DOUBLE_WEATHER, new String[]{serviceType.name(), cityName, dtFormat.format(date.getTime())});
     }
 
+    // Очистка таблицы городов и удаление погодных данных к ним.
+    public void deleteTowns() {
+        sqLite.queryExec(SQLiteFields.QUERY_DELETE_DATA_TOWNS);
+        sqLite.queryExec(SQLiteFields.QUERY_DELETE_DATA_WEATHER);
+    }
+
+    // Удаление города и погодных данных к нему.
     public void deleteTown(String name) {
         sqLite.queryExExec(SQLiteFields.QUERY_DELETE_DATA_TOWN, new String[]{name});
+        sqLite.queryExExec(SQLiteFields.QUERY_DELETE_DATA_TOWN_WEATHER, new String[]{name});
     }
 
     // Загрузка списка городов.

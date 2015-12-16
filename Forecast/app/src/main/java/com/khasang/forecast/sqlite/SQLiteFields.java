@@ -67,8 +67,6 @@ public class SQLiteFields {
     public static final String QUERY_DELETE_TABLE_TOWNS = "DROP TABLE IF EXISTS " + TABLE_TOWNS;
     public static final String QUERY_DELETE_TABLE_SETTINGS = "DROP TABLE IF EXISTS " + TABLE_SETTINGS;
 
-    public static final String QUERY_DELETE_DATA_WEATHER = "DELETE FROM " + TABLE_WEATHER;
-
     /*
     public static final String QUERY_DELETE_OLD_DATA_WEATHER = "DELETE FROM " + TABLE_WEATHER + " WHERE " + STATION_NAME + " = ? and " + TOWN + " = ? and " + DATE + " < date( ? )";
     */
@@ -77,12 +75,17 @@ public class SQLiteFields {
             "DELETE FROM " + TABLE_WEATHER +
             " WHERE " + STATION_NAME + " = ? and " + TOWN + " = ? and " + DATE + " < (SELECT MAX(" + DATE + ") FROM " + TABLE_WEATHER + " WHERE " + DATE + " < ? )";
 
+    public static final String QUERY_DELETE_DOUBLE_WEATHER =
+            "DELETE FROM " + TABLE_WEATHER +
+            " WHERE " + STATION_NAME + " = ? and " + TOWN + " = ? and " + DATE + " = ? ";
+
     public static final String QUERY_DELETE_DATA_TOWNS = "DELETE FROM " + TABLE_TOWNS;
     public static final String QUERY_DELETE_DATA_TOWN = "DELETE FROM " + TABLE_TOWNS + " WHERE " + TOWN + " = ? ";
-
+    public static final String QUERY_DELETE_DATA_TOWN_WEATHER = "DELETE FROM " + TABLE_WEATHER + " WHERE " + TOWN + " = ? ";
+    public static final String QUERY_DELETE_DATA_WEATHER = "DELETE FROM " + TABLE_WEATHER;
     public static final String QUERY_DELETE_DATA_SETTINGS = "DELETE FROM " + TABLE_SETTINGS;
 
-    public static final String QUERY_OBJECTS_COUNT = "SELECT COUNT(*) FROM SQLITE_MASTER WHERE TYPE = ? AND NAME = ?";
+    public static final String QUERY_OBJECTS_COUNT = "SELECT COUNT(*) FROM SQLITE_MASTER WHERE TYPE = ? AND NAME = ? ";
     public static final String QUERY_SELECT_TOWNS = "SELECT * FROM " + TABLE_TOWNS;
 
     /*
@@ -94,8 +97,8 @@ public class SQLiteFields {
     public static final String QUERY_SELECT_WEATHER =
             "SELECT * FROM " + TABLE_WEATHER +
             " WHERE " + STATION_NAME + " = ? and " + TOWN + " = ? " +
-            " ORDER BY ABS( CAST(strftime('%s', " + DATE + ") AS int) - CAST(strftime('%s', ?) AS int) ) " +
-            " ASC LIMIT 1";
+            " ORDER BY ABS( CAST(strftime('%s', " + DATE + ") AS int) - CAST(strftime('%s', ?) AS int) ) ASC " +
+            " LIMIT 1";
 
     public static final String QUERY_INSERT_TOWN = "INSERT INTO " + TABLE_TOWNS + " (" +
             TOWN + "," +
