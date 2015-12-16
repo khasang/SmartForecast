@@ -1,7 +1,11 @@
 package com.khasang.forecast;
 
+import android.support.annotation.Nullable;
+
+import com.facebook.stetho.okhttp.StethoInterceptor;
 import com.khasang.forecast.models.DailyResponse;
 import com.khasang.forecast.models.OpenWeatherMapResponse;
+import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.OkHttpClient;
@@ -9,6 +13,7 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.logging.HttpLoggingInterceptor;
 import com.squareup.okhttp.logging.HttpLoggingInterceptor.Level;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
 
@@ -60,12 +65,14 @@ public class OpenWeatherMap extends WeatherStation {
      */
     private OpenWeatherMapService service;
 
+    final @Nullable File baseDir = MyApplication.getAppContext().getCacheDir();
+
     /**
      * Метод, который добавляет постоянно-используемые параметры к нашему запросу, а так же
      * устанавливает уровень логирования.
      */
     private void addInterceptors() {
-        logging.setLevel(Level.BASIC);
+        logging.setLevel(Level.BODY);
         client.interceptors().add(new Interceptor() {
             @Override
             public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
@@ -74,21 +81,33 @@ public class OpenWeatherMap extends WeatherStation {
                         .addQueryParameter("lang", systemLanguage)
                         .addQueryParameter("appid", APP_ID)
                         .build();
-                request = request.newBuilder().url(httpUrl).build();
+                request = request.newBuilder()
+                        .url(httpUrl)
+                        .header("Cache-Control", "max-age=640000")
+                        .build();
                 return chain.proceed(request);
             }
         });
         client.interceptors().add(logging);
+        client.networkInterceptors().add(new StethoInterceptor());
     }
 
     /** Конструктор. */
     public OpenWeatherMap() {
         logging = new HttpLoggingInterceptor();
         client = new OkHttpClient();
-        Retrofit retrofit = new Retrofit.Builder().baseUrl(API_BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create()).client(client).build();
-        service = retrofit.create(OpenWeatherMapService.class);
-        addInterceptors();
+
+        if (baseDir != null) {
+            final File cacheDir = new File(baseDir, "HttpResponseCache");
+            client.setCache(new Cache(cacheDir, 10 * 1024 * 1024));
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(API_BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(client)
+                    .build();
+            service = retrofit.create(OpenWeatherMapService.class);
+            addInterceptors();
+        }
     }
 
     /**
