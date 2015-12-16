@@ -15,7 +15,7 @@ public class Precipitation {
         ATMOSPHERE(R.drawable.ic_fog),
         CLEAR(R.drawable.ic_sun),
         CLOUDS(R.drawable.ic_cloud),
-        EXTREME(0),
+        EXTREME(R.drawable.ic_extreme),
         ADDITIONAL(0);
 
         int iconResId;

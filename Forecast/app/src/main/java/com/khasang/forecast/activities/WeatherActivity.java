@@ -73,6 +73,9 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
     private SwipeRefreshLayout swipeRefreshLayout;
 
+    private String temp_measure;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -82,6 +85,8 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         context = getApplicationContext();
 
         PositionManager.getInstance().initManager(this);
+
+        temp_measure = getString(R.string.CELSIUS);
 
         city = (TextView) findViewById(R.id.city);
         cityPickerBtn = (ImageButton) findViewById(R.id.cityPickerBnt);
@@ -123,10 +128,11 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         wind.startAnimation(animTrans);
         humidity.startAnimation(animTrans);
 
-        /** Слушатели нажатий кнопкок */
+        /** Слушатели нажатий объектов */
         syncBtn.setOnClickListener(this);
         city.setOnClickListener(this);
         cityPickerBtn.setOnClickListener(this);
+        temperature.setOnClickListener(this);
 
         /**
          * Код для фрагментов
@@ -174,8 +180,9 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     /**
-     * Обработчик нажатия кнопки
+     * Обработчик нажатия объектов
      */
+    int temp_flag = 1;
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -188,6 +195,33 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.cityPickerBnt:
                 startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
                 break;
+            case R.id.temperature:
+                //temp_flag++;
+                switch (temp_flag) {
+                    case  1:
+                        Log.i(TAG, "FAHRENHEIT");
+                        temp_measure = getString(R.string.FAHRENHEIT);
+                        PositionManager.getInstance().updateWeather();
+                        temp_flag++;
+                        break;
+                    case 2:
+                        Log.i(TAG, "KELVIN");
+                        temp_measure = getString(R.string.KELVIN);
+                        PositionManager.getInstance().updateWeather();
+                        temp_flag++;
+                        break;
+                    case 3:
+                        Log.i(TAG, "CELSIUS");
+                        temp_measure = getString(R.string.CELSIUS);
+                        PositionManager.getInstance().updateWeather();
+                        temp_flag = 1;
+                        break;
+                    default:
+                        Log.i(TAG, "CELSIUS");
+                        temp_measure = getString(R.string.CELSIUS);
+                        PositionManager.getInstance().updateWeather();
+                        break;
+                }
         }
     }
 
@@ -230,7 +264,8 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         int minutes = date.get(Calendar.MINUTE);
 
         city.setText(PositionManager.getInstance().getCurrentPositionName()); // отображаем имя текущей локации
-        temperature.setText(String.format("%.0f°C", wCurent.getTemperature()));
+        //temperature.setText(String.format("%.0f°C", wCurent.getTemperature()));
+        temperature.setText(String.format("%.0f%s", wCurent.getTemperature(), temp_measure));
 
         description.setText(String.format("%s", wCurent.getDescription()
                 .substring(0, 1)

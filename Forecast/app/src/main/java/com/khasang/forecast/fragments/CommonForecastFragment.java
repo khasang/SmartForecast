@@ -87,8 +87,8 @@ public abstract class CommonForecastFragment extends Fragment {
         View v = inflater.inflate(R.layout.recycler_view_frag, container, false);
 
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
-        RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
-        recyclerView.setItemAnimator(itemAnimator);
+//        RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
+//        recyclerView.setItemAnimator(itemAnimator);
 
         tvEmptyList = (TextView) v.findViewById(R.id.tvEmptyList);
 
@@ -97,21 +97,21 @@ public abstract class CommonForecastFragment extends Fragment {
 
         adapter = new CustomAdapter(sDate, weathers);
 
-        AlphaAnimatorAdapter animatorAdapter = new AlphaAnimatorAdapter(adapter, recyclerView);
+        /*AlphaAnimatorAdapter animatorAdapter = new AlphaAnimatorAdapter(adapter, recyclerView);
+        recyclerView.setAdapter(animatorAdapter);*/
 
-        recyclerView.setAdapter(animatorAdapter);
-        //recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(adapter);
 
 
         return v;
     }
 
-    @Override
-    public void onResume(){
-        super.onResume();
-        Log.i(TAG, "OnResume");
-        AlphaAnimatorAdapter animatorAdapter = new AlphaAnimatorAdapter(adapter, recyclerView);
-        recyclerView.setAdapter(animatorAdapter);
-    }
+//    @Override
+//    public void onResume(){
+//        super.onResume();
+//        Log.i(TAG, "OnResume");
+//        AlphaAnimatorAdapter animatorAdapter = new AlphaAnimatorAdapter(adapter, recyclerView);
+//        recyclerView.setAdapter(animatorAdapter);
+//    }
 
 }

@@ -29,7 +29,7 @@ public class SQLiteProcessData {
 
     public SQLiteProcessData(Context context) {
         this.sqLite = new SQLiteWork(context, "Forecast.db");
-        dtFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        dtFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     }
 
     public void closeDatabase() {
@@ -208,13 +208,13 @@ public class SQLiteProcessData {
         String description = "";
         String wind_direction = "";
         String precipitation_type = "";
+        String wDate;
         int humidity = 0;
         Wind wind = null;
         Precipitation precipitation = null;
         Weather weather = null;
         HashMap hashMap = null;
         Calendar weatherDate = null;
-        String wDate;
 
         Cursor dataset = sqLite.queryOpen(SQLiteFields.QUERY_SELECT_WEATHER, new String[]{serviceType.name(), cityName, dtFormat.format(date.getTime())});
         try {
