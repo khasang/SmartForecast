@@ -8,25 +8,57 @@ public class Precipitation {
     private Type type;
 
     public static enum Type {
-        THUNDERSTORM(R.drawable.ic_thunderstorm),
-        DRIZZLE(R.drawable.ic_drizzle),
-        RAIN(R.drawable.ic_rain),
-        SNOW(R.drawable.ic_snow),
-        ATMOSPHERE(R.drawable.ic_fog),
-        CLEAR(R.drawable.ic_sun),
-        CLOUDS(R.drawable.ic_cloud),
-        EXTREME(R.drawable.ic_extreme),
-        ADDITIONAL(0);
+        THUNDERSTORM {
+            public int getIconResId(boolean isDay) {
+                return R.drawable.ic_thunderstorm;
+            }
+        },
+        DRIZZLE {
+            public int getIconResId(boolean isDay) {
+                return R.drawable.ic_drizzle;
+            }
+        },
+        RAIN {
+            public int getIconResId(boolean isDay) {
+                return R.drawable.ic_rain;
+            }
+        },
+        SNOW {
+            public int getIconResId(boolean isDay) {
+                return R.drawable.ic_snow;
+            }
+        },
+        ATMOSPHERE {
+            public int getIconResId(boolean isDay) {
+                return R.drawable.ic_fog;
+            }
+        },
+        CLEAR {
+            public int getIconResId (boolean isDay) {
+                if (isDay) {
+                    return R.drawable.ic_sun;
+                } else {
+                    return R.drawable.ic_moon;
+                }
+            }
+        },
+        CLOUDS{
+            public int getIconResId (boolean isDay) {
+                return R.drawable.ic_cloud;
+            }
+        },
+        EXTREME{
+            public int getIconResId (boolean isDay) {
+                return R.drawable.ic_extreme;
+            }
+        },
+        ADDITIONAL{
+            public int getIconResId (boolean isDay) {
+                return 0;
+            }
+        };
 
-        int iconResId;
-
-        Type(int iconResId) {
-            this.iconResId = iconResId;
-        }
-
-        public int getIconResId() {
-            return iconResId;
-        }
+        public abstract int getIconResId(boolean isDay);
     }
 
     @Override
