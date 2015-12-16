@@ -301,7 +301,7 @@ public class PositionManager {
         calendar.add(Calendar.HOUR_OF_DAY, HOUR_PERIOD);
         calendar.set(Calendar.MINUTE, 0);
         HashMap <Calendar, Weather> forecast = new HashMap<>();
-        for (int i = 1; i < FORECASTS_COUNT; i++) {
+        for (int i = 0; i < FORECASTS_COUNT; i++) {
             HashMap<Calendar, Weather> temp = dbManager.loadWeather(sType, locationName, calendar, temperatureMetric, speedMetric, pressureMetric);
             if (temp == null || temp.size() == 0) {
                 return null;
@@ -317,11 +317,10 @@ public class PositionManager {
         final int DAY_PERIOD = 1;
         final int FORECASTS_COUNT = 7;
         Calendar calendar = date;
-        calendar.add(Calendar.DAY_OF_YEAR, DAY_PERIOD);
         calendar.set(Calendar.HOUR_OF_DAY, 12);
         calendar.set(Calendar.MINUTE, 0);
         HashMap <Calendar, Weather> forecast = new HashMap<>();
-        for (int i = 1; i < FORECASTS_COUNT; i++) {
+        for (int i = 0; i < FORECASTS_COUNT; i++) {
             HashMap<Calendar, Weather> temp = dbManager.loadWeather(sType, locationName, calendar, temperatureMetric, speedMetric, pressureMetric);
             if (temp == null || temp.size() == 0) {
                 return null;
