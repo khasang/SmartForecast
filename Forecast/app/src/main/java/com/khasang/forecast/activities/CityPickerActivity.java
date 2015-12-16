@@ -53,7 +53,8 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     private final String TAG = this.getClass().getSimpleName();
     public final static String CITY_PICKER_TAG = "com.khasang.forecast.activities.CityPickerActivity";
 
-    RecyclerView recyclerView;
+    private TextView infoTV;
+    private RecyclerView recyclerView;
     private RecyclerAdapter recyclerAdapter;
     List<String> cityList;
 
@@ -79,7 +80,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         //TODO Проверить код кнопки HOME - цвет должен быть белый (не работает)
         //toolbar.setTitleTextColor(ContextCompat.getColor(this, android.R.color.white));
 
-
+        infoTV = (TextView) findViewById(R.id.infoTV);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         cityList = new ArrayList<>();
 
@@ -87,6 +88,13 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         recyclerView.setAdapter(recyclerAdapter);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        if(cityList.isEmpty())
+        recyclerView.setVisibility(View.GONE);
+        else {
+            recyclerView.setVisibility(View.VISIBLE);
+            infoTV.setVisibility(View.GONE);
+        }
 
         /** Вычисляет степень прокрутки и выполняет нужное действие.*/
         recyclerView.addOnScrollListener(new HidingScrollListener() {
@@ -117,6 +125,17 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 PositionManager.getInstance().removePosition(cityList.get(position));
                 cityList.remove(position);
                 recyclerAdapter.notifyDataSetChanged();
+
+                //TODO Не работает отображение infoTV при очистке cityList
+                Log.i(TAG, String.valueOf(cityList.size()));
+                if(cityList.size() == 0)
+                    recyclerView.setVisibility(View.GONE);
+                else {
+                    recyclerView.setVisibility(View.VISIBLE);
+                    infoTV.setVisibility(View.GONE);
+                }
+
+
             }
         };
 
@@ -139,6 +158,18 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         toolbar.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2));
         fabBtn.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(cityList.isEmpty())
+            recyclerView.setVisibility(View.GONE);
+        else {
+            recyclerView.setVisibility(View.VISIBLE);
+            infoTV.setVisibility(View.GONE);
+        }
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -184,6 +215,9 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 });
                 AlertDialog dialog = builder.create();
                 dialog.show();
+
+                infoTV.setVisibility(View.VISIBLE);
+
                 break;
         }
         return super.onOptionsItemSelected(item);
