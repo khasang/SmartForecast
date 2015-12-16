@@ -15,6 +15,8 @@ public class SQLiteFields {
     public static final String TOWN = "Town";
     public static final String LATITUDE = "Latitude";
     public static final String LONGTITUDE = "Longtitude";
+    public static final String SUNRISE = "Sunrise";
+    public static final String SUNSET = "Sunset";
 
     public static final String STATION_NAME = "StationName";
     public static final String DATE = "Date";
@@ -38,7 +40,9 @@ public class SQLiteFields {
             ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
             TOWN + " VARCHAR(255)," +
             LATITUDE + " VARCHAR(30)," +
-            LONGTITUDE + " VARCHAR(30))";
+            LONGTITUDE + " VARCHAR(30)," +
+            SUNRISE + " DATETIME," +
+            SUNSET + " DATETIME)";
 
     public static final String QUERY_CREATE_TABLE_WEATHER = "CREATE TABLE " + TABLE_WEATHER + " (" +
             ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -87,6 +91,7 @@ public class SQLiteFields {
 
     public static final String QUERY_OBJECTS_COUNT = "SELECT COUNT(*) FROM SQLITE_MASTER WHERE TYPE = ? AND NAME = ? ";
     public static final String QUERY_SELECT_TOWNS = "SELECT * FROM " + TABLE_TOWNS;
+    public static final String QUERY_SELECT_DATA_TOWN = "SELECT * FROM " + TABLE_TOWNS + " WHERE " + TOWN + " = ? ";
 
     /*
     public static final String QUERY_SELECT_WEATHER =
@@ -105,6 +110,11 @@ public class SQLiteFields {
             LATITUDE + "," +
             LONGTITUDE + ") " +
             " VALUES ( ? , ? , ? )";
+
+    public static final String QUERY_UPDATE_TOWN_SUNTIME = "UPDATE " + TABLE_TOWNS + " SET " +
+            SUNRISE + " = ? , " +
+            SUNSET + " = ? " +
+            " WHERE " + TOWN + " = ? ";
 
     public static final String QUERY_INSERT_WEATHER = "INSERT INTO " + TABLE_WEATHER + " (" +
             STATION_NAME + "," +

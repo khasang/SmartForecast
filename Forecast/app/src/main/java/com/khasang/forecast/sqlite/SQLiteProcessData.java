@@ -157,8 +157,8 @@ public class SQLiteProcessData {
     }
 
     // Очистка таблицы от данных, старше определенной даты.
-    public void deleteOldWeather(WeatherStationFactory.ServiceType serviceType, String cityName, Calendar date) {
-        sqLite.queryExExec(SQLiteFields.QUERY_DELETE_OLD_DATA_WEATHER, new String[]{serviceType.name(), cityName, dtFormat.format(date.getTime())});
+    public void deleteOldWeather(WeatherStationFactory.ServiceType serviceType, String townName, Calendar date) {
+        sqLite.queryExExec(SQLiteFields.QUERY_DELETE_OLD_DATA_WEATHER, new String[]{serviceType.name(), townName, dtFormat.format(date.getTime())});
     }
 
     // Очистка таблицы от старых данных, чтобы не было дублей.
@@ -173,9 +173,62 @@ public class SQLiteProcessData {
     }
 
     // Удаление города и погодных данных к нему.
-    public void deleteTown(String name) {
-        sqLite.queryExExec(SQLiteFields.QUERY_DELETE_DATA_TOWN, new String[]{name});
-        sqLite.queryExExec(SQLiteFields.QUERY_DELETE_DATA_TOWN_WEATHER, new String[]{name});
+    public void deleteTown(String townName) {
+        sqLite.queryExExec(SQLiteFields.QUERY_DELETE_DATA_TOWN, new String[]{townName});
+        sqLite.queryExExec(SQLiteFields.QUERY_DELETE_DATA_TOWN_WEATHER, new String[]{townName});
+    }
+
+    // Запись времени рассвета и заката.
+    public void updateTownSunTime(Calendar sunRise, Calendar sunSet, String townName) {
+        sqLite.queryExExec(SQLiteFields.QUERY_UPDATE_TOWN_SUNTIME, new String[]{dtFormat.format(sunRise.getTime()), dtFormat.format(sunSet.getTime()), townName});
+    }
+
+    // Получение времени рассвета к городу.
+    public Calendar loadTownSunSet(String townName) {
+        String wDate;
+        Calendar weatherDate = null;
+
+        Cursor dataset = sqLite.queryOpen(SQLiteFields.QUERY_SELECT_DATA_TOWN, new String[]{townName});
+        try {
+            if (dataset != null && dataset.getCount() != 0) {
+                if (dataset.moveToFirst()) {
+                    wDate = dataset.getString(dataset.getColumnIndex(SQLiteFields.SUNSET));
+                    weatherDate = Calendar.getInstance();
+                    weatherDate.setTime(dtFormat.parse(wDate));
+                }
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } finally {
+            if (dataset != null) {
+                dataset.close();
+            }
+        }
+        return weatherDate;
+    }
+
+    // Получение времени заката к городу.
+    public Calendar loadTownSunRise(String townName) {
+        String wDate;
+        Calendar weatherDate = null;
+
+        Cursor dataset = sqLite.queryOpen(SQLiteFields.QUERY_SELECT_DATA_TOWN, new String[]{townName});
+        try {
+            if (dataset != null && dataset.getCount() != 0) {
+                if (dataset.moveToFirst()) {
+                    wDate = dataset.getString(dataset.getColumnIndex(SQLiteFields.SUNRISE));
+                    weatherDate = Calendar.getInstance();
+                    weatherDate.setTime(dtFormat.parse(wDate));
+                }
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } finally {
+            if (dataset != null) {
+                dataset.close();
+            }
+        }
+        return weatherDate;
     }
 
     // Загрузка списка городов.

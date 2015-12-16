@@ -12,7 +12,7 @@ public class SQLiteWork {
 
     public SQLiteDatabase sqlDatabase;
     public SQLiteOpen dbWork;
-    private int newVersion = 2;
+    private int newVersion = 3;
 
     public SQLiteWork(Context context, String dbName) {
         // инициализация класса обёртки
