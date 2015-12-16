@@ -46,7 +46,7 @@ import java.util.Set;
 
 /**
  * Created by CopyPasteStd on 29.11.15.
- *
+ * <p/>
  * Activity для выбора местоположения
  */
 public class CityPickerActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
@@ -72,7 +72,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         final Drawable upArrow = ContextCompat.getDrawable(this, R.mipmap.ic_arrow_back_white_24dp);
         upArrow.setColorFilter(ContextCompat.getColor(this, R.color.back_arrow), PorterDuff.Mode.SRC_ATOP);
         //TODO fix NullPointerException
-    //    getSupportActionBar().setHomeAsUpIndicator(upArrow);
+        //    getSupportActionBar().setHomeAsUpIndicator(upArrow);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -89,12 +89,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        if(cityList.isEmpty())
-        recyclerView.setVisibility(View.GONE);
-        else {
-            recyclerView.setVisibility(View.VISIBLE);
-            infoTV.setVisibility(View.GONE);
-        }
+        swapVisibilityTextOrList();
 
         /** Вычисляет степень прокрутки и выполняет нужное действие.*/
         recyclerView.addOnScrollListener(new HidingScrollListener() {
@@ -128,19 +123,23 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
                 //TODO Не работает отображение infoTV при очистке cityList
                 Log.i(TAG, String.valueOf(cityList.size()));
-                if(cityList.size() == 0)
-                    recyclerView.setVisibility(View.GONE);
-                else {
-                    recyclerView.setVisibility(View.VISIBLE);
-                    infoTV.setVisibility(View.GONE);
-                }
-
+                swapVisibilityTextOrList();
 
             }
         };
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
+    }
+
+    private void swapVisibilityTextOrList() {
+        if (cityList.isEmpty()) {
+            recyclerView.setVisibility(View.GONE);
+            infoTV.setVisibility(View.VISIBLE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+            infoTV.setVisibility(View.GONE);
+        }
     }
 
     // Вспомогательные методы
@@ -162,12 +161,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onResume() {
         super.onResume();
-        if(cityList.isEmpty())
-            recyclerView.setVisibility(View.GONE);
-        else {
-            recyclerView.setVisibility(View.VISIBLE);
-            infoTV.setVisibility(View.GONE);
-        }
+        swapVisibilityTextOrList();
     }
 
 
@@ -205,6 +199,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                     public void onClick(DialogInterface dialog, int which) {
                         CityPickerActivity.this.clearList();
                         recyclerAdapter.notifyDataSetChanged();
+                        swapVisibilityTextOrList();
                     }
                 });
                 builder.setNegativeButton(R.string.btn_no, new DialogInterface.OnClickListener() {
@@ -215,8 +210,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 });
                 AlertDialog dialog = builder.create();
                 dialog.show();
-
-                infoTV.setVisibility(View.VISIBLE);
 
                 break;
         }
@@ -253,7 +246,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         finish();
     }
 
-    private void clearList () {
+    private void clearList() {
         PositionManager.getInstance().removePositions();
         cityList.clear();
     }
@@ -319,7 +312,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 PositionManager.getInstance().removePosition(cityName);*/
 
         }
-    return true;
+        return true;
     }
 
 //    public static class ErrorDialogFragment extends DialogFragment {
