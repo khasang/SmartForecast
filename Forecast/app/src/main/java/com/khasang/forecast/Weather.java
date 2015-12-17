@@ -23,6 +23,8 @@ public class Weather {
     private Wind wind;
     private Precipitation precipitation;
     private String description;
+    private long sunrise;
+    private long sunset;
 
     public Weather () {
 
@@ -152,5 +154,21 @@ public class Weather {
                 ", precipitation=" + precipitation +
                 ", description='" + description + '\'' +
                 '}';
+    }
+
+    public long getSunrise() {
+        return sunrise;
+    }
+
+    public void setSunrise(long sunrise) {
+        this.sunrise = sunrise;
+    }
+
+    public long getSunset() {
+        return sunset;
+    }
+
+    public void setSunset(long sunset) {
+        this.sunset = sunset;
     }
 }

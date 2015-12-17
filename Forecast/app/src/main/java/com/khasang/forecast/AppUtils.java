@@ -37,6 +37,8 @@ public class AppUtils {
         weather.setTemperature(response.getMain().getTemp());
         weather.setHumidity(response.getMain().getHumidity());
         weather.setPressure(response.getMain().getPressure());
+        weather.setSunrise(response.getSys().getSunrise());
+        weather.setSunset(response.getSys().getSunset());
         setPrecipitationType(response.getWeather().get(0).getId(), weather);
         double speed = response.getWind().getSpeed();
         double deg = response.getWind().getDeg();
