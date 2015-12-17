@@ -39,17 +39,20 @@ public class OpenWeatherMap extends WeatherStation {
     /** API ключ. */
     private static final String APP_ID = "96dd81a807540894eb4c96c05f17ed01";
 
-    /**
-     * Выбранные пользователем языковые настройки устройства для того, чтобы получить
-     * локализованный ответ от API.
-     */
-    private String systemLanguage = Locale.getDefault().getLanguage();
-
     /** Количество 3-х часовых интервалов для запроса к API. */
     private static final int TIME_PERIOD = 8;
 
     /** Количество дней для запроса к API. */
     private static final int DAYS_PERIOD = 7;
+
+    /** Получаем директорию кэша приложения. */
+    final @Nullable File baseDir = MyApplication.getAppContext().getCacheDir();
+
+    /**
+     * Выбранные пользователем языковые настройки устройства для того, чтобы получить
+     * локализованный ответ от API.
+     */
+    private String systemLanguage = Locale.getDefault().getLanguage();
 
     /**
      * Нам необходимо вручную создать экземпляр объекта HttpLoggingInterceptor и OkHttpClient,
@@ -65,14 +68,31 @@ public class OpenWeatherMap extends WeatherStation {
      */
     private OpenWeatherMapService service;
 
-    final @Nullable File baseDir = MyApplication.getAppContext().getCacheDir();
+    /**
+     * Конструктор.
+     */
+    public OpenWeatherMap() {
+        logging = new HttpLoggingInterceptor();
+        client = new OkHttpClient();
+        if (baseDir != null) {
+            final File cacheDir = new File(baseDir, "HttpResponseCache");
+            client.setCache(new Cache(cacheDir, 10 * 1024 * 1024));
+        }
+        addInterceptors();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(API_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
+        service = retrofit.create(OpenWeatherMapService.class);
+    }
 
     /**
      * Метод, который добавляет постоянно-используемые параметры к нашему запросу, а так же
      * устанавливает уровень логирования.
      */
     private void addInterceptors() {
-        logging.setLevel(Level.BODY);
+        logging.setLevel(Level.BASIC);
         client.interceptors().add(new Interceptor() {
             @Override
             public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
@@ -83,36 +103,33 @@ public class OpenWeatherMap extends WeatherStation {
                         .build();
                 request = request.newBuilder()
                         .url(httpUrl)
-                        .header("Cache-Control", "max-age=640000")
                         .build();
                 return chain.proceed(request);
             }
         });
         client.interceptors().add(logging);
         client.networkInterceptors().add(new StethoInterceptor());
-    }
-
-    /** Конструктор. */
-    public OpenWeatherMap() {
-        logging = new HttpLoggingInterceptor();
-        client = new OkHttpClient();
-
-        if (baseDir != null) {
-            final File cacheDir = new File(baseDir, "HttpResponseCache");
-            client.setCache(new Cache(cacheDir, 10 * 1024 * 1024));
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(API_BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .client(client)
-                    .build();
-            service = retrofit.create(OpenWeatherMapService.class);
-            addInterceptors();
-        }
+        client.networkInterceptors().add(new Interceptor() {
+            @Override
+            public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
+                Request originalRequest = chain.request();
+                String cacheHeaderValue = PositionManager.getInstance()
+                        .isNetworkAvailable(MyApplication.getAppContext())
+                        ? "public, max-age=900"
+                        : "public, only-if-cached, max-stale=14400" ;
+                Request request = originalRequest.newBuilder().build();
+                com.squareup.okhttp.Response response = chain.proceed(request);
+                return response.newBuilder()
+                        .header("Cache-Control", cacheHeaderValue)
+                        .build();
+            }
+        });
     }
 
     /**
      * Метод для асинхронного получения текущего прогноза погоды.
-     * @param cityID внутренний идентификатор города.
+     *
+     * @param cityID     внутренний идентификатор города.
      * @param coordinate объект типа {@link Coordinate}, содержащий географические координаты
      *                   для запроса.
      */
@@ -141,7 +158,8 @@ public class OpenWeatherMap extends WeatherStation {
     /**
      * Метод для асинхронного получения прогноза погоды с заданым количеством 3-х часовых
      * интервалов.
-     * @param cityID внутренний идентификатор города.
+     *
+     * @param cityID     внутренний идентификатор города.
      * @param coordinate объект типа {@link Coordinate}, содержащий географические координаты
      *                   для запроса.
      */
@@ -170,7 +188,8 @@ public class OpenWeatherMap extends WeatherStation {
 
     /**
      * Метод для асинхронного получения прогноза погоды с заданным количеством дней.
-     * @param cityID внутренний идентификатор города.
+     *
+     * @param cityID     внутренний идентификатор города.
      * @param coordinate объект типа {@link Coordinate}, содержащий географические координаты
      *                   для запроса.
      */
