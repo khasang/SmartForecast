@@ -144,6 +144,27 @@ public class PositionManager {
         positions = positionFactory.getPositions();
     }
 
+    /**
+     * Метод, с помощью которого добавляем новую локацию в список "Избранных"
+     * Вызывается когда пользователь добавляет новый город в список.
+     *
+     * @param name объект типа {@link String}, содержащий название города
+     * @param latitude географическая широта местоположения
+     * @param longitude географическая долгота местоположения
+     */
+    public void addPosition(String name, double latitude, double longitude) {
+        if (positionIsPresent(name)) {
+            Toast.makeText(mActivity, R.string.city_exist, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Coordinate coordinate = new Coordinate();
+        coordinate.setLatitude(latitude);
+        coordinate.setLongitude(longitude);
+        PositionFactory positionFactory = new PositionFactory(mActivity, positions);
+        positionFactory.addFavouritePosition(name, coordinate, dbManager);
+        positions = positionFactory.getPositions();
+    }
+
     public boolean isNetworkAvailable(final Context context) {
         final ConnectivityManager connectivityManager = ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE));
         return connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isConnected();
