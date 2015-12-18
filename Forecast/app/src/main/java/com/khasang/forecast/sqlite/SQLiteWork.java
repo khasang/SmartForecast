@@ -18,7 +18,7 @@ public class SQLiteWork {
         // инициализация класса обёртки
         dbWork = new SQLiteOpen(context, dbName, newVersion);
         sqlDatabase = dbWork.getWritableDatabase();
-        dbWork.onUpgrade(sqlDatabase, sqlDatabase.getVersion(), newVersion);
+//        dbWork.onUpgrade(sqlDatabase, sqlDatabase.getVersion(), newVersion);
     }
 
     public void checkOpenDatabase() {
