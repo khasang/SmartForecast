@@ -170,7 +170,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     private void initFirstAppearance() {
         temperature.setText("--/--");
         if (PositionManager.getInstance().getPositions().size() == 0) {
-            Toast.makeText(this, R.string.msg_add_city, Toast.LENGTH_SHORT).show();
             startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
         } else if (!PositionManager.getInstance().positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {
             Toast.makeText(this, R.string.msg_choose_city, Toast.LENGTH_SHORT).show();
