@@ -10,18 +10,4 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".activities.SplashScreenActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        android:id="@+id/textView"/>
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="check location"
-        android:id="@+id/chkLocatioBtn"
-        android:layout_marginTop="24dp"
-        android:layout_below="@+id/textView"
-        android:layout_centerHorizontal="true"/>
 </RelativeLayout>

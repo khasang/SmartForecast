@@ -236,7 +236,15 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             return;
         }
 
-        city = city.substring(0, 1).toUpperCase() + city.substring(1);
+        // Делаем каждое слово в имени города с заглавное буквы
+        StringBuilder b = new StringBuilder(city);
+        int i = 0;
+        do {
+            b.replace(i, i + 1, b.substring(i,i + 1).toUpperCase());
+            i =  b.indexOf(" ", i) + 1;
+        } while (i > 0 && i < b.length());
+        city = b.toString();
+
         if (!PositionManager.getInstance().positionIsPresent(city)) {
             PositionManager.getInstance().addPosition(city);
         }
