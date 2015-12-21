@@ -271,7 +271,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         int hours = date.get(Calendar.HOUR_OF_DAY);
         int minutes = date.get(Calendar.MINUTE);
 
-        city.setText(PositionManager.getInstance().getCurrentPositionName()); // отображаем имя текущей локации
+        city.setText(PositionManager.getInstance().getCurrentPositionName().replace(',','\n')); // отображаем имя текущей локации
         //temperature.setText(String.format("%.0f°C", wCurent.getTemperature()));
         temperature.setText(String.format("%.0f%s", wCurent.getTemperature(), temp_measure));
 
@@ -312,7 +312,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         if (requestCode == CHOOSE_CITY) {
             if (resultCode == RESULT_OK) {
                 String newCity = data.getStringExtra(CityPickerActivity.CITY_PICKER_TAG);
-                city.setText(newCity);
+                city.setText(newCity.replace(',','\n'));
                 Log.d(TAG, newCity);
                 PositionManager.getInstance().setCurrentPosition(newCity);
                 PositionManager.getInstance().saveCurrPosition();
