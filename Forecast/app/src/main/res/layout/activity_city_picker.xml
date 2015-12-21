@@ -2,11 +2,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/infoTV"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/infoTV"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipToPadding="false" />
+        android:clipToPadding="false">
+    </android.support.v7.widget.RecyclerView>
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -14,6 +22,7 @@
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"/>
 
+    <!--
     <ImageButton
         android:id="@+id/fabBtn"
         android:layout_width="56dp"
@@ -22,6 +31,16 @@
         android:layout_marginBottom="16dp"
         android:layout_marginRight="16dp"
         android:background="@drawable/fab_background"
+        android:src="@drawable/plus_fab"
+        android:contentDescription="@null"/>
+   -->
+    
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
         android:src="@drawable/plus_fab"
         android:contentDescription="@null"/>
 

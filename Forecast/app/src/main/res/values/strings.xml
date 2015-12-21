@@ -28,6 +28,19 @@
     <string name="update_error_net_not_availble">Error of updating of weather.\nThe network is inaccessible.</string>
     <string name="update_error_from">"Error of updating of weather from station "</string>
     <string name="coordinates_not_found">Coordinates of location %1$s aren\'t found.\nThe location isn\'t added</string>
-
+    <string name="msg_add_city">To continue, you must add the city.</string>
+    <string name="msg_choose_city">To continue, select a city.</string>
+    <string name="msg_no_city">Update failed.\nThe city is not in the list of locations.</string>
+    <string name="msg_clear_city_list">Do you want to clear the list of cities?</string>
+    <string name="btn_yes">Yes</string>
+    <string name="btn_no">No</string>
+    <string name="title_choose_city">Enter the name of the city</string>
+    <string name="btn_ok">OK</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="error_empty_location_name">You must enter the name of the location</string>
+    <string name="CELSIUS">°C</string>
+    <string name="FAHRENHEIT">°F</string>
+    <string name="KELVIN">" K"</string>
+    <string name="infoTV">Add a city \nto display the weather forecast.</string>
 
 </resources>

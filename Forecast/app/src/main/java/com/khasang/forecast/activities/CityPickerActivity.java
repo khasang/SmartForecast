@@ -1,9 +1,10 @@
 package com.khasang.forecast.activities;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -20,17 +21,23 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.khasang.forecast.PlaceProvider;
 import com.khasang.forecast.PositionManager;
 import com.khasang.forecast.R;
 import com.khasang.forecast.adapters.RecyclerAdapter;
 import com.khasang.forecast.adapters.etc.HidingScrollListener;
+import com.khasang.forecast.adapters.GooglePlacesAutocompleteAdapter;
+import com.khasang.forecast.view.DelayedAutoCompleteTextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,19 +46,22 @@ import java.util.Set;
 
 /**
  * Created by CopyPasteStd on 29.11.15.
- *
+ * <p/>
  * Activity для выбора местоположения
  */
 public class CityPickerActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
-    String TAG = "MyTAG";
+    private final String TAG = this.getClass().getSimpleName();
     public final static String CITY_PICKER_TAG = "com.khasang.forecast.activities.CityPickerActivity";
 
-    RecyclerView recyclerView;
+    private TextView infoTV;
+    private RecyclerView recyclerView;
     private RecyclerAdapter recyclerAdapter;
     List<String> cityList;
 
     private Toolbar toolbar;
     private ImageButton fabBtn;
+    private PlaceProvider mPlaceProvider;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +72,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         final Drawable upArrow = ContextCompat.getDrawable(this, R.mipmap.ic_arrow_back_white_24dp);
         upArrow.setColorFilter(ContextCompat.getColor(this, R.color.back_arrow), PorterDuff.Mode.SRC_ATOP);
         //TODO fix NullPointerException
-    //    getSupportActionBar().setHomeAsUpIndicator(upArrow);
+        //    getSupportActionBar().setHomeAsUpIndicator(upArrow);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -70,6 +80,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         //TODO Проверить код кнопки HOME - цвет должен быть белый (не работает)
         //toolbar.setTitleTextColor(ContextCompat.getColor(this, android.R.color.white));
 
+        infoTV = (TextView) findViewById(R.id.infoTV);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         cityList = new ArrayList<>();
 
@@ -77,6 +88,8 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         recyclerView.setAdapter(recyclerAdapter);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        swapVisibilityTextOrList();
 
         /** Вычисляет степень прокрутки и выполняет нужное действие.*/
         recyclerView.addOnScrollListener(new HidingScrollListener() {
@@ -107,11 +120,26 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 PositionManager.getInstance().removePosition(cityList.get(position));
                 cityList.remove(position);
                 recyclerAdapter.notifyDataSetChanged();
+
+                //TODO Не работает отображение infoTV при очистке cityList
+                Log.i(TAG, String.valueOf(cityList.size()));
+                swapVisibilityTextOrList();
+
             }
         };
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
+    }
+
+    private void swapVisibilityTextOrList() {
+        if (cityList.isEmpty()) {
+            recyclerView.setVisibility(View.GONE);
+            infoTV.setVisibility(View.VISIBLE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+            infoTV.setVisibility(View.GONE);
+        }
     }
 
     // Вспомогательные методы
@@ -129,6 +157,13 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         toolbar.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2));
         fabBtn.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        swapVisibilityTextOrList();
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -157,16 +192,17 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 break;
             case R.id.clear_favorite:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage("Вы действительно хотите очистить список городов?");
+                builder.setMessage(R.string.msg_clear_city_list);
                 builder.setCancelable(false);
-                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(R.string.btn_yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         CityPickerActivity.this.clearList();
                         recyclerAdapter.notifyDataSetChanged();
+                        swapVisibilityTextOrList();
                     }
                 });
-                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton(R.string.btn_no, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -174,6 +210,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 });
                 AlertDialog dialog = builder.create();
                 dialog.show();
+
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -192,7 +229,22 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     // Вспомогательный метод для добавления города в список
     private void addItem(String city) {
         city = city.trim().toLowerCase();
-        city = city.substring(0, 1).toUpperCase() + city.substring(1);
+
+        if (city.length() <= 0) {
+//            Log.w(TAG, "Имя города менее одного символа");
+            Toast.makeText(this, R.string.error_empty_location_name, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Делаем каждое слово в имени города с заглавное буквы
+        StringBuilder b = new StringBuilder(city);
+        int i = 0;
+        do {
+            b.replace(i, i + 1, b.substring(i,i + 1).toUpperCase());
+            i =  b.indexOf(" ", i) + 1;
+        } while (i > 0 && i < b.length());
+        city = b.toString();
+
         if (!PositionManager.getInstance().positionIsPresent(city)) {
             PositionManager.getInstance().addPosition(city);
         }
@@ -202,7 +254,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         finish();
     }
 
-    private void clearList () {
+    private void clearList() {
         PositionManager.getInstance().removePositions();
         cityList.clear();
     }
@@ -210,10 +262,20 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     private void showChooseCityDialog() {
         final View view = getLayoutInflater().inflate(R.layout.choose_city_dialog, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        final EditText chooseCity = (EditText) view.findViewById(R.id.editTextCityName);
-        builder.setTitle("Введите название города")
+        final DelayedAutoCompleteTextView chooseCity = (DelayedAutoCompleteTextView) view.findViewById(R.id.editTextCityName);
+        chooseCity.setAdapter(new GooglePlacesAutocompleteAdapter(this, R.layout.autocomplete_city_textview_item));
+        chooseCity.setLoadingIndicator((ProgressBar) view.findViewById(R.id.autocomplete_progressbar));
+        chooseCity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String description = (String) parent.getItemAtPosition(position);
+                String city = description.split(", ")[0];
+                chooseCity.setText(city);
+            }
+        });
+        builder.setTitle(R.string.title_choose_city)
                 .setView(view)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String positionName = chooseCity.getText().toString();
@@ -224,7 +286,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                         }
                     }
                 })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -258,6 +320,22 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 PositionManager.getInstance().removePosition(cityName);*/
 
         }
-    return true;
+        return true;
     }
+
+//    public static class ErrorDialogFragment extends DialogFragment {
+//        public ErrorDialogFragment(){}
+//
+//        @Override
+//        public Dialog onCreateDialog(Bundle savedInstanceState) {
+//            int errorCode = this.getArguments().getInt(PlaceProvider.DIALOG_ERROR);
+//            return GoogleApiAvailability.getInstance().getErrorDialog(
+//                    this.getActivity(), errorCode, PlaceProvider.REQUEST_RESOLVE_ERROR);
+//        }
+//
+//        @Override
+//        public void onDismiss(DialogInterface dialog) {
+//            ((CityPickerActivity)getActivity()).mPlaceProvider.onDialogDismissed();
+//        }
+//    }
 }

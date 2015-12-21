@@ -60,7 +60,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:gravity="center_vertical|center_horizontal"
-                            android:text="Moscow"
+                            tools:text="Moscow"
                             android:textAppearance="?android:attr/textAppearanceMedium"/>
 
                         <ImageButton
@@ -94,7 +94,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|center_vertical"
-                        android:text="1°C"
+                        tools:text="1°C"
                         android:textSize="90sp"
                         android:textStyle="bold"/>
 
@@ -103,14 +103,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|center_vertical"
-                        android:text="Облачно"/>
+                        tools:text="Облачно"/>
 
                     <TextView
                         android:id="@+id/pressure"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|center_vertical"
-                        android:text="4°/2° Ощущение -6°"/>
+                        tools:text="4°/2° Ощущение -6°"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -124,14 +124,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="right"
-                        android:text="Ветер Ю 7м/с"/>
+                        tools:text="Ветер Ю 7м/с"/>
 
                     <TextView
                         android:id="@+id/humidity"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="right"
-                        android:text="Влажность 93%"/>
+                        tools:text="Влажность 93%"/>
 
                 </LinearLayout>
 
@@ -179,7 +179,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Обновлено"
+                tools:text="Обновлено"
                 android:textAppearance="?android:attr/textAppearanceSmall"/>
 
             <ImageButton

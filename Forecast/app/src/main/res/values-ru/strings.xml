@@ -28,6 +28,17 @@
     <string name="update_error_net_not_availble">Ошибка обновления погоды.\nСеть недоступна.</string>
     <string name="update_error_from">"Ошибка обновления погоды со станции "</string>
     <string name="coordinates_not_found">Координаты местоположения %1$s не обнаружены.\nЛокация не добавлена</string>
+    <string name="msg_add_city">Для продолжения работы необходимо добавить город.</string>
+    <string name="msg_choose_city">Для продолжения работы необходимо выбрать город.</string>
+    <string name="msg_no_city">Ошибка обновления.\nГород отсутствует в списке локаций.</string>
+    <string name="msg_clear_city_list">Вы действительно хотите очистить список городов?</string>
+    <string name="btn_yes">Да</string>
+    <string name="btn_no">Нет</string>
+    <string name="title_choose_city">Введите название города</string>
+    <string name="btn_ok">OK</string>
+    <string name="btn_cancel">Отмена</string>
+    <string name="error_empty_location_name">Необходимо ввести название местоположения</string>
+    <string name="infoTV">Добавьте город, \nдля отображения прогноза погоды.</string>
 
 
 </resources>

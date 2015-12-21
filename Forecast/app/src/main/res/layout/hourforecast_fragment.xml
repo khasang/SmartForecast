@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
@@ -19,7 +20,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="20:00"
+                tools:text="20:00"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -29,13 +30,13 @@
                 android:layout_gravity="center"
                 android:layout_weight="0"
                 android:background="@null"
-                android:src="@drawable/cloudy" />
+                tools:src="@drawable/ic_cloud" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="2°"
+                tools:text="2°"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -43,7 +44,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text=" ↓ 15%"
+                tools:text=" ↓ 15%"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -59,7 +60,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="21:00"
+                tools:text="21:00"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -69,13 +70,13 @@
                 android:layout_gravity="center"
                 android:layout_weight="0"
                 android:background="@null"
-                android:src="@drawable/cloudy" />
+                tools:src="@drawable/ic_cloud" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="2°"
+                tools:text="2°"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -83,7 +84,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text=" ↓ 15%"
+                tools:text=" ↓ 15%"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -99,7 +100,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="22:00"
+                tools:text="22:00"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -109,13 +110,13 @@
                 android:layout_gravity="center"
                 android:layout_weight="0"
                 android:background="@null"
-                android:src="@drawable/cloudy" />
+                tools:src="@drawable/ic_cloud" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="2°"
+                tools:text="2°"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -123,7 +124,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text=" ↓ 15%"
+                tools:text=" ↓ 15%"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -139,7 +140,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="23:00"
+                tools:text="23:00"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -149,13 +150,13 @@
                 android:layout_gravity="center"
                 android:layout_weight="0"
                 android:background="@null"
-                android:src="@drawable/cloudy" />
+                tools:src="@drawable/ic_cloud" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="3°"
+                tools:text="3°"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -163,7 +164,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text=" ↓ 15%"
+                tools:text=" ↓ 15%"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 

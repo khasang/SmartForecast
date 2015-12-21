@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="wrap_content"
-android:layout_height="wrap_content"
-android:orientation="horizontal">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:tag="dayforecast">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -16,9 +18,9 @@ android:orientation="horizontal">
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Пт"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:text="Пт"/>
 
         <ImageButton
             android:layout_width="wrap_content"
@@ -26,15 +28,15 @@ android:orientation="horizontal">
             android:layout_gravity="center"
             android:layout_weight="0"
             android:background="@null"
-            android:src="@drawable/sunny" />
+            tools:src="@drawable/ic_sun"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="5°/2°"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:text="5°/2°"/>
 
 
     </LinearLayout>
@@ -50,24 +52,25 @@ android:orientation="horizontal">
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Сб"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:text="Сб"/>
 
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="0"
-            android:background="@null" />
+            android:background="@null"
+            tools:src="@drawable/ic_fog"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="5°/2°"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:text="5°/2°"/>
 
     </LinearLayout>
 
@@ -82,9 +85,9 @@ android:orientation="horizontal">
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Вс"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:text="Вс"/>
 
         <ImageButton
             android:layout_width="wrap_content"
@@ -92,15 +95,15 @@ android:orientation="horizontal">
             android:layout_gravity="center"
             android:layout_weight="0"
             android:background="@null"
-            android:src="@drawable/thunder" />
+            tools:src="@drawable/ic_thunderstorm"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="7°/-3°"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:text="7°/-3°"/>
 
 
     </LinearLayout>
@@ -117,9 +120,9 @@ android:orientation="horizontal">
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Пн"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:text="Пн"/>
 
         <ImageButton
             android:layout_width="wrap_content"
@@ -127,15 +130,15 @@ android:orientation="horizontal">
             android:layout_gravity="center"
             android:layout_weight="0"
             android:background="@null"
-            android:src="@drawable/cloudy" />
+            tools:src="@drawable/ic_cloud"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="6°/1°"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:text="6°/1°"/>
 
     </LinearLayout>
 
@@ -151,9 +154,9 @@ android:orientation="horizontal">
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Вт"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:text="Вт"/>
 
         <ImageButton
             android:layout_width="wrap_content"
@@ -161,15 +164,15 @@ android:orientation="horizontal">
             android:layout_gravity="center"
             android:layout_weight="0"
             android:background="@null"
-            android:src="@drawable/snowy" />
+            tools:src="@drawable/ic_snow"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="1°/-1°"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:text="1°/-1°"/>
 
     </LinearLayout>
 

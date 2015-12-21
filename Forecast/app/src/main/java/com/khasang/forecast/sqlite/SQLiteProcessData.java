@@ -3,6 +3,7 @@ package com.khasang.forecast.sqlite;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.Coordinate;
 import com.khasang.forecast.Position;
 import com.khasang.forecast.PositionManager;
@@ -28,7 +29,7 @@ public class SQLiteProcessData {
 
     public SQLiteProcessData(Context context) {
         this.sqLite = new SQLiteWork(context, "Forecast.db");
-        dtFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        dtFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     }
 
     public void closeDatabase() {
@@ -42,6 +43,9 @@ public class SQLiteProcessData {
 
     // Сохранение погоды, удаление старой погоды.
     public void saveWeather(WeatherStationFactory.ServiceType serviceType, String townName, Calendar date, Weather weather) {
+
+        deleteDoubleWeather(serviceType, townName, date);
+
         sqLite.queryExExec(SQLiteFields.QUERY_INSERT_WEATHER, new String[]
             {serviceType.name(), townName, dtFormat.format(date.getTime()), Double.toString(weather.getTemperature()), Double.toString(weather.getTemp_max()),
                     Double.toString(weather.getTemp_min()), Double.toString(weather.getPressure()),
@@ -152,18 +156,79 @@ public class SQLiteProcessData {
         return WeatherStationFactory.ServiceType.OPEN_WEATHER_MAP;
     }
 
-    // Очистка таблицы от погоды, которая старше текущего дня.
-    public void deleteOldWeather(WeatherStationFactory.ServiceType serviceType, String cityName, Calendar date) {
-        sqLite.queryExExec(SQLiteFields.QUERY_DELETE_OLD_DATA_WEATHER, new String[]{serviceType.name(), cityName, dtFormat.format(date.getTime())});
+    // Очистка таблицы от данных, старше определенной даты.
+    public void deleteOldWeather(WeatherStationFactory.ServiceType serviceType, String townName, Calendar date) {
+        sqLite.queryExExec(SQLiteFields.QUERY_DELETE_OLD_DATA_WEATHER, new String[]{serviceType.name(), townName, dtFormat.format(date.getTime())});
     }
 
-    // Очистка таблицы городов.
+    // Очистка таблицы от старых данных, чтобы не было дублей.
+    public void deleteDoubleWeather(WeatherStationFactory.ServiceType serviceType, String cityName, Calendar date) {
+        sqLite.queryExExec(SQLiteFields.QUERY_DELETE_DOUBLE_WEATHER, new String[]{serviceType.name(), cityName, dtFormat.format(date.getTime())});
+    }
+
+    // Очистка таблицы городов и удаление погодных данных к ним.
     public void deleteTowns() {
         sqLite.queryExec(SQLiteFields.QUERY_DELETE_DATA_TOWNS);
+        sqLite.queryExec(SQLiteFields.QUERY_DELETE_DATA_WEATHER);
     }
 
-    public void deleteTown(String name) {
-        sqLite.queryExExec(SQLiteFields.QUERY_DELETE_DATA_TOWN, new String[]{name});
+    // Удаление города и погодных данных к нему.
+    public void deleteTown(String townName) {
+        sqLite.queryExExec(SQLiteFields.QUERY_DELETE_DATA_TOWN, new String[]{townName});
+        sqLite.queryExExec(SQLiteFields.QUERY_DELETE_DATA_TOWN_WEATHER, new String[]{townName});
+    }
+
+    // Запись времени рассвета и заката.
+    public void updateTownSunTime(Calendar sunRise, Calendar sunSet, String townName) {
+        sqLite.queryExExec(SQLiteFields.QUERY_UPDATE_TOWN_SUNTIME, new String[]{dtFormat.format(sunRise.getTime()), dtFormat.format(sunSet.getTime()), townName});
+    }
+
+    // Получение времени рассвета к городу.
+    public Calendar loadTownSunSet(String townName) {
+        String wDate;
+        Calendar weatherDate = null;
+
+        Cursor dataset = sqLite.queryOpen(SQLiteFields.QUERY_SELECT_DATA_TOWN, new String[]{townName});
+        try {
+            if (dataset != null && dataset.getCount() != 0) {
+                if (dataset.moveToFirst()) {
+                    wDate = dataset.getString(dataset.getColumnIndex(SQLiteFields.SUNSET));
+                    weatherDate = Calendar.getInstance();
+                    weatherDate.setTime(dtFormat.parse(wDate));
+                }
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } finally {
+            if (dataset != null) {
+                dataset.close();
+            }
+        }
+        return weatherDate;
+    }
+
+    // Получение времени заката к городу.
+    public Calendar loadTownSunRise(String townName) {
+        String wDate;
+        Calendar weatherDate = null;
+
+        Cursor dataset = sqLite.queryOpen(SQLiteFields.QUERY_SELECT_DATA_TOWN, new String[]{townName});
+        try {
+            if (dataset != null && dataset.getCount() != 0) {
+                if (dataset.moveToFirst()) {
+                    wDate = dataset.getString(dataset.getColumnIndex(SQLiteFields.SUNRISE));
+                    weatherDate = Calendar.getInstance();
+                    weatherDate.setTime(dtFormat.parse(wDate));
+                }
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } finally {
+            if (dataset != null) {
+                dataset.close();
+            }
+        }
+        return weatherDate;
     }
 
     // Загрузка списка городов.
@@ -197,7 +262,7 @@ public class SQLiteProcessData {
     }
 
     // Загрузка погоды.
-    public HashMap<Calendar, Weather> loadWeather(WeatherStationFactory.ServiceType serviceType, String cityName, Calendar date) {
+    public HashMap<Calendar, Weather> loadWeather(WeatherStationFactory.ServiceType serviceType, String cityName, Calendar date, PositionManager.TemperatureMetrics tm, PositionManager.SpeedMetrics sm, PositionManager.PressureMetrics pm) {
 
         double tempirature = 0;
         double tempirature_max = 0;
@@ -207,13 +272,13 @@ public class SQLiteProcessData {
         String description = "";
         String wind_direction = "";
         String precipitation_type = "";
+        String wDate;
         int humidity = 0;
         Wind wind = null;
         Precipitation precipitation = null;
         Weather weather = null;
         HashMap hashMap = null;
         Calendar weatherDate = null;
-        String wDate;
 
         Cursor dataset = sqLite.queryOpen(SQLiteFields.QUERY_SELECT_WEATHER, new String[]{serviceType.name(), cityName, dtFormat.format(date.getTime())});
         try {
@@ -253,7 +318,7 @@ public class SQLiteProcessData {
 
         if (weather != null) {
             hashMap = new HashMap();
-            hashMap.put(weatherDate, weather);
+            hashMap.put(weatherDate, AppUtils.formatWeather(weather, tm, sm, pm));
         }
         return hashMap;
     }

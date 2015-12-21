@@ -1,35 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="wrap_content"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="90dp"
               android:layout_height="wrap_content"
               android:layout_margin="4dp"
-              android:orientation="vertical">
+              android:padding="8dp"
+              android:background="@drawable/item_weather_background">
 
     <TextView
         android:id="@+id/tvDayOfWeek"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Пт"
-        android:textSize="20sp"
-        android:textStyle="bold"/>
-
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_weight="0"
-        android:background="@null"
-        android:src="@drawable/sunny"
-        android:id="@+id/ivWeatherIcon" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="5°/2°"
+        tools:text="Пт"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:id="@+id/tvTemperature" />
+        android:gravity="center"/>
 
-</LinearLayout>
+    <ImageButton
+        android:id="@+id/ivWeatherIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@null"
+        tools:src="@drawable/sunny"
+        android:layout_centerInParent="true"/>
+
+    <TextView
+        android:id="@+id/tvTemperature"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="5°/2°"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"/>
+
+</RelativeLayout>

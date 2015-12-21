@@ -8,7 +8,6 @@ import com.khasang.forecast.activities.WeatherActivity;
 import com.khasang.forecast.sqlite.SQLiteProcessData;
 
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,14 +18,21 @@ import java.util.Set;
  */
 
 public class PositionManager {
-    public static final double KELVIN_CELSIUS_DELTA = 273.15;
-    public static final double KPA_TO_MM_HG = 1.33322;
-    public static final double KM_TO_MILES = 0.62137;
-    public static final double METER_TO_FOOT = 3.28083;
+    public enum TemperatureMetrics {
+        KELVIN {
+            public TemperatureMetrics change() {return CELSIUS;}
+        },
+        CELSIUS{
+            public TemperatureMetrics change() {return FAHRENHEIT;}
+        },
+        FAHRENHEIT{
+            public TemperatureMetrics change() {return KELVIN;}
+        };
+        public abstract TemperatureMetrics change();
+    }
+    public enum SpeedMetrics {METER_PER_SECOND, FOOT_PER_SECOND, KM_PER_HOURS, MILES_PER_HOURS}
+    public enum PressureMetrics {HPA, MM_HG}
 
-    public enum TemperatureMetrics {KELVIN, CELSIUS, FAHRENHEIT};
-    public enum SpeedMetrics {METER_PER_SECOND, FOOT_PER_SECOND, KM_PER_HOURS, MILES_PER_HOURS};
-    public enum PressureMetrics {HPA, MM_HG};
 
     TemperatureMetrics temperatureMetric;
     SpeedMetrics speedMetric;
@@ -138,6 +144,27 @@ public class PositionManager {
         positions = positionFactory.getPositions();
     }
 
+    /**
+     * Метод, с помощью которого добавляем новую локацию в список "Избранных"
+     * Вызывается когда пользователь добавляет новый город в список.
+     *
+     * @param name объект типа {@link String}, содержащий название города
+     * @param latitude географическая широта местоположения
+     * @param longitude географическая долгота местоположения
+     */
+    public void addPosition(String name, double latitude, double longitude) {
+        if (positionIsPresent(name)) {
+            Toast.makeText(mActivity, R.string.city_exist, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Coordinate coordinate = new Coordinate();
+        coordinate.setLatitude(latitude);
+        coordinate.setLongitude(longitude);
+        PositionFactory positionFactory = new PositionFactory(mActivity, positions);
+        positionFactory.addFavouritePosition(name, coordinate, dbManager);
+        positions = positionFactory.getPositions();
+    }
+
     public boolean isNetworkAvailable(final Context context) {
         final ConnectivityManager connectivityManager = ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE));
         return connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isConnected();
@@ -238,6 +265,15 @@ public class PositionManager {
         return null;
     }
 
+    public TemperatureMetrics getTemperatureMetric() {
+        return temperatureMetric;
+    }
+
+    public TemperatureMetrics changeTemperatureMetric () {
+        temperatureMetric = temperatureMetric.change();
+        return temperatureMetric;
+    }
+
     /**
      * Метод, вызывемый активити, для обновления текущей погоды от текущей погодной станции
      */
@@ -279,9 +315,9 @@ public class PositionManager {
         }
         if (currPosition.getCityID() == cityId && currStation.getServiceType() == serviceType) {
             for (Map.Entry<Calendar, Weather> entry : weather.entrySet()) {
-                entry.setValue(formatWeather(entry.getValue()));                                    //Есди позиция и станция теккущие
-            }                                                                                       //Преобразуем погодные данные в нужные метрики
-            mActivity.updateInterface(rType, weather);                 //Отправляем данные в интерфейс
+                entry.setValue(AppUtils.formatWeather(entry.getValue(), temperatureMetric, speedMetric, pressureMetric));
+            }
+            mActivity.updateInterface(rType, weather);
         }
     }
 
@@ -297,7 +333,7 @@ public class PositionManager {
     }
 
     private HashMap<Calendar, Weather> getCurrentWeatherFromDB(WeatherStationFactory.ServiceType sType, String locationName, Calendar date) {
-        return dbManager.loadWeather(sType, locationName, date);
+        return dbManager.loadWeather(sType, locationName, date, temperatureMetric, speedMetric, pressureMetric);
     }
 
     private HashMap<Calendar, Weather> getHourlyWeatherFromDB(WeatherStationFactory.ServiceType sType, String locationName, Calendar date) {
@@ -307,8 +343,8 @@ public class PositionManager {
         calendar.add(Calendar.HOUR_OF_DAY, HOUR_PERIOD);
         calendar.set(Calendar.MINUTE, 0);
         HashMap <Calendar, Weather> forecast = new HashMap<>();
-        for (int i = 1; i < FORECASTS_COUNT; i++) {
-            HashMap<Calendar, Weather> temp = dbManager.loadWeather(sType, locationName, calendar);
+        for (int i = 0; i < FORECASTS_COUNT; i++) {
+            HashMap<Calendar, Weather> temp = dbManager.loadWeather(sType, locationName, calendar, temperatureMetric, speedMetric, pressureMetric);
             if (temp == null || temp.size() == 0) {
                 return null;
             }
@@ -323,12 +359,11 @@ public class PositionManager {
         final int DAY_PERIOD = 1;
         final int FORECASTS_COUNT = 7;
         Calendar calendar = date;
-        calendar.add(Calendar.DAY_OF_YEAR, DAY_PERIOD);
         calendar.set(Calendar.HOUR_OF_DAY, 12);
         calendar.set(Calendar.MINUTE, 0);
         HashMap <Calendar, Weather> forecast = new HashMap<>();
-        for (int i = 1; i < FORECASTS_COUNT; i++) {
-            HashMap<Calendar, Weather> temp = dbManager.loadWeather(sType, locationName, calendar);
+        for (int i = 0; i < FORECASTS_COUNT; i++) {
+            HashMap<Calendar, Weather> temp = dbManager.loadWeather(sType, locationName, calendar, temperatureMetric, speedMetric, pressureMetric);
             if (temp == null || temp.size() == 0) {
                 return null;
             }
@@ -337,139 +372,4 @@ public class PositionManager {
         }
         return forecast;
     }
-
-    //region Вспомогательные методы
-    /**
-     * Метод для преобразования погодных характеристик в заданные пользователями метрики
-     *
-     * @param weather обьект класса {@link Weather}, в котором нужно привести погодные характеристики к заданным метрикам
-     * @return обьект класса {@link Weather} с преобразованными погодными характеристиками
-     */
-    private Weather formatWeather(Weather weather) {
-        weather.setTemperature(formatTemperature(weather.getTemperature()));
-        weather.setPressure(formatPressure(weather.getPressure()));
-        weather.setWind(weather.getWindDirection(), formatSpeed(weather.getWindPower()));
-        return weather;
-    }
-
-    /**
-     * Метод для преобразования температуры в заданную пользователем метрику
-     *
-     * @param temperature температура на входе (в Кельвинах)
-     * @return температура в выбранной пользователем метрике
-     */
-    double formatTemperature(double temperature) {
-        switch (temperatureMetric) {
-            case KELVIN:
-                break;
-            case CELSIUS:
-                return kelvinToCelsius(temperature);
-            case FAHRENHEIT:
-                return kelvinToFahrenheit(temperature);
-        }
-        return temperature;
-    }
-
-    /**
-     * Метод для преобразования скорости ветра в заданную пользователем метрику
-     *
-     * @param speed преобразуемая скорость
-     * @return скорость в выбранной пользователем метрике
-     */
-    double formatSpeed(double speed) {
-        switch (speedMetric) {
-            case METER_PER_SECOND:
-                break;
-            case FOOT_PER_SECOND:
-                return meterInSecondToFootInSecond(speed);
-            case KM_PER_HOURS:
-                return meterInSecondToKmInHours(speed);
-            case MILES_PER_HOURS:
-                return meterInSecondToMilesInHour(speed);
-        }
-        return speed;
-    }
-
-    /**
-     * Метод для преобразования давления в заданную пользователем метрику
-     *
-     * @param pressure преобразуемое давление
-     * @return давление в выбранной пользователем метрике
-     */
-    double formatPressure(double pressure) {
-        switch (pressureMetric) {
-            case HPA:
-                break;
-            case MM_HG:
-                return kpaToMmHg(pressure);
-        }
-        return pressure;
-    }
-
-    /**
-     * Метод для преобразования температуры из Кельвинов в Цельсии
-     *
-     * @param temperature температура в Кельвинах
-     * @return температура в Цельсиях
-     */
-    public double kelvinToCelsius(double temperature) {
-        double celsiusTemperature = temperature - KELVIN_CELSIUS_DELTA;
-        return celsiusTemperature;
-    }
-
-    /**
-     * Метод для преобразования температуры из Кельвина в Фаренгейт
-     *
-     * @param temperature температура в Кельвинах
-     * @return температура в Фаренгейтах
-     */
-    public double kelvinToFahrenheit(double temperature) {
-        double fahrenheitTemperature = (kelvinToCelsius(temperature) * 9 / 5) + 32;
-        return fahrenheitTemperature;
-    }
-
-    /**
-     * Метод для преобразования скорости ветра из метров в секунду в футы в секунду
-     *
-     * @param speed скорость ветра в метрах в секунду
-     * @return скорость ветра в футах в секунду
-     */
-    public double meterInSecondToFootInSecond(double speed) {
-        double footInSecond = speed * METER_TO_FOOT;
-        return footInSecond;
-    }
-
-    /**
-     * Метод для преобразования скорости ветра из метров в секунду в километры в час
-     *
-     * @param speed скорость ветра в метрах в секунду
-     * @return скорость ветра в километрах в час
-     */
-    public double meterInSecondToKmInHours(double speed) {
-        double kmInHours = speed * 3.6;
-        return kmInHours;
-    }
-
-    /**
-     * Метод для преобразования скорости ветра из метров в секунду в мили в час
-     *
-     * @param speed скорость ветра в метрах в секунду
-     * @return скорость ветра в милях в час
-     */
-    public double meterInSecondToMilesInHour(double speed) {
-        double milesInHours = meterInSecondToKmInHours(speed) * KM_TO_MILES;
-        return milesInHours;
-    }
-
-    /**
-     * Метод для преобразования давления из килопаскалей в мм.рт.ст.
-     *
-     * @param pressure давление в килопаскалях
-     * @return давление в мм.рт.ст.
-     */
-    public double kpaToMmHg(double pressure) {
-        double mmHg = pressure / KPA_TO_MM_HG;
-        return mmHg;
-    }
-    //endregion
 }

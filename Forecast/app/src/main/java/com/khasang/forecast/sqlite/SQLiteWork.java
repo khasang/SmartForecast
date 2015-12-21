@@ -12,13 +12,13 @@ public class SQLiteWork {
 
     public SQLiteDatabase sqlDatabase;
     public SQLiteOpen dbWork;
-    private int newVersion = 1;
+    private int newVersion = 3;
 
     public SQLiteWork(Context context, String dbName) {
         // инициализация класса обёртки
         dbWork = new SQLiteOpen(context, dbName, newVersion);
         sqlDatabase = dbWork.getWritableDatabase();
-        dbWork.onUpgrade(sqlDatabase, sqlDatabase.getVersion(), newVersion);
+//        dbWork.onUpgrade(sqlDatabase, sqlDatabase.getVersion(), newVersion);
     }
 
     public void checkOpenDatabase() {

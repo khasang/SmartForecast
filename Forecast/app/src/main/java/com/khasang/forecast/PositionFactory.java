@@ -73,6 +73,15 @@ public class PositionFactory {
         }
     }
 
+    public void addFavouritePosition(String name, Coordinate coordinates, SQLiteProcessData dbm) {
+        Position p = new Position();
+        p.setLocationName(name);
+        p.setCityID(cityIdentificationCounter++);
+        p.setCoordinate(coordinates);
+        mPositions.put(name, p);
+        dbm.saveTown(name, coordinates.getLatitude(), coordinates.getLongitude());
+    }
+
     public void addFavouritePosition(String name, Coordinate coordinates) {
         Position position = new Position();
         position.setLocationName(name);
