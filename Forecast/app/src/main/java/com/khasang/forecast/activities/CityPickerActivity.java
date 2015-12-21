@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -31,6 +33,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.khasang.forecast.Coordinate;
 import com.khasang.forecast.PlaceProvider;
 import com.khasang.forecast.PositionManager;
 import com.khasang.forecast.R;
@@ -39,6 +42,7 @@ import com.khasang.forecast.adapters.etc.HidingScrollListener;
 import com.khasang.forecast.adapters.GooglePlacesAutocompleteAdapter;
 import com.khasang.forecast.view.DelayedAutoCompleteTextView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -228,7 +232,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
     // Вспомогательный метод для добавления города в список
     private void addItem(String city) {
-        city = city.trim().toLowerCase();
+//        city = city.trim().toLowerCase();
 
         if (city.length() <= 0) {
 //            Log.w(TAG, "Имя города менее одного символа");
@@ -236,6 +240,28 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             return;
         }
 
+        Geocoder geocoder = new Geocoder(getApplicationContext());
+        List<Address> addresses;
+        try {
+            addresses = geocoder.getFromLocationName(city, 3);
+            if (addresses.size() == 0){
+                Log.i(TAG, "Coordinates not found");
+                Toast.makeText(getApplicationContext(), String.format(getString(R.string.coordinates_not_found), city), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Address currentAddress = addresses.get(0);
+            Coordinate coordinate = new Coordinate();
+            coordinate.setLatitude(currentAddress.getLatitude());
+            coordinate.setLongitude(currentAddress.getLongitude());
+            Log.i(TAG, "Coordinate of " + city + " lat: " + currentAddress.getLatitude() + ", lon: " + currentAddress.getLongitude());
+            if (!PositionManager.getInstance().positionIsPresent(city)) {
+                PositionManager.getInstance().addPosition(city, coordinate);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+/*
         // Делаем каждое слово в имени города с заглавное буквы
         StringBuilder b = new StringBuilder(city);
         int i = 0;
@@ -244,10 +270,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             i =  b.indexOf(" ", i) + 1;
         } while (i > 0 && i < b.length());
         city = b.toString();
-
-        if (!PositionManager.getInstance().positionIsPresent(city)) {
-            PositionManager.getInstance().addPosition(city);
-        }
+*/
         Intent answerIntent = new Intent();
         answerIntent.putExtra(CITY_PICKER_TAG, city);
         setResult(RESULT_OK, answerIntent);
@@ -269,8 +292,9 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String description = (String) parent.getItemAtPosition(position);
-                String city = description.split(", ")[0];
-                chooseCity.setText(city);
+                //String city = description.split(", ")[0];
+                //chooseCity.setText(city);
+                chooseCity.setText(description);
             }
         });
         builder.setTitle(R.string.title_choose_city)
