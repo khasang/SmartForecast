@@ -110,7 +110,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         fabBtn = (ImageButton) findViewById(R.id.fabBtn);
         fabBtn.setOnClickListener(this);
         createItemList();
-        Log.d(TAG, String.valueOf(PositionManager.getInstance().getPositions()));
+        //Log.d(TAG, String.valueOf(PositionManager.getInstance().getPositions()));
 
         ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
@@ -125,8 +125,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 cityList.remove(position);
                 recyclerAdapter.notifyDataSetChanged();
 
-                //TODO Не работает отображение infoTV при очистке cityList
-                Log.i(TAG, String.valueOf(cityList.size()));
+                //Log.i(TAG, String.valueOf(cityList.size()));
                 swapVisibilityTextOrList();
 
             }
@@ -245,7 +244,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         try {
             addresses = geocoder.getFromLocationName(city, 3);
             if (addresses.size() == 0){
-                Log.i(TAG, "Coordinates not found");
+                //Log.i(TAG, "Coordinates not found");
                 Toast.makeText(getApplicationContext(), String.format(getString(R.string.coordinates_not_found), city), Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -253,7 +252,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             Coordinate coordinate = new Coordinate();
             coordinate.setLatitude(currentAddress.getLatitude());
             coordinate.setLongitude(currentAddress.getLongitude());
-            Log.i(TAG, "Coordinate of " + city + " lat: " + currentAddress.getLatitude() + ", lon: " + currentAddress.getLongitude());
+            //Log.i(TAG, "Coordinate of " + city + " lat: " + currentAddress.getLatitude() + ", lon: " + currentAddress.getLongitude());
             if (!PositionManager.getInstance().positionIsPresent(city)) {
                 PositionManager.getInstance().addPosition(city, coordinate);
             }
@@ -335,7 +334,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 final int position = recyclerView.getChildAdapterPosition(v);
                 TextView thisCity = (TextView) recyclerView.getChildAt(position).findViewById(R.id.cityTW);
                 String cityName = String.valueOf(thisCity.getText());
-                Log.i(TAG, "OnLongClick: город - " + cityName);
+                //Log.i(TAG, "OnLongClick: город - " + cityName);
 
                 //TODO реализовать удаление города через Context Menu
     /*            Toast.makeText(this, "click on " + thisCity.getText(), Toast.LENGTH_SHORT).show();
