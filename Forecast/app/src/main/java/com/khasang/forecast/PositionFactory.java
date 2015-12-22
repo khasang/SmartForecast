@@ -1,5 +1,4 @@
 package com.khasang.forecast;
-import android.content.Context;
 
 import com.khasang.forecast.sqlite.SQLiteProcessData;
 import java.util.HashMap;
@@ -10,7 +9,6 @@ import java.util.HashMap;
  */
 
 public class PositionFactory {
-    private final static String TAG = "MyTAG";
     private static int cityIdentificationCounter;
 
     static {
@@ -18,16 +16,13 @@ public class PositionFactory {
     }
 
     private HashMap<String, Position> mPositions;
-    private Context mContext;
 
-    public PositionFactory(Context context) {
+    public PositionFactory() {
         mPositions = new HashMap<String, Position>();
-        mContext = context;
     }
 
-    public PositionFactory(Context context, HashMap<String, Position> positions) {
+    public PositionFactory(HashMap<String, Position> positions) {
         mPositions = positions;
-        mContext = context;
     }
 
     public void addCurrentPosition() {

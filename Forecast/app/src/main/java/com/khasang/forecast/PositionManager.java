@@ -102,7 +102,6 @@ public class PositionManager {
      * Метод инициализации списка местоположений, вызывается из активити
      */
     private void initPositions() {
-        //loadPreferences();    Здесь загружать список городов
         HashMap<String, Coordinate> pos = dbManager.loadTownList();
         initPositions(pos);
     }
@@ -113,7 +112,7 @@ public class PositionManager {
      * @param favorites коллекция {@link List} типа {@link String}, содержащий названия городов
      */
     private void initPositions(HashMap<String, Coordinate> favorites) {
-        PositionFactory positionFactory = new PositionFactory(mActivity.getApplicationContext());
+        PositionFactory positionFactory = new PositionFactory();
         positionFactory.addCurrentPosition();
 
         if (favorites.size() != 0) {
@@ -140,7 +139,7 @@ public class PositionManager {
             Toast.makeText(mActivity, R.string.city_exist, Toast.LENGTH_SHORT).show();
             return;
         }
-        PositionFactory positionFactory = new PositionFactory(mActivity, positions);
+        PositionFactory positionFactory = new PositionFactory(positions);
         positionFactory.addFavouritePosition(name, coordinates, dbManager);
         positions = positionFactory.getPositions();
     }
@@ -231,7 +230,7 @@ public class PositionManager {
     }
 
     /**
-     * Пролучение локации из списка локаций
+     * Пролучение локации из списка локаций по внутреннему идентификатору локации
      *
      * @param cityID идентификатор местоположения
      * @return обьект типа {@link Position}
@@ -275,7 +274,7 @@ public class PositionManager {
     }
 
     /**
-     * Метод для обновления погодных данных. Вызывается погодным сервисом, когда он получает актуальные данные
+     * Метод для обновления погодных данных. Вызывается погодным сервисом, когда приходят актуальные данные
      *
      * @param rType       переменая типа {@link com.khasang.forecast.WeatherStation.ResponseType}, характеризующая тип ответа (текущий прогноз, прогноз на день или неделю)
      * @param cityId      внутренний идентификатор города, передается в погодную станцию во время запроса погоды
