@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.khasang.forecast.LockableViewPager;
+import com.khasang.forecast.Logger;
 import com.khasang.forecast.PositionManager;
 import com.khasang.forecast.R;
 import com.khasang.forecast.Weather;
@@ -115,7 +116,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         humidity = (TextView) findViewById(R.id.humidity);
         timeStamp = (TextView) findViewById(R.id.timeStamp);
         syncBtn = (ImageButton) findViewById(R.id.syncBtn);
-        //llMainInformation = (LinearLayout) findViewById(R.id.llMainInformation);
+        llMainInformation = (LinearLayout) findViewById(R.id.llMainInformation);
 
         /** Слушатели нажатий объектов */
         syncBtn.setOnClickListener(this);
@@ -176,20 +177,9 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
         } else {
             if (!PositionManager.getInstance().getCurrentPositionName().isEmpty()) {
-                //PositionManager.getInstance().updateWeather();
                 onRefresh();
             }
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-/*        if (city.length() <= 0) {
-            cityPickerBtn.setVisibility(View.GONE);
-        } else {
-            cityPickerBtn.setVisibility(View.VISIBLE);
-        }*/
     }
 
     @Override
@@ -237,26 +227,26 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         stopRefresh();
 
         if (forecast == null || forecast.size() == 0) {
-            Log.i(TAG, "Weather is null!");
+            Logger.println(TAG, "Weather is null!");
 
             return;
         }
         switch (responseType) {
             case CURRENT:
-                Log.i(TAG, "Принят CURRENT прогноз");
+                Logger.println(TAG, "Принят CURRENT прогноз");
                 HashMap.Entry<Calendar, Weather> firstEntry = (Map.Entry<Calendar, Weather>) forecast.entrySet().iterator().next();
                 updateCurrentWeather(firstEntry.getKey(), firstEntry.getValue());
                 break;
             case HOURLY:
-                Log.i(TAG, "Принят HOURLY прогноз");
+                Logger.println(TAG, "Принят HOURLY прогноз");
                 ((ForecastPageAdapter) pager.getAdapter()).setHourForecast(forecast);
                 break;
             case DAILY:
-                Log.i(TAG, "Принят DAILY прогноз");
+                Logger.println(TAG, "Принят DAILY прогноз");
                 ((ForecastPageAdapter) pager.getAdapter()).setDayForecast(forecast);
                 break;
             default:
-                Log.i(TAG, "Принят необрабатываемый прогноз");
+                Logger.println(TAG, "Принят необрабатываемый прогноз");
         }
     }
 
@@ -313,10 +303,9 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             if (resultCode == RESULT_OK) {
                 String newCity = data.getStringExtra(CityPickerActivity.CITY_PICKER_TAG);
                 city.setText(newCity.replace(',','\n'));
-                Log.d(TAG, newCity);
+                Logger.println(TAG, newCity);
                 PositionManager.getInstance().setCurrentPosition(newCity);
                 PositionManager.getInstance().saveCurrPosition();
-                //PositionManager.getInstance().updateWeather();
                 onRefresh();
                 syncBtn.setVisibility(View.VISIBLE);
             } else {
@@ -334,7 +323,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onRefresh() {
         if (!PositionManager.getInstance().positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {
-            Log.i(TAG, "There is nothing to refresh");
+            Logger.println(TAG, "There is nothing to refresh");
             Toast.makeText(WeatherActivity.this, R.string.msg_no_city, Toast.LENGTH_SHORT).show();
             stopRefresh();
             return;
@@ -343,7 +332,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Log.i(TAG, "Start animation");
+                Logger.println(TAG, "Start animation");
                 allAnimation();
                 PositionManager.getInstance().updateWeather();
             }

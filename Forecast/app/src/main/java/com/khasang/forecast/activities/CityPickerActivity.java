@@ -34,6 +34,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.khasang.forecast.Coordinate;
+import com.khasang.forecast.Logger;
 import com.khasang.forecast.PlaceProvider;
 import com.khasang.forecast.PositionManager;
 import com.khasang.forecast.R;
@@ -253,7 +254,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             Coordinate coordinate = new Coordinate();
             coordinate.setLatitude(currentAddress.getLatitude());
             coordinate.setLongitude(currentAddress.getLongitude());
-            Log.i(TAG, "Coordinate of " + city + " lat: " + currentAddress.getLatitude() + ", lon: " + currentAddress.getLongitude());
+            Logger.println(TAG, "Coordinate of " + city + " lat: " + currentAddress.getLatitude() + ", lon: " + currentAddress.getLongitude());
             if (!PositionManager.getInstance().positionIsPresent(city)) {
                 PositionManager.getInstance().addPosition(city, coordinate);
             }
@@ -335,7 +336,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 final int position = recyclerView.getChildAdapterPosition(v);
                 TextView thisCity = (TextView) recyclerView.getChildAt(position).findViewById(R.id.cityTW);
                 String cityName = String.valueOf(thisCity.getText());
-                Log.i(TAG, "OnLongClick: город - " + cityName);
+                Logger.println(TAG, "OnLongClick: город - " + cityName);
 
                 //TODO реализовать удаление города через Context Menu
     /*            Toast.makeText(this, "click on " + thisCity.getText(), Toast.LENGTH_SHORT).show();
