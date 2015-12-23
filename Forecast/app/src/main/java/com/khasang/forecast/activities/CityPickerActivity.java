@@ -111,7 +111,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         fabBtn = (ImageButton) findViewById(R.id.fabBtn);
         fabBtn.setOnClickListener(this);
         createItemList();
-        Log.d(TAG, String.valueOf(PositionManager.getInstance().getPositions()));
+        Logger.println(TAG, String.valueOf(PositionManager.getInstance().getPositions()));
 
         ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
@@ -127,7 +127,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 recyclerAdapter.notifyDataSetChanged();
 
                 //TODO Не работает отображение infoTV при очистке cityList
-                Log.i(TAG, String.valueOf(cityList.size()));
+                Logger.println(TAG, String.valueOf(cityList.size()));
                 swapVisibilityTextOrList();
 
             }
