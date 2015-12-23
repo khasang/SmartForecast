@@ -1,9 +1,6 @@
 package com.khasang.forecast;
 
 
-import android.app.DownloadManager;
-import android.content.Context;
-import android.net.ConnectivityManager;
 import android.util.Log;
 
 import com.squareup.okhttp.Call;
@@ -27,7 +24,7 @@ import java.util.ArrayList;
 public class PlaceProvider {
     private final static String TAG = PlaceProvider.class.getSimpleName();
     private final static String PLACE_API_BASE_URL = "https://maps.googleapis.com/maps/api/place/autocomplete/json";
-    private final static String API_KEY = "AIzaSyBR70pjZmykrJsIG9eNHzKKzX0WDZVddQc";
+    private final static String API_KEY = MyApplication.getAppContext().getString(R.string.place_provider_key);
 
 
     ArrayList resultList = null;

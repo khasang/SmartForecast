@@ -51,32 +51,32 @@ public class SQLiteOpen extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        checkTable(SQLiteFields.TABLE_TOWNS, SQLiteFields.QUERY_CREATE_TABLE_TOWNS, db);
-        checkTable(SQLiteFields.TABLE_WEATHER, SQLiteFields.QUERY_CREATE_TABLE_WEATHER, db);
-        checkTable(SQLiteFields.TABLE_SETTINGS, SQLiteFields.QUERY_CREATE_TABLE_SETTINGS, db);
+//        checkTable(SQLiteFields.TABLE_TOWNS, SQLiteFields.QUERY_CREATE_TABLE_TOWNS, db);
+//        checkTable(SQLiteFields.TABLE_WEATHER, SQLiteFields.QUERY_CREATE_TABLE_WEATHER, db);
+//        checkTable(SQLiteFields.TABLE_SETTINGS, SQLiteFields.QUERY_CREATE_TABLE_SETTINGS, db);
+
+        db.execSQL(SQLiteFields.QUERY_CREATE_TABLE_TOWNS);
+        db.execSQL(SQLiteFields.QUERY_CREATE_TABLE_WEATHER);
+        db.execSQL(SQLiteFields.QUERY_CREATE_TABLE_SETTINGS);
+
+        db.execSQL(SQLiteFields.QUERY_INSERT_SETTINGS, new String[]{"OPEN_WEATHER_MAP", "", "CELSIUS", "METER_PER_SECOND", "HPA"});
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (oldVersion != newVersion) {
+        recreate(db);
+    }
 
-            try {
-                db.beginTransaction();
+    @Override
+    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        recreate(db);
+    }
 
-                db.execSQL(SQLiteFields.QUERY_DELETE_TABLE_TOWNS);
-                db.execSQL(SQLiteFields.QUERY_DELETE_TABLE_WEATHER);
-                db.execSQL(SQLiteFields.QUERY_DELETE_TABLE_SETTINGS);
+    private void recreate(SQLiteDatabase db) {
+        db.execSQL(SQLiteFields.QUERY_DELETE_TABLE_TOWNS);
+        db.execSQL(SQLiteFields.QUERY_DELETE_TABLE_WEATHER);
+        db.execSQL(SQLiteFields.QUERY_DELETE_TABLE_SETTINGS);
 
-                onCreate(db);
-
-                db.setVersion(newVersion);
-                db.setTransactionSuccessful();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            } finally {
-                db.endTransaction();
-            }
-        }
-
+        onCreate(db);
     }
 }
