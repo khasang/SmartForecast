@@ -92,7 +92,7 @@ public class OpenWeatherMap extends WeatherStation {
      * устанавливает уровень логирования.
      */
     private void addInterceptors() {
-        logging.setLevel(Level.BASIC);
+        logging.setLevel(Level.BODY);
         client.interceptors().add(new Interceptor() {
             @Override
             public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {

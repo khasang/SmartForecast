@@ -333,9 +333,11 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!pattern.matcher(s.toString().trim()).matches()) {
                     dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
-                    Toast.makeText(getApplicationContext(), R.string.incorrect_city_error, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(), R.string.incorrect_city_error, Toast.LENGTH_SHORT).show();
+                    chooseCity.setBackgroundColor(0x88FF0000);
                 } else {
                     dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
+                    chooseCity.setBackgroundColor(0xFFFFFFFF);
                 }
             }
 
