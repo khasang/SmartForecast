@@ -45,6 +45,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by CopyPasteStd on 29.11.15.
@@ -281,6 +283,8 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void showChooseCityDialog() {
+        final Pattern pattern = Pattern.compile("^[\\w\\s,-]+$");
+
         final View view = getLayoutInflater().inflate(R.layout.choose_city_dialog, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final DelayedAutoCompleteTextView chooseCity = (DelayedAutoCompleteTextView) view.findViewById(R.id.editTextCityName);
@@ -327,7 +331,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.toString().trim().length() == 0) {
+                if (!pattern.matcher(s).matches()) {
                     dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
                     Toast.makeText(getApplicationContext(), R.string.incorrect_city_error, Toast.LENGTH_SHORT).show();
                 } else {
