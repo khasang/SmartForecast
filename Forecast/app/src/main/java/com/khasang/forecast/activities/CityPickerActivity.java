@@ -1,8 +1,6 @@
 package com.khasang.forecast.activities;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
@@ -16,6 +14,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,15 +24,12 @@ import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
-import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.GoogleApiAvailability;
 import com.khasang.forecast.Coordinate;
 import com.khasang.forecast.Logger;
 import com.khasang.forecast.PlaceProvider;
@@ -48,6 +45,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by CopyPasteStd on 29.11.15.
@@ -284,6 +283,8 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void showChooseCityDialog() {
+        final Pattern pattern = Pattern.compile("^[\\w\\s,-]+$");
+
         final View view = getLayoutInflater().inflate(R.layout.choose_city_dialog, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final DelayedAutoCompleteTextView chooseCity = (DelayedAutoCompleteTextView) view.findViewById(R.id.editTextCityName);
@@ -293,8 +294,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String description = (String) parent.getItemAtPosition(position);
-                //String city = description.split(", ")[0];
-                //chooseCity.setText(city);
                 chooseCity.setText(description);
             }
         });
@@ -317,7 +316,34 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                         dialog.cancel();
                     }
                 });
-        AlertDialog dialog = builder.create();
+        final AlertDialog dialog = builder.create();
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+            }
+        });
+        chooseCity.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!pattern.matcher(s.toString().trim()).matches()) {
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+                    Toast.makeText(getApplicationContext(), R.string.incorrect_city_error, Toast.LENGTH_SHORT).show();
+                } else {
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         dialog.show();
     }
 
