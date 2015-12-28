@@ -295,6 +295,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String description = (String) parent.getItemAtPosition(position);
                 chooseCity.setText(description);
+                chooseCity.setError(null);
             }
         });
         builder.setTitle(R.string.title_choose_city)
@@ -333,11 +334,12 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!pattern.matcher(s.toString().trim()).matches()) {
                     dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
-//                    Toast.makeText(getApplicationContext(), R.string.incorrect_city_error, Toast.LENGTH_SHORT).show();
-                    chooseCity.setBackgroundColor(0x88FF0000);
+                    chooseCity.setError(null);
+
                 } else {
                     dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
-                    chooseCity.setBackgroundColor(0xFFFFFFFF);
+                    chooseCity.setError(getString(R.string.city_error));
+
                 }
             }
 
