@@ -9,6 +9,7 @@
     <string name="humidity">Влажность</string>
     <string name="timeStamp">Обновлено</string>
     <string name="pressure_measure">мм рт.ст.</string>
+    <string name="pressure_measure_hpa">HPa</string>
     <string name="wind_measure"><![CDATA[<sup><small>м</small></sup>/<small>c</small>]]></string>
 
     <string name="clear_sky">Ясно</string> 
@@ -38,7 +39,19 @@
     <string name="btn_ok">OK</string>
     <string name="btn_cancel">Отмена</string>
     <string name="error_empty_location_name">Необходимо ввести название местоположения</string>
+    <string name="CELSIUS">°C</string>
+    <string name="FAHRENHEIT">°F</string>
+    <string name="KELVIN">" K"</string>
     <string name="infoTV">Добавьте город, \nдля отображения прогноза погоды.</string>
-
+    <string name="incorrect_city_error">Некорректное название города</string>
+    <string name="about_gps">Ваш GPS отключен, Вы хотите включить его?</string>
+    <string name="N">С</string>
+    <string name="NE">СВ</string>
+    <string name="E">В</string>
+    <string name="SE">ЮВ</string>
+    <string name="S">Ю</string>
+    <string name="SW">ЮЗ</string>
+    <string name="W">З</string>
+    <string name="NW">СЗ</string>
 
 </resources>

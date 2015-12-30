@@ -21,7 +21,6 @@ import android.widget.Toast;
 
 import com.khasang.forecast.LockableViewPager;
 import com.khasang.forecast.Logger;
-import com.khasang.forecast.Position;
 import com.khasang.forecast.PositionManager;
 import com.khasang.forecast.R;
 import com.khasang.forecast.Weather;
@@ -108,11 +107,11 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         }
         switch (PositionManager.getInstance().getPressureMetric()) {
             case MM_HG:
-                press_measure = "мм рт. ст.";
+                press_measure = getString(R.string.pressure_measure);
                 break;
             case HPA:
             default:
-                press_measure = "кПа";
+                press_measure = getString(R.string.pressure_measure_hpa);
         }
     }
 
@@ -232,11 +231,11 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.pressure:
                 switch (PositionManager.getInstance().changePressureMetric()) {
                     case MM_HG:
-                        press_measure = "мм рт. ст.";
+                        press_measure = getString(R.string.pressure_measure);
                         break;
                     case HPA:
                     default:
-                        press_measure = "кПа";
+                        press_measure = getString(R.string.pressure_measure_hpa);
                 }
                 PositionManager.getInstance().updateWeather();
                 break;
