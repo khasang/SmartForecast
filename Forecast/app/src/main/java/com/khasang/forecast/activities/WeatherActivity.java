@@ -137,7 +137,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         ForecastPageAdapter adapter = new ForecastPageAdapter(getSupportFragmentManager());
         pager.setAdapter(adapter);
         tabLayout.setupWithViewPager(pager);
-        tabLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.my_holo_alpha));
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_by_hour_24);
         tabLayout.getTabAt(1).setIcon(R.drawable.ic_by_date_24);
         pager.setSwipeable(false);

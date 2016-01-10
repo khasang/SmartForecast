@@ -43,5 +43,6 @@
     <string name="KELVIN">" K"</string>
     <string name="infoTV">Add a city \nto display the weather forecast.</string>
     <string name="incorrect_city_error">Некорректное название города</string>
+    <string name="empty_forecast_list">No Weather Information Available</string>
 
 </resources>

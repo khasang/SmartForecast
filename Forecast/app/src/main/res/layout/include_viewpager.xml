@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Реализация фрагментов-->
+<RelativeLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/llHourAndDayWeather"
+    android:layout_width="wrap_content"
+    android:layout_height="0dp"
+    android:layout_weight="3"
+    android:orientation="vertical"
+    android:visibility="visible"
+    tools:showIn="@layout/activity_weather_material">
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/black"/>
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/sliding_tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/divider"
+        app:tabGravity="fill"
+        app:tabIndicatorHeight="7dp"
+        app:tabMaxWidth="0dp"/>
+
+    <LinearLayout
+        android:id="@+id/llRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="right"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/timeStamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            tools:text="Обновлено"
+            android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+        <ImageButton
+            android:id="@+id/syncBtn"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@null"
+            android:contentDescription="test"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_refresh"/>
+
+    </LinearLayout>
+
+    <com.khasang.forecast.LockableViewPager
+        android:id="@+id/pager"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/llRefresh"
+        android:layout_below="@id/sliding_tabs"/>
+
+</RelativeLayout>
