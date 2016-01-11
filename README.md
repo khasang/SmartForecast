@@ -1,4 +1,4 @@
-# Android_20151115
+# SmartForecast
 
 <image src="Auxiliary_files/3q3A63B1TdQ.jpg" height=400 alt="Screenshots"/>
 
