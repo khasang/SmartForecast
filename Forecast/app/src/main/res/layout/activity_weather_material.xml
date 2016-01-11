@@ -17,60 +17,62 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:elevation="@dimen/appbar_elevation">
+            app:elevation="@dimen/appbar_elevation"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
+                android:id="@+id/toolbar_material"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="?attr/actionBarSize"
                 android:elevation="0dp"
                 app:layout_scrollFlags="scroll|enterAlways"
-                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+                >
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="48dp"
-                    android:layout_marginBottom="48dp"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"
-
-                    >
-
-                    <ImageView
-                        android:layout_width="96dp"
-                        android:layout_height="96dp"
-                        android:src="@drawable/ic_cloud"
-                        android:layout_centerVertical="true"
-                        android:id="@+id/imageView"
-                        android:layout_marginLeft="56dp"
-                        />
-
-                    <TextView
-                        android:id="@+id/temperature"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        tools:text="1°C"
-                        android:textSize="56sp"
-                        android:textColor="#fff"
-                        android:layout_toRightOf="@+id/imageView"
-                        android:layout_marginLeft="24dp"
-                        />
-
-                    <TextView
-                        android:id="@+id/precipitation"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        tools:text="Облачно"
-                        android:textColor="#fff"
-                        android:textSize="24sp"
-                        android:layout_below="@+id/temperature"
-                        android:layout_toRightOf="@+id/imageView"
-                        android:layout_marginLeft="24dp"
-                        />
-
-                </RelativeLayout>
             </android.support.v7.widget.Toolbar>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="48dp"
+                android:layout_marginBottom="48dp"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+
+                >
+
+                <ImageView
+                    android:layout_width="96dp"
+                    android:layout_height="96dp"
+                    android:src="@drawable/ic_cloud"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/imageView"
+                    android:layout_marginLeft="56dp"
+                    />
+
+                <TextView
+                    android:id="@+id/temperature"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1°C"
+                    android:textSize="56sp"
+                    android:textColor="#fff"
+                    android:layout_toRightOf="@+id/imageView"
+                    android:layout_marginLeft="24dp"
+                    />
+
+                <TextView
+                    android:id="@+id/precipitation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Облачно"
+                    android:textColor="#fff"
+                    android:textSize="24sp"
+                    android:layout_below="@+id/temperature"
+                    android:layout_toRightOf="@+id/imageView"
+                    android:layout_marginLeft="24dp"
+                    />
+
+            </RelativeLayout>
 
         </android.support.design.widget.AppBarLayout>
 
@@ -80,7 +82,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:clickable="true"
-            app:layout_anchor="@id/toolbar"
+            app:layout_anchor="@id/appbar"
             app:layout_anchorGravity="bottom|right|end"
             android:src="@drawable/ic_by_date_24"/>
 
