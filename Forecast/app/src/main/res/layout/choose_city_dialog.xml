@@ -10,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:paddingRight="52dp"
         android:hint="@string/choose_city_label"
         android:ems="10"
         android:imeOptions="flagNoExtractUi|actionSearch">
