@@ -24,7 +24,7 @@ import com.khasang.forecast.Logger;
 import com.khasang.forecast.PositionManager;
 import com.khasang.forecast.R;
 import com.khasang.forecast.Weather;
-import com.khasang.forecast.WeatherStation;
+import com.khasang.forecast.stations.WeatherStation;
 import com.khasang.forecast.adapters.ForecastPageAdapter;
 
 import java.util.Calendar;

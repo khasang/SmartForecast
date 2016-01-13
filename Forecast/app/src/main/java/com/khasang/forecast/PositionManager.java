@@ -6,6 +6,8 @@ import android.widget.Toast;
 
 import com.khasang.forecast.activities.WeatherActivity;
 import com.khasang.forecast.sqlite.SQLiteProcessData;
+import com.khasang.forecast.stations.WeatherStation;
+import com.khasang.forecast.stations.WeatherStationFactory;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -308,7 +310,7 @@ public class PositionManager {
     /**
      * Метод для обновления погодных данных. Вызывается погодным сервисом, когда приходят актуальные данные
      *
-     * @param rType       переменая типа {@link com.khasang.forecast.WeatherStation.ResponseType}, характеризующая тип ответа (текущий прогноз, прогноз на день или неделю)
+     * @param rType       переменая типа {@link WeatherStation.ResponseType}, характеризующая тип ответа (текущий прогноз, прогноз на день или неделю)
      * @param cityId      внутренний идентификатор города, передается в погодную станцию во время запроса погоды
      * @param serviceType идентификатор погодного сервиса
      * @param weather     обьект типа {@link Weather}, содержащий погодные характеристики

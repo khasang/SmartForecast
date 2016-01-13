@@ -9,8 +9,8 @@ import com.khasang.forecast.Position;
 import com.khasang.forecast.PositionManager;
 import com.khasang.forecast.Precipitation;
 import com.khasang.forecast.Weather;
-import com.khasang.forecast.WeatherStation;
-import com.khasang.forecast.WeatherStationFactory;
+import com.khasang.forecast.stations.WeatherStation;
+import com.khasang.forecast.stations.WeatherStationFactory;
 import com.khasang.forecast.Wind;
 
 import java.text.ParseException;
