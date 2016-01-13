@@ -9,14 +9,14 @@ public class Wind {
     private double speed;
 
     public static enum Direction {
-        NORTH("N"),
-        NORTHEAST("NE"),
-        EAST("E"),
-        SOUTHEAST("SE"),
-        SOUTH("S"),
-        SOUTHWEST("SW"),
-        WEST("W"),
-        NORTHWEST("NW");
+        NORTH(MyApplication.getAppContext().getString(R.string.N)),
+        NORTHEAST(MyApplication.getAppContext().getString(R.string.NE)),
+        EAST(MyApplication.getAppContext().getString(R.string.E)),
+        SOUTHEAST(MyApplication.getAppContext().getString(R.string.SE)),
+        SOUTH(MyApplication.getAppContext().getString(R.string.S)),
+        SOUTHWEST(MyApplication.getAppContext().getString(R.string.SW)),
+        WEST(MyApplication.getAppContext().getString(R.string.W)),
+        NORTHWEST(MyApplication.getAppContext().getString(R.string.NW));
 
         String directionString;
 

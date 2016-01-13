@@ -9,6 +9,7 @@
     <string name="humidity">Humidity</string>
     <string name="timeStamp">Updated</string>
     <string name="pressure_measure">mmHg</string>
+    <string name="pressure_measure_hpa">HPa</string>
     <string name="wind_measure"><![CDATA[<sup><small>m</small></sup>/<small>s</small>]]></string>
 
     <string name="clear_sky">Clear sky</string> 
@@ -42,6 +43,15 @@
     <string name="FAHRENHEIT">°F</string>
     <string name="KELVIN">" K"</string>
     <string name="infoTV">Add a city \nto display the weather forecast.</string>
-    <string name="incorrect_city_error">Некорректное название города</string>
+    <string name="incorrect_city_error">Incorrect city name</string>
+    <string name="about_gps">Your GPS seems to be disabled, do you want to enable it?</string>
+    <string name="N">N</string>
+    <string name="NE">NE</string>
+    <string name="E">E</string>
+    <string name="SE">SE</string>
+    <string name="S">S</string>
+    <string name="SW">SW</string>
+    <string name="W">W</string>
+    <string name="NW">NW</string>
 
 </resources>

@@ -294,8 +294,8 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String description = (String) parent.getItemAtPosition(position);
-                chooseCity.setText(description);
                 chooseCity.setError(null);
+                chooseCity.setText(description);
             }
         });
         builder.setTitle(R.string.title_choose_city)
@@ -334,12 +334,10 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!pattern.matcher(s.toString().trim()).matches()) {
                     dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
-                    chooseCity.setError(null);
-
+                    chooseCity.setError(getString(R.string.city_error));
                 } else {
                     dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
-                    chooseCity.setError(getString(R.string.city_error));
-
+                    chooseCity.setError(null);
                 }
             }
 

@@ -75,6 +75,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     private SwipeRefreshLayout swipeRefreshLayout;
 
     private String temp_measure;
+    private String press_measure;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +105,14 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             default:
                 temp_measure = getString(R.string.CELSIUS);
         }
+        switch (PositionManager.getInstance().getPressureMetric()) {
+            case MM_HG:
+                press_measure = getString(R.string.pressure_measure);
+                break;
+            case HPA:
+            default:
+                press_measure = getString(R.string.pressure_measure_hpa);
+        }
     }
 
     private void initFields() {
@@ -123,6 +132,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         city.setOnClickListener(this);
         cityPickerBtn.setOnClickListener(this);
         temperature.setOnClickListener(this);
+        pressure.setOnClickListener(this);
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -217,6 +227,18 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                         temp_measure = getString(R.string.CELSIUS);
                 }
                 PositionManager.getInstance().updateWeather();
+                break;
+            case R.id.pressure:
+                switch (PositionManager.getInstance().changePressureMetric()) {
+                    case MM_HG:
+                        press_measure = getString(R.string.pressure_measure);
+                        break;
+                    case HPA:
+                    default:
+                        press_measure = getString(R.string.pressure_measure_hpa);
+                }
+                PositionManager.getInstance().updateWeather();
+                break;
         }
     }
 
@@ -274,7 +296,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         pressure.setText(String.format("%s %.0f %s",
                 getString(R.string.pressure),
                 wCurent.getPressure(),
-                getString(R.string.pressure_measure)));
+                press_measure));
 
         wind.setText(Html.fromHtml(String.format("%s %s %.0f%s",
                 getString(R.string.wind),

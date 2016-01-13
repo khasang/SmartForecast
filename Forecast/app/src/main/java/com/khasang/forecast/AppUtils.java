@@ -21,7 +21,7 @@ import java.util.Map;
 
 public class AppUtils {
     public static final double KELVIN_CELSIUS_DELTA = 273.15;
-    public static final double KPA_TO_MM_HG = 1.33322;
+    public static final double HPA_TO_MM_HG = 1.33322;
     public static final double KM_TO_MILES = 0.62137;
     public static final double METER_TO_FOOT = 3.28083;
     /**
@@ -280,7 +280,7 @@ public class AppUtils {
             case HPA:
                 break;
             case MM_HG:
-                return kpaToMmHg(pressure);
+                return hpaToMmHg(pressure);
         }
         return pressure;
     }
@@ -346,8 +346,8 @@ public class AppUtils {
      * @param pressure давление в килопаскалях
      * @return давление в мм.рт.ст.
      */
-    public static double kpaToMmHg(double pressure) {
-        double mmHg = pressure / KPA_TO_MM_HG;
+    public static double hpaToMmHg(double pressure) {
+        double mmHg = pressure / HPA_TO_MM_HG;
         return mmHg;
     }
 }
