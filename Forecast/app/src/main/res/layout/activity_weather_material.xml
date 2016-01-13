@@ -17,16 +17,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:elevation="@dimen/appbar_elevation"
-            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+            app:elevation="@dimen/appbar_elevation">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar_material"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
+                android:layout_height="wrap_content"
                 android:elevation="0dp"
                 app:layout_scrollFlags="scroll|enterAlways"
-                >
+                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+                <Spinner
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/spinner"
+                    style="@style/MySpinnerStyle"
+                    android:theme="@style/ThemeOverlay.AppCompat.Light"
+                    android:spinnerMode="dropdown"/>
 
             </android.support.v7.widget.Toolbar>
 
@@ -36,14 +43,12 @@
                 android:layout_marginTop="48dp"
                 android:layout_marginBottom="48dp"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-
-                >
+                android:layout_marginRight="@dimen/activity_horizontal_margin">
 
                 <ImageView
                     android:layout_width="96dp"
                     android:layout_height="96dp"
-                    android:src="@drawable/ic_cloud"
+                    android:src="@drawable/ic_weather_snow"
                     android:layout_centerVertical="true"
                     android:id="@+id/imageView"
                     android:layout_marginLeft="56dp"
@@ -64,7 +69,7 @@
                     android:id="@+id/precipitation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Облачно"
+                    android:text="Снег"
                     android:textColor="#fff"
                     android:textSize="24sp"
                     android:layout_below="@+id/temperature"
@@ -85,6 +90,12 @@
             app:layout_anchor="@id/appbar"
             app:layout_anchorGravity="bottom|right|end"
             android:src="@drawable/ic_by_date_24"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerview_forecast"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     </android.support.design.widget.CoordinatorLayout>
 

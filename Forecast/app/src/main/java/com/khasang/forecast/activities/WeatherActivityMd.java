@@ -1,6 +1,7 @@
 package com.khasang.forecast.activities;
 
 import android.os.Bundle;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -24,18 +25,20 @@ public class WeatherActivityMd extends AppCompatActivity {
         setContentView(R.layout.activity_weather_material);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_material);
 
-        View spinnerContainer = LayoutInflater.from(this).inflate(R.layout.toolbar_spinner,
-                toolbar, false);
-        ActionBar.LayoutParams lp = new ActionBar.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        toolbar.addView(spinnerContainer, lp);
+//        View spinnerContainer = LayoutInflater.from(this).inflate(R.layout.toolbar_spinner,
+//                toolbar, false);
+//        ActionBar.LayoutParams lp = new ActionBar.LayoutParams(
+//                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+//        toolbar.addView(spinnerContainer, lp);
 
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         YourObjectSpinnerAdapter spinnerAdapter = new YourObjectSpinnerAdapter();
         spinnerAdapter.addItem("Москва");
         spinnerAdapter.addItem("Санкт-Петербург");
         spinnerAdapter.addItem("Сочи");
 
-        Spinner spinner = (Spinner) spinnerContainer.findViewById(R.id.toolbar_spinner);
+        Spinner spinner = (Spinner) findViewById(R.id.spinner);
         spinner.setAdapter(spinnerAdapter);
     }
 
@@ -75,7 +78,6 @@ public class WeatherActivityMd extends AppCompatActivity {
                 view = getLayoutInflater().inflate(R.layout.toolbar_spinner_item_dropdown, parent, false);
                 view.setTag("DROPDOWN");
             }
-
             TextView textView = (TextView) view.findViewById(android.R.id.text1);
             textView.setText(getTitle(position));
 
@@ -85,8 +87,7 @@ public class WeatherActivityMd extends AppCompatActivity {
         @Override
         public View getView(int position, View view, ViewGroup parent) {
             if (view == null || !view.getTag().toString().equals("NON_DROPDOWN")) {
-                view = getLayoutInflater().inflate(R.layout.
-                        toolbar_spinner_item_actionbar, parent, false);
+                view = getLayoutInflater().inflate(R.layout.toolbar_spinner_item_actionbar, parent, false);
                 view.setTag("NON_DROPDOWN");
             }
             TextView textView = (TextView) view.findViewById(android.R.id.text1);
