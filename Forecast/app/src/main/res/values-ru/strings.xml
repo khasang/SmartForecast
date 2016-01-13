@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">Прогноз</string>
     <string name="service_name_open_weather_map">OpenWeatherMap</string>
 
     <string name="city_list">Список городов</string>
@@ -53,5 +52,6 @@
     <string name="SW">ЮЗ</string>
     <string name="W">З</string>
     <string name="NW">СЗ</string>
+    <string name="city_error">Проверьте название города</string>
 
 </resources>

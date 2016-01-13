@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Forecast</string>
+    <string name="app_name">Smart Forecast</string>
     <string name="service_name_open_weather_map">OpenWeatherMap</string>
 
     <string name="city_list">List of cities</string>
