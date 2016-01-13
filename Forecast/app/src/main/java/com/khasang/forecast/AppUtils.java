@@ -4,6 +4,10 @@ import com.khasang.forecast.models.DailyForecastList;
 import com.khasang.forecast.models.DailyResponse;
 import com.khasang.forecast.models.HourlyForecastList;
 import com.khasang.forecast.models.OpenWeatherMapResponse;
+import com.khasang.forecast.position.PositionManager;
+import com.khasang.forecast.position.Precipitation;
+import com.khasang.forecast.position.Weather;
+import com.khasang.forecast.position.Wind;
 
 import java.util.Calendar;
 import java.util.HashMap;

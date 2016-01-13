@@ -4,9 +4,9 @@ import android.support.annotation.Nullable;
 
 import com.facebook.stetho.okhttp.StethoInterceptor;
 import com.khasang.forecast.AppUtils;
-import com.khasang.forecast.Coordinate;
+import com.khasang.forecast.position.Coordinate;
 import com.khasang.forecast.MyApplication;
-import com.khasang.forecast.PositionManager;
+import com.khasang.forecast.position.PositionManager;
 import com.khasang.forecast.models.DailyResponse;
 import com.khasang.forecast.models.OpenWeatherMapResponse;
 import com.squareup.okhttp.Cache;

@@ -21,9 +21,9 @@ import android.widget.Toast;
 
 import com.khasang.forecast.LockableViewPager;
 import com.khasang.forecast.Logger;
-import com.khasang.forecast.PositionManager;
+import com.khasang.forecast.position.PositionManager;
 import com.khasang.forecast.R;
-import com.khasang.forecast.Weather;
+import com.khasang.forecast.position.Weather;
 import com.khasang.forecast.stations.WeatherStation;
 import com.khasang.forecast.adapters.ForecastPageAdapter;
 

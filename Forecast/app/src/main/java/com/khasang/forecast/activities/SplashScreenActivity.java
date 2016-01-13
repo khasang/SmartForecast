@@ -11,7 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Button;
 
-import com.khasang.forecast.PositionManager;
+import com.khasang.forecast.position.PositionManager;
 import com.khasang.forecast.R;
 import com.khasang.forecast.location.LocationFactory;
 import com.khasang.forecast.location.LocationProvider;

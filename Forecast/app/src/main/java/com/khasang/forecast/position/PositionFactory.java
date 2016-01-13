@@ -1,5 +1,7 @@
-package com.khasang.forecast;
+package com.khasang.forecast.position;
 
+import com.khasang.forecast.position.Coordinate;
+import com.khasang.forecast.position.Position;
 import com.khasang.forecast.sqlite.SQLiteProcessData;
 import java.util.HashMap;
 

@@ -1,10 +1,4 @@
-package com.khasang.forecast;
-
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+package com.khasang.forecast.position;
 
 /**
  * Created by Veda on 24.11.15.

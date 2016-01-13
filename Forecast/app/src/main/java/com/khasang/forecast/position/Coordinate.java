@@ -1,4 +1,4 @@
-package com.khasang.forecast;
+package com.khasang.forecast.position;
 
 /**
  * Created by Veda on 24.11.15.

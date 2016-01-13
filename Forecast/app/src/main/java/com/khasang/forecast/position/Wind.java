@@ -1,4 +1,7 @@
-package com.khasang.forecast;
+package com.khasang.forecast.position;
+
+import com.khasang.forecast.MyApplication;
+import com.khasang.forecast.R;
 
 /**
  * Created by Veda on 24.11.15.

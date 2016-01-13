@@ -1,6 +1,6 @@
 package com.khasang.forecast.stations;
 
-import com.khasang.forecast.Coordinate;
+import com.khasang.forecast.position.Coordinate;
 
 /**
  * Created by novoselov on 24.11.2015.

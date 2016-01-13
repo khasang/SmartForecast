@@ -1,9 +1,11 @@
-package com.khasang.forecast;
+package com.khasang.forecast.position;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.widget.Toast;
 
+import com.khasang.forecast.AppUtils;
+import com.khasang.forecast.R;
 import com.khasang.forecast.activities.WeatherActivity;
 import com.khasang.forecast.sqlite.SQLiteProcessData;
 import com.khasang.forecast.stations.WeatherStation;
