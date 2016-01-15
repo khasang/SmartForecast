@@ -94,9 +94,9 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         public ViewHolder(View itemView) {
             super(itemView);
 
-            tvDayOfWeekOrTime = (TextView) itemView.findViewById(R.id.tvDayOfWeek);
-            ivWeatherIcon = (ImageView) itemView.findViewById(R.id.ivWeatherIcon);
-            tvTemperature = (TextView) itemView.findViewById(R.id.tvTemperature);
+            tvDayOfWeekOrTime = (TextView) itemView.findViewById(R.id.tv_day_of_week);
+            ivWeatherIcon = (ImageView) itemView.findViewById(R.id.iv_weather_icon);
+            tvTemperature = (TextView) itemView.findViewById(R.id.tv_temperature);
         }
     }
 }

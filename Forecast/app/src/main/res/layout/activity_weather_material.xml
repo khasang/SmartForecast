@@ -48,7 +48,7 @@
                 <ImageView
                     android:layout_width="96dp"
                     android:layout_height="96dp"
-                    android:src="@drawable/ic_weather_snow"
+                    android:src="@drawable/ic_cloud"
                     android:layout_centerVertical="true"
                     android:id="@+id/imageView"
                     android:layout_marginLeft="56dp"
@@ -91,11 +91,11 @@
             app:layout_anchorGravity="bottom|right|end"
             android:src="@drawable/ic_by_date_24"/>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerview_forecast"
+
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            android:id="@+id/fragment_container"/>
 
     </android.support.design.widget.CoordinatorLayout>
 

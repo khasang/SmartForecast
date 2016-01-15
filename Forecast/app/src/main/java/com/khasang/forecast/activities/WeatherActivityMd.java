@@ -13,6 +13,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.khasang.forecast.R;
+import com.khasang.forecast.adapters.CitySpinnerAdapter;
+import com.khasang.forecast.fragments.DayForecastFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,78 +27,25 @@ public class WeatherActivityMd extends AppCompatActivity {
         setContentView(R.layout.activity_weather_material);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_material);
 
-//        View spinnerContainer = LayoutInflater.from(this).inflate(R.layout.toolbar_spinner,
-//                toolbar, false);
-//        ActionBar.LayoutParams lp = new ActionBar.LayoutParams(
-//                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-//        toolbar.addView(spinnerContainer, lp);
-
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        YourObjectSpinnerAdapter spinnerAdapter = new YourObjectSpinnerAdapter();
+        CitySpinnerAdapter spinnerAdapter = new CitySpinnerAdapter();
         spinnerAdapter.addItem("Москва");
         spinnerAdapter.addItem("Санкт-Петербург");
         spinnerAdapter.addItem("Сочи");
 
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         spinner.setAdapter(spinnerAdapter);
-    }
 
-    private class YourObjectSpinnerAdapter extends BaseAdapter {
-        private List<String> mItems = new ArrayList<>();
-
-        public void clear() {
-            mItems.clear();
-        }
-
-        public void addItem(String yourObject) {
-            mItems.add(yourObject);
-        }
-
-        public void addItems(List<String> yourObjectList) {
-            mItems.addAll(yourObjectList);
-        }
-
-        @Override
-        public int getCount() {
-            return mItems.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return mItems.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getDropDownView(int position, View view, ViewGroup parent) {
-            if (view == null || !view.getTag().toString().equals("DROPDOWN")) {
-                view = getLayoutInflater().inflate(R.layout.toolbar_spinner_item_dropdown, parent, false);
-                view.setTag("DROPDOWN");
+        if (findViewById(R.id.fragment_container) != null) {
+            if (savedInstanceState != null) {
+                return;
             }
-            TextView textView = (TextView) view.findViewById(android.R.id.text1);
-            textView.setText(getTitle(position));
 
-            return view;
-        }
-
-        @Override
-        public View getView(int position, View view, ViewGroup parent) {
-            if (view == null || !view.getTag().toString().equals("NON_DROPDOWN")) {
-                view = getLayoutInflater().inflate(R.layout.toolbar_spinner_item_actionbar, parent, false);
-                view.setTag("NON_DROPDOWN");
-            }
-            TextView textView = (TextView) view.findViewById(android.R.id.text1);
-            textView.setText(getTitle(position));
-            return view;
-        }
-
-        private String getTitle(int position) {
-            return position >= 0 && position < mItems.size() ? mItems.get(position) : "";
+            DayForecastFragment firstFragment = new DayForecastFragment();
+            firstFragment.setArguments(getIntent().getExtras());
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fragment_container, firstFragment).commit();
         }
     }
 }

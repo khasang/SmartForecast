@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,7 +27,9 @@ import com.khasang.forecast.PositionManager;
 import com.khasang.forecast.R;
 import com.khasang.forecast.Weather;
 import com.khasang.forecast.WeatherStation;
+import com.khasang.forecast.adapters.CitySpinnerAdapter;
 import com.khasang.forecast.adapters.ForecastPageAdapter;
+import com.khasang.forecast.fragments.DayForecastFragment;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -43,18 +47,18 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     /**
      * ViewPager для отображения нижних вкладок прогноза: по часам и по дням
      */
-    private TabLayout tabLayout;
-    private LockableViewPager pager;
+//    private TabLayout tabLayout;
+//    private LockableViewPager pager;
 
-    private TextView city;
-    private TextView temperature;
-    private TextView description;
-    private TextView pressure;
-    private TextView wind;
-    private TextView humidity;
-    private TextView timeStamp;
-    private ImageButton syncBtn;
-    private ImageButton cityPickerBtn;
+//    private TextView city;
+//    private TextView temperature;
+//    private TextView description;
+//    private TextView pressure;
+//    private TextView wind;
+//    private TextView humidity;
+//    private TextView timeStamp;
+//    private ImageButton syncBtn;
+//    private ImageButton cityPickerBtn;
 
     private LinearLayout llMainInformation;
 
@@ -79,15 +83,39 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_weather);
+//        setContentView(R.layout.activity_weather);
+
+        setContentView(R.layout.activity_weather_material);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_material);
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        CitySpinnerAdapter spinnerAdapter = new CitySpinnerAdapter();
+        spinnerAdapter.addItem("Москва");
+        spinnerAdapter.addItem("Санкт-Петербург");
+        spinnerAdapter.addItem("Сочи");
+
+        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        spinner.setAdapter(spinnerAdapter);
 
         context = getApplicationContext();
         PositionManager.getInstance().initManager(this);
 
+        if (findViewById(R.id.fragment_container) != null) {
+            if (savedInstanceState != null) {
+                return;
+            }
+
+            DayForecastFragment firstFragment = new DayForecastFragment();
+            firstFragment.setArguments(getIntent().getExtras());
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fragment_container, firstFragment).commit();
+        }
+
         initStartingMetrics();
-        initFields();
-        setAnimationForWidgets();
-        startAnimation();
+//        initFields();
+//        setAnimationForWidgets();
+//        startAnimation();
 
         initFirstAppearance();
     }
@@ -107,46 +135,48 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void initFields() {
-        city = (TextView) findViewById(R.id.city);
-        cityPickerBtn = (ImageButton) findViewById(R.id.cityPickerBnt);
-        temperature = (TextView) findViewById(R.id.temperature);
-        description = (TextView) findViewById(R.id.precipitation);
-        pressure = (TextView) findViewById(R.id.pressure);
-        wind = (TextView) findViewById(R.id.wind);
-        humidity = (TextView) findViewById(R.id.humidity);
-        timeStamp = (TextView) findViewById(R.id.timeStamp);
-        syncBtn = (ImageButton) findViewById(R.id.syncBtn);
-        llMainInformation = (LinearLayout) findViewById(R.id.llMainInformation);
+
+
+//        city = (TextView) findViewById(R.id.city);
+//        cityPickerBtn = (ImageButton) findViewById(R.id.cityPickerBnt);
+//        temperature = (TextView) findViewById(R.id.temperature);
+//        description = (TextView) findViewById(R.id.precipitation);
+//        pressure = (TextView) findViewById(R.id.pressure);
+//        wind = (TextView) findViewById(R.id.wind);
+//        humidity = (TextView) findViewById(R.id.humidity);
+//        timeStamp = (TextView) findViewById(R.id.timeStamp);
+//        syncBtn = (ImageButton) findViewById(R.id.syncBtn);
+//        llMainInformation = (LinearLayout) findViewById(R.id.llMainInformation);
 
         /** Слушатели нажатий объектов */
-        syncBtn.setOnClickListener(this);
-        city.setOnClickListener(this);
-        cityPickerBtn.setOnClickListener(this);
-        temperature.setOnClickListener(this);
+//        syncBtn.setOnClickListener(this);
+//        city.setOnClickListener(this);
+//        cityPickerBtn.setOnClickListener(this);
+//        temperature.setOnClickListener(this);
 
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
-        swipeRefreshLayout.setOnRefreshListener(this);
+//        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+//        swipeRefreshLayout.setOnRefreshListener(this);
+//
+//        swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+//                android.R.color.holo_green_light,
+//                android.R.color.holo_orange_light,
+//                android.R.color.holo_red_light);
 
-        swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
-
-        tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
-        pager = (LockableViewPager) findViewById(R.id.pager);
-        ForecastPageAdapter adapter = new ForecastPageAdapter(getSupportFragmentManager());
-        pager.setAdapter(adapter);
-        tabLayout.setupWithViewPager(pager);
-        tabLayout.getTabAt(0).setIcon(R.drawable.ic_by_hour_24);
-        tabLayout.getTabAt(1).setIcon(R.drawable.ic_by_date_24);
-        pager.setSwipeable(false);
-        pager.addOnPageChangeListener(adapter);
+//        tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+//        pager = (LockableViewPager) findViewById(R.id.pager);
+//        ForecastPageAdapter adapter = new ForecastPageAdapter(getSupportFragmentManager());
+//        pager.setAdapter(adapter);
+//        tabLayout.setupWithViewPager(pager);
+//        tabLayout.getTabAt(0).setIcon(R.drawable.ic_by_hour_24);
+//        tabLayout.getTabAt(1).setIcon(R.drawable.ic_by_date_24);
+//        pager.setSwipeable(false);
+//        pager.addOnPageChangeListener(adapter);
     }
 
     private void startAnimation() {
-        syncBtn.startAnimation(animationRotateCenter);
-        wind.startAnimation(animTrans);
-        humidity.startAnimation(animTrans);
+//        syncBtn.startAnimation(animationRotateCenter);
+//        wind.startAnimation(animTrans);
+//        humidity.startAnimation(animTrans);
     }
 
     private void setAnimationForWidgets() {
@@ -168,7 +198,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void initFirstAppearance() {
-        temperature.setText("--/--");
+//        temperature.setText("--/--");
         if (PositionManager.getInstance().getPositions().size() == 0) {
             startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
         } else if (!PositionManager.getInstance().positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {
@@ -176,7 +206,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
         } else {
             if (!PositionManager.getInstance().getCurrentPositionName().isEmpty()) {
-                onRefresh();
+//                onRefresh();
             }
         }
     }
@@ -195,7 +225,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.syncBtn:
-                onRefresh();
+//                onRefresh();
                 break;
             case R.id.city:
                 startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
@@ -238,11 +268,11 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case HOURLY:
                 Logger.println(TAG, "Принят HOURLY прогноз");
-                ((ForecastPageAdapter) pager.getAdapter()).setHourForecast(forecast);
+//                ((ForecastPageAdapter) pager.getAdapter()).setHourForecast(forecast);
                 break;
             case DAILY:
                 Logger.println(TAG, "Принят DAILY прогноз");
-                ((ForecastPageAdapter) pager.getAdapter()).setDayForecast(forecast);
+//                ((ForecastPageAdapter) pager.getAdapter()).setDayForecast(forecast);
                 break;
             default:
                 Logger.println(TAG, "Принят необрабатываемый прогноз");
@@ -260,35 +290,35 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         int hours = date.get(Calendar.HOUR_OF_DAY);
         int minutes = date.get(Calendar.MINUTE);
 
-        city.setText(PositionManager.getInstance().getCurrentPositionName().split(",")[0]); // отображаем имя текущей локации
-        //temperature.setText(String.format("%.0f°C", wCurent.getTemperature()));
-        temperature.setText(String.format("%.0f%s", wCurent.getTemperature(), temp_measure));
-
-        description.setText(String.format("%s", wCurent.getDescription()
-                .substring(0, 1)
-                .toUpperCase() + wCurent
-                .getDescription()
-                .substring(1)));
-
-        pressure.setText(String.format("%s %.0f %s",
-                getString(R.string.pressure),
-                wCurent.getPressure(),
-                getString(R.string.pressure_measure)));
-
-        wind.setText(Html.fromHtml(String.format("%s %s %.0f%s",
-                getString(R.string.wind),
-                wCurent.getWindDirection().getDirectionString(),
-                wCurent.getWindPower(),
-                getString(R.string.wind_measure))));
-
-        humidity.setText(String.format("%s %s%%",
-                getString(R.string.humidity),
-                wCurent.getHumidity()));
-
-        timeStamp.setText(String.format("%s %d:%02d",
-                getString(R.string.timeStamp),
-                hours,
-                minutes));
+//        city.setText(PositionManager.getInstance().getCurrentPositionName().split(",")[0]); // отображаем имя текущей локации
+//        //temperature.setText(String.format("%.0f°C", wCurent.getTemperature()));
+//        temperature.setText(String.format("%.0f%s", wCurent.getTemperature(), temp_measure));
+//
+//        description.setText(String.format("%s", wCurent.getDescription()
+//                .substring(0, 1)
+//                .toUpperCase() + wCurent
+//                .getDescription()
+//                .substring(1)));
+//
+//        pressure.setText(String.format("%s %.0f %s",
+//                getString(R.string.pressure),
+//                wCurent.getPressure(),
+//                getString(R.string.pressure_measure)));
+//
+//        wind.setText(Html.fromHtml(String.format("%s %s %.0f%s",
+//                getString(R.string.wind),
+//                wCurent.getWindDirection().getDirectionString(),
+//                wCurent.getWindPower(),
+//                getString(R.string.wind_measure))));
+//
+//        humidity.setText(String.format("%s %s%%",
+//                getString(R.string.humidity),
+//                wCurent.getHumidity()));
+//
+//        timeStamp.setText(String.format("%s %d:%02d",
+//                getString(R.string.timeStamp),
+//                hours,
+//                minutes));
 
     }
 
@@ -301,16 +331,16 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         if (requestCode == CHOOSE_CITY) {
             if (resultCode == RESULT_OK) {
                 String newCity = data.getStringExtra(CityPickerActivity.CITY_PICKER_TAG);
-                city.setText(newCity.split(",")[0]);
+//                city.setText(newCity.split(",")[0]);
                 Logger.println(TAG, newCity);
                 PositionManager.getInstance().setCurrentPosition(newCity);
                 PositionManager.getInstance().saveCurrPosition();
-                onRefresh();
-                syncBtn.setVisibility(View.VISIBLE);
+//                onRefresh();
+//                syncBtn.setVisibility(View.VISIBLE);
             } else {
                 if (!PositionManager.getInstance().positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {
                     stopRefresh();
-                    syncBtn.setVisibility(View.GONE);
+//                    syncBtn.setVisibility(View.GONE);
                 }
             }
         }
@@ -343,16 +373,16 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
      * Проигрываение анимации всех объектов activity
      */
     private void allAnimation() {
-        city.startAnimation(fallingDown);
-        cityPickerBtn.startAnimation(fallingDown_plus1);
-        temperature.startAnimation(flip);
-        description.startAnimation(fallingDownAlpha);
-        pressure.startAnimation(fallingDownAlpha_plus1);
-        //llMainInformation.setAnimation(flip);
-        wind.startAnimation(animTrans);
-        humidity.startAnimation(animTrans_plus1);
-        timeStamp.startAnimation(fallingUp);
-        syncBtn.startAnimation(animationRotateCenter);
+//        city.startAnimation(fallingDown);
+//        cityPickerBtn.startAnimation(fallingDown_plus1);
+//        temperature.startAnimation(flip);
+//        description.startAnimation(fallingDownAlpha);
+//        pressure.startAnimation(fallingDownAlpha_plus1);
+//        //llMainInformation.setAnimation(flip);
+//        wind.startAnimation(animTrans);
+//        humidity.startAnimation(animTrans_plus1);
+//        timeStamp.startAnimation(fallingUp);
+//        syncBtn.startAnimation(animationRotateCenter);
     }
 
     /**

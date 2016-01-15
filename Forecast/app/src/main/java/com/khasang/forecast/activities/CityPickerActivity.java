@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -63,7 +64,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     List<String> cityList;
 
     private Toolbar toolbar;
-    private ImageButton fabBtn;
+    private FloatingActionButton fabBtn;
     private PlaceProvider mPlaceProvider;
 
 
@@ -107,7 +108,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 showViews();
             }
         });
-        fabBtn = (ImageButton) findViewById(R.id.fabBtn);
+        fabBtn = (FloatingActionButton) findViewById(R.id.fabBtn);
         fabBtn.setOnClickListener(this);
         createItemList();
         Logger.println(TAG, String.valueOf(PositionManager.getInstance().getPositions()));

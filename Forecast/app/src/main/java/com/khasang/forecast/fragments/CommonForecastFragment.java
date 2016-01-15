@@ -90,10 +90,11 @@ public abstract class CommonForecastFragment extends Fragment {
 //        RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
 //        recyclerView.setItemAnimator(itemAnimator);
 
-        tvEmptyList = (TextView) v.findViewById(R.id.tvEmptyList);
+//        tvEmptyList = (TextView) v.findViewById(R.id.tvEmptyList);
 
-        layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, true);
-        recyclerView.setLayoutManager(layoutManager);
+//        layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, true);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         adapter = new CustomAdapter(sDate, weathers);
 
