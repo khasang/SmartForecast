@@ -37,15 +37,15 @@ public class WeatherActivityMd extends AppCompatActivity {
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         spinner.setAdapter(spinnerAdapter);
 
-        if (findViewById(R.id.fragment_container) != null) {
-            if (savedInstanceState != null) {
-                return;
-            }
-
-            DayForecastFragment firstFragment = new DayForecastFragment();
-            firstFragment.setArguments(getIntent().getExtras());
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, firstFragment).commit();
-        }
+//        if (findViewById(R.id.fragment_container) != null) {
+//            if (savedInstanceState != null) {
+//                return;
+//            }
+//
+//            DayForecastFragment firstFragment = new DayForecastFragment();
+//            firstFragment.setArguments(getIntent().getExtras());
+//            getSupportFragmentManager().beginTransaction()
+//                    .add(R.id.fragment_container, firstFragment).commit();
+//        }
     }
 }

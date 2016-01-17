@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -30,6 +31,7 @@ import com.khasang.forecast.WeatherStation;
 import com.khasang.forecast.adapters.CitySpinnerAdapter;
 import com.khasang.forecast.adapters.ForecastPageAdapter;
 import com.khasang.forecast.fragments.DayForecastFragment;
+import com.khasang.forecast.fragments.HourForecastFragment;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -79,12 +81,12 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     private SwipeRefreshLayout swipeRefreshLayout;
 
     private String temp_measure;
+    private DayForecastFragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_weather);
-
         setContentView(R.layout.activity_weather_material);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_material);
 
@@ -101,16 +103,26 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         context = getApplicationContext();
         PositionManager.getInstance().initManager(this);
 
-        if (findViewById(R.id.fragment_container) != null) {
-            if (savedInstanceState != null) {
-                return;
-            }
 
-            DayForecastFragment firstFragment = new DayForecastFragment();
-            firstFragment.setArguments(getIntent().getExtras());
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, firstFragment).commit();
-        }
+        fragment = new DayForecastFragment();
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.add(R.id.fragment_container, fragment);
+        ft.commit();
+
+
+
+
+//        if (findViewById(R.id.fragment_container) != null) {
+//            if (savedInstanceState != null) {
+//                return;
+//            }
+//
+//            DayForecastFragment firstFragment = new DayForecastFragment();
+//            firstFragment.setArguments(getIntent().getExtras());
+//            getSupportFragmentManager().beginTransaction()
+//                    .add(R.id.fragment_container, firstFragment).commit();
+//        }
 
         initStartingMetrics();
 //        initFields();
@@ -253,7 +265,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
      * Обновление интерфейса Activity при получении новых данных
      */
     public void updateInterface(WeatherStation.ResponseType responseType, Map<Calendar, Weather> forecast) {
-        stopRefresh();
+//        stopRefresh();
 
         if (forecast == null || forecast.size() == 0) {
             Logger.println(TAG, "Weather is null!");
@@ -273,6 +285,8 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             case DAILY:
                 Logger.println(TAG, "Принят DAILY прогноз");
 //                ((ForecastPageAdapter) pager.getAdapter()).setDayForecast(forecast);
+                fragment.setDatasAndAnimate(forecast);
+
                 break;
             default:
                 Logger.println(TAG, "Принят необрабатываемый прогноз");

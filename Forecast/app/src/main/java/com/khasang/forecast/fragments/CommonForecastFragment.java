@@ -55,7 +55,7 @@ public abstract class CommonForecastFragment extends Fragment {
             adapter.notifyDataSetChanged();
         }
 
-        animate();
+//        animate();
     }
 
     public void animate() {
