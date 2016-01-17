@@ -43,14 +43,14 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.recycler_item_view, parent, false);
+                .inflate(R.layout.list_item_forecast, parent, false);
 
-        if (utils.getWidthDpx() > 640f) {
-            width = utils.getWidthPx() / dataset.size();
-            ViewGroup.MarginLayoutParams params = new ViewGroup.MarginLayoutParams(width, ViewGroup.LayoutParams.MATCH_PARENT);
-            params.setMargins(4, 4, 4, 4);
-            v.setLayoutParams(params);
-        }
+//        if (utils.getWidthDpx() > 640f) {
+//            width = utils.getWidthPx() / dataset.size();
+//            ViewGroup.MarginLayoutParams params = new ViewGroup.MarginLayoutParams(width, ViewGroup.LayoutParams.MATCH_PARENT);
+//            params.setMargins(4, 4, 4, 4);
+//            v.setLayoutParams(params);
+//        }
 
         return new ViewHolder(v);
     }

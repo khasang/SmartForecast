@@ -90,7 +90,7 @@ public abstract class CommonForecastFragment extends Fragment {
 //        RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
 //        recyclerView.setItemAnimator(itemAnimator);
 
-//        tvEmptyList = (TextView) v.findViewById(R.id.tvEmptyList);
+        tvEmptyList = (TextView) v.findViewById(R.id.tvEmptyList);
 
 //        layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, true);
 

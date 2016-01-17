@@ -110,6 +110,8 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         ft.add(R.id.fragment_container, fragment);
         ft.commit();
 
+        onRefresh();
+
 
 
 
@@ -380,7 +382,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 PositionManager.getInstance().updateWeather();
             }
         }, 1000);
-        swipeRefreshLayout.setRefreshing(true);
+//        swipeRefreshLayout.setRefreshing(true);
     }
 
     /**
@@ -403,7 +405,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
      * Останавливаем анимацию
      */
     public void stopRefresh() {
-        swipeRefreshLayout.setRefreshing(false);
+//        swipeRefreshLayout.setRefreshing(false);
         //syncBtn.clearAnimation();
     }
 
