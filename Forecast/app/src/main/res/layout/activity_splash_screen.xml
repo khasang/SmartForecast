@@ -6,21 +6,73 @@
     android:layout_height="match_parent"
     tools:context=".activities.SplashScreenActivity">
 
-    <ImageView
+    <!--<ImageView
         android:id="@+id/imageview_animation_list_filling"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:background="@drawable/animation_list_filling"
-        />
+        />-->
 
- <!--   <ImageView
-        android:id="@+id/imageview_animated_selector"
+    <ImageView
+        android:id="@+id/splash_bg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/selector"
+        android:layout_centerInParent="true"
+        android:background="@drawable/splash_bg"
         />
--->
+
+    <ImageView
+        android:id="@+id/splash_cloud"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/splash_cloud"/>
+
+    <ImageView
+        android:id="@+id/splash_left_cloud"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/splash_left_cloud"/>
+
+    <ImageView
+        android:id="@+id/splash_right_cloud"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/splash_right_cloud"/>
+
+    <ImageView
+        android:id="@+id/splash_rainbow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/splash_rainbow"/>
+
+    <ImageView
+        android:id="@+id/splash_wink"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/splash_wink"/>
+
+    <ImageView
+        android:id="@+id/splash_smile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/splash_smile"/>
+
+
+
+    <!--   <ImageView
+           android:id="@+id/imageview_animated_selector"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:background="@drawable/selector"
+           />
+   -->
 
     <!--<ViewAnimator
         android:id="@+id/viewAnimator1"
