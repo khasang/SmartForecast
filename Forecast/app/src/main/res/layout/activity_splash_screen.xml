@@ -6,13 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".activities.SplashScreenActivity">
 
-    <!--<ImageView
-        android:id="@+id/imageview_animation_list_filling"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:background="@drawable/animation_list_filling"
-        />-->
+
 
     <ImageView
         android:id="@+id/splash_bg"
@@ -64,7 +58,13 @@
         android:layout_centerInParent="true"
         android:background="@drawable/splash_smile"/>
 
-
+    <ImageView
+           android:id="@+id/imageview_animation_list_face"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_centerInParent="true"
+           android:background="@drawable/animation_list_face"
+           />
 
     <!--   <ImageView
            android:id="@+id/imageview_animated_selector"

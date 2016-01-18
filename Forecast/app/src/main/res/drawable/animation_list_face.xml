@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <animation-list xmlns:android="http://schemas.android.com/apk/res/android"
-                android:oneshot="true">
+                android:oneshot="true"
+                >
 
     <item
-        android:duration="500"
+        android:duration="200"
         android:fromAlpha="1.0"
         android:toAlpha="0.0"
-        android:drawable="@drawable/splash_bg"/>
+        android:drawable="@drawable/splash_smile"/>
 
     <item
-        android:duration="500"
+        android:duration="200"
         android:fromAlpha="1.0"
         android:toAlpha="0.0"
-        android:drawable="@drawable/splash_cloud"/>
+        android:drawable="@drawable/splash_wink"/>
 
-  <!--  <item
-        android:duration="500"
+    <item
+        android:duration="200"
         android:fromAlpha="1.0"
         android:toAlpha="0.0"
-        android:drawable="@drawable/splash3"/>-->
+        android:drawable="@drawable/splash_smile"/>
 
 </animation-list>

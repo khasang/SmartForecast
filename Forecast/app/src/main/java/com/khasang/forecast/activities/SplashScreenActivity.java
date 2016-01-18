@@ -1,6 +1,7 @@
 package com.khasang.forecast.activities;
 
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,8 +32,7 @@ public class SplashScreenActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
-        /*final ImageView mImageViewFilling = (ImageView) findViewById(R.id.imageview_animation_list_filling);
-        ((AnimationDrawable) mImageViewFilling.getBackground()).start();*/
+
 
         ImageView splash_cloud = (ImageView)findViewById(R.id.splash_cloud);
         final ImageView splash_left_cloud = (ImageView)findViewById(R.id.splash_left_cloud);
@@ -63,11 +63,14 @@ public class SplashScreenActivity
         splash_smile.startAnimation(anim_splash_smile);
         splash_wink.startAnimation(anim_splash_wink);
 
-        splash_left_cloud.setVisibility(View.GONE);
-        splash_right_cloud.setVisibility(View.GONE);
-        splash_rainbow.setVisibility(View.GONE);
+        //splash_left_cloud.setVisibility(View.GONE);
+        //splash_right_cloud.setVisibility(View.GONE);
+        //splash_rainbow.setVisibility(View.GONE);
         //splash_smile.setVisibility(View.GONE);
 
+        final ImageView mImageViewFilling = (ImageView) findViewById(R.id.imageview_animation_list_face);
+        mImageViewFilling.animate().setStartDelay(1000);
+        ((AnimationDrawable) mImageViewFilling.getBackground()).start();
 
         //TODO DELETE
      /*   mImageViewFilling.setOnClickListener(new View.OnClickListener() {
