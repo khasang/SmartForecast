@@ -350,4 +350,16 @@ public class AppUtils {
         double mmHg = pressure / KPA_TO_MM_HG;
         return mmHg;
     }
+
+    /** Определение времени суток */
+    public static boolean isDayFromString(String timeString) {
+        timeString = timeString.substring(0, 2);
+        try {
+            int time = Integer.parseInt(timeString);
+            if (time >= 21 || time < 6)return false;
+            return true;
+        } catch(NumberFormatException nfe) {
+            return true;
+        }
+    }
 }

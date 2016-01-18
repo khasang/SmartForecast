@@ -60,7 +60,7 @@ public class PositionManager {
     public void initManager(WeatherActivity activity) {
         this.mActivity = activity;
 
-        dbManager = new SQLiteProcessData(mActivity.context);
+        dbManager = new SQLiteProcessData(MyApplication.getAppContext());
         temperatureMetric = dbManager.loadTemperatureMetrics();
         speedMetric = dbManager.loadSpeedMetrics();
         pressureMetric = dbManager.loadPressureMetrics();

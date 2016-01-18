@@ -40,17 +40,17 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="48dp"
-                android:layout_marginBottom="48dp"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin">
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                app:layout_scrollFlags="scroll|enterAlways"
+                android:layout_marginBottom="?attr/actionBarSize">
 
                 <ImageView
                     android:layout_width="96dp"
                     android:layout_height="96dp"
                     android:src="@drawable/ic_cloud"
                     android:layout_centerVertical="true"
-                    android:id="@+id/imageView"
+                    android:id="@+id/iv_curr_weather"
                     android:layout_marginLeft="56dp"
                     />
 
@@ -61,7 +61,7 @@
                     android:text="1°C"
                     android:textSize="56sp"
                     android:textColor="#fff"
-                    android:layout_toRightOf="@+id/imageView"
+                    android:layout_toRightOf="@+id/iv_curr_weather"
                     android:layout_marginLeft="24dp"
                     />
 
@@ -73,7 +73,7 @@
                     android:textColor="#fff"
                     android:textSize="24sp"
                     android:layout_below="@+id/temperature"
-                    android:layout_toRightOf="@+id/imageView"
+                    android:layout_toRightOf="@+id/iv_curr_weather"
                     android:layout_marginLeft="24dp"
                     />
 
@@ -86,16 +86,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:clickable="true"
             app:layout_anchor="@id/appbar"
             app:layout_anchorGravity="bottom|right|end"
-            android:src="@drawable/ic_by_date_24"/>
+            android:src="@drawable/ic_by_date_24"
+            app:layout_behavior="com.khasang.forecast.ScrollAwareFabBehavior"
+            android:elevation="6dp"
+            android:clickable="true"/>
 
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
-            android:id="@+id/fragment_container"/>
+            android:id="@+id/fragment_container"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     </android.support.design.widget.CoordinatorLayout>
 
