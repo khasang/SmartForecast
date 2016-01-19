@@ -1,6 +1,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
-             android:layout_height="match_parent">
+             android:layout_height="match_parent"
+             xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
         android:id="@+id/infoTV"
@@ -20,20 +21,8 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"/>
-
-    <!--
-    <ImageButton
-        android:id="@+id/fabBtn"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_gravity="bottom|right"
-        android:layout_marginBottom="16dp"
-        android:layout_marginRight="16dp"
-        android:background="@drawable/fab_background"
-        android:src="@drawable/plus_fab"
-        android:contentDescription="@null"/>
-   -->
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:elevation="@dimen/appbar_elevation"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabBtn"
@@ -41,7 +30,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
-        android:src="@drawable/plus_fab"
-        android:contentDescription="@null"/>
+        android:src="@drawable/ic_add"
+        android:contentDescription="@null"
+        android:elevation="@dimen/fab_elevation"/>
 
 </FrameLayout>

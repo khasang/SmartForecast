@@ -36,7 +36,6 @@ public abstract class CommonForecastFragment extends Fragment {
 
     protected RecyclerView recyclerView;
     protected TextView tvEmptyList;
-    protected RecyclerView.LayoutManager layoutManager;
     protected CustomAdapter adapter;
     protected ArrayList<String> sDate;
     protected ArrayList<Weather> weathers;
@@ -92,9 +91,10 @@ public abstract class CommonForecastFragment extends Fragment {
 
         tvEmptyList = (TextView) v.findViewById(R.id.tvEmptyList);
 
-//        layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, true);
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setReverseLayout(true);
+        layoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(layoutManager);
 
         adapter = new CustomAdapter(sDate, weathers);
 

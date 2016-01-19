@@ -88,9 +88,9 @@
             android:layout_margin="16dp"
             app:layout_anchor="@id/appbar"
             app:layout_anchorGravity="bottom|right|end"
-            android:src="@drawable/ic_by_date_24"
+            android:src="@drawable/ic_by_day"
             app:layout_behavior="com.khasang.forecast.ScrollAwareFabBehavior"
-            android:elevation="6dp"
+            android:elevation="@dimen/fab_elevation"
             android:clickable="true"/>
 
 

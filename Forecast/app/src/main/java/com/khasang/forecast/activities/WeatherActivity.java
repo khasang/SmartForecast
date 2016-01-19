@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -29,6 +30,8 @@ import com.khasang.forecast.adapters.CitySpinnerAdapter;
 import com.khasang.forecast.fragments.DayForecastFragment;
 import com.khasang.forecast.fragments.HourForecastFragment;
 
+import org.w3c.dom.Text;
+
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
@@ -41,7 +44,7 @@ import java.util.Map;
  */
 
 public class WeatherActivity extends AppCompatActivity implements View.OnClickListener,
-        SwipeRefreshLayout.OnRefreshListener {
+        SwipeRefreshLayout.OnRefreshListener, AdapterView.OnItemSelectedListener {
     private final String TAG = this.getClass().getSimpleName();
 
     /**
@@ -100,6 +103,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                     .add(R.id.fragment_container, mDayForecastFragment)
                     .hide(mDayForecastFragment)
                     .commit();
+
         }
         initStartingMetrics();
         initFields();
@@ -128,12 +132,12 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             ft.show(mDayForecastFragment)
                     .hide(mHourForecastFragment)
                     .commit();
-            mFab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_by_hour_24));
+            mFab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_by_hour));
         } else {
             ft.show(mHourForecastFragment)
                     .hide(mDayForecastFragment)
                     .commit();
-            mFab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_by_date_24));
+            mFab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_by_day));
         }
     }
 
@@ -155,6 +159,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
         /** Слушатели нажатий объектов */
         mFab.setOnClickListener(this);
+        spinner.setOnItemSelectedListener(this);
 //        syncBtn.setOnClickListener(this);
 //        city.setOnClickListener(this);
 //        cityPickerBtn.setOnClickListener(this);
@@ -181,6 +186,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         spinnerAdapter.addItem("Москва");
         spinnerAdapter.addItem("Санкт-Петербург");
         spinnerAdapter.addItem("Сочи");
+        spinnerAdapter.addItem("Другой...");
         spinner.setAdapter(spinnerAdapter);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -415,5 +421,16 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         //syncBtn.clearAnimation();
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if(((TextView)view).getText().equals("Другой...")) {
+            startActivity(new Intent(this, CityPickerActivity.class));
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
 }
 
