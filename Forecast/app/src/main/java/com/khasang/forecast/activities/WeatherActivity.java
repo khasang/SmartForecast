@@ -9,6 +9,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -57,8 +58,8 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     private TextView temperature;
     private TextView description;
 //    private TextView pressure;
-//    private TextView wind;
-//    private TextView humidity;
+    private TextView wind;
+    private TextView humidity;
 //    private TextView timeStamp;
 //    private ImageButton syncBtn;
 //    private ImageButton cityPickerBtn;
@@ -151,8 +152,8 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         temperature = (TextView) findViewById(R.id.temperature);
         description = (TextView) findViewById(R.id.precipitation);
 //        pressure = (TextView) findViewById(R.id.pressure);
-//        wind = (TextView) findViewById(R.id.wind);
-//        humidity = (TextView) findViewById(R.id.humidity);
+        wind = (TextView) findViewById(R.id.wind);
+        humidity = (TextView) findViewById(R.id.humidity);
 //        timeStamp = (TextView) findViewById(R.id.timeStamp);
 //        syncBtn = (ImageButton) findViewById(R.id.syncBtn);
 //        llMainInformation = (LinearLayout) findViewById(R.id.llMainInformation);
@@ -333,15 +334,13 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 //                wCurent.getPressure(),
 //                getString(R.string.pressure_measure)));
 //
-//        wind.setText(Html.fromHtml(String.format("%s %s %.0f%s",
-//                getString(R.string.wind),
-//                wCurent.getWindDirection().getDirectionString(),
-//                wCurent.getWindPower(),
-//                getString(R.string.wind_measure))));
-//
-//        humidity.setText(String.format("%s %s%%",
-//                getString(R.string.humidity),
-//                wCurent.getHumidity()));
+        wind.setText(Html.fromHtml(String.format("%s %.0f%s",
+                wCurent.getWindDirection().getDirectionString(),
+                wCurent.getWindPower(),
+                getString(R.string.wind_measure))));
+
+        humidity.setText(String.format("%s%%",
+                wCurent.getHumidity()));
 //
 //        timeStamp.setText(String.format("%s %d:%02d",
 //                getString(R.string.timeStamp),
