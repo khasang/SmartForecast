@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
-    android:id="@+id/relative_layout"
+    android:id="@+id/frame_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -17,67 +17,118 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:elevation="@dimen/appbar_elevation">
+            app:elevation="@dimen/appbar_elevation"
+            >
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar_material"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:elevation="0dp"
-                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:layout_scrollFlags="scroll|enterAlways">
+                app:layout_scrollFlags="scroll|enterAlways"
+                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
                 <Spinner
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:id="@+id/spinner"
                     style="@style/MySpinnerStyle"
-                    android:theme="@style/ThemeOverlay.AppCompat.Light"
-                    android:spinnerMode="dropdown"/>
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:spinnerMode="dropdown"
+                    android:theme="@style/ThemeOverlay.AppCompat.Light"/>
 
             </android.support.v7.widget.Toolbar>
 
-            <RelativeLayout
+            <android.support.v7.widget.GridLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                app:columnCount="2"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
                 app:layout_scrollFlags="scroll|enterAlways"
-                android:layout_marginBottom="?attr/actionBarSize">
+                android:paddingBottom="@dimen/activity_vertical_margin">
 
-                <ImageView
-                    android:layout_width="96dp"
-                    android:layout_height="96dp"
-                    android:src="@drawable/ic_cloud"
-                    android:layout_centerVertical="true"
-                    android:id="@+id/iv_curr_weather"
-                    android:layout_marginLeft="56dp"
-                    />
-
-                <TextView
-                    android:id="@+id/temperature"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="1°C"
-                    android:textSize="56sp"
-                    android:textColor="#fff"
-                    android:layout_toRightOf="@+id/iv_curr_weather"
-                    android:layout_marginLeft="24dp"
-                    />
+                    android:orientation="vertical"
+                    app:layout_columnWeight="1">
 
-                <TextView
-                    android:id="@+id/precipitation"
-                    android:layout_width="wrap_content"
+                    <TextView
+                        android:id="@+id/temperature"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1°C"
+                        android:textColor="#fff"
+                        android:textSize="56sp"
+                        android:layout_gravity="center"
+                        />
+
+                    <TextView
+                        android:id="@+id/precipitation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Снег"
+                        android:textColor="#fff"
+                        android:textSize="24sp"
+                        android:layout_gravity="center"
+                        />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Снег"
-                    android:textColor="#fff"
-                    android:textSize="24sp"
-                    android:layout_below="@+id/temperature"
-                    android:layout_toRightOf="@+id/iv_curr_weather"
-                    android:layout_marginLeft="24dp"
-                    />
+                    android:orientation="vertical"
+                    app:layout_columnWeight="1">
 
-            </RelativeLayout>
+                    <ImageView
+                        android:id="@+id/iv_curr_weather"
+                        android:layout_width="96dp"
+                        android:layout_height="96dp"
+                        android:src="@drawable/ic_cloud"
+                        />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_wind"
+                            android:layout_gravity="center_vertical"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="23 km/h"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="16dp"
+                            android:textColor="@color/icons"/>
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_humidity"
+                            android:layout_gravity="center_vertical"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="96%"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="16dp"
+                            android:textColor="@color/icons"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </android.support.v7.widget.GridLayout>
 
         </android.support.design.widget.AppBarLayout>
 
@@ -86,18 +137,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
+            android:clickable="true"
+            android:elevation="@dimen/fab_elevation"
+            android:src="@drawable/ic_by_day"
             app:layout_anchor="@id/appbar"
             app:layout_anchorGravity="bottom|right|end"
-            android:src="@drawable/ic_by_day"
-            app:layout_behavior="com.khasang.forecast.ScrollAwareFabBehavior"
-            android:elevation="@dimen/fab_elevation"
-            android:clickable="true"/>
+            app:layout_behavior="com.khasang.forecast.ScrollAwareFabBehavior"/>
 
 
         <FrameLayout
+            android:id="@+id/fragment_container"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
-            android:id="@+id/fragment_container"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     </android.support.design.widget.CoordinatorLayout>
