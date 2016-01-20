@@ -23,7 +23,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="@null"
-        tools:src="@drawable/sunny"
         android:layout_centerInParent="true"/>
 
     <TextView

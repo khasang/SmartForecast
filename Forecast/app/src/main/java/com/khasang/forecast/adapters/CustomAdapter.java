@@ -7,8 +7,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.DrawUtils;
 import com.khasang.forecast.R;
+import com.khasang.forecast.position.PositionManager;
 import com.khasang.forecast.position.Weather;
 
 import java.util.ArrayList;
@@ -36,14 +38,14 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.recycler_item_view, parent, false);
+                .inflate(R.layout.list_item_forecast, parent, false);
 
-        if (utils.getWidthDpx() > 640f) {
-            width = utils.getWidthPx() / dataset.size();
-            ViewGroup.MarginLayoutParams params = new ViewGroup.MarginLayoutParams(width, ViewGroup.LayoutParams.MATCH_PARENT);
-            params.setMargins(4, 4, 4, 4);
-            v.setLayoutParams(params);
-        }
+//        if (utils.getWidthDpx() > 640f) {
+//            width = utils.getWidthPx() / dataset.size();
+//            ViewGroup.MarginLayoutParams params = new ViewGroup.MarginLayoutParams(width, ViewGroup.LayoutParams.MATCH_PARENT);
+//            params.setMargins(4, 4, 4, 4);
+//            v.setLayoutParams(params);
+//        }
 
         return new ViewHolder(v);
     }
@@ -55,23 +57,13 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         int res = (int) (dataset.get(position).getTemperature() + 0.5);
         String tvTemperature = String.format(res == 0 ? "%d" : "%+d", res);
         holder.tvTemperature.setText(tvTemperature);
-
-        int iconId = dataset.get(position).getPrecipitation().getIconResId(isDayFromString(dayOfWeek));
+        holder.tvTempUnit.setText(PositionManager.getInstance().getTemperatureMetric().toStringValue());
+        int iconId = dataset.get(position).getPrecipitation().getIconResId(AppUtils.isDayFromString(dayOfWeek));
         holder.ivWeatherIcon.setImageResource(iconId == 0 ? R.mipmap.ic_launcher : iconId);
+        String description = dataset.get(position).getDescription();
+        String capitalizedDescription = description.substring(0,1).toUpperCase() + description.substring(1);
+        holder.tvWeatherDescription.setText(capitalizedDescription);
 
-    }
-
-
-    /** Определение времени суток */
-    private boolean isDayFromString(String timeString) {
-        timeString = timeString.substring(0, 2);
-        try {
-            int time = Integer.parseInt(timeString);
-            if (time >= 21 || time < 6)return false;
-            return true;
-        } catch(NumberFormatException nfe) {
-            return true;
-        }
     }
 
     @Override
@@ -83,13 +75,17 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         TextView tvDayOfWeekOrTime;
         ImageView ivWeatherIcon;
         TextView tvTemperature;
+        TextView tvWeatherDescription;
+        TextView tvTempUnit;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
-            tvDayOfWeekOrTime = (TextView) itemView.findViewById(R.id.tvDayOfWeek);
-            ivWeatherIcon = (ImageView) itemView.findViewById(R.id.ivWeatherIcon);
-            tvTemperature = (TextView) itemView.findViewById(R.id.tvTemperature);
+            tvDayOfWeekOrTime = (TextView) itemView.findViewById(R.id.tv_day_of_week);
+            ivWeatherIcon = (ImageView) itemView.findViewById(R.id.iv_weather_icon);
+            tvTemperature = (TextView) itemView.findViewById(R.id.tv_temperature);
+            tvWeatherDescription = (TextView) itemView.findViewById(R.id.tv_weather_description);
+            tvTempUnit = (TextView) itemView.findViewById(R.id.tv_temp_unit);
         }
     }
 }

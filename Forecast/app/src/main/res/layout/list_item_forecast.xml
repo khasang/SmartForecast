@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    xmlns:android.support.v7.cardview="http://schemas.android.com/apk/res-auto"
+                                    android:layout_margin="8dp"
+                                    android:paddingBottom="24dp"
+                                    android:paddingTop="@dimen/activity_vertical_margin">
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:columnCount="2"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_day_of_week"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:text="Понедельник"
+                android:textColor="@color/primary_text"
+                android:textSize="24sp"
+                android:paddingBottom="12dp"/>
+
+            <TextView
+                android:id="@+id/tv_weather_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Облачно"
+                android:textColor="@color/secondary_text"
+                android:textSize="14sp"
+                android:paddingBottom="16dp"/>
+
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+                    android:id="@+id/tv_temperature"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="5"
+                    android:textColor="@color/secondary_text"
+                    android:textSize="56sp"
+                    android:includeFontPadding="false"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/secondary_text"
+                    android:text="°C"
+                    android:textSize="24sp"
+                    android:layout_gravity="clip_vertical"
+                    android:includeFontPadding="false"
+                    android:layout_toRightOf="@+id/tv_temperature"
+                    android:layout_alignTop="@+id/tv_temperature"
+                    android:paddingTop="7dp"
+                    android:id="@+id/tv_temp_unit"
+                    />
+
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|right">
+
+            <ImageView
+                android:id="@+id/iv_weather_icon"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/ic_cloud"/>
+        </LinearLayout>
+
+    </GridLayout>
+
+</android.support.v7.widget.CardView>
