@@ -38,7 +38,7 @@
                 android:paddingBottom="16dp"/>
 
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -61,10 +61,13 @@
                     android:textSize="24sp"
                     android:layout_gravity="clip_vertical"
                     android:includeFontPadding="false"
+                    android:layout_toRightOf="@+id/tv_temperature"
+                    android:layout_alignTop="@+id/tv_temperature"
                     android:paddingTop="7dp"
+                    android:id="@+id/tv_temp_unit"
                     />
 
-            </LinearLayout>
+            </RelativeLayout>
         </LinearLayout>
 
         <LinearLayout

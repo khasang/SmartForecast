@@ -3,7 +3,6 @@ package com.khasang.forecast.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -24,11 +23,12 @@ import android.widget.Toast;
 
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.Logger;
-import com.khasang.forecast.position.PositionManager;
 import com.khasang.forecast.R;
+import com.khasang.forecast.fragments.DayForecastFragment;
+import com.khasang.forecast.fragments.HourForecastFragment;
+import com.khasang.forecast.position.PositionManager;
 import com.khasang.forecast.position.Weather;
 import com.khasang.forecast.stations.WeatherStation;
-import com.khasang.forecast.adapters.ForecastPageAdapter;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -168,9 +168,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void initFields() {
-//        city = (TextView) findViewById(R.id.city);
-//        cityPickerBtn = (ImageButton) findViewById(R.id.cityPickerBnt);
-//        Spinner spinner = (Spinner) findViewById(R.id.spinner);
         toolbar = (Toolbar) findViewById(R.id.toolbar_material);
         mFab = (FloatingActionButton) findViewById(R.id.fab);
         currWeather = (ImageView) findViewById(R.id.iv_curr_weather);
@@ -185,12 +182,9 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
         /** Слушатели нажатий объектов */
         mFab.setOnClickListener(this);
-//        spinner.setOnItemSelectedListener(this);
 //        syncBtn.setOnClickListener(this);
-//        city.setOnClickListener(this);
-//        cityPickerBtn.setOnClickListener(this);
-//        temperature.setOnClickListener(this);
-        pressure.setOnClickListener(this);
+        temperature.setOnClickListener(this);
+//        pressure.setOnClickListener(this);
 
 //        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
 //        swipeRefreshLayout.setOnRefreshListener(this);

@@ -75,6 +75,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         ImageView ivWeatherIcon;
         TextView tvTemperature;
         TextView tvWeatherDescription;
+        TextView tvTempUnit;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -83,6 +84,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
             ivWeatherIcon = (ImageView) itemView.findViewById(R.id.iv_weather_icon);
             tvTemperature = (TextView) itemView.findViewById(R.id.tv_temperature);
             tvWeatherDescription = (TextView) itemView.findViewById(R.id.tv_weather_description);
+            tvTempUnit = (TextView) itemView.findViewById(R.id.tv_temp_unit);
         }
     }
 }

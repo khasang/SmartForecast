@@ -4,8 +4,10 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,8 @@ import com.khasang.forecast.adapters.CustomAdapter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Map;
+
+import it.gmariotti.recyclerview.adapter.AlphaAnimatorAdapter;
 
 /**
  * Created by aleksandrlihovidov on 05.12.15.
@@ -49,7 +53,7 @@ public abstract class CommonForecastFragment extends Fragment {
             adapter.notifyDataSetChanged();
         }
 
-//        animate();
+        animate();
     }
 
     public void animate() {
@@ -81,8 +85,8 @@ public abstract class CommonForecastFragment extends Fragment {
         View v = inflater.inflate(R.layout.recycler_view_frag, container, false);
 
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
-//        RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
-//        recyclerView.setItemAnimator(itemAnimator);
+        RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
+        recyclerView.setItemAnimator(itemAnimator);
 
         tvEmptyList = (TextView) v.findViewById(R.id.tvEmptyList);
 
@@ -102,12 +106,12 @@ public abstract class CommonForecastFragment extends Fragment {
         return v;
     }
 
-//    @Override
-//    public void onResume(){
-//        super.onResume();
-//        Log.i(TAG, "OnResume");
-//        AlphaAnimatorAdapter animatorAdapter = new AlphaAnimatorAdapter(adapter, recyclerView);
-//        recyclerView.setAdapter(animatorAdapter);
-//    }
+    @Override
+    public void onResume(){
+        super.onResume();
+        Log.i(TAG, "OnResume");
+        AlphaAnimatorAdapter animatorAdapter = new AlphaAnimatorAdapter(adapter, recyclerView);
+        recyclerView.setAdapter(animatorAdapter);
+    }
 
 }

@@ -5,6 +5,7 @@ import android.net.ConnectivityManager;
 import android.widget.Toast;
 
 import com.khasang.forecast.AppUtils;
+import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.R;
 import com.khasang.forecast.activities.WeatherActivity;
 import com.khasang.forecast.sqlite.SQLiteProcessData;

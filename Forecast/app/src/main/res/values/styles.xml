@@ -21,11 +21,4 @@
         <item name="popupTheme">@style/Theme.AppCompat.Light</item>
     </style>
 
-    <style name="MySpinnerStyle" parent="Widget.AppCompat.Light.Spinner.DropDown.ActionBar">
-        <item name="android:background">?attr/selectableItemBackground</item>
-        <item name="android:dropDownSelector">?attr/selectableItemBackground</item>
-        <item name="android:divider">@null</item>
-        <item name="android:overlapAnchor">true</item>
-    </style>
-
 </resources>
