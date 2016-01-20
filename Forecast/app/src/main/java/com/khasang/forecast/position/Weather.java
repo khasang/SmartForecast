@@ -1,4 +1,4 @@
-package com.khasang.forecast;
+package com.khasang.forecast.position;
 
 /**
  *
@@ -95,7 +95,7 @@ public class Weather {
 
     /**
      * Получение из обьекта направления ветра
-     * @return Метод возвращает значение {@link com.khasang.forecast.Wind.Direction}
+     * @return Метод возвращает значение {@link Wind.Direction}
      */
     public Wind.Direction getWindDirection() {
         return wind.getDirection();
@@ -120,7 +120,7 @@ public class Weather {
 
     /**
      * Получение из обьекта типа погоды
-     * @return Метод возвращает значение {@link com.khasang.forecast.Precipitation.Type}
+     * @return Метод возвращает значение {@link Precipitation.Type}
      */
     public Precipitation.Type getPrecipitation() {
         return precipitation.getType();

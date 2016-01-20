@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.DrawUtils;
 import com.khasang.forecast.R;
-import com.khasang.forecast.Weather;
+import com.khasang.forecast.position.Weather;
 
 import java.util.ArrayList;
 

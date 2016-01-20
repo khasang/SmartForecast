@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
-import com.khasang.forecast.Weather;
+import com.khasang.forecast.position.Weather;
 import com.khasang.forecast.fragments.CommonForecastFragment;
 import com.khasang.forecast.fragments.DayForecastFragment;
 import com.khasang.forecast.fragments.HourForecastFragment;

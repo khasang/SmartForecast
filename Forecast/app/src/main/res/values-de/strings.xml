@@ -1,7 +1,4 @@
 <resources>
-    <string name="app_name">die Wettervorhersage</string>
-    <string name="service_name_open_weather_map">OpenWeatherMap</string>
-
     <string name="city_list">Die Liste der Städte</string>
 
     <string name="pressure">der Atmosphärendruck</string>
@@ -9,6 +6,7 @@
     <string name="humidity">die Feuchtigkeit</string>
     <string name="timeStamp">erneuert</string>
     <string name="pressure_measure">mmHg</string>
+    <string name="pressure_measure_hpa">HPa</string>
     <string name="wind_measure"><![CDATA[<sup><small>m</small></sup>/<small>s</small>]]></string>
 
     <string name="clear_sky">Klar</string> 
@@ -28,6 +26,29 @@
     <string name="update_error_net_not_availble">Der Fehler der Erneuerung des Wetters.\nDas Netz ist unzugänglich.</string>
     <string name="update_error_from">"Der Fehler der Erneuerung des Wetters von der Station "</string>
     <string name="coordinates_not_found">Die Koordinaten der Lage %1$s sind nicht aufgedeckt.\nDie Ortung ist nicht beigefügt</string>
-
+    <string name="msg_add_city">Um fortzufahren, müssen Sie eine Stadt hinzufügen.</string>
+    <string name="msg_choose_city">Um fortzufahren, müssen Sie eine Stadt auswählen.</string>
+    <string name="msg_no_city">Update-Fehler.\nDie Stadt ist nicht aufgelistet in Standorten.</string>
+    <string name="msg_clear_city_list">Wollen Sie wirklich die Liste der Städte sauber machen?</string>
+    <string name="btn_yes">Ja</string>
+    <string name="btn_no">Nein</string>
+    <string name="title_choose_city">Geben Sie den Namen der Stadt</string>
+    <string name="btn_ok">OK</string>
+    <string name="btn_cancel">Abbrechen</string>
+    <string name="error_empty_location_name">Sie müssen einen Standort Namen eingeben</string>
+    <string name="CELSIUS">°C</string>
+    <string name="FAHRENHEIT">°F</string>
+    <string name="KELVIN">" K"</string>
+    <string name="infoTV">Hinzufügen Sie die Stadt \nfür das Wetteranzeigen.</string>
+    <string name="incorrect_city_error">Falsche Stadtname</string>
+    <string name="about_gps">Ihr GPS ist abgeschaltet, wollen Sie es aufnehmen?</string>
+    <string name="N">N</string>
+    <string name="NO">NE</string>
+    <string name="O">E</string>
+    <string name="SO">SE</string>
+    <string name="S">S</string>
+    <string name="SW">SW</string>
+    <string name="W">W</string>
+    <string name="NW">NW</string>
 
 </resources>

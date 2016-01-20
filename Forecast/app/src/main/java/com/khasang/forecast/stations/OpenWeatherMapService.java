@@ -1,4 +1,4 @@
-package com.khasang.forecast;
+package com.khasang.forecast.stations;
 
 import com.khasang.forecast.models.DailyResponse;
 import com.khasang.forecast.models.OpenWeatherMapResponse;

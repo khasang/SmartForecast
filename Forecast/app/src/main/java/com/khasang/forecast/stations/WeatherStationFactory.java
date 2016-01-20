@@ -1,6 +1,5 @@
-package com.khasang.forecast;
+package com.khasang.forecast.stations;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**

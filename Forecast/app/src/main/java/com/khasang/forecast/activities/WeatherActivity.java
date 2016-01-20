@@ -24,12 +24,11 @@ import android.widget.Toast;
 
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.Logger;
-import com.khasang.forecast.PositionManager;
+import com.khasang.forecast.position.PositionManager;
 import com.khasang.forecast.R;
-import com.khasang.forecast.Weather;
-import com.khasang.forecast.WeatherStation;
-import com.khasang.forecast.fragments.DayForecastFragment;
-import com.khasang.forecast.fragments.HourForecastFragment;
+import com.khasang.forecast.position.Weather;
+import com.khasang.forecast.stations.WeatherStation;
+import com.khasang.forecast.adapters.ForecastPageAdapter;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -81,6 +80,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 //    private SwipeRefreshLayout swipeRefreshLayout;
 
     private String temp_measure;
+    private String press_measure;
     private HourForecastFragment mHourForecastFragment;
     private DayForecastFragment mDayForecastFragment;
     private FloatingActionButton mFab;
@@ -122,6 +122,14 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             case CELSIUS:
             default:
                 temp_measure = getString(R.string.CELSIUS);
+        }
+        switch (PositionManager.getInstance().getPressureMetric()) {
+            case MM_HG:
+                press_measure = getString(R.string.pressure_measure);
+                break;
+            case HPA:
+            default:
+                press_measure = getString(R.string.pressure_measure_hpa);
         }
     }
 
@@ -182,6 +190,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 //        city.setOnClickListener(this);
 //        cityPickerBtn.setOnClickListener(this);
 //        temperature.setOnClickListener(this);
+        pressure.setOnClickListener(this);
 
 //        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
 //        swipeRefreshLayout.setOnRefreshListener(this);
@@ -260,6 +269,18 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                         temp_measure = getString(R.string.CELSIUS);
                 }
                 PositionManager.getInstance().updateWeather();
+                break;
+            case R.id.pressure:
+                switch (PositionManager.getInstance().changePressureMetric()) {
+                    case MM_HG:
+                        press_measure = getString(R.string.pressure_measure);
+                        break;
+                    case HPA:
+                    default:
+                        press_measure = getString(R.string.pressure_measure_hpa);
+                }
+                PositionManager.getInstance().updateWeather();
+                break;
         }
     }
 

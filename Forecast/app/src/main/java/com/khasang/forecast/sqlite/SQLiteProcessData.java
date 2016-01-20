@@ -4,14 +4,14 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.khasang.forecast.AppUtils;
-import com.khasang.forecast.Coordinate;
-import com.khasang.forecast.Position;
-import com.khasang.forecast.PositionManager;
-import com.khasang.forecast.Precipitation;
-import com.khasang.forecast.Weather;
-import com.khasang.forecast.WeatherStation;
-import com.khasang.forecast.WeatherStationFactory;
-import com.khasang.forecast.Wind;
+import com.khasang.forecast.position.Coordinate;
+import com.khasang.forecast.position.Position;
+import com.khasang.forecast.position.PositionManager;
+import com.khasang.forecast.position.Precipitation;
+import com.khasang.forecast.position.Weather;
+import com.khasang.forecast.stations.WeatherStation;
+import com.khasang.forecast.stations.WeatherStationFactory;
+import com.khasang.forecast.position.Wind;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

@@ -31,10 +31,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.khasang.forecast.Coordinate;
+import com.khasang.forecast.position.Coordinate;
 import com.khasang.forecast.Logger;
 import com.khasang.forecast.PlaceProvider;
-import com.khasang.forecast.PositionManager;
+import com.khasang.forecast.position.PositionManager;
 import com.khasang.forecast.R;
 import com.khasang.forecast.adapters.RecyclerAdapter;
 import com.khasang.forecast.adapters.etc.HidingScrollListener;
@@ -46,7 +46,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -294,6 +293,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String description = (String) parent.getItemAtPosition(position);
+                chooseCity.setError(null);
                 chooseCity.setText(description);
             }
         });
@@ -333,11 +333,10 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!pattern.matcher(s.toString().trim()).matches()) {
                     dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
-//                    Toast.makeText(getApplicationContext(), R.string.incorrect_city_error, Toast.LENGTH_SHORT).show();
-                    chooseCity.setBackgroundColor(0x88FF0000);
+                    chooseCity.setError(getString(R.string.city_error));
                 } else {
                     dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
-                    chooseCity.setBackgroundColor(0xFFFFFFFF);
+                    chooseCity.setError(null);
                 }
             }
 

@@ -1,11 +1,15 @@
-package com.khasang.forecast;
+package com.khasang.forecast.position;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.widget.Toast;
 
+import com.khasang.forecast.AppUtils;
+import com.khasang.forecast.R;
 import com.khasang.forecast.activities.WeatherActivity;
 import com.khasang.forecast.sqlite.SQLiteProcessData;
+import com.khasang.forecast.stations.WeatherStation;
+import com.khasang.forecast.stations.WeatherStationFactory;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -18,20 +22,43 @@ import java.util.Set;
  */
 
 public class PositionManager {
+
     public enum TemperatureMetrics {
         KELVIN {
-            public TemperatureMetrics change() {return CELSIUS;}
+            public TemperatureMetrics change() {
+                return CELSIUS;
+            }
         },
-        CELSIUS{
-            public TemperatureMetrics change() {return FAHRENHEIT;}
+        CELSIUS {
+            public TemperatureMetrics change() {
+                return FAHRENHEIT;
+            }
         },
-        FAHRENHEIT{
-            public TemperatureMetrics change() {return KELVIN;}
+        FAHRENHEIT {
+            public TemperatureMetrics change() {
+                return KELVIN;
+            }
         };
+
         public abstract TemperatureMetrics change();
     }
+
     public enum SpeedMetrics {METER_PER_SECOND, FOOT_PER_SECOND, KM_PER_HOURS, MILES_PER_HOURS}
-    public enum PressureMetrics {HPA, MM_HG}
+
+    public enum PressureMetrics {
+        HPA {
+            public PressureMetrics change() {
+                return MM_HG;
+            }
+        },
+        MM_HG {
+            public PressureMetrics change() {
+                return HPA;
+            }
+        };
+
+        public abstract PressureMetrics change();
+    }
 
 
     TemperatureMetrics temperatureMetric;
@@ -53,7 +80,7 @@ public class PositionManager {
         lastResponseIsFailure = false;
     }
 
-    public static PositionManager getInstance () {
+    public static PositionManager getInstance() {
         return ManagerHolder.instance;
     }
 
@@ -75,15 +102,15 @@ public class PositionManager {
         saveMetrics();
     }
 
-    public void saveMetrics () {
+    public void saveMetrics() {
         dbManager.saveSettings(temperatureMetric, speedMetric, pressureMetric);
     }
 
-    public void saveCurrPosition () {
+    public void saveCurrPosition() {
         dbManager.saveSettings(currPosition);
     }
 
-    public void saveCurrStation () {
+    public void saveCurrStation() {
         dbManager.saveSettings(currStation);
     }
 
@@ -131,7 +158,7 @@ public class PositionManager {
      * Метод, с помощью которого добавляем новую локацию в список "Избранных"
      * Вызывается когда пользователь добавляет новый город в список.
      *
-     * @param name объект типа {@link String}, содержащий название города
+     * @param name        объект типа {@link String}, содержащий название города
      * @param coordinates геграфические координаты местоположения
      */
     public void addPosition(String name, Coordinate coordinates) {
@@ -244,11 +271,20 @@ public class PositionManager {
         return null;
     }
 
+    public PressureMetrics getPressureMetric() {
+        return pressureMetric;
+    }
+
+    public PressureMetrics changePressureMetric() {
+        pressureMetric = pressureMetric.change();
+        return pressureMetric;
+    }
+
     public TemperatureMetrics getTemperatureMetric() {
         return temperatureMetric;
     }
 
-    public TemperatureMetrics changeTemperatureMetric () {
+    public TemperatureMetrics changeTemperatureMetric() {
         temperatureMetric = temperatureMetric.change();
         return temperatureMetric;
     }
@@ -256,7 +292,7 @@ public class PositionManager {
     /**
      * Метод, вызывемый активити, для обновления текущей погоды от текущей погодной станции
      */
-    public void updateWeather () {
+    public void updateWeather() {
         if (currPosition == null || !positionIsPresent(currPosition.getLocationName())) {
             Toast.makeText(mActivity, R.string.update_error_location_not_found, Toast.LENGTH_SHORT).show();
             return;
@@ -276,7 +312,7 @@ public class PositionManager {
     /**
      * Метод для обновления погодных данных. Вызывается погодным сервисом, когда приходят актуальные данные
      *
-     * @param rType       переменая типа {@link com.khasang.forecast.WeatherStation.ResponseType}, характеризующая тип ответа (текущий прогноз, прогноз на день или неделю)
+     * @param rType       переменая типа {@link WeatherStation.ResponseType}, характеризующая тип ответа (текущий прогноз, прогноз на день или неделю)
      * @param cityId      внутренний идентификатор города, передается в погодную станцию во время запроса погоды
      * @param serviceType идентификатор погодного сервиса
      * @param weather     обьект типа {@link Weather}, содержащий погодные характеристики
@@ -286,7 +322,7 @@ public class PositionManager {
         Position position = getPosition(cityId);
         if (position != null) {
             for (Map.Entry<Calendar, Weather> entry : weather.entrySet()) {
-                if (rType == WeatherStation.ResponseType.CURRENT){
+                if (rType == WeatherStation.ResponseType.CURRENT) {
                     dbManager.deleteOldWeather(serviceType, position.getLocationName(), entry.getKey());
                 }
                 dbManager.saveWeather(serviceType, position.getLocationName(), entry.getKey(), entry.getValue());
@@ -321,7 +357,7 @@ public class PositionManager {
         Calendar calendar = date;
         calendar.add(Calendar.HOUR_OF_DAY, HOUR_PERIOD);
         calendar.set(Calendar.MINUTE, 0);
-        HashMap <Calendar, Weather> forecast = new HashMap<>();
+        HashMap<Calendar, Weather> forecast = new HashMap<>();
         for (int i = 0; i < FORECASTS_COUNT; i++) {
             HashMap<Calendar, Weather> temp = dbManager.loadWeather(sType, locationName, calendar, temperatureMetric, speedMetric, pressureMetric);
             if (temp == null || temp.size() == 0) {
@@ -340,7 +376,7 @@ public class PositionManager {
         Calendar calendar = date;
         calendar.set(Calendar.HOUR_OF_DAY, 12);
         calendar.set(Calendar.MINUTE, 0);
-        HashMap <Calendar, Weather> forecast = new HashMap<>();
+        HashMap<Calendar, Weather> forecast = new HashMap<>();
         for (int i = 0; i < FORECASTS_COUNT; i++) {
             HashMap<Calendar, Weather> temp = dbManager.loadWeather(sType, locationName, calendar, temperatureMetric, speedMetric, pressureMetric);
             if (temp == null || temp.size() == 0) {
