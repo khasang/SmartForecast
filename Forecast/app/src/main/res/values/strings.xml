@@ -23,6 +23,8 @@
 
     <string name="choose_city_label"></string>
     <string name="clear_favorite">To remove all cities</string>
+    <string name="refresh">Refresh</string>
+    <string name="change_location">Change Location</string>
     <string name="city_exist">The city is already present at the list</string>
     <string name="update_error_location_not_found">Error of updating of weather.\nThe city is absent in the list of locations.</string>
     <string name="update_error_net_not_availble">Error of updating of weather.\nThe network is inaccessible.</string>

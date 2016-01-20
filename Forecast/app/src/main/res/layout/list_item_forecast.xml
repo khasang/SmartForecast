@@ -5,8 +5,7 @@
                                     xmlns:android.support.v7.cardview="http://schemas.android.com/apk/res-auto"
                                     android:layout_margin="8dp"
                                     android:paddingBottom="24dp"
-                                    android:paddingTop="@dimen/activity_vertical_margin"
-                                    android.support.v7.cardview:cardBackgroundColor="@color/primary_light">
+                                    android:paddingTop="@dimen/activity_vertical_margin">
 
     <GridLayout
         android:layout_width="match_parent"

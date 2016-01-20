@@ -3,6 +3,7 @@ package com.khasang.forecast.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -11,13 +12,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,11 +28,8 @@ import com.khasang.forecast.PositionManager;
 import com.khasang.forecast.R;
 import com.khasang.forecast.Weather;
 import com.khasang.forecast.WeatherStation;
-import com.khasang.forecast.adapters.CitySpinnerAdapter;
 import com.khasang.forecast.fragments.DayForecastFragment;
 import com.khasang.forecast.fragments.HourForecastFragment;
-
-import org.w3c.dom.Text;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -45,7 +43,7 @@ import java.util.Map;
  */
 
 public class WeatherActivity extends AppCompatActivity implements View.OnClickListener,
-        SwipeRefreshLayout.OnRefreshListener, AdapterView.OnItemSelectedListener {
+        SwipeRefreshLayout.OnRefreshListener {
     private final String TAG = this.getClass().getSimpleName();
 
     /**
@@ -80,7 +78,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
     private final int CHOOSE_CITY = 1;
 
-    private SwipeRefreshLayout swipeRefreshLayout;
+//    private SwipeRefreshLayout swipeRefreshLayout;
 
     private String temp_measure;
     private HourForecastFragment mHourForecastFragment;
@@ -142,10 +140,29 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_activity_weather, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.menu_item_change_location:
+                startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
+                return true;
+            case R.id.menu_item_refresh:
+                onRefresh();
+                return true;
+        }
+        return false;
+    }
+
     private void initFields() {
 //        city = (TextView) findViewById(R.id.city);
 //        cityPickerBtn = (ImageButton) findViewById(R.id.cityPickerBnt);
-        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+//        Spinner spinner = (Spinner) findViewById(R.id.spinner);
         toolbar = (Toolbar) findViewById(R.id.toolbar_material);
         mFab = (FloatingActionButton) findViewById(R.id.fab);
         currWeather = (ImageView) findViewById(R.id.iv_curr_weather);
@@ -160,7 +177,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
         /** Слушатели нажатий объектов */
         mFab.setOnClickListener(this);
-        spinner.setOnItemSelectedListener(this);
+//        spinner.setOnItemSelectedListener(this);
 //        syncBtn.setOnClickListener(this);
 //        city.setOnClickListener(this);
 //        cityPickerBtn.setOnClickListener(this);
@@ -173,24 +190,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 //                android.R.color.holo_green_light,
 //                android.R.color.holo_orange_light,
 //                android.R.color.holo_red_light);
-
-//        tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
-//        pager = (LockableViewPager) findViewById(R.id.pager);
-//        ForecastPageAdapter adapter = new ForecastPageAdapter(getSupportFragmentManager());
-//        pager.setAdapter(adapter);
-//        tabLayout.setupWithViewPager(pager);
-//        tabLayout.getTabAt(0).setIcon(R.drawable.ic_by_hour_24);
-//        tabLayout.getTabAt(1).setIcon(R.drawable.ic_by_date_24);
-//        pager.setSwipeable(false);
-//        pager.addOnPageChangeListener(adapter);
-        CitySpinnerAdapter spinnerAdapter = new CitySpinnerAdapter();
-        spinnerAdapter.addItem("Москва");
-        spinnerAdapter.addItem("Санкт-Петербург");
-        spinnerAdapter.addItem("Сочи");
-        spinnerAdapter.addItem("Другой...");
-        spinner.setAdapter(spinnerAdapter);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
 
     private void startAnimation() {
@@ -244,15 +244,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.syncBtn:
-//                onRefresh();
-                break;
-            case R.id.city:
-                startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
-                break;
-            case R.id.cityPickerBnt:
-                startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
-                break;
             case R.id.fab:
                 switchDisplayMode();
                 break;
@@ -276,7 +267,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
      * Обновление интерфейса Activity при получении новых данных
      */
     public void updateInterface(WeatherStation.ResponseType responseType, Map<Calendar, Weather> forecast) {
-//        stopRefresh();
+        stopRefresh();
 
         if (forecast == null || forecast.size() == 0) {
             Logger.println(TAG, "Weather is null!");
@@ -285,17 +276,15 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         switch (responseType) {
             case CURRENT:
                 Logger.println(TAG, "Принят CURRENT прогноз");
-                HashMap.Entry<Calendar, Weather> firstEntry = (Map.Entry<Calendar, Weather>) forecast.entrySet().iterator().next();
+                HashMap.Entry<Calendar, Weather> firstEntry = forecast.entrySet().iterator().next();
                 updateCurrentWeather(firstEntry.getKey(), firstEntry.getValue());
                 break;
             case HOURLY:
                 Logger.println(TAG, "Принят HOURLY прогноз");
-//                ((ForecastPageAdapter) pager.getAdapter()).setHourForecast(forecast);
                 mHourForecastFragment.setDatasAndAnimate(forecast);
                 break;
             case DAILY:
                 Logger.println(TAG, "Принят DAILY прогноз");
-//                ((ForecastPageAdapter) pager.getAdapter()).setDayForecast(forecast);
                 mDayForecastFragment.setDatasAndAnimate(forecast);
                 break;
             default:
@@ -316,6 +305,8 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
 //        city.setText(PositionManager.getInstance().getCurrentPositionName().split(",")[0]); // отображаем имя текущей локации
         //temperature.setText(String.format("%.0f°C", wCurent.getTemperature()));
+        toolbar.setTitle(PositionManager.getInstance().getCurrentPositionName().split(",")[0]);
+
         temperature.setText(String.format("%.0f%s", wCurent.getTemperature(), temp_measure));
 
         description.setText(String.format("%s", wCurent.getDescription()
@@ -359,6 +350,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             if (resultCode == RESULT_OK) {
                 String newCity = data.getStringExtra(CityPickerActivity.CITY_PICKER_TAG);
 //                city.setText(newCity.split(",")[0]);
+                toolbar.setTitle(newCity.split(",")[0]);
                 Logger.println(TAG, newCity);
                 PositionManager.getInstance().setCurrentPosition(newCity);
                 PositionManager.getInstance().saveCurrPosition();
@@ -381,7 +373,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         if (!PositionManager.getInstance().positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {
             Logger.println(TAG, "There is nothing to refresh");
             Toast.makeText(WeatherActivity.this, R.string.msg_no_city, Toast.LENGTH_SHORT).show();
-            stopRefresh();
+//            stopRefresh();
             return;
         }
 
@@ -389,7 +381,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void run() {
                 Logger.println(TAG, "Start animation");
-                allAnimation();
+//                allAnimation();
                 PositionManager.getInstance().updateWeather();
             }
         }, 1000);
@@ -418,18 +410,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     public void stopRefresh() {
 //        swipeRefreshLayout.setRefreshing(false);
         //syncBtn.clearAnimation();
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if(((TextView)view).getText().equals("Другой...")) {
-            startActivity(new Intent(this, CityPickerActivity.class));
-        }
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
     }
 }
 
