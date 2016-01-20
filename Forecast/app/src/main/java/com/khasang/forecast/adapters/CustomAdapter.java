@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.DrawUtils;
 import com.khasang.forecast.R;
+import com.khasang.forecast.position.PositionManager;
 import com.khasang.forecast.position.Weather;
 
 import java.util.ArrayList;
@@ -56,7 +57,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         int res = (int) (dataset.get(position).getTemperature() + 0.5);
         String tvTemperature = String.format(res == 0 ? "%d" : "%+d", res);
         holder.tvTemperature.setText(tvTemperature);
-
+        holder.tvTempUnit.setText(PositionManager.getInstance().getTemperatureMetric().toStringValue());
         int iconId = dataset.get(position).getPrecipitation().getIconResId(AppUtils.isDayFromString(dayOfWeek));
         holder.ivWeatherIcon.setImageResource(iconId == 0 ? R.mipmap.ic_launcher : iconId);
         String description = dataset.get(position).getDescription();

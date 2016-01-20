@@ -112,17 +112,17 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void initStartingMetrics() {
-        switch (PositionManager.getInstance().getTemperatureMetric()) {
-            case FAHRENHEIT:
-                temp_measure = getString(R.string.FAHRENHEIT);
-                break;
-            case KELVIN:
-                temp_measure = getString(R.string.KELVIN);
-                break;
-            case CELSIUS:
-            default:
-                temp_measure = getString(R.string.CELSIUS);
-        }
+//        switch (PositionManager.getInstance().getTemperatureMetric()) {
+//            case FAHRENHEIT:
+//                temp_measure = getString(R.string.FAHRENHEIT);
+//                break;
+//            case KELVIN:
+//                temp_measure = getString(R.string.KELVIN);
+//                break;
+//            case CELSIUS:
+//            default:
+//                temp_measure = getString(R.string.CELSIUS);
+//        }
         switch (PositionManager.getInstance().getPressureMetric()) {
             case MM_HG:
                 press_measure = getString(R.string.pressure_measure);
@@ -322,7 +322,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         //temperature.setText(String.format("%.0f°C", wCurent.getTemperature()));
         toolbar.setTitle(PositionManager.getInstance().getCurrentPositionName().split(",")[0]);
 
-        temperature.setText(String.format("%.0f%s", wCurent.getTemperature(), temp_measure));
+        temperature.setText(String.format("%.0f%s", wCurent.getTemperature(), PositionManager.getInstance().getTemperatureMetric().toStringValue()));
 
         description.setText(String.format("%s", wCurent.getDescription()
                 .substring(0, 1)
