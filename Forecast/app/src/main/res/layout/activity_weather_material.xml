@@ -24,7 +24,7 @@
                 android:id="@+id/toolbar_material"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:elevation="0dp"
+                app:elevation="0dp"
                 app:layout_scrollFlags="scroll|enterAlways"
                 app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
@@ -143,7 +143,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:clickable="true"
-            android:elevation="@dimen/fab_elevation"
+            app:elevation="@dimen/fab_elevation"
+            app:borderWidth="0dp"
             android:src="@drawable/ic_by_day"
             app:layout_anchor="@id/appbar"
             app:layout_anchorGravity="bottom|right|end"
