@@ -28,6 +28,45 @@ public class AppUtils {
     public static final double HPA_TO_MM_HG = 1.33322;
     public static final double KM_TO_MILES = 0.62137;
     public static final double METER_TO_FOOT = 3.28083;
+
+    public enum TemperatureMetrics {
+        KELVIN {
+            public TemperatureMetrics change() { return CELSIUS; }
+            public String toStringValue() { return MyApplication.getAppContext().getString(R.string.KELVIN); }
+        },
+        CELSIUS {
+            public TemperatureMetrics change() {
+                return FAHRENHEIT;
+            }
+            public String toStringValue() { return MyApplication.getAppContext().getString(R.string.CELSIUS); }
+
+        },
+        FAHRENHEIT {
+            public TemperatureMetrics change() { return KELVIN; }
+            public String toStringValue() { return MyApplication.getAppContext().getString(R.string.FAHRENHEIT); }
+        };
+
+        public abstract TemperatureMetrics change();
+        public abstract String toStringValue();
+    }
+
+    public enum SpeedMetrics {METER_PER_SECOND, FOOT_PER_SECOND, KM_PER_HOURS, MILES_PER_HOURS}
+
+    public enum PressureMetrics {
+        HPA {
+            public PressureMetrics change() {
+                return MM_HG;
+            }
+        },
+        MM_HG {
+            public PressureMetrics change() {
+                return HPA;
+            }
+        };
+
+        public abstract PressureMetrics change();
+    }
+
     /**
      * Метод для конвертирования ответа от API в коллекцию типа {@link Map}<{@link Calendar}, {@link Weather}>
      * для запроса текущего прогноза погоды.
@@ -225,7 +264,7 @@ public class AppUtils {
      * @param weather обьект класса {@link Weather}, в котором нужно привести погодные характеристики к заданным метрикам
      * @return обьект класса {@link Weather} с преобразованными погодными характеристиками
      */
-    public static Weather formatWeather(Weather weather, PositionManager.TemperatureMetrics temperatureMetric, PositionManager.SpeedMetrics speedMetric, PositionManager.PressureMetrics pressureMetric) {
+    public static Weather formatWeather(Weather weather, AppUtils.TemperatureMetrics temperatureMetric, AppUtils.SpeedMetrics speedMetric, AppUtils.PressureMetrics pressureMetric) {
         weather.setTemperature(formatTemperature(weather.getTemperature(),temperatureMetric));
         weather.setPressure(formatPressure(weather.getPressure(), pressureMetric));
         weather.setWind(weather.getWindDirection(), formatSpeed(weather.getWindPower(), speedMetric));
@@ -239,7 +278,7 @@ public class AppUtils {
      * @param temperatureMetric
      * @return температура в выбранной пользователем метрике
      */
-    public static double formatTemperature(double temperature, PositionManager.TemperatureMetrics temperatureMetric) {
+    public static double formatTemperature(double temperature, AppUtils.TemperatureMetrics temperatureMetric) {
         switch (temperatureMetric) {
             case KELVIN:
                 break;
@@ -258,7 +297,7 @@ public class AppUtils {
      * @param speedMetric
      * @return скорость в выбранной пользователем метрике
      */
-    public static double formatSpeed(double speed, PositionManager.SpeedMetrics speedMetric) {
+    public static double formatSpeed(double speed, AppUtils.SpeedMetrics speedMetric) {
         switch (speedMetric) {
             case METER_PER_SECOND:
                 break;
@@ -279,7 +318,7 @@ public class AppUtils {
      * @param pressureMetric
      * @return давление в выбранной пользователем метрике
      */
-    public static double formatPressure(double pressure, PositionManager.PressureMetrics pressureMetric) {
+    public static double formatPressure(double pressure, AppUtils.PressureMetrics pressureMetric) {
         switch (pressureMetric) {
             case HPA:
                 break;
