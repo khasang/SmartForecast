@@ -10,7 +10,7 @@ import java.util.Map;
  * Created by CopyPasteStd on 24.11.15.
  * Фрагмент для отображения погоды по дням
  */
-public class DayForecastFragment extends CommonForecastFragment {
+public class DailyForecastFragment extends CommonForecastFragment {
 
     @Override
     protected void updateForecasts() {

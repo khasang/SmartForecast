@@ -24,8 +24,8 @@ import android.widget.Toast;
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.Logger;
 import com.khasang.forecast.R;
-import com.khasang.forecast.fragments.DayForecastFragment;
-import com.khasang.forecast.fragments.HourForecastFragment;
+import com.khasang.forecast.fragments.DailyForecastFragment;
+import com.khasang.forecast.fragments.HourlyForecastFragment;
 import com.khasang.forecast.position.PositionManager;
 import com.khasang.forecast.position.Weather;
 import com.khasang.forecast.stations.WeatherStation;
@@ -43,26 +43,16 @@ import java.util.Map;
 
 public class WeatherActivity extends AppCompatActivity implements View.OnClickListener,
         SwipeRefreshLayout.OnRefreshListener {
-    private final String TAG = this.getClass().getSimpleName();
+    private static final int CHOOSE_CITY = 1;
+    private static final String TAG = WeatherActivity.class.getSimpleName();
 
-    /**
-     * ViewPager для отображения нижних вкладок прогноза: по часам и по дням
-     */
-//    private TabLayout tabLayout;
-//    private LockableViewPager pager;
-
-//    private TextView city;
     private TextView temperature;
     private TextView description;
 //    private TextView pressure;
     private TextView wind;
     private TextView humidity;
-//    private TextView timeStamp;
-//    private ImageButton syncBtn;
-//    private ImageButton cityPickerBtn;
     private ImageView currWeather;
-
-    private LinearLayout llMainInformation;
+    private ImageView syncBtn;
 
     private Animation animationRotateCenter;
     private Animation animScale;
@@ -74,16 +64,12 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     private Animation animTrans;
     private Animation animTrans_plus1;
     private Animation fallingUp;
-
-    private final int CHOOSE_CITY = 1;
-
 //    private SwipeRefreshLayout swipeRefreshLayout;
-
     private String temp_measure;
     private String press_measure;
-    private HourForecastFragment mHourForecastFragment;
-    private DayForecastFragment mDayForecastFragment;
-    private FloatingActionButton mFab;
+    private HourlyForecastFragment hourlyForecastFragment;
+    private DailyForecastFragment dailyForecastFragment;
+    private FloatingActionButton fab;
     private Toolbar toolbar;
 
     @Override
@@ -95,19 +81,17 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             if (savedInstanceState != null) {
                 return;
             }
-            mHourForecastFragment = new HourForecastFragment();
-            mDayForecastFragment = new DayForecastFragment();
+            hourlyForecastFragment = new HourlyForecastFragment();
+            dailyForecastFragment = new DailyForecastFragment();
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, mHourForecastFragment)
-                    .add(R.id.fragment_container, mDayForecastFragment)
-                    .hide(mDayForecastFragment)
+                    .add(R.id.fragment_container, hourlyForecastFragment)
+                    .add(R.id.fragment_container, dailyForecastFragment)
+                    .hide(dailyForecastFragment)
                     .commit();
-
         }
         initStartingMetrics();
         initFields();
-//        setAnimationForWidgets();
-//        startAnimation();
+        setAnimationForWidgets();
         initFirstAppearance();
     }
 
@@ -135,22 +119,31 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
     private void switchDisplayMode() {
         final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        if (mDayForecastFragment.isHidden()) {
-            ft.show(mDayForecastFragment)
-                    .hide(mHourForecastFragment)
+        if (dailyForecastFragment.isHidden()) {
+            ft.show(dailyForecastFragment)
+                    .hide(hourlyForecastFragment)
                     .commit();
-            mFab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_by_hour));
+            fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_by_hour));
         } else {
-            ft.show(mHourForecastFragment)
-                    .hide(mDayForecastFragment)
+            ft.show(hourlyForecastFragment)
+                    .hide(dailyForecastFragment)
                     .commit();
-            mFab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_by_day));
+            fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_by_day));
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_activity_weather, menu);
+        final MenuItem item = menu.findItem(R.id.menu_item_refresh);
+        item.setActionView(R.layout.iv_action_refresh);
+        syncBtn = (ImageView) item.getActionView().findViewById(R.id.refreshButton);
+        syncBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onOptionsItemSelected(item);
+            }
+        });
         return true;
     }
 
@@ -161,6 +154,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
                 return true;
             case R.id.menu_item_refresh:
+                startAnimation();
                 onRefresh();
                 return true;
         }
@@ -169,20 +163,16 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
     private void initFields() {
         toolbar = (Toolbar) findViewById(R.id.toolbar_material);
-        mFab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         currWeather = (ImageView) findViewById(R.id.iv_curr_weather);
         temperature = (TextView) findViewById(R.id.temperature);
         description = (TextView) findViewById(R.id.precipitation);
 //        pressure = (TextView) findViewById(R.id.pressure);
         wind = (TextView) findViewById(R.id.wind);
         humidity = (TextView) findViewById(R.id.humidity);
-//        timeStamp = (TextView) findViewById(R.id.timeStamp);
-//        syncBtn = (ImageButton) findViewById(R.id.syncBtn);
-//        llMainInformation = (LinearLayout) findViewById(R.id.llMainInformation);
 
         /** Слушатели нажатий объектов */
-        mFab.setOnClickListener(this);
-//        syncBtn.setOnClickListener(this);
+        fab.setOnClickListener(this);
         temperature.setOnClickListener(this);
 //        pressure.setOnClickListener(this);
 
@@ -197,7 +187,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void startAnimation() {
-//        syncBtn.startAnimation(animationRotateCenter);
+        syncBtn.startAnimation(animationRotateCenter);
 //        wind.startAnimation(animTrans);
 //        humidity.startAnimation(animTrans);
     }
@@ -205,19 +195,19 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     private void setAnimationForWidgets() {
         /** Анимация объектов */
         animationRotateCenter = AnimationUtils.loadAnimation(this, R.anim.rotate_center);
-        animScale = AnimationUtils.loadAnimation(this, R.anim.scale);
-        fallingDown = AnimationUtils.loadAnimation(this, R.anim.falling_down);
-        fallingDown_plus1 = AnimationUtils.loadAnimation(this, R.anim.falling_down_plus1);
-        fallingDownAlpha = AnimationUtils.loadAnimation(this, R.anim.falling_down_alpha);
-        fallingDownAlpha_plus1 = AnimationUtils.loadAnimation(this, R.anim.falling_down_alpha_plus1);
-        flip = AnimationUtils.loadAnimation(this, R.anim.flip);
-        animTrans = AnimationUtils.loadAnimation(this, R.anim.translate);
-        animTrans_plus1 = AnimationUtils.loadAnimation(this, R.anim.translate_plus1);
-        fallingUp = AnimationUtils.loadAnimation(this, R.anim.falling_up);
-
-        getSupportFragmentManager().beginTransaction()
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left);
+//        animScale = AnimationUtils.loadAnimation(this, R.anim.scale);
+//        fallingDown = AnimationUtils.loadAnimation(this, R.anim.falling_down);
+//        fallingDown_plus1 = AnimationUtils.loadAnimation(this, R.anim.falling_down_plus1);
+//        fallingDownAlpha = AnimationUtils.loadAnimation(this, R.anim.falling_down_alpha);
+//        fallingDownAlpha_plus1 = AnimationUtils.loadAnimation(this, R.anim.falling_down_alpha_plus1);
+//        flip = AnimationUtils.loadAnimation(this, R.anim.flip);
+//        animTrans = AnimationUtils.loadAnimation(this, R.anim.translate);
+//        animTrans_plus1 = AnimationUtils.loadAnimation(this, R.anim.translate_plus1);
+//        fallingUp = AnimationUtils.loadAnimation(this, R.anim.falling_up);
+//
+//        getSupportFragmentManager().beginTransaction()
+//                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+//                .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left);
     }
 
     private void initFirstAppearance() {
@@ -296,11 +286,11 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case HOURLY:
                 Logger.println(TAG, "Принят HOURLY прогноз");
-                mHourForecastFragment.setDatasAndAnimate(forecast);
+                hourlyForecastFragment.setDatasAndAnimate(forecast);
                 break;
             case DAILY:
                 Logger.println(TAG, "Принят DAILY прогноз");
-                mDayForecastFragment.setDatasAndAnimate(forecast);
+                dailyForecastFragment.setDatasAndAnimate(forecast);
                 break;
             default:
                 Logger.println(TAG, "Принят необрабатываемый прогноз");
@@ -318,18 +308,15 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         int hours = date.get(Calendar.HOUR_OF_DAY);
         int minutes = date.get(Calendar.MINUTE);
 
-//        city.setText(PositionManager.getInstance().getCurrentPositionName().split(",")[0]); // отображаем имя текущей локации
         //temperature.setText(String.format("%.0f°C", wCurent.getTemperature()));
         toolbar.setTitle(PositionManager.getInstance().getCurrentPositionName().split(",")[0]);
-
-        temperature.setText(String.format("%.0f%s", wCurent.getTemperature(), PositionManager.getInstance().getTemperatureMetric().toStringValue()));
-
+        temperature.setText(String.format("%.0f%s", wCurent.getTemperature(),
+                PositionManager.getInstance().getTemperatureMetric().toStringValue()));
         description.setText(String.format("%s", wCurent.getDescription()
                 .substring(0, 1)
                 .toUpperCase() + wCurent
                 .getDescription()
                 .substring(1)));
-
         int iconId = wCurent.getPrecipitation().getIconResId(
                 AppUtils.isDayFromString(
                         String.format(Locale.getDefault(), "%tR", date)));
@@ -347,12 +334,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
         humidity.setText(String.format("%s%%",
                 wCurent.getHumidity()));
-//
-//        timeStamp.setText(String.format("%s %d:%02d",
-//                getString(R.string.timeStamp),
-//                hours,
-//                minutes));
-
     }
 
     /**
@@ -397,6 +378,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             public void run() {
                 Logger.println(TAG, "Start animation");
 //                allAnimation();
+//                startAnimation();
                 PositionManager.getInstance().updateWeather();
             }
         }, 1000);
@@ -424,7 +406,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
      */
     public void stopRefresh() {
 //        swipeRefreshLayout.setRefreshing(false);
-        //syncBtn.clearAnimation();
+//        syncBtn.clearAnimation();
     }
 }
 
