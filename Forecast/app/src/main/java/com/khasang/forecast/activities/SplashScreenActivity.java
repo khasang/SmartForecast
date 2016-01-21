@@ -32,30 +32,30 @@ public class SplashScreenActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
-
-
         ImageView splash_cloud = (ImageView)findViewById(R.id.splash_cloud);
         final ImageView splash_left_cloud = (ImageView)findViewById(R.id.splash_left_cloud);
         ImageView splash_right_cloud = (ImageView)findViewById(R.id.splash_right_cloud);
         ImageView splash_rainbow = (ImageView)findViewById(R.id.splash_rainbow);
         ImageView splash_smile = (ImageView)findViewById(R.id.splash_smile);
         ImageView splash_wink = (ImageView)findViewById(R.id.splash_wink);
-        // определим для ImageView какое-нибудь изображение
+
+        // Определение изображение для ImageView
         splash_cloud.setImageResource(R.drawable.splash_cloud);
         splash_left_cloud.setImageResource(R.drawable.splash_left_cloud);
         splash_right_cloud.setImageResource(R.drawable.splash_right_cloud);
         splash_rainbow.setImageResource(R.drawable.splash_rainbow);
         splash_smile.setImageResource(R.drawable.splash_smile);
         splash_wink.setImageResource(R.drawable.splash_wink);
-        // создаем анимацию
+
+        // Создание анимации
         Animation anim_splash_cloud = AnimationUtils.loadAnimation(this, R.anim.anim_splash_cloud);
         Animation anim_splash_left_cloud = AnimationUtils.loadAnimation(this, R.anim.anim_splash_left_cloud);
         Animation anim_splash_right_cloud = AnimationUtils.loadAnimation(this, R.anim.anim_splash_right_cloud);
         Animation anim_splash_rainbow = AnimationUtils.loadAnimation(this, R.anim.anim_splash_rainbow);
         Animation anim_splash_smile = AnimationUtils.loadAnimation(this, R.anim.anim_splash_smile);
         Animation anim_splash_wink = AnimationUtils.loadAnimation(this, R.anim.anim_splash_wink);
-        //Animation anim_splash_smile = AnimationUtils.loadAnimation(this, android.R.anim.fade_out);
-        // запуск анимации
+
+        // Запуск анимации
         splash_cloud.startAnimation(anim_splash_cloud);
         splash_left_cloud.startAnimation(anim_splash_left_cloud);
         splash_right_cloud.startAnimation(anim_splash_right_cloud);
@@ -63,14 +63,17 @@ public class SplashScreenActivity
         splash_smile.startAnimation(anim_splash_smile);
         splash_wink.startAnimation(anim_splash_wink);
 
+
+        //TODO FOR TEST
         //splash_left_cloud.setVisibility(View.GONE);
         //splash_right_cloud.setVisibility(View.GONE);
         //splash_rainbow.setVisibility(View.GONE);
         //splash_smile.setVisibility(View.GONE);
 
-        final ImageView mImageViewFilling = (ImageView) findViewById(R.id.imageview_animation_list_face);
+        //TODO FOR TEST
+       /* final ImageView mImageViewFilling = (ImageView) findViewById(R.id.imageview_animation_list_face);
         mImageViewFilling.animate().setStartDelay(1000);
-        ((AnimationDrawable) mImageViewFilling.getBackground()).start();
+        ((AnimationDrawable) mImageViewFilling.getBackground()).start();*/
 
         //TODO DELETE
      /*   mImageViewFilling.setOnClickListener(new View.OnClickListener() {
@@ -86,14 +89,10 @@ public class SplashScreenActivity
             @Override
             public void run() {
                 Intent intent = new Intent(SplashScreenActivity.this, WeatherActivity.class);
-              /*  startActivity(intent);
-                finish();*/
+                startActivity(intent);
+                finish();
             }
         }, SPLASH_DISPLAY_LENGTH);
-
-/*        Intent intent = new Intent(this, WeatherActivity.class);
-        startActivity(intent);
-        finish();*/
 
     }
 
