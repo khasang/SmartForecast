@@ -1,34 +1,38 @@
 package com.khasang.forecast.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.TabLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.khasang.forecast.LockableViewPager;
+import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.Logger;
-import com.khasang.forecast.position.PositionManager;
 import com.khasang.forecast.R;
+import com.khasang.forecast.fragments.DayForecastFragment;
+import com.khasang.forecast.fragments.HourForecastFragment;
+import com.khasang.forecast.position.PositionManager;
 import com.khasang.forecast.position.Weather;
 import com.khasang.forecast.stations.WeatherStation;
-import com.khasang.forecast.adapters.ForecastPageAdapter;
 
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 
@@ -37,24 +41,26 @@ import java.util.Map;
  * город, температура, давление, влажность, ветер, временная метка.
  */
 
-public class WeatherActivity extends AppCompatActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
+public class WeatherActivity extends AppCompatActivity implements View.OnClickListener,
+        SwipeRefreshLayout.OnRefreshListener {
     private final String TAG = this.getClass().getSimpleName();
 
     /**
      * ViewPager для отображения нижних вкладок прогноза: по часам и по дням
      */
-    private TabLayout tabLayout;
-    private LockableViewPager pager;
+//    private TabLayout tabLayout;
+//    private LockableViewPager pager;
 
-    private TextView city;
+//    private TextView city;
     private TextView temperature;
     private TextView description;
-    private TextView pressure;
+//    private TextView pressure;
     private TextView wind;
     private TextView humidity;
-    private TextView timeStamp;
-    private ImageButton syncBtn;
-    private ImageButton cityPickerBtn;
+//    private TextView timeStamp;
+//    private ImageButton syncBtn;
+//    private ImageButton cityPickerBtn;
+    private ImageView currWeather;
 
     private LinearLayout llMainInformation;
 
@@ -70,41 +76,53 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     private Animation fallingUp;
 
     private final int CHOOSE_CITY = 1;
-    public Context context;
 
-    private SwipeRefreshLayout swipeRefreshLayout;
+//    private SwipeRefreshLayout swipeRefreshLayout;
 
     private String temp_measure;
     private String press_measure;
+    private HourForecastFragment mHourForecastFragment;
+    private DayForecastFragment mDayForecastFragment;
+    private FloatingActionButton mFab;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_weather);
-
-        context = getApplicationContext();
+        setContentView(R.layout.activity_weather_material);
         PositionManager.getInstance().initManager(this);
+        if (findViewById(R.id.fragment_container) != null) {
+            if (savedInstanceState != null) {
+                return;
+            }
+            mHourForecastFragment = new HourForecastFragment();
+            mDayForecastFragment = new DayForecastFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fragment_container, mHourForecastFragment)
+                    .add(R.id.fragment_container, mDayForecastFragment)
+                    .hide(mDayForecastFragment)
+                    .commit();
 
+        }
         initStartingMetrics();
         initFields();
-        setAnimationForWidgets();
-        startAnimation();
-
+//        setAnimationForWidgets();
+//        startAnimation();
         initFirstAppearance();
     }
 
     private void initStartingMetrics() {
-        switch (PositionManager.getInstance().getTemperatureMetric()) {
-            case FAHRENHEIT:
-                temp_measure = getString(R.string.FAHRENHEIT);
-                break;
-            case KELVIN:
-                temp_measure = getString(R.string.KELVIN);
-                break;
-            case CELSIUS:
-            default:
-                temp_measure = getString(R.string.CELSIUS);
-        }
+//        switch (PositionManager.getInstance().getTemperatureMetric()) {
+//            case FAHRENHEIT:
+//                temp_measure = getString(R.string.FAHRENHEIT);
+//                break;
+//            case KELVIN:
+//                temp_measure = getString(R.string.KELVIN);
+//                break;
+//            case CELSIUS:
+//            default:
+//                temp_measure = getString(R.string.CELSIUS);
+//        }
         switch (PositionManager.getInstance().getPressureMetric()) {
             case MM_HG:
                 press_measure = getString(R.string.pressure_measure);
@@ -115,49 +133,73 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
+    private void switchDisplayMode() {
+        final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        if (mDayForecastFragment.isHidden()) {
+            ft.show(mDayForecastFragment)
+                    .hide(mHourForecastFragment)
+                    .commit();
+            mFab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_by_hour));
+        } else {
+            ft.show(mHourForecastFragment)
+                    .hide(mDayForecastFragment)
+                    .commit();
+            mFab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_by_day));
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_activity_weather, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.menu_item_change_location:
+                startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
+                return true;
+            case R.id.menu_item_refresh:
+                onRefresh();
+                return true;
+        }
+        return false;
+    }
+
     private void initFields() {
-        city = (TextView) findViewById(R.id.city);
-        cityPickerBtn = (ImageButton) findViewById(R.id.cityPickerBnt);
+        toolbar = (Toolbar) findViewById(R.id.toolbar_material);
+        mFab = (FloatingActionButton) findViewById(R.id.fab);
+        currWeather = (ImageView) findViewById(R.id.iv_curr_weather);
         temperature = (TextView) findViewById(R.id.temperature);
         description = (TextView) findViewById(R.id.precipitation);
-        pressure = (TextView) findViewById(R.id.pressure);
+//        pressure = (TextView) findViewById(R.id.pressure);
         wind = (TextView) findViewById(R.id.wind);
         humidity = (TextView) findViewById(R.id.humidity);
-        timeStamp = (TextView) findViewById(R.id.timeStamp);
-        syncBtn = (ImageButton) findViewById(R.id.syncBtn);
-        llMainInformation = (LinearLayout) findViewById(R.id.llMainInformation);
+//        timeStamp = (TextView) findViewById(R.id.timeStamp);
+//        syncBtn = (ImageButton) findViewById(R.id.syncBtn);
+//        llMainInformation = (LinearLayout) findViewById(R.id.llMainInformation);
 
         /** Слушатели нажатий объектов */
-        syncBtn.setOnClickListener(this);
-        city.setOnClickListener(this);
-        cityPickerBtn.setOnClickListener(this);
+        mFab.setOnClickListener(this);
+//        syncBtn.setOnClickListener(this);
         temperature.setOnClickListener(this);
-        pressure.setOnClickListener(this);
+//        pressure.setOnClickListener(this);
 
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
-        swipeRefreshLayout.setOnRefreshListener(this);
-
-        swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
-
-        tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
-        pager = (LockableViewPager) findViewById(R.id.pager);
-        ForecastPageAdapter adapter = new ForecastPageAdapter(getSupportFragmentManager());
-        pager.setAdapter(adapter);
-        tabLayout.setupWithViewPager(pager);
-        tabLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.my_holo_alpha));
-        tabLayout.getTabAt(0).setIcon(R.drawable.ic_by_hour_24);
-        tabLayout.getTabAt(1).setIcon(R.drawable.ic_by_date_24);
-        pager.setSwipeable(false);
-        pager.addOnPageChangeListener(adapter);
+//        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+//        swipeRefreshLayout.setOnRefreshListener(this);
+//
+//        swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+//                android.R.color.holo_green_light,
+//                android.R.color.holo_orange_light,
+//                android.R.color.holo_red_light);
+        setSupportActionBar(toolbar);
     }
 
     private void startAnimation() {
-        syncBtn.startAnimation(animationRotateCenter);
-        wind.startAnimation(animTrans);
-        humidity.startAnimation(animTrans);
+//        syncBtn.startAnimation(animationRotateCenter);
+//        wind.startAnimation(animTrans);
+//        humidity.startAnimation(animTrans);
     }
 
     private void setAnimationForWidgets() {
@@ -205,14 +247,8 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.syncBtn:
-                onRefresh();
-                break;
-            case R.id.city:
-                startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
-                break;
-            case R.id.cityPickerBnt:
-                startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
+            case R.id.fab:
+                switchDisplayMode();
                 break;
             case R.id.temperature:
                 switch (PositionManager.getInstance().changeTemperatureMetric()) {
@@ -250,22 +286,21 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
         if (forecast == null || forecast.size() == 0) {
             Logger.println(TAG, "Weather is null!");
-
             return;
         }
         switch (responseType) {
             case CURRENT:
                 Logger.println(TAG, "Принят CURRENT прогноз");
-                HashMap.Entry<Calendar, Weather> firstEntry = (Map.Entry<Calendar, Weather>) forecast.entrySet().iterator().next();
+                HashMap.Entry<Calendar, Weather> firstEntry = forecast.entrySet().iterator().next();
                 updateCurrentWeather(firstEntry.getKey(), firstEntry.getValue());
                 break;
             case HOURLY:
                 Logger.println(TAG, "Принят HOURLY прогноз");
-                ((ForecastPageAdapter) pager.getAdapter()).setHourForecast(forecast);
+                mHourForecastFragment.setDatasAndAnimate(forecast);
                 break;
             case DAILY:
                 Logger.println(TAG, "Принят DAILY прогноз");
-                ((ForecastPageAdapter) pager.getAdapter()).setDayForecast(forecast);
+                mDayForecastFragment.setDatasAndAnimate(forecast);
                 break;
             default:
                 Logger.println(TAG, "Принят необрабатываемый прогноз");
@@ -283,9 +318,11 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         int hours = date.get(Calendar.HOUR_OF_DAY);
         int minutes = date.get(Calendar.MINUTE);
 
-        city.setText(PositionManager.getInstance().getCurrentPositionName().split(",")[0]); // отображаем имя текущей локации
+//        city.setText(PositionManager.getInstance().getCurrentPositionName().split(",")[0]); // отображаем имя текущей локации
         //temperature.setText(String.format("%.0f°C", wCurent.getTemperature()));
-        temperature.setText(String.format("%.0f%s", wCurent.getTemperature(), temp_measure));
+        toolbar.setTitle(PositionManager.getInstance().getCurrentPositionName().split(",")[0]);
+
+        temperature.setText(String.format("%.0f%s", wCurent.getTemperature(), PositionManager.getInstance().getTemperatureMetric().toStringValue()));
 
         description.setText(String.format("%s", wCurent.getDescription()
                 .substring(0, 1)
@@ -293,25 +330,28 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 .getDescription()
                 .substring(1)));
 
-        pressure.setText(String.format("%s %.0f %s",
-                getString(R.string.pressure),
-                wCurent.getPressure(),
-                press_measure));
-
-        wind.setText(Html.fromHtml(String.format("%s %s %.0f%s",
-                getString(R.string.wind),
+        int iconId = wCurent.getPrecipitation().getIconResId(
+                AppUtils.isDayFromString(
+                        String.format(Locale.getDefault(), "%tR", date)));
+        currWeather.setImageResource(iconId == 0 ? R.mipmap.ic_launcher : iconId);
+//
+//        pressure.setText(String.format("%s %.0f %s",
+//                getString(R.string.pressure),
+//                wCurent.getPressure(),
+//                getString(R.string.pressure_measure)));
+//
+        wind.setText(Html.fromHtml(String.format("%s %.0f%s",
                 wCurent.getWindDirection().getDirectionString(),
                 wCurent.getWindPower(),
                 getString(R.string.wind_measure))));
 
-        humidity.setText(String.format("%s %s%%",
-                getString(R.string.humidity),
+        humidity.setText(String.format("%s%%",
                 wCurent.getHumidity()));
-
-        timeStamp.setText(String.format("%s %d:%02d",
-                getString(R.string.timeStamp),
-                hours,
-                minutes));
+//
+//        timeStamp.setText(String.format("%s %d:%02d",
+//                getString(R.string.timeStamp),
+//                hours,
+//                minutes));
 
     }
 
@@ -324,16 +364,17 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         if (requestCode == CHOOSE_CITY) {
             if (resultCode == RESULT_OK) {
                 String newCity = data.getStringExtra(CityPickerActivity.CITY_PICKER_TAG);
-                city.setText(newCity.split(",")[0]);
+//                city.setText(newCity.split(",")[0]);
+                toolbar.setTitle(newCity.split(",")[0]);
                 Logger.println(TAG, newCity);
                 PositionManager.getInstance().setCurrentPosition(newCity);
                 PositionManager.getInstance().saveCurrPosition();
                 onRefresh();
-                syncBtn.setVisibility(View.VISIBLE);
+//                syncBtn.setVisibility(View.VISIBLE);
             } else {
                 if (!PositionManager.getInstance().positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {
                     stopRefresh();
-                    syncBtn.setVisibility(View.GONE);
+//                    syncBtn.setVisibility(View.GONE);
                 }
             }
         }
@@ -347,7 +388,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         if (!PositionManager.getInstance().positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {
             Logger.println(TAG, "There is nothing to refresh");
             Toast.makeText(WeatherActivity.this, R.string.msg_no_city, Toast.LENGTH_SHORT).show();
-            stopRefresh();
+//            stopRefresh();
             return;
         }
 
@@ -355,36 +396,35 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void run() {
                 Logger.println(TAG, "Start animation");
-                allAnimation();
+//                allAnimation();
                 PositionManager.getInstance().updateWeather();
             }
         }, 1000);
-        swipeRefreshLayout.setRefreshing(true);
+//        swipeRefreshLayout.setRefreshing(true);
     }
 
     /**
      * Проигрываение анимации всех объектов activity
      */
     private void allAnimation() {
-        city.startAnimation(fallingDown);
-        cityPickerBtn.startAnimation(fallingDown_plus1);
-        temperature.startAnimation(flip);
-        description.startAnimation(fallingDownAlpha);
-        pressure.startAnimation(fallingDownAlpha_plus1);
-        //llMainInformation.setAnimation(flip);
-        wind.startAnimation(animTrans);
-        humidity.startAnimation(animTrans_plus1);
-        timeStamp.startAnimation(fallingUp);
-        syncBtn.startAnimation(animationRotateCenter);
+//        city.startAnimation(fallingDown);
+//        cityPickerBtn.startAnimation(fallingDown_plus1);
+//        temperature.startAnimation(flip);
+//        description.startAnimation(fallingDownAlpha);
+//        pressure.startAnimation(fallingDownAlpha_plus1);
+//        //llMainInformation.setAnimation(flip);
+//        wind.startAnimation(animTrans);
+//        humidity.startAnimation(animTrans_plus1);
+//        timeStamp.startAnimation(fallingUp);
+//        syncBtn.startAnimation(animationRotateCenter);
     }
 
     /**
      * Останавливаем анимацию
      */
     public void stopRefresh() {
-        swipeRefreshLayout.setRefreshing(false);
+//        swipeRefreshLayout.setRefreshing(false);
         //syncBtn.clearAnimation();
     }
-
 }
 

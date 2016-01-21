@@ -5,6 +5,7 @@ import android.net.ConnectivityManager;
 import android.widget.Toast;
 
 import com.khasang.forecast.AppUtils;
+import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.R;
 import com.khasang.forecast.activities.WeatherActivity;
 import com.khasang.forecast.sqlite.SQLiteProcessData;
@@ -23,47 +24,9 @@ import java.util.Set;
 
 public class PositionManager {
 
-    public enum TemperatureMetrics {
-        KELVIN {
-            public TemperatureMetrics change() {
-                return CELSIUS;
-            }
-        },
-        CELSIUS {
-            public TemperatureMetrics change() {
-                return FAHRENHEIT;
-            }
-        },
-        FAHRENHEIT {
-            public TemperatureMetrics change() {
-                return KELVIN;
-            }
-        };
-
-        public abstract TemperatureMetrics change();
-    }
-
-    public enum SpeedMetrics {METER_PER_SECOND, FOOT_PER_SECOND, KM_PER_HOURS, MILES_PER_HOURS}
-
-    public enum PressureMetrics {
-        HPA {
-            public PressureMetrics change() {
-                return MM_HG;
-            }
-        },
-        MM_HG {
-            public PressureMetrics change() {
-                return HPA;
-            }
-        };
-
-        public abstract PressureMetrics change();
-    }
-
-
-    TemperatureMetrics temperatureMetric;
-    SpeedMetrics speedMetric;
-    PressureMetrics pressureMetric;
+    AppUtils.TemperatureMetrics temperatureMetric;
+    AppUtils.SpeedMetrics speedMetric;
+    AppUtils.PressureMetrics pressureMetric;
     private WeatherStation currStation;
     private Position currPosition;
     private HashMap<WeatherStationFactory.ServiceType, WeatherStation> stations;
@@ -87,7 +50,7 @@ public class PositionManager {
     public void initManager(WeatherActivity activity) {
         this.mActivity = activity;
 
-        dbManager = new SQLiteProcessData(mActivity.context);
+        dbManager = new SQLiteProcessData(MyApplication.getAppContext());
         temperatureMetric = dbManager.loadTemperatureMetrics();
         speedMetric = dbManager.loadSpeedMetrics();
         pressureMetric = dbManager.loadPressureMetrics();
@@ -271,20 +234,20 @@ public class PositionManager {
         return null;
     }
 
-    public PressureMetrics getPressureMetric() {
+    public AppUtils.PressureMetrics getPressureMetric() {
         return pressureMetric;
     }
 
-    public PressureMetrics changePressureMetric() {
+    public AppUtils.PressureMetrics changePressureMetric() {
         pressureMetric = pressureMetric.change();
         return pressureMetric;
     }
 
-    public TemperatureMetrics getTemperatureMetric() {
+    public AppUtils.TemperatureMetrics getTemperatureMetric() {
         return temperatureMetric;
     }
 
-    public TemperatureMetrics changeTemperatureMetric() {
+    public AppUtils.TemperatureMetrics changeTemperatureMetric() {
         temperatureMetric = temperatureMetric.change();
         return temperatureMetric;
     }

@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -62,7 +63,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     List<String> cityList;
 
     private Toolbar toolbar;
-    private ImageButton fabBtn;
+    private FloatingActionButton fabBtn;
     private PlaceProvider mPlaceProvider;
 
 
@@ -72,13 +73,12 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         setContentView(R.layout.activity_city_picker);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        final Drawable upArrow = ContextCompat.getDrawable(this, R.mipmap.ic_arrow_back_white_24dp);
-        upArrow.setColorFilter(ContextCompat.getColor(this, R.color.back_arrow), PorterDuff.Mode.SRC_ATOP);
+//        final Drawable upArrow = ContextCompat.getDrawable(this, R.mipmap.ic_arrow_back_white_24dp);
+//        upArrow.setColorFilter(ContextCompat.getColor(this, R.color.back_arrow), PorterDuff.Mode.SRC_ATOP);
         //TODO fix NullPointerException
         //    getSupportActionBar().setHomeAsUpIndicator(upArrow);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         setTitle(getString(R.string.city_list));
         //TODO Проверить код кнопки HOME - цвет должен быть белый (не работает)
         //toolbar.setTitleTextColor(ContextCompat.getColor(this, android.R.color.white));
@@ -106,7 +106,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 showViews();
             }
         });
-        fabBtn = (ImageButton) findViewById(R.id.fabBtn);
+        fabBtn = (FloatingActionButton) findViewById(R.id.fabBtn);
         fabBtn.setOnClickListener(this);
         createItemList();
         Logger.println(TAG, String.valueOf(PositionManager.getInstance().getPositions()));
