@@ -7,6 +7,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -163,14 +164,14 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         switch (v.getId()) {
             case R.id.fabBtn:
                 showChooseCityDialog();
-                return;
+                break;
             case R.id.recycler_item:
                 final int position = recyclerView.getChildAdapterPosition(v);
                 Intent answerIntent = new Intent();
                 answerIntent.putExtra(CITY_PICKER_TAG, cityList.get(position - 1));
                 setResult(RESULT_OK, answerIntent);
-                finish();
-                return;
+                ActivityCompat.finishAfterTransition(this);
+                break;
         }
     }
 
@@ -180,9 +181,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-//            case android.R.id.home:
-//                onBackPressed();
-//                break;
             case R.id.clear_favorite:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage(R.string.msg_clear_city_list);
@@ -262,7 +260,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         Intent answerIntent = new Intent();
         answerIntent.putExtra(CITY_PICKER_TAG, city);
         setResult(RESULT_OK, answerIntent);
-        finish();
+        ActivityCompat.finishAfterTransition(this);
     }
 
     private void clearList() {
