@@ -51,7 +51,7 @@ public abstract class CommonForecastFragment extends Fragment {
             adapter.notifyDataSetChanged();
         }
 
-        animate();
+//        animate();
     }
 
     public void animate() {
@@ -100,7 +100,7 @@ public abstract class CommonForecastFragment extends Fragment {
     public void onResume(){
         super.onResume();
         Log.i(TAG, "OnResume");
-        AlphaAnimatorAdapter animatorAdapter = new AlphaAnimatorAdapter(adapter, recyclerView);
-        recyclerView.setAdapter(animatorAdapter);
+//        AlphaAnimatorAdapter animatorAdapter = new AlphaAnimatorAdapter(adapter, recyclerView);
+//        recyclerView.setAdapter(animatorAdapter);
     }
 }

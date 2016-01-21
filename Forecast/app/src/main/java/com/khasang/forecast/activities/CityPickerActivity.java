@@ -14,12 +14,16 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.transition.Fade;
+import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
@@ -94,6 +98,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         });
         fabBtn = (FloatingActionButton) findViewById(R.id.fabBtn);
         fabBtn.setOnClickListener(this);
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.simple_grow);
         createItemList();
         Logger.println(TAG, String.valueOf(PositionManager.getInstance().getPositions()));
 
@@ -118,6 +123,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
+        fabBtn.startAnimation(animation);
     }
 
     private void swapVisibilityTextOrList() {
@@ -358,7 +364,13 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         return true;
     }
 
-//    public static class ErrorDialogFragment extends DialogFragment {
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    //    public static class ErrorDialogFragment extends DialogFragment {
 //        public ErrorDialogFragment(){}
 //
 //        @Override

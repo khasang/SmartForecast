@@ -1,5 +1,6 @@
 package com.khasang.forecast.activities;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,6 +11,9 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.transition.Explode;
+import android.transition.Slide;
+import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,7 +21,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,15 +58,16 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     private ImageView syncBtn;
 
     private Animation animationRotateCenter;
-    private Animation animScale;
-    private Animation fallingDown;
-    private Animation fallingDown_plus1;
-    private Animation fallingDownAlpha;
-    private Animation fallingDownAlpha_plus1;
-    private Animation flip;
-    private Animation animTrans;
-    private Animation animTrans_plus1;
-    private Animation fallingUp;
+    private Animation animationGrow;
+//    private Animation animScale;
+//    private Animation fallingDown;
+//    private Animation fallingDown_plus1;
+//    private Animation fallingDownAlpha;
+//    private Animation fallingDownAlpha_plus1;
+//    private Animation flip;
+//    private Animation animTrans;
+//    private Animation animTrans_plus1;
+//    private Animation fallingUp;
 //    private SwipeRefreshLayout swipeRefreshLayout;
     private String temp_measure;
     private String press_measure;
@@ -91,8 +95,9 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         }
         initStartingMetrics();
         initFields();
-        setAnimationForWidgets();
         initFirstAppearance();
+        setAnimationForWidgets();
+        startAnimations();
     }
 
     private void initStartingMetrics() {
@@ -151,7 +156,11 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.menu_item_change_location:
-                startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
+//                startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
+                Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(this)
+                        .toBundle();
+                Intent intent = new Intent(this, CityPickerActivity.class);
+                startActivityForResult(intent, CHOOSE_CITY, bundle);
                 return true;
             case R.id.menu_item_refresh:
                 startAnimation();
@@ -195,6 +204,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     private void setAnimationForWidgets() {
         /** Анимация объектов */
         animationRotateCenter = AnimationUtils.loadAnimation(this, R.anim.rotate_center);
+        animationGrow = AnimationUtils.loadAnimation(this, R.anim.simple_grow);
 //        animScale = AnimationUtils.loadAnimation(this, R.anim.scale);
 //        fallingDown = AnimationUtils.loadAnimation(this, R.anim.falling_down);
 //        fallingDown_plus1 = AnimationUtils.loadAnimation(this, R.anim.falling_down_plus1);
@@ -377,8 +387,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void run() {
                 Logger.println(TAG, "Start animation");
-//                allAnimation();
-//                startAnimation();
                 PositionManager.getInstance().updateWeather();
             }
         }, 1000);
@@ -388,7 +396,8 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     /**
      * Проигрываение анимации всех объектов activity
      */
-    private void allAnimation() {
+    private void startAnimations() {
+        fab.startAnimation(animationGrow);
 //        city.startAnimation(fallingDown);
 //        cityPickerBtn.startAnimation(fallingDown_plus1);
 //        temperature.startAnimation(flip);
