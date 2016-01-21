@@ -24,21 +24,17 @@ import java.util.HashMap;
 
 public class SQLiteProcessData {
 
-    public SQLiteWork sqLite;
     public SimpleDateFormat dtFormat;
 
     public SQLiteProcessData(Context context) {
-        this.sqLite = new SQLiteWork(context, "Forecast.db");
+        SQLiteWork.getInstance();
+        SQLiteWork.getInstance().init(context, "Forecast.db");
         dtFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    }
-
-    public void closeDatabase() {
-        sqLite.closeDatabase();
     }
 
     // Сохранение города с координатами (перед сохранением списка нужно очистить старый)
     public void saveTown(String town, double latitude, double longitude) {
-        sqLite.queryExExec(SQLiteFields.QUERY_INSERT_TOWN, new String[]{town, Double.toString(latitude), Double.toString(longitude)});
+        SQLiteWork.getInstance().qExExec(SQLiteFields.QUERY_INSERT_TOWN, new String[]{town, Double.toString(latitude), Double.toString(longitude)});
     }
 
     // Сохранение погоды, удаление старой погоды.
@@ -46,30 +42,30 @@ public class SQLiteProcessData {
 
         deleteDoubleWeather(serviceType, townName, date);
 
-        sqLite.queryExExec(SQLiteFields.QUERY_INSERT_WEATHER, new String[]
-            {serviceType.name(), townName, dtFormat.format(date.getTime()), Double.toString(weather.getTemperature()), Double.toString(weather.getTemp_max()),
-                    Double.toString(weather.getTemp_min()), Double.toString(weather.getPressure()),
-                    Integer.toString(weather.getHumidity()), weather.getDescription(), weather.getWindDirection().name(),
-                    Double.toString(weather.getWindPower()), weather.getPrecipitation().name()});
+        SQLiteWork.getInstance().qExExec(SQLiteFields.QUERY_INSERT_WEATHER, new String[]
+                {serviceType.name(), townName, dtFormat.format(date.getTime()), Double.toString(weather.getTemperature()), Double.toString(weather.getTemp_max()),
+                        Double.toString(weather.getTemp_min()), Double.toString(weather.getPressure()),
+                        Integer.toString(weather.getHumidity()), weather.getDescription(), weather.getWindDirection().name(),
+                        Double.toString(weather.getWindPower()), weather.getPrecipitation().name()});
     }
 
     // Сохранение настроек
     public void saveSettings(WeatherStation currentStation) {
-        sqLite.queryExExec(SQLiteFields.QUERY_UPDATE_CURRSTATION_SETTING, new String[]{currentStation.getServiceType().name()});
+        SQLiteWork.getInstance().qExExec(SQLiteFields.QUERY_UPDATE_CURRSTATION_SETTING, new String[]{currentStation.getServiceType().name()});
     }
 
     public void saveSettings(Position currPosition) {
-        sqLite.queryExExec(SQLiteFields.QUERY_UPDATE_CURRCITY_SETTING, new String[]{currPosition.getLocationName()});
+        SQLiteWork.getInstance().qExExec(SQLiteFields.QUERY_UPDATE_CURRCITY_SETTING, new String[]{currPosition.getLocationName()});
     }
 
-    public void saveSettings(AppUtils.TemperatureMetrics temperatureMetrics,
-                             AppUtils.SpeedMetrics speedMetrics, AppUtils.PressureMetrics pressureMetrics) {
-        sqLite.queryExExec(SQLiteFields.QUERY_UPDATE_METRICS_SETTINGS, new String[]{temperatureMetrics.name(), speedMetrics.name(), pressureMetrics.name()});
+    public void saveSettings(PositionManager.TemperatureMetrics temperatureMetrics,
+                             PositionManager.SpeedMetrics speedMetrics, PositionManager.PressureMetrics pressureMetrics) {
+        SQLiteWork.getInstance().qExExec(SQLiteFields.QUERY_UPDATE_METRICS_SETTINGS, new String[]{temperatureMetrics.name(), speedMetrics.name(), pressureMetrics.name()});
     }
 
     // Загрузка CurrentTown.
     public String loadСurrentTown() {
-        Cursor dataset = sqLite.queryOpen(SQLiteFields.QUERY_SELECT_SETTINGS, null);
+        Cursor dataset = SQLiteWork.getInstance().queryOpen(SQLiteFields.QUERY_SELECT_SETTINGS, null);
         try {
             if (dataset != null && dataset.getCount() != 0) {
                 if (dataset.moveToFirst()) {
@@ -85,12 +81,12 @@ public class SQLiteProcessData {
     }
 
     // Загрузка TemperatureMetrics.
-    public AppUtils.TemperatureMetrics loadTemperatureMetrics() {
-        Cursor dataset = sqLite.queryOpen(SQLiteFields.QUERY_SELECT_SETTINGS, null);
+    public PositionManager.TemperatureMetrics loadTemperatureMetrics() {
+        Cursor dataset = SQLiteWork.getInstance().queryOpen(SQLiteFields.QUERY_SELECT_SETTINGS, null);
         try {
             if (dataset != null && dataset.getCount() != 0) {
                 if (dataset.moveToFirst()) {
-                    return AppUtils.TemperatureMetrics.valueOf(dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_TEMPIRATURE_METRICS)));
+                    return PositionManager.TemperatureMetrics.valueOf(dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_TEMPIRATURE_METRICS)));
                 }
             }
         } finally {
@@ -99,16 +95,16 @@ public class SQLiteProcessData {
             }
         }
         // Значение по умолчанию.
-        return AppUtils.TemperatureMetrics.CELSIUS;
+        return PositionManager.TemperatureMetrics.CELSIUS;
     }
 
     // Загрузка SpeedMetrics.
-    public AppUtils.SpeedMetrics loadSpeedMetrics() {
-        Cursor dataset = sqLite.queryOpen(SQLiteFields.QUERY_SELECT_SETTINGS, null);
+    public PositionManager.SpeedMetrics loadSpeedMetrics() {
+        Cursor dataset = SQLiteWork.getInstance().queryOpen(SQLiteFields.QUERY_SELECT_SETTINGS, null);
         try {
             if (dataset != null && dataset.getCount() != 0) {
                 if (dataset.moveToFirst()) {
-                    return AppUtils.SpeedMetrics.valueOf(dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_SPEED_METRICS)));
+                    return PositionManager.SpeedMetrics.valueOf(dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_SPEED_METRICS)));
                 }
             }
         } finally {
@@ -117,16 +113,16 @@ public class SQLiteProcessData {
             }
         }
         // Значение по умолчанию.
-        return AppUtils.SpeedMetrics.METER_PER_SECOND;
+        return PositionManager.SpeedMetrics.METER_PER_SECOND;
     }
 
     // Загрузка PressureMetrics.  {HPA, MM_HG}
-    public AppUtils.PressureMetrics loadPressureMetrics() {
-        Cursor dataset = sqLite.queryOpen(SQLiteFields.QUERY_SELECT_SETTINGS, null);
+    public PositionManager.PressureMetrics loadPressureMetrics() {
+        Cursor dataset = SQLiteWork.getInstance().queryOpen(SQLiteFields.QUERY_SELECT_SETTINGS, null);
         try {
             if (dataset != null && dataset.getCount() != 0) {
                 if (dataset.moveToFirst()) {
-                    return AppUtils.PressureMetrics.valueOf(dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_PRESSURE_METRICS)));
+                    return PositionManager.PressureMetrics.valueOf(dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_PRESSURE_METRICS)));
                 }
             }
         } finally {
@@ -135,12 +131,12 @@ public class SQLiteProcessData {
             }
         }
         // Значение по умолчанию.
-        return AppUtils.PressureMetrics.HPA;
+        return PositionManager.PressureMetrics.HPA;
     }
 
     // Загрузка Station.
     public WeatherStationFactory.ServiceType loadStation() {
-        Cursor dataset = sqLite.queryOpen(SQLiteFields.QUERY_SELECT_SETTINGS, null);
+        Cursor dataset = SQLiteWork.getInstance().queryOpen(SQLiteFields.QUERY_SELECT_SETTINGS, null);
         try {
             if (dataset != null && dataset.getCount() != 0) {
                 if (dataset.moveToFirst()) {
@@ -158,29 +154,29 @@ public class SQLiteProcessData {
 
     // Очистка таблицы от данных, старше определенной даты.
     public void deleteOldWeather(WeatherStationFactory.ServiceType serviceType, String townName, Calendar date) {
-        sqLite.queryExExec(SQLiteFields.QUERY_DELETE_OLD_DATA_WEATHER, new String[]{serviceType.name(), townName, dtFormat.format(date.getTime())});
+        SQLiteWork.getInstance().qExExec(SQLiteFields.QUERY_DELETE_OLD_DATA_WEATHER, new String[]{serviceType.name(), townName, dtFormat.format(date.getTime())});
     }
 
     // Очистка таблицы от старых данных, чтобы не было дублей.
     public void deleteDoubleWeather(WeatherStationFactory.ServiceType serviceType, String cityName, Calendar date) {
-        sqLite.queryExExec(SQLiteFields.QUERY_DELETE_DOUBLE_WEATHER, new String[]{serviceType.name(), cityName, dtFormat.format(date.getTime())});
+        SQLiteWork.getInstance().qExExec(SQLiteFields.QUERY_DELETE_DOUBLE_WEATHER, new String[]{serviceType.name(), cityName, dtFormat.format(date.getTime())});
     }
 
     // Очистка таблицы городов и удаление погодных данных к ним.
     public void deleteTowns() {
-        sqLite.queryExec(SQLiteFields.QUERY_DELETE_DATA_TOWNS);
-        sqLite.queryExec(SQLiteFields.QUERY_DELETE_DATA_WEATHER);
+        SQLiteWork.getInstance().qExec(SQLiteFields.QUERY_DELETE_DATA_TOWNS);
+        SQLiteWork.getInstance().qExec(SQLiteFields.QUERY_DELETE_DATA_WEATHER);
     }
 
     // Удаление города и погодных данных к нему.
     public void deleteTown(String townName) {
-        sqLite.queryExExec(SQLiteFields.QUERY_DELETE_DATA_TOWN, new String[]{townName});
-        sqLite.queryExExec(SQLiteFields.QUERY_DELETE_DATA_TOWN_WEATHER, new String[]{townName});
+        SQLiteWork.getInstance().qExExec(SQLiteFields.QUERY_DELETE_DATA_TOWN, new String[]{townName});
+        SQLiteWork.getInstance().qExExec(SQLiteFields.QUERY_DELETE_DATA_TOWN_WEATHER, new String[]{townName});
     }
 
     // Запись времени рассвета и заката.
     public void updateTownSunTime(Calendar sunRise, Calendar sunSet, String townName) {
-        sqLite.queryExExec(SQLiteFields.QUERY_UPDATE_TOWN_SUNTIME, new String[]{dtFormat.format(sunRise.getTime()), dtFormat.format(sunSet.getTime()), townName});
+        SQLiteWork.getInstance().qExExec(SQLiteFields.QUERY_UPDATE_TOWN_SUNTIME, new String[]{dtFormat.format(sunRise.getTime()), dtFormat.format(sunSet.getTime()), townName});
     }
 
     // Получение времени рассвета к городу.
@@ -188,7 +184,7 @@ public class SQLiteProcessData {
         String wDate;
         Calendar weatherDate = null;
 
-        Cursor dataset = sqLite.queryOpen(SQLiteFields.QUERY_SELECT_DATA_TOWN, new String[]{townName});
+        Cursor dataset = SQLiteWork.getInstance().queryOpen(SQLiteFields.QUERY_SELECT_DATA_TOWN, new String[]{townName});
         try {
             if (dataset != null && dataset.getCount() != 0) {
                 if (dataset.moveToFirst()) {
@@ -212,7 +208,7 @@ public class SQLiteProcessData {
         String wDate;
         Calendar weatherDate = null;
 
-        Cursor dataset = sqLite.queryOpen(SQLiteFields.QUERY_SELECT_DATA_TOWN, new String[]{townName});
+        Cursor dataset = SQLiteWork.getInstance().queryOpen(SQLiteFields.QUERY_SELECT_DATA_TOWN, new String[]{townName});
         try {
             if (dataset != null && dataset.getCount() != 0) {
                 if (dataset.moveToFirst()) {
@@ -239,7 +235,7 @@ public class SQLiteProcessData {
         String townName = "";
         HashMap hashMap = new HashMap();
 
-        Cursor dataset = sqLite.queryOpen(SQLiteFields.QUERY_SELECT_TOWNS, null);
+        Cursor dataset = SQLiteWork.getInstance().queryOpen(SQLiteFields.QUERY_SELECT_TOWNS, null);
         try {
             if (dataset != null && dataset.getCount() != 0) {
                 if (dataset.moveToFirst()) {
@@ -262,7 +258,7 @@ public class SQLiteProcessData {
     }
 
     // Загрузка погоды.
-    public HashMap<Calendar, Weather> loadWeather(WeatherStationFactory.ServiceType serviceType, String cityName, Calendar date, AppUtils.TemperatureMetrics tm, AppUtils.SpeedMetrics sm, AppUtils.PressureMetrics pm) {
+    public HashMap<Calendar, Weather> loadWeather(WeatherStationFactory.ServiceType serviceType, String cityName, Calendar date, PositionManager.TemperatureMetrics tm, PositionManager.SpeedMetrics sm, PositionManager.PressureMetrics pm) {
 
         double tempirature = 0;
         double tempirature_max = 0;
@@ -280,7 +276,7 @@ public class SQLiteProcessData {
         HashMap hashMap = null;
         Calendar weatherDate = null;
 
-        Cursor dataset = sqLite.queryOpen(SQLiteFields.QUERY_SELECT_WEATHER, new String[]{serviceType.name(), cityName, dtFormat.format(date.getTime())});
+        Cursor dataset = SQLiteWork.getInstance().queryOpen(SQLiteFields.QUERY_SELECT_WEATHER, new String[]{serviceType.name(), cityName, dtFormat.format(date.getTime())});
         try {
             if (dataset != null && dataset.getCount() != 0) {
                 if (dataset.moveToFirst()) {

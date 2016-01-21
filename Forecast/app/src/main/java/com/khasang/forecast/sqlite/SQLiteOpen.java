@@ -25,7 +25,7 @@ public class SQLiteOpen extends SQLiteOpenHelper {
                 }
             }
         } catch (Exception e) {
-            System.out.println("createTables ERROR " + e);
+            e.printStackTrace();
         }
     }
 
@@ -51,10 +51,6 @@ public class SQLiteOpen extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-//        checkTable(SQLiteFields.TABLE_TOWNS, SQLiteFields.QUERY_CREATE_TABLE_TOWNS, db);
-//        checkTable(SQLiteFields.TABLE_WEATHER, SQLiteFields.QUERY_CREATE_TABLE_WEATHER, db);
-//        checkTable(SQLiteFields.TABLE_SETTINGS, SQLiteFields.QUERY_CREATE_TABLE_SETTINGS, db);
-
         db.execSQL(SQLiteFields.QUERY_CREATE_TABLE_TOWNS);
         db.execSQL(SQLiteFields.QUERY_CREATE_TABLE_WEATHER);
         db.execSQL(SQLiteFields.QUERY_CREATE_TABLE_SETTINGS);
