@@ -3,13 +3,11 @@ package com.khasang.forecast.activities;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.ContextCompat;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,16 +15,19 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.transition.Fade;
+import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -73,25 +74,15 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         setContentView(R.layout.activity_city_picker);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-//        final Drawable upArrow = ContextCompat.getDrawable(this, R.mipmap.ic_arrow_back_white_24dp);
-//        upArrow.setColorFilter(ContextCompat.getColor(this, R.color.back_arrow), PorterDuff.Mode.SRC_ATOP);
         //TODO fix NullPointerException
-        //    getSupportActionBar().setHomeAsUpIndicator(upArrow);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         setTitle(getString(R.string.city_list));
-        //TODO Проверить код кнопки HOME - цвет должен быть белый (не работает)
-        //toolbar.setTitleTextColor(ContextCompat.getColor(this, android.R.color.white));
-
         infoTV = (TextView) findViewById(R.id.infoTV);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         cityList = new ArrayList<>();
-
         recyclerAdapter = new RecyclerAdapter(cityList, this, this);
         recyclerView.setAdapter(recyclerAdapter);
-
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         swapVisibilityTextOrList();
 
         /** Вычисляет степень прокрутки и выполняет нужное действие.*/
@@ -108,6 +99,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         });
         fabBtn = (FloatingActionButton) findViewById(R.id.fabBtn);
         fabBtn.setOnClickListener(this);
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.simple_grow);
         createItemList();
         Logger.println(TAG, String.valueOf(PositionManager.getInstance().getPositions()));
 
@@ -127,12 +119,12 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 //TODO Не работает отображение infoTV при очистке cityList
                 Logger.println(TAG, String.valueOf(cityList.size()));
                 swapVisibilityTextOrList();
-
             }
         };
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
+        fabBtn.startAnimation(animation);
     }
 
     private void swapVisibilityTextOrList() {
@@ -167,20 +159,19 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         swapVisibilityTextOrList();
     }
 
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fabBtn:
                 showChooseCityDialog();
-                return;
+                break;
             case R.id.recycler_item:
                 final int position = recyclerView.getChildAdapterPosition(v);
                 Intent answerIntent = new Intent();
                 answerIntent.putExtra(CITY_PICKER_TAG, cityList.get(position - 1));
                 setResult(RESULT_OK, answerIntent);
-                finish();
-                return;
+                ActivityCompat.finishAfterTransition(this);
+                break;
         }
     }
 
@@ -190,9 +181,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                break;
             case R.id.clear_favorite:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage(R.string.msg_clear_city_list);
@@ -213,7 +201,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 });
                 AlertDialog dialog = builder.create();
                 dialog.show();
-
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -273,7 +260,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         Intent answerIntent = new Intent();
         answerIntent.putExtra(CITY_PICKER_TAG, city);
         setResult(RESULT_OK, answerIntent);
-        finish();
+        ActivityCompat.finishAfterTransition(this);
     }
 
     private void clearList() {
@@ -284,7 +271,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     private void showChooseCityDialog() {
         final Pattern pattern = Pattern.compile("^[\\w\\s,-]+$");
 
-        final View view = getLayoutInflater().inflate(R.layout.choose_city_dialog, null);
+        final View view = getLayoutInflater().inflate(R.layout.dialog_pick_location, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final DelayedAutoCompleteTextView chooseCity = (DelayedAutoCompleteTextView) view.findViewById(R.id.editTextCityName);
         chooseCity.setAdapter(new GooglePlacesAutocompleteAdapter(this, R.layout.autocomplete_city_textview_item));
@@ -375,7 +362,13 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         return true;
     }
 
-//    public static class ErrorDialogFragment extends DialogFragment {
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    //    public static class ErrorDialogFragment extends DialogFragment {
 //        public ErrorDialogFragment(){}
 //
 //        @Override
