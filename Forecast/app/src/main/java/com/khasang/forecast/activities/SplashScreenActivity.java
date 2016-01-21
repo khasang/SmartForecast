@@ -21,7 +21,6 @@ public class SplashScreenActivity
 
     private final static String TAG = SplashScreenActivity.class.getSimpleName();
 
-
     private double mCurrentLatitude;
     private double mCurrentLongitude;
 
