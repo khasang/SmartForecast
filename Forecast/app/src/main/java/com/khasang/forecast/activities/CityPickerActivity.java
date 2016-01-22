@@ -269,7 +269,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void showChooseCityDialog() {
-        final Pattern pattern = Pattern.compile("^[\\w\\s,-`']+$");
+        final Pattern pattern = Pattern.compile("^[\\w\\s,`'-]+$");
 
         final View view = getLayoutInflater().inflate(R.layout.dialog_pick_location, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
