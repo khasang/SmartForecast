@@ -2,18 +2,17 @@ package com.khasang.forecast.activities;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
-import android.transition.Explode;
-import android.transition.Slide;
-import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,7 +50,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
     private TextView temperature;
     private TextView description;
-//    private TextView pressure;
+    //    private TextView pressure;
     private TextView wind;
     private TextView humidity;
     private ImageView currWeather;
@@ -59,7 +58,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
     private Animation animationRotateCenter;
     private Animation animationGrow;
-//    private Animation animScale;
+    //    private Animation animScale;
 //    private Animation fallingDown;
 //    private Animation fallingDown_plus1;
 //    private Animation fallingDownAlpha;
@@ -98,6 +97,12 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         initFirstAppearance();
         setAnimationForWidgets();
         startAnimations();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        PositionManager.getInstance().saveSettings();
     }
 
     private void initStartingMetrics() {
@@ -154,13 +159,10 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case R.id.menu_item_change_location:
 //                startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
-                Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(this)
-                        .toBundle();
-                Intent intent = new Intent(this, CityPickerActivity.class);
-                startActivityForResult(intent, CHOOSE_CITY, bundle);
+                startCityPickerActivity();
                 return true;
             case R.id.menu_item_refresh:
                 startAnimation();
@@ -168,6 +170,17 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 return true;
         }
         return false;
+    }
+
+    private void startCityPickerActivity() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(this)
+                    .toBundle();
+            Intent intent = new Intent(this, CityPickerActivity.class);
+            startActivityForResult(intent, CHOOSE_CITY, bundle);
+        } else {
+            startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
+        }
     }
 
     private void initFields() {
@@ -234,13 +247,34 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        PositionManager.getInstance().saveSettings();
-    }
-
     /**
+     * Обновление интерфейса Activity при получении новых данных
+     */
+    public void updateInterface(WeatherStation.ResponseType responseType, Map<Calendar, Weather> forecast) {
+        stopRefresh();
+
+        if (forecast == null || forecast.size() == 0) {
+            Logger.println(TAG, "Weather is null!");
+            return;
+        }
+        switch (responseType) {
+            case CURRENT:
+                Logger.println(TAG, "Принят CURRENT прогноз");
+                HashMap.Entry<Calendar, Weather> firstEntry = forecast.entrySet().iterator().next();
+                updateCurrentWeather(firstEntry.getKey(), firstEntry.getValue());
+                break;
+            case HOURLY:
+                Logger.println(TAG, "Принят HOURLY прогноз");
+                hourlyForecastFragment.setDatasAndAnimate(forecast);
+                break;
+            case DAILY:
+                Logger.println(TAG, "Принят DAILY прогноз");
+                dailyForecastFragment.setDatasAndAnimate(forecast);
+                break;
+            default:
+                Logger.println(TAG, "Принят необрабатываемый прогноз");
+        }
+    }    /**
      * Обработчик нажатия объектов
      */
 
@@ -275,35 +309,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 }
                 PositionManager.getInstance().updateWeather();
                 break;
-        }
-    }
-
-    /**
-     * Обновление интерфейса Activity при получении новых данных
-     */
-    public void updateInterface(WeatherStation.ResponseType responseType, Map<Calendar, Weather> forecast) {
-        stopRefresh();
-
-        if (forecast == null || forecast.size() == 0) {
-            Logger.println(TAG, "Weather is null!");
-            return;
-        }
-        switch (responseType) {
-            case CURRENT:
-                Logger.println(TAG, "Принят CURRENT прогноз");
-                HashMap.Entry<Calendar, Weather> firstEntry = forecast.entrySet().iterator().next();
-                updateCurrentWeather(firstEntry.getKey(), firstEntry.getValue());
-                break;
-            case HOURLY:
-                Logger.println(TAG, "Принят HOURLY прогноз");
-                hourlyForecastFragment.setDatasAndAnimate(forecast);
-                break;
-            case DAILY:
-                Logger.println(TAG, "Принят DAILY прогноз");
-                dailyForecastFragment.setDatasAndAnimate(forecast);
-                break;
-            default:
-                Logger.println(TAG, "Принят необрабатываемый прогноз");
         }
     }
 
@@ -417,5 +422,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 //        swipeRefreshLayout.setRefreshing(false);
 //        syncBtn.clearAnimation();
     }
+
+
 }
 
