@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -174,13 +175,9 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
     private void startCityPickerActivity() {
         Intent intent = new Intent(this, CityPickerActivity.class);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(this)
+        Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(this)
                     .toBundle();
-            startActivityForResult(intent, CHOOSE_CITY, bundle);
-        } else {
-            startActivityForResult(intent, CHOOSE_CITY);
-        }
+        ActivityCompat.startActivityForResult(this, intent, CHOOSE_CITY, bundle);
     }
 
     private void initFields() {
