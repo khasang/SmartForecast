@@ -269,7 +269,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void showChooseCityDialog() {
-        final Pattern pattern = Pattern.compile("^[\\w\\s,-]+$");
+        final Pattern pattern = Pattern.compile("^[\\w\\s,-`']+$");
 
         final View view = getLayoutInflater().inflate(R.layout.dialog_pick_location, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -320,7 +320,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!pattern.matcher(s.toString().trim()).matches()) {
                     dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
-                    chooseCity.setError(getString(R.string.city_error));
+                    chooseCity.setError(getString(R.string.incorrect_city_error));
                 } else {
                     dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
                     chooseCity.setError(null);

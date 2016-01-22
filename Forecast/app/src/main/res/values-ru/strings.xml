@@ -50,6 +50,4 @@
     <string name="SW">ЮЗ</string>
     <string name="W">З</string>
     <string name="NW">СЗ</string>
-    <string name="city_error">Проверьте название города</string>
-
 </resources>
