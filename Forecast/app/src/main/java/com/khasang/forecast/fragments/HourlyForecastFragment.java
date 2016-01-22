@@ -11,7 +11,7 @@ import java.util.Map;
  * Фрагмент для отображения погоды по часам
  */
 
-public class HourForecastFragment extends CommonForecastFragment {
+public class HourlyForecastFragment extends CommonForecastFragment {
 
     @Override
     protected void updateForecasts() {

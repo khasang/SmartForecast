@@ -150,7 +150,6 @@
             app:layout_anchorGravity="bottom|right|end"
             app:layout_behavior="com.khasang.forecast.ScrollAwareFabBehavior"/>
 
-
         <FrameLayout
             android:id="@+id/fragment_container"
             android:layout_width="match_parent"

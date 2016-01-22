@@ -6,12 +6,12 @@
         android:id="@+id/menu_item_change_location"
         android:title="@string/change_location"
         android:icon="@drawable/ic_location_city"
-        app:showAsAction="ifRoom|collapseActionView" />
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/menu_item_refresh"
         android:title="@string/refresh"
         android:icon="@drawable/ic_refresh"
-        app:showAsAction="ifRoom|collapseActionView" />
+        app:showAsAction="ifRoom" />
 
 </menu>
