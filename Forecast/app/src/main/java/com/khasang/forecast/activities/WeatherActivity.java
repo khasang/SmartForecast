@@ -173,13 +173,13 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void startCityPickerActivity() {
+        Intent intent = new Intent(this, CityPickerActivity.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(this)
                     .toBundle();
-            Intent intent = new Intent(this, CityPickerActivity.class);
             startActivityForResult(intent, CHOOSE_CITY, bundle);
         } else {
-            startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
+            startActivityForResult(intent, CHOOSE_CITY);
         }
     }
 
