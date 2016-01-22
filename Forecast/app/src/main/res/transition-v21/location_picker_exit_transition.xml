@@ -10,7 +10,7 @@
     </fade>
 
     <slide xmlns:android="http://schemas.android.com/apk/res/android"
-           android:slideEdge="start">
+           android:slideEdge="left">
         <targets>
             <target android:targetId="@id/toolbar"/>
         </targets>
