@@ -1,19 +1,17 @@
 package com.khasang.forecast.activities;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.provider.Settings;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.Button;
-
-import com.khasang.forecast.position.PositionManager;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import com.khasang.forecast.R;
-import com.khasang.forecast.location.LocationFactory;
 import com.khasang.forecast.location.LocationProvider;
 
 
@@ -23,77 +21,79 @@ public class SplashScreenActivity
 
     private final static String TAG = SplashScreenActivity.class.getSimpleName();
 
-    private Button chkButton;
-    private LocationManager mAndroidLocationManager;
-    private LocationProvider mLocationProvider;
-    private LocationFactory mLocationFactory;
-
     private double mCurrentLatitude;
     private double mCurrentLongitude;
 
-    PositionManager manager;
+    private final int SPLASH_DISPLAY_LENGTH = 1500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_splash_screen);
 
-        Intent intent = new Intent(this, WeatherActivity.class);
-        startActivity(intent);
-        finish();
+        ImageView splash_cloud = (ImageView)findViewById(R.id.splash_cloud);
+        final ImageView splash_left_cloud = (ImageView)findViewById(R.id.splash_left_cloud);
+        ImageView splash_right_cloud = (ImageView)findViewById(R.id.splash_right_cloud);
+        ImageView splash_rainbow = (ImageView)findViewById(R.id.splash_rainbow);
+        ImageView splash_smile = (ImageView)findViewById(R.id.splash_smile);
+        ImageView splash_wink = (ImageView)findViewById(R.id.splash_wink);
 
-        /*setContentView(R.layout.activity_splash_screen);
+        // Определение изображение для ImageView
+        splash_cloud.setImageResource(R.drawable.splash_cloud);
+        splash_left_cloud.setImageResource(R.drawable.splash_left_cloud);
+        splash_right_cloud.setImageResource(R.drawable.splash_right_cloud);
+        splash_rainbow.setImageResource(R.drawable.splash_rainbow);
+        splash_smile.setImageResource(R.drawable.splash_smile);
+        splash_wink.setImageResource(R.drawable.splash_wink);
 
-        mLocationProvider = new LocationProvider(this, this);
-        mAndroidLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        mLocationFactory = new LocationFactory();
+        // Создание анимации
+        Animation anim_splash_cloud = AnimationUtils.loadAnimation(this, R.anim.anim_splash_cloud);
+        Animation anim_splash_left_cloud = AnimationUtils.loadAnimation(this, R.anim.anim_splash_left_cloud);
+        Animation anim_splash_right_cloud = AnimationUtils.loadAnimation(this, R.anim.anim_splash_right_cloud);
+        Animation anim_splash_rainbow = AnimationUtils.loadAnimation(this, R.anim.anim_splash_rainbow);
+        Animation anim_splash_smile = AnimationUtils.loadAnimation(this, R.anim.anim_splash_smile);
+        Animation anim_splash_wink = AnimationUtils.loadAnimation(this, R.anim.anim_splash_wink);
 
-        chkButton = (Button) findViewById(R.id.chkLocatioBtn);
-        chkButton.setOnClickListener(new View.OnClickListener() {
+        // Запуск анимации
+        splash_cloud.startAnimation(anim_splash_cloud);
+        splash_left_cloud.startAnimation(anim_splash_left_cloud);
+        splash_right_cloud.startAnimation(anim_splash_right_cloud);
+        splash_rainbow.startAnimation(anim_splash_rainbow);
+        splash_smile.startAnimation(anim_splash_smile);
+        splash_wink.startAnimation(anim_splash_wink);
+
+
+        //TODO FOR TEST
+        //splash_left_cloud.setVisibility(View.GONE);
+        //splash_right_cloud.setVisibility(View.GONE);
+        //splash_rainbow.setVisibility(View.GONE);
+        //splash_smile.setVisibility(View.GONE);
+
+        //TODO FOR TEST
+       /* final ImageView mImageViewFilling = (ImageView) findViewById(R.id.imageview_animation_list_face);
+        mImageViewFilling.animate().setStartDelay(1000);
+        ((AnimationDrawable) mImageViewFilling.getBackground()).start();*/
+
+        //TODO DELETE
+     /*   mImageViewFilling.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mAndroidLocationManager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)) {
-                    GPSLocation currentGPSLocation = (GPSLocation) LocationFactory.getLocation(GPSLocation.factory);
-                    currentGPSLocation.setLatitude(mCurrentLatitude);
-                    currentGPSLocation.setLongitude(mCurrentLongitude);
-                    Log.i(TAG, "Created gps location " + mCurrentLongitude + ", " + mCurrentLatitude);
-                } else {
-                    buildAlertMessageNoGps();
-                }
+                mImageViewFilling.setActivated(!mImageViewFilling.isActivated());
             }
         });*/
-    }
 
-    private void buildAlertMessageNoGps() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.about_gps)
-                .setCancelable(false)
-                .setPositiveButton(getString(R.string.btn_yes), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                    }
-                })
-                .setNegativeButton(getString(R.string.btn_no), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                })
-                .create()
-                .show();
-    }
+        /** New Handler запускает  Splash-Screen Activity
+         * и закрывает его после нескольких секунд ожидания.*/
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(SplashScreenActivity.this, WeatherActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        }, SPLASH_DISPLAY_LENGTH);
 
-    /*@Override
-    protected void onResume() {
-        super.onResume();
-        mLocationProvider.connect();
     }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mLocationProvider.disconnect();
-    }*/
 
     @Override
     public void handleNewLocation(Location location) {
