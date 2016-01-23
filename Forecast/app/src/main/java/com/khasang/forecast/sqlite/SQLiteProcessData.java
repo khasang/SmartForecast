@@ -58,8 +58,8 @@ public class SQLiteProcessData {
         SQLiteWork.getInstance().qExExec(SQLiteFields.QUERY_UPDATE_CURRCITY_SETTING, new String[]{currPosition.getLocationName()});
     }
 
-    public void saveSettings(PositionManager.TemperatureMetrics temperatureMetrics,
-                             PositionManager.SpeedMetrics speedMetrics, PositionManager.PressureMetrics pressureMetrics) {
+    public void saveSettings(AppUtils.TemperatureMetrics temperatureMetrics,
+                             AppUtils.SpeedMetrics speedMetrics, AppUtils.PressureMetrics pressureMetrics) {
         SQLiteWork.getInstance().qExExec(SQLiteFields.QUERY_UPDATE_METRICS_SETTINGS, new String[]{temperatureMetrics.name(), speedMetrics.name(), pressureMetrics.name()});
     }
 
@@ -81,12 +81,12 @@ public class SQLiteProcessData {
     }
 
     // Загрузка TemperatureMetrics.
-    public PositionManager.TemperatureMetrics loadTemperatureMetrics() {
+    public AppUtils.TemperatureMetrics loadTemperatureMetrics() {
         Cursor dataset = SQLiteWork.getInstance().queryOpen(SQLiteFields.QUERY_SELECT_SETTINGS, null);
         try {
             if (dataset != null && dataset.getCount() != 0) {
                 if (dataset.moveToFirst()) {
-                    return PositionManager.TemperatureMetrics.valueOf(dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_TEMPIRATURE_METRICS)));
+                    return AppUtils.TemperatureMetrics.valueOf(dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_TEMPIRATURE_METRICS)));
                 }
             }
         } finally {
@@ -95,16 +95,16 @@ public class SQLiteProcessData {
             }
         }
         // Значение по умолчанию.
-        return PositionManager.TemperatureMetrics.CELSIUS;
+        return AppUtils.TemperatureMetrics.CELSIUS;
     }
 
     // Загрузка SpeedMetrics.
-    public PositionManager.SpeedMetrics loadSpeedMetrics() {
+    public AppUtils.SpeedMetrics loadSpeedMetrics() {
         Cursor dataset = SQLiteWork.getInstance().queryOpen(SQLiteFields.QUERY_SELECT_SETTINGS, null);
         try {
             if (dataset != null && dataset.getCount() != 0) {
                 if (dataset.moveToFirst()) {
-                    return PositionManager.SpeedMetrics.valueOf(dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_SPEED_METRICS)));
+                    return AppUtils.SpeedMetrics.valueOf(dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_SPEED_METRICS)));
                 }
             }
         } finally {
@@ -113,16 +113,16 @@ public class SQLiteProcessData {
             }
         }
         // Значение по умолчанию.
-        return PositionManager.SpeedMetrics.METER_PER_SECOND;
+        return AppUtils.SpeedMetrics.METER_PER_SECOND;
     }
 
     // Загрузка PressureMetrics.  {HPA, MM_HG}
-    public PositionManager.PressureMetrics loadPressureMetrics() {
+    public AppUtils.PressureMetrics loadPressureMetrics() {
         Cursor dataset = SQLiteWork.getInstance().queryOpen(SQLiteFields.QUERY_SELECT_SETTINGS, null);
         try {
             if (dataset != null && dataset.getCount() != 0) {
                 if (dataset.moveToFirst()) {
-                    return PositionManager.PressureMetrics.valueOf(dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_PRESSURE_METRICS)));
+                    return AppUtils.PressureMetrics.valueOf(dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_PRESSURE_METRICS)));
                 }
             }
         } finally {
@@ -131,7 +131,7 @@ public class SQLiteProcessData {
             }
         }
         // Значение по умолчанию.
-        return PositionManager.PressureMetrics.HPA;
+        return AppUtils.PressureMetrics.HPA;
     }
 
     // Загрузка Station.
@@ -258,7 +258,7 @@ public class SQLiteProcessData {
     }
 
     // Загрузка погоды.
-    public HashMap<Calendar, Weather> loadWeather(WeatherStationFactory.ServiceType serviceType, String cityName, Calendar date, PositionManager.TemperatureMetrics tm, PositionManager.SpeedMetrics sm, PositionManager.PressureMetrics pm) {
+    public HashMap<Calendar, Weather> loadWeather(WeatherStationFactory.ServiceType serviceType, String cityName, Calendar date, AppUtils.TemperatureMetrics tm, AppUtils.SpeedMetrics sm, AppUtils.PressureMetrics pm) {
 
         double tempirature = 0;
         double tempirature_max = 0;
