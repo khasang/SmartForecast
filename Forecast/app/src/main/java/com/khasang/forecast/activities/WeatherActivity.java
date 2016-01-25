@@ -1,8 +1,7 @@
 package com.khasang.forecast.activities;
 
-import android.app.ActivityOptions;
 import android.content.Intent;
-import android.os.Build;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -32,7 +31,9 @@ import com.khasang.forecast.fragments.HourlyForecastFragment;
 import com.khasang.forecast.position.PositionManager;
 import com.khasang.forecast.position.Weather;
 import com.khasang.forecast.stations.WeatherStation;
+import com.mikepenz.community_material_typeface_library.CommunityMaterial;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
@@ -42,6 +43,7 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SectionDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
 import java.util.Calendar;
@@ -87,6 +89,16 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     private FloatingActionButton fab;
     private Toolbar toolbar;
 
+
+    private OnFilterChangedListener onFilterChangedListener;
+
+    public void setOnFilterChangedListener(OnFilterChangedListener onFilterChangedListener) {
+        this.onFilterChangedListener = onFilterChangedListener;
+    }
+
+    private Drawer result = null;
+    private boolean opened = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,7 +134,12 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 .withHeaderBackground(R.drawable.header)
                 .withCompactStyle(true)
                 .addProfiles(
+
                         //new ProfileDrawerItem().withName("Mike Penz").withEmail("mikepenz@gmail.com").withIcon(R.drawable.ic_location_city))
+                        new ProfileDrawerItem()
+                                .withName("ГОРОД")
+                                .withEmail("СТРАНА")
+                                .withIcon(getResources().getDrawable(R.drawable.ic_location_city))
                 )
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
@@ -132,8 +149,22 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 })
                 .build();
 
-        PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName(R.string.app_name);
+        //TODO Delete
+        PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName(R.string.app_name).withSelectable(false);
         SecondaryDrawerItem item2 = new SecondaryDrawerItem().withName(R.string.error_empty_location_name);
+        PrimaryDrawerItem item_addCity = new PrimaryDrawerItem().withName(R.string.drawer_item_city_list).withIcon(CommunityMaterial.Icon.cmd_city);
+        new PrimaryDrawerItem().withName(R.string.drawer_item_custom).withIcon(FontAwesome.Icon.faw_eye).withBadge("6").withIdentifier(2);
+        new PrimaryDrawerItem().withName(R.string.drawer_item_free_play).withIcon(FontAwesome.Icon.faw_gamepad);
+
+
+
+        DividerDrawerItem divider = new DividerDrawerItem();
+        PrimaryDrawerItem favorites = new PrimaryDrawerItem().withName(R.string.drawer_item_home).withIcon(FontAwesome.Icon.faw_home).withBadge("99").withIdentifier(1);
+        final SecondaryDrawerItem moscow = new SecondaryDrawerItem().withName("Москва");
+        final SecondaryDrawerItem milan = new SecondaryDrawerItem().withName("Милан");
+        final SecondaryDrawerItem new_york = new SecondaryDrawerItem().withName("Нью Йорк");
+        new SecondaryDrawerItem().withName("Collapsable").withIcon(GoogleMaterial.Icon.gmd_play_for_work).withIdentifier(19).withSelectable(false);
+
 
         /*new DrawerBuilder()
                 .withActivity(this)
@@ -142,24 +173,96 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 .build();*/
 
         //new Drawer()
-        new DrawerBuilder()
+        result = new DrawerBuilder()
                 .withActivity(this)
                 .withToolbar(toolbar)
+                .withSelectedItem(-1)
                 .withActionBarDrawerToggle(true)
                 .withHeader(R.layout.drawer_header)
                 .addDrawerItems(
-                        new PrimaryDrawerItem().withName(R.string.drawer_item_home).withIcon(FontAwesome.Icon.faw_home).withBadge("99").withIdentifier(1),
-                        new PrimaryDrawerItem().withName(R.string.drawer_item_free_play).withIcon(FontAwesome.Icon.faw_gamepad),
-                        new PrimaryDrawerItem().withName(R.string.drawer_item_custom).withIcon(FontAwesome.Icon.faw_eye).withBadge("6").withIdentifier(2),
+                        favorites,
+                        item_addCity,
                         new SectionDrawerItem().withName(R.string.drawer_item_settings),
                         new SecondaryDrawerItem().withName(R.string.drawer_item_help).withIcon(FontAwesome.Icon.faw_cog),
-                        //new SecondaryDrawerItem().withName(R.string.drawer_item_open_source).withIcon(FontAwesome.Icon.faw_question).setEnabled(false),
-                        new DividerDrawerItem(),
-                        new SecondaryDrawerItem().withName(R.string.drawer_item_contact).withIcon(FontAwesome.Icon.faw_github).withBadge("12+").withIdentifier(1)
+                        divider,
+                        new SecondaryDrawerItem().withName(R.string.drawer_item_contact).withIcon(FontAwesome.Icon.faw_github).withBadge("12+").withIdentifier(1),
+                        new SecondaryDrawerItem().withName(R.string.drawer_item_feedback).withIcon(FontAwesome.Icon.faw_google)
                 )
+                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                    @Override
+                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                        switch (position) {
+                            case 1:
+                                if (opened) {
+                                    result.removeItems(1000, 1001, 1003);
+                                } else {
+                                    int curPos = result.getPosition(drawerItem);
+                                    result.addItemsAtPosition(
+                                            curPos,
+                                            moscow.withLevel(2).withIdentifier(1000),
+                                            milan.withLevel(2).withIdentifier(1001),
+                                            new_york.withLevel(2).withIdentifier(1003)
+                                    );
+                                }
+                                opened = !opened;
+                                break;
+                            case 5:
+                                startCityPickerActivity();
+                                break;
+                            case 6:
+                                String url = "https://github.com/khasang/SmartForecast";
+                                Intent i = new Intent(Intent.ACTION_VIEW);
+                                i.setData(Uri.parse(url));
+                                startActivity(i);
+                                break;
+                            case 7:
+                                Intent feedbackIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://docs.google.com/forms/d/1HK_s5Fuzacf0qeB8t2bvHwbo7sJQB_DMesYA6opU_zY/viewform"));
+                                startActivity(feedbackIntent);
+                                break;
+                            default:
+                                Toast.makeText(WeatherActivity.this, "Position is: " + position, Toast.LENGTH_SHORT).show();
+                        }
+                        return true;
+                    }
+                })
                 .build();
+
+
+
+
+/*                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                    @Override
+                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                        if (drawerItem != null) {
+                            if (drawerItem instanceof Nameable) {
+                                toolbar.setTitle(((Nameable) drawerItem).getName().getText(WeatherActivity.this));
+                            }
+
+                            if (onFilterChangedListener != null) {
+                                onFilterChangedListener.onFilterChanged(drawerItem.getIdentifier());
+                            }
+                        }
+
+                        return false;
+                    }
+                })*/
+           /*     .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                    @Override
+                    public boolean onItemClick(AdapterView<?> parent, View view, int position, long id, IDrawerItem drawerItem) {
+                        switch(drawerItem.getIdentifier()){
+                            case 0:
+
+                                break;
+                        }
+                        return true;
+                    }
+                })*/
+        //.build();
     }
 
+    public interface OnFilterChangedListener {
+        public void onFilterChanged(int filter);
+    }
 
     @Override
     protected void onStop() {
