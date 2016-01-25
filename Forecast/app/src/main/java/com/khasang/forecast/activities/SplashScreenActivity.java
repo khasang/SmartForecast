@@ -1,16 +1,19 @@
 package com.khasang.forecast.activities;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.AnimationDrawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.khasang.forecast.R;
 import com.khasang.forecast.location.LocationProvider;
 
@@ -20,6 +23,7 @@ public class SplashScreenActivity
         implements LocationProvider.LocationCallback {
 
     private final static String TAG = SplashScreenActivity.class.getSimpleName();
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
     private double mCurrentLatitude;
     private double mCurrentLongitude;
@@ -84,15 +88,38 @@ public class SplashScreenActivity
 
         /** New Handler запускает  Splash-Screen Activity
          * и закрывает его после нескольких секунд ожидания.*/
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(SplashScreenActivity.this, WeatherActivity.class);
-                startActivity(intent);
+        if (checkPlayServices()){
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent intent = new Intent(SplashScreenActivity.this, WeatherActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }, SPLASH_DISPLAY_LENGTH);
+        }
+    }
+
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                Dialog dialog = apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST);
+                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        SplashScreenActivity.this.finish();
+                    }
+                });
+                dialog.show();
+            } else {
+                Log.d("LOG", "This device is not supported.");
                 finish();
             }
-        }, SPLASH_DISPLAY_LENGTH);
-
+            return false;
+        }
+        return true;
     }
 
     @Override
