@@ -1,9 +1,10 @@
 package com.khasang.forecast.fragments;
 
+import com.khasang.forecast.AppUtils;
+import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.position.Weather;
 
 import java.util.Calendar;
-import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -20,9 +21,8 @@ public class DailyForecastFragment extends CommonForecastFragment {
         // TODO: пока заполняю списки просто в цикле
         for (Map.Entry<Calendar, Weather> entry : forecasts.entrySet()) {
             Calendar calendar = entry.getKey();
-            String dayOfWeek = String.format(Locale.getDefault(), "%ta", calendar);
+            String dayOfWeek = AppUtils.getDayName(MyApplication.getAppContext(), calendar);
             sDate.add(dayOfWeek);
-
             weathers.add(entry.getValue());
         }
     }
