@@ -2,6 +2,8 @@
 <resources>
     <style name="AppTheme.Main" parent="@style/AppTheme">
         <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowEnterTransition">@transition/weather_activity_enter_transition</item>
+        <item name="android:windowReturnTransition">@transition/weather_activity_exit_transition</item>
     </style>
 
     <style name="AppTheme.CityPicker" parent="@style/AppTheme">

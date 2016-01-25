@@ -54,5 +54,6 @@
     <string name="SW">SW</string>
     <string name="W">W</string>
     <string name="NW">NW</string>
-
+    <string name="today">Today</string>
+    <string name="tomorrow">Tomorrow</string>
 </resources>

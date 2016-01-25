@@ -5,7 +5,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.animation.Animation;
@@ -20,27 +21,26 @@ import com.khasang.forecast.location.LocationProvider;
 
 public class SplashScreenActivity
         extends AppCompatActivity
-        implements LocationProvider.LocationCallback {
+        implements LocationProvider.LocationCallback,
+        Animation.AnimationListener {
 
     private final static String TAG = SplashScreenActivity.class.getSimpleName();
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-
+    private final int SPLASH_DISPLAY_LENGTH = 1500;
     private double mCurrentLatitude;
     private double mCurrentLongitude;
-
-    private final int SPLASH_DISPLAY_LENGTH = 1500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
-        ImageView splash_cloud = (ImageView)findViewById(R.id.splash_cloud);
-        final ImageView splash_left_cloud = (ImageView)findViewById(R.id.splash_left_cloud);
-        ImageView splash_right_cloud = (ImageView)findViewById(R.id.splash_right_cloud);
-        ImageView splash_rainbow = (ImageView)findViewById(R.id.splash_rainbow);
-        ImageView splash_smile = (ImageView)findViewById(R.id.splash_smile);
-        ImageView splash_wink = (ImageView)findViewById(R.id.splash_wink);
+        ImageView splash_cloud = (ImageView) findViewById(R.id.splash_cloud);
+        final ImageView splash_left_cloud = (ImageView) findViewById(R.id.splash_left_cloud);
+        ImageView splash_right_cloud = (ImageView) findViewById(R.id.splash_right_cloud);
+        ImageView splash_rainbow = (ImageView) findViewById(R.id.splash_rainbow);
+        ImageView splash_smile = (ImageView) findViewById(R.id.splash_smile);
+        ImageView splash_wink = (ImageView) findViewById(R.id.splash_wink);
 
         // Определение изображение для ImageView
         splash_cloud.setImageResource(R.drawable.splash_cloud);
@@ -65,8 +65,7 @@ public class SplashScreenActivity
         splash_rainbow.startAnimation(anim_splash_rainbow);
         splash_smile.startAnimation(anim_splash_smile);
         splash_wink.startAnimation(anim_splash_wink);
-
-
+        anim_splash_wink.setAnimationListener(this);
         //TODO FOR TEST
         //splash_left_cloud.setVisibility(View.GONE);
         //splash_right_cloud.setVisibility(View.GONE);
@@ -88,16 +87,20 @@ public class SplashScreenActivity
 
         /** New Handler запускает  Splash-Screen Activity
          * и закрывает его после нескольких секунд ожидания.*/
-        if (checkPlayServices()){
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Intent intent = new Intent(SplashScreenActivity.this, WeatherActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-            }, SPLASH_DISPLAY_LENGTH);
-        }
+//        if (checkPlayServices()){
+//            new Handler().postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    Intent intent = new Intent(SplashScreenActivity.this, WeatherActivity.class);
+////                    startActivity(intent);
+//                    Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(SplashScreenActivity.this)
+//                            .toBundle();
+//                    ActivityCompat.startActivity(SplashScreenActivity.this, intent, bundle);
+//                    finish();
+//                }
+//            }, SPLASH_DISPLAY_LENGTH);
+//        }
+
     }
 
     private boolean checkPlayServices() {
@@ -128,5 +131,23 @@ public class SplashScreenActivity
 
         mCurrentLatitude = location.getLatitude();
         mCurrentLongitude = location.getLongitude();
+    }
+
+    @Override
+    public void onAnimationStart(Animation animation) {
+    }
+
+    @Override
+    public void onAnimationEnd(Animation animation) {
+        if (checkPlayServices()) {
+            Intent intent = new Intent(SplashScreenActivity.this, WeatherActivity.class);
+            Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(SplashScreenActivity.this)
+                    .toBundle();
+            ActivityCompat.startActivity(SplashScreenActivity.this, intent, bundle);
+        }
+    }
+
+    @Override
+    public void onAnimationRepeat(Animation animation) {
     }
 }

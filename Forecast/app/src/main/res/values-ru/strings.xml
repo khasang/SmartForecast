@@ -50,4 +50,6 @@
     <string name="SW">ЮЗ</string>
     <string name="W">З</string>
     <string name="NW">СЗ</string>
+    <string name="today">Сегодня</string>
+    <string name="tomorrow">Завтра</string>
 </resources>
