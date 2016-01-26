@@ -1,16 +1,19 @@
 package com.khasang.forecast;
 
+import android.content.Context;
+
 import com.khasang.forecast.models.DailyForecastList;
 import com.khasang.forecast.models.DailyResponse;
 import com.khasang.forecast.models.HourlyForecastList;
 import com.khasang.forecast.models.OpenWeatherMapResponse;
-import com.khasang.forecast.position.PositionManager;
 import com.khasang.forecast.position.Precipitation;
 import com.khasang.forecast.position.Weather;
 import com.khasang.forecast.position.Wind;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -403,6 +406,35 @@ public class AppUtils {
             return true;
         } catch(NumberFormatException nfe) {
             return true;
+        }
+    }
+
+    /** Получение дня **/
+    public static String getDayName(Context context, Calendar calendar) {
+        int rightnow = Calendar.getInstance(Locale.getDefault()).get(Calendar.DAY_OF_MONTH);
+        int today = calendar.get(Calendar.DAY_OF_MONTH);
+        if (rightnow == today) {
+            return context.getString(R.string.today);
+        } else if (today == rightnow + 1) {
+            return context.getString(R.string.tomorrow);
+        } else {
+            SimpleDateFormat dayFormat = new SimpleDateFormat("EEE, d MMMM", Locale.getDefault());
+            String myString = dayFormat.format(calendar.getTime());
+            return myString.substring(0,1).toUpperCase() + myString.substring(1);
+        }
+    }
+
+    /** Получение времени **/
+    public static String getTime(Context context, Calendar calendar) {
+        int rightnow = Calendar.getInstance(Locale.getDefault()).get(Calendar.DAY_OF_MONTH);
+        int today = calendar.get(Calendar.DAY_OF_MONTH);
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        if (rightnow == today) {
+            return timeFormat.format(calendar.getTime());
+        } else {
+            return timeFormat.format(calendar.getTime())
+                    + ", "
+                    + context.getString(R.string.tomorrow).toLowerCase();
         }
     }
 }
