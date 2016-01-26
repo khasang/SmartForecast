@@ -19,8 +19,9 @@
     <string name="snow">der Schnee</string> 
     <string name="mist">der Nebel</string>
 
-    <string name="choose_city_label"></string>
     <string name="clear_favorite">Alle Städte löschen</string>
+    <string name="refresh">Aktualisieren</string>
+    <string name="change_location">Standort verändern</string>
     <string name="city_exist">Die Stadt ist in der Liste schon anwesend</string>
     <string name="update_error_location_not_found">Der Fehler der Erneuerung des Wetters.\nDie Stadt fehlt in die Ortliste.</string>
     <string name="update_error_net_not_availble">Der Fehler der Erneuerung des Wetters.\nDas Netz ist unzugänglich.</string>
@@ -43,12 +44,13 @@
     <string name="incorrect_city_error">Falsche Stadtname</string>
     <string name="about_gps">Ihr GPS ist abgeschaltet, wollen Sie es aufnehmen?</string>
     <string name="N">N</string>
-    <string name="NO">NE</string>
-    <string name="O">E</string>
-    <string name="SO">SE</string>
+    <string name="NE">NE</string>
+    <string name="E">E</string>
+    <string name="SE">SE</string>
     <string name="S">S</string>
     <string name="SW">SW</string>
     <string name="W">W</string>
     <string name="NW">NW</string>
-
+    <string name="today">Heute</string>
+    <string name="tomorrow">Morgen</string>
 </resources>
