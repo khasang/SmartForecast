@@ -180,18 +180,50 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 .withActionBarDrawerToggle(true)
                 .withHeader(R.layout.drawer_header)
                 .addDrawerItems(
-                        favorites,
-                        item_addCity,
+                        favorites.withIdentifier(1),
+                        item_addCity.withIdentifier(2),
                         new SectionDrawerItem().withName(R.string.drawer_item_settings),
-                        new SecondaryDrawerItem().withName(R.string.drawer_item_help).withIcon(FontAwesome.Icon.faw_cog),
+                        new SecondaryDrawerItem().withName(R.string.drawer_item_help).withIcon(FontAwesome.Icon.faw_cog).withIdentifier(3),
                         divider,
-                        new SecondaryDrawerItem().withName(R.string.drawer_item_contact).withIcon(FontAwesome.Icon.faw_github).withBadge("12+").withIdentifier(1),
-                        new SecondaryDrawerItem().withName(R.string.drawer_item_feedback).withIcon(FontAwesome.Icon.faw_google)
+                        new SecondaryDrawerItem().withName(R.string.drawer_item_contact).withIcon(FontAwesome.Icon.faw_github).withBadge("12+").withIdentifier(4),
+                        new SecondaryDrawerItem().withName(R.string.drawer_item_feedback).withIcon(FontAwesome.Icon.faw_google).withIdentifier(5)
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
-                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        switch (position) {
+                    public boolean onItemClick(View v, int position, IDrawerItem drawerItem) {
+                        switch (drawerItem.getIdentifier()) {
+                            case 1:
+                                if (opened) {
+                                    result.removeItems(1000, 1001, 1003);
+                                } else {
+                                    int curPos = result.getPosition(drawerItem);
+                                    result.addItemsAtPosition(
+                                            curPos,
+                                            moscow.withLevel(2).withIdentifier(1000),
+                                            milan.withLevel(2).withIdentifier(1001),
+                                            new_york.withLevel(2).withIdentifier(1003)
+                                    );
+                                }
+                                opened = !opened;
+                                break;
+                            case 2:
+                                startCityPickerActivity();
+                                break;
+                            case 3:
+                                Toast.makeText(WeatherActivity.this, "Intent for settings ", Toast.LENGTH_SHORT).show();
+                                break;
+                            case 4:
+                                String url = "https://github.com/khasang/SmartForecast";
+                                Intent i = new Intent(Intent.ACTION_VIEW);
+                                i.setData(Uri.parse(url));
+                                startActivity(i);
+                                break;
+                            case 5:
+                                Intent feedbackIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://docs.google.com/forms/d/1HK_s5Fuzacf0qeB8t2bvHwbo7sJQB_DMesYA6opU_zY/viewform"));
+                                startActivity(feedbackIntent);
+                                break;
+                        }
+                        /*switch (position) {
                             case 1:
                                 if (opened) {
                                     result.removeItems(1000, 1001, 1003);
@@ -221,7 +253,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                                 break;
                             default:
                                 Toast.makeText(WeatherActivity.this, "Position is: " + position, Toast.LENGTH_SHORT).show();
-                        }
+                        }*/
                         return true;
                     }
                 })
