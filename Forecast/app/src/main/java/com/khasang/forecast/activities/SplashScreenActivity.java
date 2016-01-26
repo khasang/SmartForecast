@@ -141,9 +141,11 @@ public class SplashScreenActivity
     public void onAnimationEnd(Animation animation) {
         if (checkPlayServices()) {
             Intent intent = new Intent(SplashScreenActivity.this, WeatherActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(SplashScreenActivity.this)
                     .toBundle();
             ActivityCompat.startActivity(SplashScreenActivity.this, intent, bundle);
+            ActivityCompat.finishAfterTransition(SplashScreenActivity.this);
         }
     }
 
