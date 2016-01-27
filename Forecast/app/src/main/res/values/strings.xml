@@ -8,6 +8,7 @@
     <string name="wind">Wind</string>
     <string name="humidity">Humidity</string>
     <string name="timeStamp">Updated</string>
+    <string name="pressure_measure">mmHg</string>
     <string name="pressure_measure_hpa">HPa</string>
     <string name="wind_measure"><![CDATA[<sup><small>m</small></sup>/<small>s</small>]]></string>
 
@@ -21,7 +22,6 @@
     <string name="snow">Snow</string> 
     <string name="mist">Mist</string>
 
-    <string name="choose_city_label"></string>
     <string name="clear_favorite">To remove all cities</string>
     <string name="refresh">Refresh</string>
     <string name="change_location">Change Location</string>
