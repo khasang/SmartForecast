@@ -4,7 +4,7 @@ package com.khasang.forecast.position;
  * Created by Veda on 24.11.15.
  */
 
-public class Position {
+public class Position implements IPosition {
     private String name;
     private int cityID;
     private Coordinate coordinate;
@@ -12,26 +12,32 @@ public class Position {
     public Position() {
     }
 
+    @Override
     public void setLocationName(String name) {
         this.name = name;
     }
 
+    @Override
     public String getLocationName() {
         return name;
     }
 
+    @Override
     public int getCityID() {
         return cityID;
     }
 
+    @Override
     public void setCityID(int cityID) {
         this.cityID = cityID;
     }
 
+    @Override
     public Coordinate getCoordinate() {
         return coordinate;
     }
 
+    @Override
     public void setCoordinate(Coordinate coordinate) {
         this.coordinate = coordinate;
     }
