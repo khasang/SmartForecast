@@ -8,6 +8,7 @@
     <string name="wind">Wind</string>
     <string name="humidity">Humidity</string>
     <string name="timeStamp">Updated</string>
+    <string name="pressure_measure">mmHg</string>
     <string name="pressure_measure_hpa">HPa</string>
     <string name="wind_measure"><![CDATA[<sup><small>m</small></sup>/<small>s</small>]]></string>
 
