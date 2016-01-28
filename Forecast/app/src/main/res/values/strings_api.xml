@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="place_provider_key">AIzaSyBR70pjZmykrJsIG9eNHzKKzX0WDZVddQc</string>
-    <string name="crashlytics_key">763d0e7ee5e3a91a0e52380e1107d8f6013f33c2</string>
 </resources>
