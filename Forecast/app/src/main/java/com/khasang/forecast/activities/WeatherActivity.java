@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,6 +35,7 @@ import com.khasang.forecast.stations.WeatherStation;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
@@ -104,6 +106,8 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     private boolean opened = false;
     List<String> cityList;
 
+    private PrimaryDrawerItem favorites;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -157,25 +161,31 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         //TODO Delete
         PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName(R.string.app_name).withSelectable(false);
         SecondaryDrawerItem item2 = new SecondaryDrawerItem().withName(R.string.error_empty_location_name);
-        PrimaryDrawerItem item_addCity = new PrimaryDrawerItem().withName(R.string.drawer_item_city_list).withIcon(CommunityMaterial.Icon.cmd_city);
         new PrimaryDrawerItem().withName(R.string.drawer_item_custom).withIcon(FontAwesome.Icon.faw_eye).withBadge("6").withIdentifier(2);
         new PrimaryDrawerItem().withName(R.string.drawer_item_free_play).withIcon(FontAwesome.Icon.faw_gamepad);
-
-        //Cписок городов
-        cityList = new ArrayList<>();
-        Set<String> cities = PositionManager.getInstance().getPositions();
-        for (String city : cities) {
-            cityList.add(city);
-            Collections.sort(cityList);
-        }
-
-
-        DividerDrawerItem divider = new DividerDrawerItem();
-        PrimaryDrawerItem favorites = new PrimaryDrawerItem().withName(R.string.drawer_item_home).withIcon(FontAwesome.Icon.faw_home).withBadge(String.valueOf(cityList.size())).withIdentifier(1);
         final SecondaryDrawerItem moscow = new SecondaryDrawerItem().withName("Москва");
         final SecondaryDrawerItem milan = new SecondaryDrawerItem().withName("Милан");
         final SecondaryDrawerItem new_york = new SecondaryDrawerItem().withName("Нью Йорк");
         new SecondaryDrawerItem().withName("Collapsable").withIcon(GoogleMaterial.Icon.gmd_play_for_work).withIdentifier(19).withSelectable(false);
+
+
+        getFavaritesList();
+        //Cписок городов
+/*        cityList = new ArrayList<>();
+        Set<String> cities = PositionManager.getInstance().getPositions();
+        for (String city : cities) {
+            cityList.add(city);
+            Collections.sort(cityList);
+        }*/
+
+
+        DividerDrawerItem divider = new DividerDrawerItem();
+        favorites = new PrimaryDrawerItem().withName(R.string.drawer_item_home).withIcon(MaterialDesignIconic.Icon.gmi_star).withBadge(String.valueOf(cityList.size())).withIdentifier(1);
+        PrimaryDrawerItem cityList = new PrimaryDrawerItem().withName(R.string.drawer_item_city_list).withIcon(CommunityMaterial.Icon.cmd_city).withIdentifier(2);
+        SecondaryDrawerItem settings = new SecondaryDrawerItem().withName(R.string.drawer_item_settings).withIcon(FontAwesome.Icon.faw_cog).withIdentifier(3);
+        SecondaryDrawerItem feedBack = new SecondaryDrawerItem().withName(R.string.drawer_item_feedback).withIcon(GoogleMaterial.Icon.gmd_feedback).withIdentifier(4);
+
+
 
 
         /*new DrawerBuilder()
@@ -192,13 +202,11 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 .withActionBarDrawerToggle(true)
                 .withHeader(R.layout.drawer_header)
                 .addDrawerItems(
-                        favorites.withIdentifier(1),
-                        item_addCity.withIdentifier(2),
-                        new SectionDrawerItem().withName(R.string.drawer_item_settings),
-                        new SecondaryDrawerItem().withName(R.string.drawer_item_help).withIcon(FontAwesome.Icon.faw_cog).withIdentifier(3),
+                        favorites,
+                        cityList,
                         divider,
-                        new SecondaryDrawerItem().withName(R.string.drawer_item_contact).withIcon(FontAwesome.Icon.faw_github).withBadge("12+").withIdentifier(4),
-                        new SecondaryDrawerItem().withName(R.string.drawer_item_feedback).withIcon(FontAwesome.Icon.faw_google).withIdentifier(5)
+                        settings,
+                        feedBack
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
@@ -206,34 +214,20 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                         switch (drawerItem.getIdentifier()) {
                             case 1:
                                 if (opened) {
-                                    for(int i = cityList.size()-1; i >= 0; i--) {
+                                    for(int i = WeatherActivity.this.cityList.size()-1; i >= 0; i--) {
                                         result.removeItems(1000+i);
                                     }
-                                    //result.removeItems(1000, 1001, 1003);
                                 } else {
                                     int curPos = result.getPosition(drawerItem);
-
-
-
-                                    if (!cityList.isEmpty()) {
-                                        for(int i = cityList.size()-1; i >= 0; i--) {
+                                    if (!WeatherActivity.this.cityList.isEmpty()) {
+                                        for(int i = WeatherActivity.this.cityList.size()-1; i >= 0; i--) {
                                             result.addItemsAtPosition(
                                                     curPos,
-                                                    new SecondaryDrawerItem().withName(cityList.get(i)).withIdentifier(1000+i)
+                                                    new SecondaryDrawerItem().withLevel(2).withName(WeatherActivity.this.cityList.get(i)).withIdentifier(1000+i)
                                             );
-
                                         }
-                           /*             result.addItemsAtPosition(
-                                                curPos,
-                                                moscow.withLevel(2).withIdentifier(1000),
-                                                new SecondaryDrawerItem().withName(cityList.get(2))*/
-
-                                        //milan.withLevel(2).withIdentifier(1001),
-                                                //new_york.withLevel(2).withIdentifier(1003)
-                                        //);
                                     } else {
                                         Toast.makeText(WeatherActivity.this, "cityList is empty ", Toast.LENGTH_SHORT).show();
-
                                     }
                                 }
                                 opened = !opened;
@@ -243,27 +237,41 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                                 result.closeDrawer();
                                 break;
                             case 3:
+                                result.updateItem(favorites);
                                 Toast.makeText(WeatherActivity.this, "Intent for settings ", Toast.LENGTH_SHORT).show();
                                 break;
                             case 4:
-                                String url = "https://github.com/khasang/SmartForecast";
-                                Intent i = new Intent(Intent.ACTION_VIEW);
-                                i.setData(Uri.parse(url));
-                                startActivity(i);
-                                break;
-                            case 5:
                                 Intent feedbackIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://docs.google.com/forms/d/1HK_s5Fuzacf0qeB8t2bvHwbo7sJQB_DMesYA6opU_zY/viewform"));
                                 startActivity(feedbackIntent);
+                                result.closeDrawer();
                                 break;
                         }
                         return true;
                     }
                 })
                 .build();
+
     }
 
     public interface OnFilterChangedListener {
         public void onFilterChanged(int filter);
+    }
+
+    private void getFavaritesList() {
+        //Cписок городов
+        cityList = new ArrayList<>();
+        Set<String> cities = PositionManager.getInstance().getPositions();
+        for (String city : cities) {
+            cityList.add(city);
+            Collections.sort(cityList);
+        }
+        //result.updateItem(favorites);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getFavaritesList();
     }
 
     @Override
