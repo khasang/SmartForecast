@@ -2,9 +2,6 @@ package com.khasang.forecast;
 
 import android.app.Application;
 import android.content.Context;
-import android.provider.SyncStateContract;
-import android.util.Log;
-
 import com.facebook.stetho.Stetho;
 import com.crashlytics.android.Crashlytics;
 import io.fabric.sdk.android.Fabric;
