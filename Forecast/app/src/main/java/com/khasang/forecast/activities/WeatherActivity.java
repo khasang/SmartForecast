@@ -14,7 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,11 +39,11 @@ import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.holder.StringHolder;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
-import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
@@ -95,16 +94,9 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     private FloatingActionButton fab;
     private Toolbar toolbar;
 
-
-    private OnFilterChangedListener onFilterChangedListener;
-
-    public void setOnFilterChangedListener(OnFilterChangedListener onFilterChangedListener) {
-        this.onFilterChangedListener = onFilterChangedListener;
-    }
-
     private Drawer result = null;
     private boolean opened = false;
-    List<String> cityList;
+    List<String> cities;
 
     private PrimaryDrawerItem favorites;
 
@@ -178,23 +170,21 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             Collections.sort(cityList);
         }*/
 
+        //Cписок городов
+        cities = new ArrayList<>();
+        Set<String> cities = PositionManager.getInstance().getPositions();
+        for (String city : cities) {
+            this.cities.add(city);
+            Collections.sort(this.cities);
+        }
+
 
         DividerDrawerItem divider = new DividerDrawerItem();
-        favorites = new PrimaryDrawerItem().withName(R.string.drawer_item_home).withIcon(MaterialDesignIconic.Icon.gmi_star).withBadge(String.valueOf(cityList.size())).withIdentifier(1);
+        favorites = new PrimaryDrawerItem().withName(R.string.drawer_item_home).withIcon(MaterialDesignIconic.Icon.gmi_star).withBadge(String.valueOf(this.cities.size())).withIdentifier(1);
         PrimaryDrawerItem cityList = new PrimaryDrawerItem().withName(R.string.drawer_item_city_list).withIcon(CommunityMaterial.Icon.cmd_city).withIdentifier(2);
         SecondaryDrawerItem settings = new SecondaryDrawerItem().withName(R.string.drawer_item_settings).withIcon(FontAwesome.Icon.faw_cog).withIdentifier(3);
         SecondaryDrawerItem feedBack = new SecondaryDrawerItem().withName(R.string.drawer_item_feedback).withIcon(GoogleMaterial.Icon.gmd_feedback).withIdentifier(4);
 
-
-
-
-        /*new DrawerBuilder()
-                .withActivity(this)
-                .withAccountHeader(headerResult)
-                .addDrawerItems(item1,item2)
-                .build();*/
-
-        //new Drawer()
         result = new DrawerBuilder()
                 .withActivity(this)
                 .withToolbar(toolbar)
@@ -208,25 +198,43 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                         settings,
                         feedBack
                 )
+                .withGenerateMiniDrawer(true)
+                .withOnDrawerListener(new Drawer.OnDrawerListener() {
+                    @Override
+                    public void onDrawerOpened(View drawerView) {
+                        result.updateBadge(1, new StringHolder("test"));
+                    }
+
+                    @Override
+                    public void onDrawerClosed(View drawerView) {
+
+                    }
+
+                    @Override
+                    public void onDrawerSlide(View drawerView, float slideOffset) {
+
+                    }
+                })
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View v, int position, IDrawerItem drawerItem) {
                         switch (drawerItem.getIdentifier()) {
                             case 1:
                                 if (opened) {
-                                    for(int i = WeatherActivity.this.cityList.size()-1; i >= 0; i--) {
-                                        result.removeItems(1000+i);
+                                    for (int i = WeatherActivity.this.cities.size() - 1; i >= 0; i--) {
+                                        result.removeItems(1000 + i);
                                     }
                                 } else {
                                     int curPos = result.getPosition(drawerItem);
-                                    if (!WeatherActivity.this.cityList.isEmpty()) {
-                                        for(int i = WeatherActivity.this.cityList.size()-1; i >= 0; i--) {
+                                    if (!WeatherActivity.this.cities.isEmpty()) {
+                                        for (int i = WeatherActivity.this.cities.size() - 1; i >= 0; i--) {
                                             result.addItemsAtPosition(
                                                     curPos,
-                                                    new SecondaryDrawerItem().withLevel(2).withName(WeatherActivity.this.cityList.get(i)).withIdentifier(1000+i)
+                                                    new SecondaryDrawerItem().withLevel(2).withName(WeatherActivity.this.cities.get(i)).withIdentifier(1000 + i)
                                             );
                                         }
                                     } else {
+                                        result.updateItem(favorites.withDescription("Список пуст"));
                                         Toast.makeText(WeatherActivity.this, "cityList is empty ", Toast.LENGTH_SHORT).show();
                                     }
                                 }
@@ -249,21 +257,20 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                         return true;
                     }
                 })
+
+
+
                 .build();
 
     }
 
-    public interface OnFilterChangedListener {
-        public void onFilterChanged(int filter);
-    }
-
     private void getFavaritesList() {
         //Cписок городов
-        cityList = new ArrayList<>();
+        cities = new ArrayList<>();
         Set<String> cities = PositionManager.getInstance().getPositions();
         for (String city : cities) {
-            cityList.add(city);
-            Collections.sort(cityList);
+            this.cities.add(city);
+            Collections.sort(this.cities);
         }
         //result.updateItem(favorites);
     }
