@@ -116,7 +116,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 cityList.remove(position);
                 recyclerAdapter.notifyDataSetChanged();
 
-                //TODO Не работает отображение infoTV при очистке cityList
+                //TODO Не работает отображение infoTV при очистке favCityList
                 Logger.println(TAG, String.valueOf(cityList.size()));
                 swapVisibilityTextOrList();
             }
@@ -354,7 +354,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
                 //TODO реализовать удаление города через Context Menu
     /*            Toast.makeText(this, "click on " + thisCity.getText(), Toast.LENGTH_SHORT).show();
-                cityList.remove(cityName);
+                favCityList.remove(cityName);
                 recyclerAdapter.notifyDataSetChanged();
                 PositionManager.getInstance().removePosition(cityName);*/
 

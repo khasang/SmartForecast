@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceActivity;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -98,6 +97,8 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     private Drawer result = null;
     private boolean opened = false;
     List<String> cities;
+    List<String> favCityList;
+
 
     private PrimaryDrawerItem favorites;
 
@@ -164,11 +165,11 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
         getFavaritesList();
         //Cписок городов
-/*        cityList = new ArrayList<>();
+/*        favCityList = new ArrayList<>();
         Set<String> cities = PositionManager.getInstance().getPositions();
         for (String city : cities) {
-            cityList.add(city);
-            Collections.sort(cityList);
+            favCityList.add(city);
+            Collections.sort(favCityList);
         }*/
 
         //Cписок городов
@@ -178,6 +179,15 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             this.cities.add(city);
             Collections.sort(this.cities);
         }
+
+        favCityList = new ArrayList<>();
+        Set<String> pos = PositionManager.getInstance().getPositions();
+        for (String city : pos) {
+            favCityList.add(city);
+        }
+        Collections.sort(favCityList);
+
+
 
 
         DividerDrawerItem divider = new DividerDrawerItem();
@@ -203,11 +213,13 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 .withOnDrawerListener(new Drawer.OnDrawerListener() {
                     @Override
                     public void onDrawerOpened(View drawerView) {
-                        result.updateBadge(1, new StringHolder("test"));
+                        //result.updateBadge(1, new StringHolder("test"));
+                        result.updateBadge(1, new StringHolder(String.valueOf(favCityList.size())));
                     }
 
                     @Override
                     public void onDrawerClosed(View drawerView) {
+                        result.updateBadge(1, new StringHolder(String.valueOf("")));
 
                     }
 
@@ -222,21 +234,22 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                         switch (drawerItem.getIdentifier()) {
                             case 1:
                                 if (opened) {
-                                    for (int i = WeatherActivity.this.cities.size() - 1; i >= 0; i--) {
+                                    for (int i = WeatherActivity.this.favCityList.size() - 1; i >= 0; i--) {
                                         result.removeItems(1000 + i);
                                     }
                                 } else {
                                     int curPos = result.getPosition(drawerItem);
-                                    if (!WeatherActivity.this.cities.isEmpty()) {
-                                        for (int i = WeatherActivity.this.cities.size() - 1; i >= 0; i--) {
+                                    if (!WeatherActivity.this.favCityList.isEmpty()) {
+                                        for (int i = WeatherActivity.this.favCityList.size() - 1; i >= 0; i--) {
                                             result.addItemsAtPosition(
                                                     curPos,
-                                                    new SecondaryDrawerItem().withLevel(2).withName(WeatherActivity.this.cities.get(i)).withIdentifier(1000 + i)
+                                                    //new SecondaryDrawerItem().withLevel(2).withName(WeatherActivity.this.cities.get(i)).withIdentifier(1000 + i)
+                                                    new SecondaryDrawerItem().withLevel(2).withName(WeatherActivity.this.favCityList.get(i)).withIdentifier(1000 + i)
                                             );
                                         }
                                     } else {
                                         result.updateItem(favorites.withDescription("Список пуст"));
-                                        Toast.makeText(WeatherActivity.this, "cityList is empty ", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(WeatherActivity.this, "favCityList is empty ", Toast.LENGTH_SHORT).show();
                                     }
                                 }
                                 opened = !opened;
@@ -298,12 +311,12 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
     private void getFavaritesList() {
         //Cписок городов
-        cities = new ArrayList<>();
+        favCityList = new ArrayList<>();
         Set<String> cities = PositionManager.getInstance().getPositions();
         for (String city : cities) {
-            this.cities.add(city);
-            Collections.sort(this.cities);
+            this.favCityList.add(city);
         }
+        Collections.sort(this.favCityList);
         //result.updateItem(favorites);
     }
 
