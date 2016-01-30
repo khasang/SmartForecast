@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceActivity;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -183,7 +184,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         favorites = new PrimaryDrawerItem().withName(R.string.drawer_item_home).withIcon(MaterialDesignIconic.Icon.gmi_star).withBadge(String.valueOf(this.cities.size())).withIdentifier(1);
         PrimaryDrawerItem cityList = new PrimaryDrawerItem().withName(R.string.drawer_item_city_list).withIcon(CommunityMaterial.Icon.cmd_city).withIdentifier(2);
         SecondaryDrawerItem settings = new SecondaryDrawerItem().withName(R.string.drawer_item_settings).withIcon(FontAwesome.Icon.faw_cog).withIdentifier(3);
-        SecondaryDrawerItem feedBack = new SecondaryDrawerItem().withName(R.string.drawer_item_feedback).withIcon(GoogleMaterial.Icon.gmd_feedback).withIdentifier(4);
+        final SecondaryDrawerItem feedBack = new SecondaryDrawerItem().withName(R.string.drawer_item_feedback).withIcon(GoogleMaterial.Icon.gmd_feedback).withIdentifier(4);
 
         result = new DrawerBuilder()
                 .withActivity(this)
@@ -253,6 +254,19 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                                 startActivity(feedbackIntent);
                                 result.closeDrawer();
                                 break;
+                            case 1001:
+                                Toast.makeText(WeatherActivity.this, "Submenu click ", Toast.LENGTH_SHORT).show();
+                                break;
+                            default:
+                                PositionManager.getInstance().setCurrentPosition("Moscow");
+                                PositionManager.getInstance().saveCurrPosition();
+                                onRefresh();
+                                //onRefresh();
+                                Log.i(TAG, String.valueOf(result.getDrawerItem(drawerItem.getIdentifier()).getType()));
+                                Toast.makeText(WeatherActivity.this, String.valueOf(feedBack.getName()), Toast.LENGTH_SHORT).show();
+
+                                Toast.makeText(WeatherActivity.this, String.valueOf(drawerItem.getIdentifier()), Toast.LENGTH_SHORT).show();
+                                break;
                         }
                         return true;
                     }
@@ -262,6 +276,15 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
                 .build();
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (result != null && result.isDrawerOpen()) {
+            result.closeDrawer();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     private void getFavaritesList() {
