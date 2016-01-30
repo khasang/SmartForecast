@@ -96,7 +96,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
     private Drawer result = null;
     private boolean opened = false;
-    List<String> cities;
     List<String> favCityList;
 
 
@@ -172,14 +171,9 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             Collections.sort(favCityList);
         }*/
 
-        //Cписок городов
-        cities = new ArrayList<>();
-        Set<String> cities = PositionManager.getInstance().getPositions();
-        for (String city : cities) {
-            this.cities.add(city);
-            Collections.sort(this.cities);
-        }
 
+
+        //Cписок городов
         favCityList = new ArrayList<>();
         Set<String> pos = PositionManager.getInstance().getPositions();
         for (String city : pos) {
@@ -190,8 +184,8 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
 
 
-        DividerDrawerItem divider = new DividerDrawerItem();
-        favorites = new PrimaryDrawerItem().withName(R.string.drawer_item_home).withIcon(MaterialDesignIconic.Icon.gmi_star).withBadge(String.valueOf(this.cities.size())).withIdentifier(1);
+        final DividerDrawerItem divider = new DividerDrawerItem();
+        favorites = new PrimaryDrawerItem().withName(R.string.drawer_item_home).withIcon(MaterialDesignIconic.Icon.gmi_star).withBadge(String.valueOf(this.favCityList.size())).withIdentifier(1);
         PrimaryDrawerItem cityList = new PrimaryDrawerItem().withName(R.string.drawer_item_city_list).withIcon(CommunityMaterial.Icon.cmd_city).withIdentifier(2);
         SecondaryDrawerItem settings = new SecondaryDrawerItem().withName(R.string.drawer_item_settings).withIcon(FontAwesome.Icon.faw_cog).withIdentifier(3);
         final SecondaryDrawerItem feedBack = new SecondaryDrawerItem().withName(R.string.drawer_item_feedback).withIcon(GoogleMaterial.Icon.gmd_feedback).withIdentifier(4);
@@ -213,7 +207,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 .withOnDrawerListener(new Drawer.OnDrawerListener() {
                     @Override
                     public void onDrawerOpened(View drawerView) {
-                        //result.updateBadge(1, new StringHolder("test"));
                         result.updateBadge(1, new StringHolder(String.valueOf(favCityList.size())));
                     }
 
@@ -243,11 +236,11 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                                         for (int i = WeatherActivity.this.favCityList.size() - 1; i >= 0; i--) {
                                             result.addItemsAtPosition(
                                                     curPos,
-                                                    //new SecondaryDrawerItem().withLevel(2).withName(WeatherActivity.this.cities.get(i)).withIdentifier(1000 + i)
                                                     new SecondaryDrawerItem().withLevel(2).withName(WeatherActivity.this.favCityList.get(i)).withIdentifier(1000 + i)
                                             );
                                         }
                                     } else {
+                                        //TODO FIXME: 31.01.16
                                         result.updateItem(favorites.withDescription("Список пуст"));
                                         Toast.makeText(WeatherActivity.this, "favCityList is empty ", Toast.LENGTH_SHORT).show();
                                     }
@@ -263,7 +256,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                                 Toast.makeText(WeatherActivity.this, "Intent for settings ", Toast.LENGTH_SHORT).show();
                                 break;
                             case 4:
-
+                                // FIXME: 31.01.16
                                 Intent feedbackIntent = null;
                                 switch (Locale.getDefault().getLanguage()) {
                                     case "ru":
@@ -295,7 +288,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 })
 
 
-
                 .build();
 
     }
@@ -325,6 +317,15 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         super.onResume();
         getFavaritesList();
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        for (int i = WeatherActivity.this.favCityList.size() - 1; i >= 0; i--) {
+            result.removeItems(1000 + i); }
+        if (opened) opened = !opened;
+    }
+
 
     @Override
     protected void onStop() {
