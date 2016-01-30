@@ -14,7 +14,7 @@ public class PositionFactory {
     private static int cityIdentificationCounter;
 
     static {
-        cityIdentificationCounter = 0;
+        cityIdentificationCounter = 1;
     }
 
     private HashMap<String, Position> mPositions;
