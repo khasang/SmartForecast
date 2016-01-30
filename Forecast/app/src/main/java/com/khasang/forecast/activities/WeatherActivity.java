@@ -250,7 +250,16 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                                 Toast.makeText(WeatherActivity.this, "Intent for settings ", Toast.LENGTH_SHORT).show();
                                 break;
                             case 4:
-                                Intent feedbackIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://docs.google.com/forms/d/1HK_s5Fuzacf0qeB8t2bvHwbo7sJQB_DMesYA6opU_zY/viewform"));
+
+                                Intent feedbackIntent = null;
+                                switch (Locale.getDefault().getLanguage()) {
+                                    case "ru":
+                                        feedbackIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://docs.google.com/forms/d/1HK_s5Fuzacf0qeB8t2bvHwbo7sJQB_DMesYA6opU_zY/viewform"));
+                                        break;
+                                    default:
+                                        feedbackIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://docs.google.com/forms/d/1hS3cs7lgEqJ76odBq8eP6Z1lEZi3RmXIQCGO3ISNsI8/viewform"));
+                                        break;
+                                }
                                 startActivity(feedbackIntent);
                                 result.closeDrawer();
                                 break;
