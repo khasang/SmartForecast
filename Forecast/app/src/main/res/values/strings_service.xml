@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Do not translate, for inner use only. -->
+
+
+    <string name="google_form_ru">https://docs.google.com/forms/d/1HK_s5Fuzacf0qeB8t2bvHwbo7sJQB_DMesYA6opU_zY/viewform</string>
+    <string name="google_form_en">https://docs.google.com/forms/d/1hS3cs7lgEqJ76odBq8eP6Z1lEZi3RmXIQCGO3ISNsI8/viewform</string>
+</resources>
