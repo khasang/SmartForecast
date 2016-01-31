@@ -227,6 +227,36 @@ public class SQLiteProcessData {
         return weatherDate;
     }
 
+    // Запись наличия города в избранном.
+    public void saveTownFavourite(boolean isFavourite, String townName) {
+        String favourite = "0";
+        if(isFavourite) {
+            favourite = "1";
+        }
+        SQLiteWork.getInstance().qExExec(SQLiteFields.QUERY_UPDATE_TOWN_FAVORITE, new String[]{favourite, townName});
+    }
+
+    // Запись наличия города в избранном.
+    public boolean getTownFavourite(String townName) {
+        Cursor dataset = SQLiteWork.getInstance().queryOpen(SQLiteFields.QUERY_SELECT_DATA_TOWN, new String[]{townName});
+        try {
+            if (dataset != null && dataset.getCount() != 0) {
+                if (dataset.moveToFirst()) {
+                    do {
+                        if(dataset.getString(dataset.getColumnIndex(SQLiteFields.FAVORITE)) == "1") {
+                            return true;
+                        }
+                    } while (dataset.moveToNext());
+                }
+            }
+        } finally {
+            if (dataset != null) {
+                dataset.close();
+            }
+        }
+        return false;
+    }
+
     // Загрузка списка городов.
     public HashMap<String, Coordinate> loadTownList() {
 

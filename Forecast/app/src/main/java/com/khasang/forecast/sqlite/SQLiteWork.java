@@ -17,7 +17,7 @@ public class SQLiteWork {
     private SQLiteOpen dbWork;
     private SQLiteExecAsyncTask execAsyncTask;
     private SQLiteExExecAsyncTask exExecAsyncTask;
-    private int newVersion = 3;
+    private int newVersion = 4;
 
     private static class ManagerHolder {
         private final static SQLiteWork instance = new SQLiteWork();
