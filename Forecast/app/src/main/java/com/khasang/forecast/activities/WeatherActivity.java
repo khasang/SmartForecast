@@ -34,6 +34,7 @@ import com.khasang.forecast.stations.WeatherStation;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.ionicons_typeface_library.Ionicons;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -89,7 +90,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     List<String> favCityList;
 
 
-    private PrimaryDrawerItem favorites;
+    //private PrimaryDrawerItem favorites;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,8 +145,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         //TODO Delete
         PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName(R.string.app_name).withSelectable(false);
         SecondaryDrawerItem item2 = new SecondaryDrawerItem().withName(R.string.error_empty_location_name);
-        new PrimaryDrawerItem().withName(R.string.drawer_item_custom).withIcon(FontAwesome.Icon.faw_eye).withBadge("6").withIdentifier(2);
-        new PrimaryDrawerItem().withName(R.string.drawer_item_free_play).withIcon(FontAwesome.Icon.faw_gamepad);
         final SecondaryDrawerItem moscow = new SecondaryDrawerItem().withName("Москва");
         final SecondaryDrawerItem milan = new SecondaryDrawerItem().withName("Милан");
         final SecondaryDrawerItem new_york = new SecondaryDrawerItem().withName("Нью Йорк");
@@ -175,9 +174,10 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
 
         final DividerDrawerItem divider = new DividerDrawerItem();
-        favorites = new PrimaryDrawerItem().withName(R.string.drawer_item_home).withIcon(MaterialDesignIconic.Icon.gmi_star).withBadge(String.valueOf(this.favCityList.size())).withIdentifier(1);
-        PrimaryDrawerItem cityList = new PrimaryDrawerItem().withName(R.string.drawer_item_city_list).withIcon(CommunityMaterial.Icon.cmd_city).withIdentifier(2);
-        SecondaryDrawerItem settings = new SecondaryDrawerItem().withName(R.string.drawer_item_settings).withIcon(FontAwesome.Icon.faw_cog).withIdentifier(3);
+        final PrimaryDrawerItem currentPlace = new PrimaryDrawerItem().withName(R.string.drawer_item_current_place).withIcon(Ionicons.Icon.ion_navigate).withIdentifier(0);
+        final PrimaryDrawerItem cityList = new PrimaryDrawerItem().withName(R.string.drawer_item_city_list).withIcon(CommunityMaterial.Icon.cmd_city).withIdentifier(1);
+        final PrimaryDrawerItem favorites = new PrimaryDrawerItem().withName(R.string.drawer_item_home).withIcon(MaterialDesignIconic.Icon.gmi_star).withBadge(String.valueOf(this.favCityList.size())).withIdentifier(2);
+        final SecondaryDrawerItem settings = new SecondaryDrawerItem().withName(R.string.drawer_item_settings).withIcon(FontAwesome.Icon.faw_cog).withIdentifier(3);
         final SecondaryDrawerItem feedBack = new SecondaryDrawerItem().withName(R.string.drawer_item_feedback).withIcon(GoogleMaterial.Icon.gmd_feedback).withIdentifier(4);
 
         result = new DrawerBuilder()
@@ -187,8 +187,9 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 .withActionBarDrawerToggle(true)
                 .withHeader(R.layout.drawer_header)
                 .addDrawerItems(
-                        favorites,
+                        currentPlace,
                         cityList,
+                        favorites,
                         divider,
                         settings,
                         feedBack
@@ -197,12 +198,12 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 .withOnDrawerListener(new Drawer.OnDrawerListener() {
                     @Override
                     public void onDrawerOpened(View drawerView) {
-                        result.updateBadge(1, new StringHolder(String.valueOf(favCityList.size())));
+                        result.updateBadge(2, new StringHolder(String.valueOf(favCityList.size())));
                     }
 
                     @Override
                     public void onDrawerClosed(View drawerView) {
-                        result.updateBadge(1, new StringHolder(String.valueOf("")));
+                        result.updateBadge(2, new StringHolder(String.valueOf("")));
 
                     }
 
@@ -215,8 +216,15 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                     @Override
                     public boolean onItemClick(View v, int position, IDrawerItem drawerItem) {
                         switch (drawerItem.getIdentifier()) {
+                            case 0:
+                            Toast.makeText(WeatherActivity.this, "Intent for current position", Toast.LENGTH_SHORT).show();
+                            break;
                             case 1:
-                                if (opened) {
+                                startCityPickerActivity();
+                                result.closeDrawer();
+                                break;
+                            case 2:
+                            if (opened) {
                                     for (int i = WeatherActivity.this.favCityList.size() - 1; i >= 0; i--) {
                                         result.removeItems(1000 + i);
                                     }
@@ -238,14 +246,9 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                                         Toast.makeText(WeatherActivity.this, "favCityList is empty ", Toast.LENGTH_SHORT).show();
                                     }
                                 }
-                                opened = !opened;
-                                break;
-                            case 2:
-                                startCityPickerActivity();
-                                result.closeDrawer();
-                                break;
+                            opened = !opened;
+                            break;
                             case 3:
-                                result.updateItem(favorites);
                                 Toast.makeText(WeatherActivity.this, "Intent for settings ", Toast.LENGTH_SHORT).show();
                                 break;
                             case 4:

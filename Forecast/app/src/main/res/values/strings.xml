@@ -64,9 +64,8 @@
 
     <!-- TODO Translate -->
     <!-- Navigation Drawer menu -->
+    <string name="drawer_item_current_place">Текущее место</string>
     <string name="drawer_item_home">Избранное</string>
-    <string name="drawer_item_free_play">Free Play</string>
-    <string name="drawer_item_custom">Custom</string>
     <string name="drawer_item_settings">Настройки</string>
     <string name="drawer_item_city_list">Список городов</string>
     <string name="drawer_item_contact">Контакты</string>
