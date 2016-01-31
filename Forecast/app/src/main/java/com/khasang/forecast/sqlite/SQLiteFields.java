@@ -17,6 +17,7 @@ public class SQLiteFields {
     public static final String LONGTITUDE = "Longtitude";
     public static final String SUNRISE = "Sunrise";
     public static final String SUNSET = "Sunset";
+    public static final String FAVORITE = "Favorite";
 
     public static final String STATION_NAME = "StationName";
     public static final String DATE = "Date";
@@ -42,7 +43,8 @@ public class SQLiteFields {
             LATITUDE + " VARCHAR(30)," +
             LONGTITUDE + " VARCHAR(30)," +
             SUNRISE + " DATETIME," +
-            SUNSET + " DATETIME)";
+            SUNSET + " DATETIME," +
+            FAVORITE + " VARCHAR(5))";
 
     public static final String QUERY_CREATE_TABLE_WEATHER = "CREATE TABLE " + TABLE_WEATHER + " (" +
             ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -114,6 +116,10 @@ public class SQLiteFields {
     public static final String QUERY_UPDATE_TOWN_SUNTIME = "UPDATE " + TABLE_TOWNS + " SET " +
             SUNRISE + " = ? , " +
             SUNSET + " = ? " +
+            " WHERE " + TOWN + " = ? ";
+
+    public static final String QUERY_UPDATE_TOWN_FAVORITE = "UPDATE " + TABLE_TOWNS + " SET " +
+            FAVORITE + " = ? " +
             " WHERE " + TOWN + " = ? ";
 
     public static final String QUERY_INSERT_WEATHER = "INSERT INTO " + TABLE_WEATHER + " (" +
