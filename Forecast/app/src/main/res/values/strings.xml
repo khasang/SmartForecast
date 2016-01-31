@@ -61,6 +61,9 @@
     <string name="today">Today</string>
     <string name="tomorrow">Tomorrow</string>
 
+
+    <!-- TODO Translate -->
+    <!-- Navigation Drawer menu -->
     <string name="drawer_item_home">Избранное</string>
     <string name="drawer_item_free_play">Free Play</string>
     <string name="drawer_item_custom">Custom</string>

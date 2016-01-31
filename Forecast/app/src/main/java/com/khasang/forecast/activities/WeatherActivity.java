@@ -69,7 +69,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
     private TextView temperature;
     private TextView description;
-    //    private TextView pressure;
     private TextView wind;
     private TextView humidity;
     private ImageView currWeather;
@@ -77,16 +76,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
     private Animation animationRotateCenter;
     private Animation animationGrow;
-    //    private Animation animScale;
-//    private Animation fallingDown;
-//    private Animation fallingDown_plus1;
-//    private Animation fallingDownAlpha;
-//    private Animation fallingDownAlpha_plus1;
-//    private Animation flip;
-//    private Animation animTrans;
-//    private Animation animTrans_plus1;
-//    private Animation fallingUp;
-//    private SwipeRefreshLayout swipeRefreshLayout;
+
     private String temp_measure;
     private String press_measure;
     private HourlyForecastFragment hourlyForecastFragment;
@@ -260,10 +250,10 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                                 Intent feedbackIntent = null;
                                 switch (Locale.getDefault().getLanguage()) {
                                     case "ru":
-                                        feedbackIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://docs.google.com/forms/d/1HK_s5Fuzacf0qeB8t2bvHwbo7sJQB_DMesYA6opU_zY/viewform"));
+                                        feedbackIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.google_form_ru)));
                                         break;
                                     default:
-                                        feedbackIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://docs.google.com/forms/d/1hS3cs7lgEqJ76odBq8eP6Z1lEZi3RmXIQCGO3ISNsI8/viewform"));
+                                        feedbackIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.google_form_en)));
                                         break;
                                 }
                                 startActivity(feedbackIntent);
@@ -309,7 +299,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             this.favCityList.add(city);
         }
         Collections.sort(this.favCityList);
-        //result.updateItem(favorites);
     }
 
     @Override
@@ -334,17 +323,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void initStartingMetrics() {
-//        switch (PositionManager.getInstance().getTemperatureMetric()) {
-//            case FAHRENHEIT:
-//                temp_measure = getString(R.string.FAHRENHEIT);
-//                break;
-//            case KELVIN:
-//                temp_measure = getString(R.string.KELVIN);
-//                break;
-//            case CELSIUS:
-//            default:
-//                temp_measure = getString(R.string.CELSIUS);
-//        }
         switch (PositionManager.getInstance().getPressureMetric()) {
             case MM_HG:
                 press_measure = getString(R.string.pressure_measure);
@@ -389,7 +367,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_item_change_location:
-//                startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
                 startCityPickerActivity();
                 return true;
             case R.id.menu_item_refresh:
@@ -413,48 +390,25 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         currWeather = (ImageView) findViewById(R.id.iv_curr_weather);
         temperature = (TextView) findViewById(R.id.temperature);
         description = (TextView) findViewById(R.id.precipitation);
-//        pressure = (TextView) findViewById(R.id.pressure);
         wind = (TextView) findViewById(R.id.wind);
         humidity = (TextView) findViewById(R.id.humidity);
 
         /** Слушатели нажатий объектов */
         fab.setOnClickListener(this);
         temperature.setOnClickListener(this);
-//        pressure.setOnClickListener(this);
-
-//        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
-//        swipeRefreshLayout.setOnRefreshListener(this);
-//
-//        swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
-//                android.R.color.holo_green_light,
-//                android.R.color.holo_orange_light,
-//                android.R.color.holo_red_light);
         setSupportActionBar(toolbar);
     }
 
+
     private void startAnimation() {
         syncBtn.startAnimation(animationRotateCenter);
-//        wind.startAnimation(animTrans);
-//        humidity.startAnimation(animTrans);
     }
+
 
     private void setAnimationForWidgets() {
         /** Анимация объектов */
         animationRotateCenter = AnimationUtils.loadAnimation(this, R.anim.rotate_center);
         animationGrow = AnimationUtils.loadAnimation(this, R.anim.simple_grow);
-//        animScale = AnimationUtils.loadAnimation(this, R.anim.scale);
-//        fallingDown = AnimationUtils.loadAnimation(this, R.anim.falling_down);
-//        fallingDown_plus1 = AnimationUtils.loadAnimation(this, R.anim.falling_down_plus1);
-//        fallingDownAlpha = AnimationUtils.loadAnimation(this, R.anim.falling_down_alpha);
-//        fallingDownAlpha_plus1 = AnimationUtils.loadAnimation(this, R.anim.falling_down_alpha_plus1);
-//        flip = AnimationUtils.loadAnimation(this, R.anim.flip);
-//        animTrans = AnimationUtils.loadAnimation(this, R.anim.translate);
-//        animTrans_plus1 = AnimationUtils.loadAnimation(this, R.anim.translate_plus1);
-//        fallingUp = AnimationUtils.loadAnimation(this, R.anim.falling_up);
-//
-//        getSupportFragmentManager().beginTransaction()
-//                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-//                .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left);
     }
 
     private void initFirstAppearance() {
@@ -471,9 +425,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    /**
-     * Обновление интерфейса Activity при получении новых данных
-     */
+    /** Обновление интерфейса Activity при получении новых данных */
     public void updateInterface(WeatherStation.ResponseType responseType, Map<Calendar, Weather> forecast) {
         stopRefresh();
 
@@ -498,10 +450,10 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             default:
                 Logger.println(TAG, "Принят необрабатываемый прогноз");
         }
-    }    /**
-     * Обработчик нажатия объектов
-     */
+    }
 
+
+    /** Обработчик нажатия объектов */
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -575,40 +527,32 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 wCurent.getHumidity()));
     }
 
-    /**
-     * Получаем город из CityPickActivity
-     */
+    /** Получаем город из CityPickActivity */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CHOOSE_CITY) {
             if (resultCode == RESULT_OK) {
                 String newCity = data.getStringExtra(CityPickerActivity.CITY_PICKER_TAG);
-//                city.setText(newCity.split(",")[0]);
                 toolbar.setTitle(newCity.split(",")[0]);
                 Logger.println(TAG, newCity);
                 PositionManager.getInstance().setCurrentPosition(newCity);
                 PositionManager.getInstance().saveCurrPosition();
                 onRefresh();
-//                syncBtn.setVisibility(View.VISIBLE);
             } else {
                 if (!PositionManager.getInstance().positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {
                     stopRefresh();
-//                    syncBtn.setVisibility(View.GONE);
                 }
             }
         }
     }
 
-    /**
-     * Анимация обновления
-     */
+    /** Анимация обновления */
     @Override
     public void onRefresh() {
         if (!PositionManager.getInstance().positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {
             Logger.println(TAG, "There is nothing to refresh");
             Toast.makeText(WeatherActivity.this, R.string.msg_no_city, Toast.LENGTH_SHORT).show();
-//            stopRefresh();
             return;
         }
 
@@ -619,32 +563,17 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 PositionManager.getInstance().updateWeather();
             }
         }, 1000);
-//        swipeRefreshLayout.setRefreshing(true);
+
     }
 
-    /**
-     * Проигрываение анимации всех объектов activity
-     */
+    /** Проигрываение анимации всех объектов activity */
     private void startAnimations() {
         fab.startAnimation(animationGrow);
-//        city.startAnimation(fallingDown);
-//        cityPickerBtn.startAnimation(fallingDown_plus1);
-//        temperature.startAnimation(flip);
-//        description.startAnimation(fallingDownAlpha);
-//        pressure.startAnimation(fallingDownAlpha_plus1);
-//        //llMainInformation.setAnimation(flip);
-//        wind.startAnimation(animTrans);
-//        humidity.startAnimation(animTrans_plus1);
-//        timeStamp.startAnimation(fallingUp);
-//        syncBtn.startAnimation(animationRotateCenter);
     }
 
-    /**
-     * Останавливаем анимацию
-     */
+    //TODO DELETE
+    /** Останавливаем анимацию */
     public void stopRefresh() {
-//        swipeRefreshLayout.setRefreshing(false);
-//        syncBtn.clearAnimation();
     }
 
 
