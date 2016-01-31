@@ -65,9 +65,8 @@
     <!-- TODO Translate -->
     <!-- Navigation Drawer menu -->
     <string name="drawer_item_current_place">Текущее место</string>
-    <string name="drawer_item_home">Избранное</string>
-    <string name="drawer_item_settings">Настройки</string>
     <string name="drawer_item_city_list">Список городов</string>
-    <string name="drawer_item_contact">Контакты</string>
+    <string name="drawer_item_favorites">Избранное</string>
+    <string name="drawer_item_settings">Настройки</string>
     <string name="drawer_item_feedback">Обратная связь</string>
 </resources>
