@@ -47,16 +47,17 @@ public class PositionManager {
         return ManagerHolder.instance;
     }
 
-    public void initManager(WeatherActivity activity) {
-        this.mActivity = activity;
-
+    public void initManager () {
         dbManager = new SQLiteProcessData(MyApplication.getAppContext());
         temperatureMetric = dbManager.loadTemperatureMetrics();
         speedMetric = dbManager.loadSpeedMetrics();
         pressureMetric = dbManager.loadPressureMetrics();
-
         initStations();
         initPositions();
+    }
+
+    public void configureManager(WeatherActivity activity) {
+        this.mActivity = activity;
     }
 
     // Пока заглушка, потом настрки сохранять при их смене в настройках
@@ -83,7 +84,7 @@ public class PositionManager {
     private void initStations() {
         WeatherStationFactory wsf = new WeatherStationFactory();
         stations = wsf
-                .addOpenWeatherMap(mActivity.getString(R.string.service_name_open_weather_map))
+                .addOpenWeatherMap(MyApplication.getAppContext().getString(R.string.service_name_open_weather_map))
                 .create();
         currStation = stations.get(dbManager.loadStation());
     }

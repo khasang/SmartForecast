@@ -84,13 +84,13 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     private Drawer result = null;
     private boolean opened = false;
     private List<String> favCityList;
-    private int subItemIndex = 2000;
+    private final int subItemIndex = 2000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather_material);
-        PositionManager.getInstance().initManager(this);
+        PositionManager.getInstance().configureManager(this);
         if (findViewById(R.id.fragment_container) != null) {
             if (savedInstanceState != null) {
                 return;
