@@ -224,10 +224,13 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                                     int curPos = result.getPosition(drawerItem);
                                     if (!WeatherActivity.this.favCityList.isEmpty()) {
                                         for (int i = WeatherActivity.this.favCityList.size() - 1; i >= 0; i--) {
+                                            String city = WeatherActivity.this.favCityList.get(i).split(",")[0];
                                             result.addItemsAtPosition(
                                                     curPos,
-                                                    new SecondaryDrawerItem().withLevel(2).withName(WeatherActivity.this.favCityList.get(i)).withIdentifier(1000 + i)
-                                            );
+                                                    new SecondaryDrawerItem().withLevel(2).withName(city).withIdentifier(1000 + i)
+                                                    //toolbar.setTitle(PositionManager.getInstance().getCurrentPositionName().split(",")[0]);
+
+                                                    );
                                         }
                                     } else {
                                         //TODO FIXME: 31.01.16
@@ -259,18 +262,10 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                                 startActivity(feedbackIntent);
                                 result.closeDrawer();
                                 break;
-                            case 1001:
-                                Toast.makeText(WeatherActivity.this, "Submenu click ", Toast.LENGTH_SHORT).show();
-                                break;
                             default:
-                                PositionManager.getInstance().setCurrentPosition("Moscow");
-                                PositionManager.getInstance().saveCurrPosition();
-                                onRefresh();
-                                //onRefresh();
-                                Log.i(TAG, String.valueOf(result.getDrawerItem(drawerItem.getIdentifier()).getType()));
-                                Toast.makeText(WeatherActivity.this, String.valueOf(feedBack.getName()), Toast.LENGTH_SHORT).show();
-
-                                Toast.makeText(WeatherActivity.this, String.valueOf(drawerItem.getIdentifier()), Toast.LENGTH_SHORT).show();
+                                String newCity = WeatherActivity.this.favCityList.get(drawerItem.getIdentifier()-1000);
+                                changeDisplayedCity(newCity);
+                                result.closeDrawer();
                                 break;
                         }
                         return true;
@@ -527,6 +522,15 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 wCurent.getHumidity()));
     }
 
+
+    /** Изменяет отображаемый город WeatherActivity */
+    public void changeDisplayedCity(String newCity) {
+        PositionManager.getInstance().setCurrentPosition(newCity);
+        PositionManager.getInstance().saveCurrPosition();
+        onRefresh();
+    }
+
+
     /** Получаем город из CityPickActivity */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -536,9 +540,10 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 String newCity = data.getStringExtra(CityPickerActivity.CITY_PICKER_TAG);
                 toolbar.setTitle(newCity.split(",")[0]);
                 Logger.println(TAG, newCity);
-                PositionManager.getInstance().setCurrentPosition(newCity);
+                changeDisplayedCity(newCity);
+              /*  PositionManager.getInstance().setCurrentPosition(newCity);
                 PositionManager.getInstance().saveCurrPosition();
-                onRefresh();
+                onRefresh();*/
             } else {
                 if (!PositionManager.getInstance().positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {
                     stopRefresh();
