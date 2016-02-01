@@ -1,8 +1,7 @@
 package com.khasang.forecast.activities;
 
-import android.app.ActivityOptions;
 import android.content.Intent;
-import android.os.Build;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -32,11 +31,27 @@ import com.khasang.forecast.fragments.HourlyForecastFragment;
 import com.khasang.forecast.position.PositionManager;
 import com.khasang.forecast.position.Weather;
 import com.khasang.forecast.stations.WeatherStation;
+import com.mikepenz.community_material_typeface_library.CommunityMaterial;
+import com.mikepenz.fontawesome_typeface_library.FontAwesome;
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.ionicons_typeface_library.Ionicons;
+import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
+import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.holder.StringHolder;
+import com.mikepenz.materialdrawer.model.DividerDrawerItem;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -51,7 +66,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
     private TextView temperature;
     private TextView description;
-    //    private TextView pressure;
     private TextView wind;
     private TextView humidity;
     private ImageView currWeather;
@@ -59,16 +73,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
     private Animation animationRotateCenter;
     private Animation animationGrow;
-    //    private Animation animScale;
-//    private Animation fallingDown;
-//    private Animation fallingDown_plus1;
-//    private Animation fallingDownAlpha;
-//    private Animation fallingDownAlpha_plus1;
-//    private Animation flip;
-//    private Animation animTrans;
-//    private Animation animTrans_plus1;
-//    private Animation fallingUp;
-//    private SwipeRefreshLayout swipeRefreshLayout;
+
     private String temp_measure;
     private String press_measure;
     private HourlyForecastFragment hourlyForecastFragment;
@@ -76,11 +81,16 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     private FloatingActionButton fab;
     private Toolbar toolbar;
 
+    private Drawer result = null;
+    private boolean opened = false;
+    private List<String> favCityList;
+    private final int subItemIndex = 2000;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather_material);
-        PositionManager.getInstance().initManager(this);
+        PositionManager.getInstance().configureManager(this);
         if (findViewById(R.id.fragment_container) != null) {
             if (savedInstanceState != null) {
                 return;
@@ -98,7 +108,155 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         initFirstAppearance();
         setAnimationForWidgets();
         startAnimations();
+        initNavigationDrawer();
     }
+
+    /** Инициализация Navigation Drawer
+     * @version beta
+     * */
+    private void initNavigationDrawer() {
+
+        getFavaritesList();
+
+        /** Инициализация элементов меню */
+        final DividerDrawerItem divider = new DividerDrawerItem();
+        final PrimaryDrawerItem currentPlace = new PrimaryDrawerItem().withName(R.string.drawer_item_current_place).withIcon(Ionicons.Icon.ion_navigate).withIdentifier(0);
+        final PrimaryDrawerItem cityList = new PrimaryDrawerItem().withName(R.string.drawer_item_city_list).withIcon(CommunityMaterial.Icon.cmd_city).withIdentifier(1);
+        final PrimaryDrawerItem favorites = new PrimaryDrawerItem().withName(R.string.drawer_item_favorites).withIcon(MaterialDesignIconic.Icon.gmi_star).withBadge(String.valueOf(this.favCityList.size())).withIdentifier(2);
+        final SecondaryDrawerItem settings = new SecondaryDrawerItem().withName(R.string.drawer_item_settings).withIcon(FontAwesome.Icon.faw_cog).withIdentifier(3);
+        final SecondaryDrawerItem feedBack = new SecondaryDrawerItem().withName(R.string.drawer_item_feedback).withIcon(GoogleMaterial.Icon.gmd_feedback).withIdentifier(4);
+
+        /** Создание Navigation Drawer */
+        result = new DrawerBuilder()
+                .withActivity(this)
+                .withToolbar(toolbar)
+                .withSelectedItem(-1)
+                .withActionBarDrawerToggle(true)
+                .withHeader(R.layout.drawer_header)
+                .addDrawerItems(
+                        currentPlace,
+                        cityList,
+                        favorites,
+                        divider,
+                        settings,
+                        feedBack
+                )
+                .withGenerateMiniDrawer(true)
+                .withOnDrawerListener(new Drawer.OnDrawerListener() {
+                    @Override
+                    public void onDrawerOpened(View drawerView) {
+                        result.updateBadge(2, new StringHolder(String.valueOf(favCityList.size())));
+                    }
+
+                    @Override
+                    public void onDrawerClosed(View drawerView) {
+                        result.updateBadge(2, new StringHolder(String.valueOf("")));
+
+                    }
+
+                    @Override
+                    public void onDrawerSlide(View drawerView, float slideOffset) {
+
+                    }
+                })
+                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                    @Override
+                    public boolean onItemClick(View v, int position, IDrawerItem drawerItem) {
+                        switch (drawerItem.getIdentifier()) {
+                            case 0:
+                                changeDisplayedCity("");
+                                result.closeDrawer();
+                                //TODO add unselect item
+                                break;
+                            case 1:
+                                startCityPickerActivity();
+                                result.closeDrawer();
+                                //TODO add unselect item
+                                break;
+                            case 2:
+                            if (opened) {
+                                    for (int i = WeatherActivity.this.favCityList.size() - 1; i >= 0; i--) {
+                                        result.removeItems(subItemIndex + i);
+                                    }
+                                } else {
+                                    int curPos = result.getPosition(drawerItem);
+                                    if (!WeatherActivity.this.favCityList.isEmpty()) {
+                                        for (int i = WeatherActivity.this.favCityList.size() - 1; i >= 0; i--) {
+                                            String city = WeatherActivity.this.favCityList.get(i).split(",")[0];
+                                            result.addItemsAtPosition(
+                                                    curPos,
+                                                    new SecondaryDrawerItem().withLevel(2).withName(city).withIdentifier(subItemIndex + i)
+                                                    );
+                                        }
+                                    } else {
+                                        Logger.println(TAG, "favCityList is empty");
+                                    }
+                                }
+                            opened = !opened;
+                            break;
+                            case 3:
+                                Toast.makeText(WeatherActivity.this, "Intent for settings ", Toast.LENGTH_SHORT).show();
+                                break;
+                            case 4:
+                                //TODO add unselect item
+                                // FIXME: 31.01.16
+                                Intent feedbackIntent = null;
+                                switch (Locale.getDefault().getLanguage()) {
+                                    case "ru":
+                                        feedbackIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.google_form_ru)));
+                                        break;
+                                    default:
+                                        feedbackIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.google_form_en)));
+                                        break;
+                                }
+                                startActivity(feedbackIntent);
+                                result.closeDrawer();
+                                break;
+                            default:
+                                String newCity = WeatherActivity.this.favCityList.get(drawerItem.getIdentifier() - subItemIndex);
+                                changeDisplayedCity(newCity);
+                                result.closeDrawer();
+                                break;
+                        }
+                        return true;
+                    }
+                })
+                .build();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (result != null && result.isDrawerOpen()) {
+            result.closeDrawer();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    /** Запрос на список избранныъ городов из PositionManager */
+    private void getFavaritesList() {
+        favCityList = new ArrayList<>();
+        Set<String> cities = PositionManager.getInstance().getPositions();
+        for (String city : cities) {
+            this.favCityList.add(city);
+        }
+        Collections.sort(this.favCityList);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getFavaritesList();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        for (int i = WeatherActivity.this.favCityList.size() - 1; i >= 0; i--) {
+            result.removeItems(subItemIndex + i); }
+        if (opened) opened = !opened;
+    }
+
 
     @Override
     protected void onStop() {
@@ -107,17 +265,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void initStartingMetrics() {
-//        switch (PositionManager.getInstance().getTemperatureMetric()) {
-//            case FAHRENHEIT:
-//                temp_measure = getString(R.string.FAHRENHEIT);
-//                break;
-//            case KELVIN:
-//                temp_measure = getString(R.string.KELVIN);
-//                break;
-//            case CELSIUS:
-//            default:
-//                temp_measure = getString(R.string.CELSIUS);
-//        }
         switch (PositionManager.getInstance().getPressureMetric()) {
             case MM_HG:
                 press_measure = getString(R.string.pressure_measure);
@@ -162,7 +309,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_item_change_location:
-//                startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
                 startCityPickerActivity();
                 return true;
             case R.id.menu_item_refresh:
@@ -186,48 +332,25 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         currWeather = (ImageView) findViewById(R.id.iv_curr_weather);
         temperature = (TextView) findViewById(R.id.temperature);
         description = (TextView) findViewById(R.id.precipitation);
-//        pressure = (TextView) findViewById(R.id.pressure);
         wind = (TextView) findViewById(R.id.wind);
         humidity = (TextView) findViewById(R.id.humidity);
 
         /** Слушатели нажатий объектов */
         fab.setOnClickListener(this);
         temperature.setOnClickListener(this);
-//        pressure.setOnClickListener(this);
-
-//        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
-//        swipeRefreshLayout.setOnRefreshListener(this);
-//
-//        swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
-//                android.R.color.holo_green_light,
-//                android.R.color.holo_orange_light,
-//                android.R.color.holo_red_light);
         setSupportActionBar(toolbar);
     }
 
+
     private void startAnimation() {
         syncBtn.startAnimation(animationRotateCenter);
-//        wind.startAnimation(animTrans);
-//        humidity.startAnimation(animTrans);
     }
+
 
     private void setAnimationForWidgets() {
         /** Анимация объектов */
         animationRotateCenter = AnimationUtils.loadAnimation(this, R.anim.rotate_center);
         animationGrow = AnimationUtils.loadAnimation(this, R.anim.simple_grow);
-//        animScale = AnimationUtils.loadAnimation(this, R.anim.scale);
-//        fallingDown = AnimationUtils.loadAnimation(this, R.anim.falling_down);
-//        fallingDown_plus1 = AnimationUtils.loadAnimation(this, R.anim.falling_down_plus1);
-//        fallingDownAlpha = AnimationUtils.loadAnimation(this, R.anim.falling_down_alpha);
-//        fallingDownAlpha_plus1 = AnimationUtils.loadAnimation(this, R.anim.falling_down_alpha_plus1);
-//        flip = AnimationUtils.loadAnimation(this, R.anim.flip);
-//        animTrans = AnimationUtils.loadAnimation(this, R.anim.translate);
-//        animTrans_plus1 = AnimationUtils.loadAnimation(this, R.anim.translate_plus1);
-//        fallingUp = AnimationUtils.loadAnimation(this, R.anim.falling_up);
-//
-//        getSupportFragmentManager().beginTransaction()
-//                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-//                .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left);
     }
 
     private void initFirstAppearance() {
@@ -244,9 +367,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    /**
-     * Обновление интерфейса Activity при получении новых данных
-     */
+    /** Обновление интерфейса Activity при получении новых данных */
     public void updateInterface(WeatherStation.ResponseType responseType, Map<Calendar, Weather> forecast) {
         stopRefresh();
 
@@ -271,10 +392,10 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             default:
                 Logger.println(TAG, "Принят необрабатываемый прогноз");
         }
-    }    /**
-     * Обработчик нажатия объектов
-     */
+    }
 
+
+    /** Обработчик нажатия объектов */
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -348,40 +469,39 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 wCurent.getHumidity()));
     }
 
-    /**
-     * Получаем город из CityPickActivity
-     */
+
+    /** Изменяет отображаемый город WeatherActivity */
+    public void changeDisplayedCity(String newCity) {
+        PositionManager.getInstance().setCurrentPosition(newCity);
+        PositionManager.getInstance().saveCurrPosition();
+        onRefresh();
+    }
+
+
+    /** Получаем город из CityPickActivity */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CHOOSE_CITY) {
             if (resultCode == RESULT_OK) {
                 String newCity = data.getStringExtra(CityPickerActivity.CITY_PICKER_TAG);
-//                city.setText(newCity.split(",")[0]);
                 toolbar.setTitle(newCity.split(",")[0]);
                 Logger.println(TAG, newCity);
-                PositionManager.getInstance().setCurrentPosition(newCity);
-                PositionManager.getInstance().saveCurrPosition();
-                onRefresh();
-//                syncBtn.setVisibility(View.VISIBLE);
+                changeDisplayedCity(newCity);
             } else {
                 if (!PositionManager.getInstance().positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {
                     stopRefresh();
-//                    syncBtn.setVisibility(View.GONE);
                 }
             }
         }
     }
 
-    /**
-     * Анимация обновления
-     */
+    /** Анимация обновления */
     @Override
     public void onRefresh() {
         if (!PositionManager.getInstance().positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {
             Logger.println(TAG, "There is nothing to refresh");
             Toast.makeText(WeatherActivity.this, R.string.msg_no_city, Toast.LENGTH_SHORT).show();
-//            stopRefresh();
             return;
         }
 
@@ -392,32 +512,17 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 PositionManager.getInstance().updateWeather();
             }
         }, 1000);
-//        swipeRefreshLayout.setRefreshing(true);
+
     }
 
-    /**
-     * Проигрываение анимации всех объектов activity
-     */
+    /** Проигрываение анимации всех объектов activity */
     private void startAnimations() {
         fab.startAnimation(animationGrow);
-//        city.startAnimation(fallingDown);
-//        cityPickerBtn.startAnimation(fallingDown_plus1);
-//        temperature.startAnimation(flip);
-//        description.startAnimation(fallingDownAlpha);
-//        pressure.startAnimation(fallingDownAlpha_plus1);
-//        //llMainInformation.setAnimation(flip);
-//        wind.startAnimation(animTrans);
-//        humidity.startAnimation(animTrans_plus1);
-//        timeStamp.startAnimation(fallingUp);
-//        syncBtn.startAnimation(animationRotateCenter);
     }
 
-    /**
-     * Останавливаем анимацию
-     */
+    //TODO DELETE
+    /** Останавливаем анимацию */
     public void stopRefresh() {
-//        swipeRefreshLayout.setRefreshing(false);
-//        syncBtn.clearAnimation();
     }
 
 

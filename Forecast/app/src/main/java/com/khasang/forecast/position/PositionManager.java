@@ -1,13 +1,16 @@
 package com.khasang.forecast.position;
 
 import android.content.Context;
+import android.location.Location;
 import android.net.ConnectivityManager;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.R;
 import com.khasang.forecast.activities.WeatherActivity;
+import com.khasang.forecast.location.CurrentLocationManager;
 import com.khasang.forecast.sqlite.SQLiteProcessData;
 import com.khasang.forecast.stations.WeatherStation;
 import com.khasang.forecast.stations.WeatherStationFactory;
@@ -28,12 +31,14 @@ public class PositionManager {
     AppUtils.SpeedMetrics speedMetric;
     AppUtils.PressureMetrics pressureMetric;
     private WeatherStation currStation;
-    private Position currPosition;
+    private Position activePosition;
     private HashMap<WeatherStationFactory.ServiceType, WeatherStation> stations;
+    private volatile Position currentLocation;
     private volatile HashMap<String, Position> positions;
     private WeatherActivity mActivity;
     private SQLiteProcessData dbManager;
     private boolean lastResponseIsFailure;
+    CurrentLocationManager locationManager;
 
     private static class ManagerHolder {
         private final static PositionManager instance = new PositionManager();
@@ -47,16 +52,18 @@ public class PositionManager {
         return ManagerHolder.instance;
     }
 
-    public void initManager(WeatherActivity activity) {
-        this.mActivity = activity;
-
+    public void initManager() {
         dbManager = new SQLiteProcessData(MyApplication.getAppContext());
         temperatureMetric = dbManager.loadTemperatureMetrics();
         speedMetric = dbManager.loadSpeedMetrics();
         pressureMetric = dbManager.loadPressureMetrics();
-
-        initStations();
         initPositions();
+        initLocationManager();
+        initStations();
+    }
+
+    public void configureManager(WeatherActivity activity) {
+        this.mActivity = activity;
     }
 
     // Пока заглушка, потом настрки сохранять при их смене в настройках
@@ -70,7 +77,7 @@ public class PositionManager {
     }
 
     public void saveCurrPosition() {
-        dbManager.saveSettings(currPosition);
+        dbManager.saveSettings(activePosition);
     }
 
     public void saveCurrStation() {
@@ -83,15 +90,19 @@ public class PositionManager {
     private void initStations() {
         WeatherStationFactory wsf = new WeatherStationFactory();
         stations = wsf
-                .addOpenWeatherMap(mActivity.getString(R.string.service_name_open_weather_map))
+                .addOpenWeatherMap(MyApplication.getAppContext().getString(R.string.service_name_open_weather_map))
                 .create();
         currStation = stations.get(dbManager.loadStation());
     }
+
 
     /**
      * Метод инициализации списка местоположений, вызывается из активити
      */
     private void initPositions() {
+        currentLocation = new Position();
+        currentLocation.setLocationName("Current");
+        currentLocation.setCityID(0);
         HashMap<String, Coordinate> pos = dbManager.loadTownList();
         initPositions(pos);
     }
@@ -113,7 +124,7 @@ public class PositionManager {
         positions = positionFactory.getPositions();
         String currPositionName = dbManager.loadСurrentTown();
         if (!currPositionName.isEmpty() && positionIsPresent(currPositionName)) {
-            currPosition = positions.get(currPositionName);
+            activePosition = positions.get(currPositionName);
         }
     }
 
@@ -155,10 +166,10 @@ public class PositionManager {
      * @return возвращает {@link String}, содержащий названия города
      */
     public String getCurrentPositionName() {
-        if (currPosition == null) {
+        if (activePosition == null) {
             return "";
         }
-        return currPosition.getLocationName();
+        return activePosition.getLocationName();
     }
 
     /**
@@ -186,7 +197,7 @@ public class PositionManager {
      */
     public void setCurrentPosition(String name) {
         if (positions.containsKey(name)) {
-            currPosition = positions.get(name);
+            activePosition = positions.get(name);
         }
     }
 
@@ -256,18 +267,18 @@ public class PositionManager {
      * Метод, вызывемый активити, для обновления текущей погоды от текущей погодной станции
      */
     public void updateWeather() {
-        if (currPosition == null || !positionIsPresent(currPosition.getLocationName())) {
+        if (activePosition == null || !positionIsPresent(activePosition.getLocationName())) {
             Toast.makeText(mActivity, R.string.update_error_location_not_found, Toast.LENGTH_SHORT).show();
             return;
         }
         if (isNetworkAvailable(mActivity)) {
-            currStation.updateWeather(currPosition.getCityID(), currPosition.getCoordinate());
-            currStation.updateHourlyWeather(currPosition.getCityID(), currPosition.getCoordinate());
-            currStation.updateWeeklyWeather(currPosition.getCityID(), currPosition.getCoordinate());
+            currStation.updateWeather(activePosition.getCityID(), activePosition.getCoordinate());
+            currStation.updateHourlyWeather(activePosition.getCityID(), activePosition.getCoordinate());
+            currStation.updateWeeklyWeather(activePosition.getCityID(), activePosition.getCoordinate());
         } else {
-            mActivity.updateInterface(WeatherStation.ResponseType.CURRENT, getCurrentWeatherFromDB(currStation.getServiceType(), currPosition.getLocationName(), Calendar.getInstance()));
-            mActivity.updateInterface(WeatherStation.ResponseType.HOURLY, getHourlyWeatherFromDB(currStation.getServiceType(), currPosition.getLocationName(), Calendar.getInstance()));
-            mActivity.updateInterface(WeatherStation.ResponseType.DAILY, getDailyWeatherFromDB(currStation.getServiceType(), currPosition.getLocationName(), Calendar.getInstance()));
+            mActivity.updateInterface(WeatherStation.ResponseType.CURRENT, getCurrentWeatherFromDB(currStation.getServiceType(), activePosition.getLocationName(), Calendar.getInstance()));
+            mActivity.updateInterface(WeatherStation.ResponseType.HOURLY, getHourlyWeatherFromDB(currStation.getServiceType(), activePosition.getLocationName(), Calendar.getInstance()));
+            mActivity.updateInterface(WeatherStation.ResponseType.DAILY, getDailyWeatherFromDB(currStation.getServiceType(), activePosition.getLocationName(), Calendar.getInstance()));
             Toast.makeText(mActivity, R.string.update_error_net_not_availble, Toast.LENGTH_SHORT).show();
         }
     }
@@ -291,7 +302,7 @@ public class PositionManager {
                 dbManager.saveWeather(serviceType, position.getLocationName(), entry.getKey(), entry.getValue());
             }
         }
-        if (currPosition.getCityID() == cityId && currStation.getServiceType() == serviceType) {
+        if (activePosition.getCityID() == cityId && currStation.getServiceType() == serviceType) {
             for (Map.Entry<Calendar, Weather> entry : weather.entrySet()) {
                 entry.setValue(AppUtils.formatWeather(entry.getValue(), temperatureMetric, speedMetric, pressureMetric));
             }
@@ -349,5 +360,33 @@ public class PositionManager {
             calendar.add(Calendar.DAY_OF_YEAR, DAY_PERIOD);
         }
         return forecast;
+    }
+
+    public void initLocationManager() {
+        locationManager = new CurrentLocationManager();
+        setCurrentLocationCoordinates(locationManager.getLastLocation());
+        updateCurrentLocationCoordinates();
+    }
+
+    public void updateCurrentLocationCoordinates () {
+        if (locationManager.checkProviders()) {
+            Log.d("LOCATION", "Запрос");
+            locationManager.updateCurrentLocationCoordinates();
+        } else {
+            Log.d("LOCATION", "Запрос не послан");
+            // TODO включить gps или  network
+        }
+    }
+
+    public void setCurrentLocationCoordinates(Location location) {
+        if (location == null) {
+            Log.d ("LOCATION", "нет координат");
+            //TODO сообщить пользователю
+            return;
+        }
+        //TODO получить название локации
+        Log.d("LOCATION", "получен ответ: " + location.toString());
+        currentLocation.setLocationName("CURRENT");
+        currentLocation.setCoordinate(new Coordinate(location.getLatitude(), location.getLongitude()));
     }
 }

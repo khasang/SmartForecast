@@ -16,19 +16,16 @@ import android.widget.ImageView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.khasang.forecast.R;
-import com.khasang.forecast.location.LocationProvider;
+import com.khasang.forecast.position.PositionManager;
 
 
 public class SplashScreenActivity
         extends AppCompatActivity
-        implements LocationProvider.LocationCallback,
-        Animation.AnimationListener {
+        implements Animation.AnimationListener {
 
     private final static String TAG = SplashScreenActivity.class.getSimpleName();
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private final int SPLASH_DISPLAY_LENGTH = 1500;
-    private double mCurrentLatitude;
-    private double mCurrentLongitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +62,7 @@ public class SplashScreenActivity
         splash_rainbow.startAnimation(anim_splash_rainbow);
         splash_smile.startAnimation(anim_splash_smile);
         splash_wink.startAnimation(anim_splash_wink);
+        PositionManager.getInstance().initManager();
         anim_splash_wink.setAnimationListener(this);
         //TODO FOR TEST
         //splash_left_cloud.setVisibility(View.GONE);
@@ -122,14 +120,6 @@ public class SplashScreenActivity
             return false;
         }
         return true;
-    }
-
-    @Override
-    public void handleNewLocation(Location location) {
-        Log.d(TAG, location.toString());
-
-        mCurrentLatitude = location.getLatitude();
-        mCurrentLongitude = location.getLongitude();
     }
 
     @Override
