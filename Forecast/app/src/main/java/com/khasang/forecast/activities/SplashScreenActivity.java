@@ -19,9 +19,7 @@ import com.khasang.forecast.R;
 import com.khasang.forecast.location.LocationProvider;
 
 
-public class SplashScreenActivity
-        extends AppCompatActivity
-        implements LocationProvider.LocationCallback,
+public class SplashScreenActivity extends AppCompatActivity implements LocationProvider.LocationCallback,
         Animation.AnimationListener {
 
     private final static String TAG = SplashScreenActivity.class.getSimpleName();
