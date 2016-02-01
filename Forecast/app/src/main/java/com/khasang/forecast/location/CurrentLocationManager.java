@@ -3,6 +3,7 @@ package com.khasang.forecast.location;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -13,11 +14,14 @@ import android.util.Log;
 import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.position.PositionManager;
 
+import java.util.List;
+
 /**
  * Created by roman on 30.01.16.
  */
 public class CurrentLocationManager {
     private LocationManager locationManager;
+    private boolean isGpsAccessGranted;
     private boolean gps_enabled;
     private boolean network_enabled;
 
@@ -27,6 +31,20 @@ public class CurrentLocationManager {
         network_enabled = false;
     }
 
+    /**
+     * Метод дает возможность использовать или не использовать GPS для получения координат
+     *
+     * @param access примитив типа boolean, однозначно определяющий использовать или не использовать модуль GPS для опередения координат
+     */
+    public void giveGpsAccess(boolean access) {
+        isGpsAccessGranted = access;
+    }
+
+    /**
+     * Метод для получения последнего известного местоположения (вызывается при старте программы)
+     *
+     * @return объект типа {@link Location}, указывающий на последнее обнаруженное каким либо провайдером местоположение
+     */
     public Location getLastLocation() {
         if (ActivityCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -38,7 +56,43 @@ public class CurrentLocationManager {
             // for ActivityCompat#requestPermissions for more details.
             return null;
         }
-        return locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        Location recentLocation = null;
+        List<String> matchingProviders = locationManager.getAllProviders();
+        long bestTime = 0;
+        for (String provider : matchingProviders) {
+            Location location = locationManager.getLastKnownLocation(provider);
+            if (location != null) {
+                long time = location.getTime();
+                if (time > bestTime) {
+                    recentLocation = location;
+                    bestTime = time;
+                }
+            }
+        }
+        Log.d("LOCATION", "getLastKnownLocation: " + recentLocation.toString());
+        return recentLocation;
+    }
+
+    /**
+     * Метод для выбора лучшего из возможных на данный момент провайдеров определения местоположения
+     *
+     * @return объект типа {@link String}, определяющий провайдера для определения местоположения
+     */
+    private String getTheBestProvider() {
+        if (!isGpsAccessGranted) {
+            return LocationManager.NETWORK_PROVIDER;
+        }
+        Criteria criteria = new Criteria();
+        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+        criteria.setSpeedRequired(true);
+        String providerName = locationManager.getBestProvider(criteria, true);
+        if (providerName != null) {
+            return providerName;
+        } else if (gps_enabled) {
+            return LocationManager.GPS_PROVIDER;
+        } else {
+            return LocationManager.NETWORK_PROVIDER;
+        }
     }
 
     public boolean checkProviders() {
@@ -60,18 +114,12 @@ public class CurrentLocationManager {
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        if (network_enabled) {
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
-            Log.d("LOCATION", "запрос network");
-        }
-        if (gps_enabled) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-            Log.d("LOCATION", "запрос gps");
-        }
+        String provider = getTheBestProvider(); //// TODO: потом убрать
+        locationManager.requestLocationUpdates(provider, 0, 0, locationListener);
+        Log.d("LOCATION", "запрос: " + provider);
     }
 
     private void coordinatesUpdated(Location location) {
-        PositionManager.getInstance().setCurrentLocationCoordinates(location);
         if (ActivityCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -82,11 +130,8 @@ public class CurrentLocationManager {
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        if (!gps_enabled) {
-            locationManager.removeUpdates(locationListener);
-        } else if (location.getProvider().equals(LocationManager.GPS_PROVIDER)) {
-            locationManager.removeUpdates(locationListener);
-        }
+        locationManager.removeUpdates(locationListener);
+        PositionManager.getInstance().setCurrentLocationCoordinates(location);
     }
 
     private LocationListener locationListener = new LocationListener() {

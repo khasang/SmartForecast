@@ -111,9 +111,11 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         initNavigationDrawer();
     }
 
-    /** Инициализация Navigation Drawer
+    /**
+     * Инициализация Navigation Drawer
+     *
      * @version beta
-     * */
+     */
     private void initNavigationDrawer() {
 
         getFavaritesList();
@@ -174,7 +176,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                                 //TODO add unselect item
                                 break;
                             case 2:
-                            if (opened) {
+                                if (opened) {
                                     for (int i = WeatherActivity.this.favCityList.size() - 1; i >= 0; i--) {
                                         result.removeItems(subItemIndex + i);
                                     }
@@ -186,14 +188,14 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                                             result.addItemsAtPosition(
                                                     curPos,
                                                     new SecondaryDrawerItem().withLevel(2).withName(city).withIdentifier(subItemIndex + i)
-                                                    );
+                                            );
                                         }
                                     } else {
                                         Logger.println(TAG, "favCityList is empty");
                                     }
                                 }
-                            opened = !opened;
-                            break;
+                                opened = !opened;
+                                break;
                             case 3:
                                 Toast.makeText(WeatherActivity.this, "Intent for settings ", Toast.LENGTH_SHORT).show();
                                 break;
@@ -233,7 +235,9 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    /** Запрос на список избранныъ городов из PositionManager */
+    /**
+     * Запрос на список избранныъ городов из PositionManager
+     */
     private void getFavaritesList() {
         favCityList = new ArrayList<>();
         Set<String> cities = PositionManager.getInstance().getPositions();
@@ -253,7 +257,8 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     protected void onPause() {
         super.onPause();
         for (int i = WeatherActivity.this.favCityList.size() - 1; i >= 0; i--) {
-            result.removeItems(subItemIndex + i); }
+            result.removeItems(subItemIndex + i);
+        }
         if (opened) opened = !opened;
     }
 
@@ -322,7 +327,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     private void startCityPickerActivity() {
         Intent intent = new Intent(this, CityPickerActivity.class);
         Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(this)
-                    .toBundle();
+                .toBundle();
         ActivityCompat.startActivityForResult(this, intent, CHOOSE_CITY, bundle);
     }
 
@@ -367,10 +372,12 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    /** Обновление интерфейса Activity при получении новых данных */
+    /**
+     * Обновление интерфейса Activity при получении новых данных
+     */
     public void updateInterface(WeatherStation.ResponseType responseType, Map<Calendar, Weather> forecast) {
         stopRefresh();
-
+        toolbar.setTitle(PositionManager.getInstance().getCurrentPositionName().split(",")[0]);
         if (forecast == null || forecast.size() == 0) {
             Logger.println(TAG, "Weather is null!");
             return;
@@ -395,7 +402,9 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     }
 
 
-    /** Обработчик нажатия объектов */
+    /**
+     * Обработчик нажатия объектов
+     */
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -470,7 +479,9 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     }
 
 
-    /** Изменяет отображаемый город WeatherActivity */
+    /**
+     * Изменяет отображаемый город WeatherActivity
+     */
     public void changeDisplayedCity(String newCity) {
         PositionManager.getInstance().setCurrentPosition(newCity);
         PositionManager.getInstance().saveCurrPosition();
@@ -478,7 +489,9 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     }
 
 
-    /** Получаем город из CityPickActivity */
+    /**
+     * Получаем город из CityPickActivity
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -496,7 +509,9 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    /** Анимация обновления */
+    /**
+     * Анимация обновления
+     */
     @Override
     public void onRefresh() {
         if (!PositionManager.getInstance().positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {
@@ -515,13 +530,18 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
-    /** Проигрываение анимации всех объектов activity */
+    /**
+     * Проигрываение анимации всех объектов activity
+     */
     private void startAnimations() {
         fab.startAnimation(animationGrow);
     }
 
     //TODO DELETE
-    /** Останавливаем анимацию */
+
+    /**
+     * Останавливаем анимацию
+     */
     public void stopRefresh() {
     }
 
