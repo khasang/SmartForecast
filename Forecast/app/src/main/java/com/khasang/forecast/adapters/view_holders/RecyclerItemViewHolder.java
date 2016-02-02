@@ -2,8 +2,8 @@ package com.khasang.forecast.adapters.view_holders;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.khasang.forecast.R;
 
@@ -12,21 +12,27 @@ import com.khasang.forecast.R;
  */
 public class RecyclerItemViewHolder extends RecyclerView.ViewHolder {
     private final TextView mItemTextView;
+    private final ImageButton mItemImageButton;
 
-    public RecyclerItemViewHolder(final View parent, TextView itemTextView) {
+
+    //TODO DELETE
+   /* public RecyclerItemViewHolder(final View parent, TextView itemTextView, ImageButton imageButton) {
         super(parent);
         mItemTextView = itemTextView;
-    }
+        mItemImageButton = imageButton;
+    }*/
 
-     public RecyclerItemViewHolder (View itemView, View.OnClickListener listener, View.OnLongClickListener longListener) {
-         super(itemView);
-         mItemTextView = (TextView) itemView.findViewById(R.id.cityTW);
-         itemView.setOnClickListener(listener);
-         itemView.setOnLongClickListener(longListener);
-     }
+    public RecyclerItemViewHolder (View itemView, View.OnClickListener listener, View.OnLongClickListener longListener) {
+        super(itemView);
+        mItemTextView = (TextView) itemView.findViewById(R.id.cityTW);
+        mItemImageButton = (ImageButton) itemView.findViewById(R.id.starBtn);
+        itemView.setOnClickListener(listener);
+        itemView.setOnLongClickListener(longListener);
+    }
 
 
     public void setItemText(CharSequence text) {
         mItemTextView.setText(text);
     }
+
 }

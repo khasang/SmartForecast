@@ -15,8 +15,6 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.transition.Fade;
-import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,7 +32,6 @@ import android.widget.Toast;
 
 import com.khasang.forecast.position.Coordinate;
 import com.khasang.forecast.Logger;
-import com.khasang.forecast.PlaceProvider;
 import com.khasang.forecast.position.PositionManager;
 import com.khasang.forecast.R;
 import com.khasang.forecast.adapters.RecyclerAdapter;
@@ -164,11 +161,16 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 showChooseCityDialog();
                 break;
             case R.id.recycler_item:
+                Logger.println(TAG, "STAR");
                 final int position = recyclerView.getChildAdapterPosition(v);
                 Intent answerIntent = new Intent();
                 answerIntent.putExtra(CITY_PICKER_TAG, cityList.get(position - 1));
                 setResult(RESULT_OK, answerIntent);
                 ActivityCompat.finishAfterTransition(this);
+                break;
+            case R.id.starBtn:
+                Toast.makeText(this, "STAR", Toast.LENGTH_SHORT).show();
+                Logger.println(TAG, "STAR");
                 break;
         }
     }
