@@ -51,7 +51,7 @@ import java.util.regex.Pattern;
 
 /**
  * Created by CopyPasteStd on 29.11.15.
- * <p/>
+ *
  * Activity для выбора местоположения
  */
 public class CityPickerActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
@@ -65,8 +65,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
     private Toolbar toolbar;
     private FloatingActionButton fabBtn;
-    private PlaceProvider mPlaceProvider;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -218,10 +216,8 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
     // Вспомогательный метод для добавления города в список
     private void addItem(String city) {
-//        city = city.trim().toLowerCase();
 
         if (city.length() <= 0) {
-//            Log.w(TAG, "Имя города менее одного символа");
             Toast.makeText(this, R.string.error_empty_location_name, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -247,16 +243,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             e.printStackTrace();
         }
 
-/*
-        // Делаем каждое слово в имени города с заглавное буквы
-        StringBuilder b = new StringBuilder(city);
-        int i = 0;
-        do {
-            b.replace(i, i + 1, b.substring(i,i + 1).toUpperCase());
-            i =  b.indexOf(" ", i) + 1;
-        } while (i > 0 && i < b.length());
-        city = b.toString();
-*/
         Intent answerIntent = new Intent();
         answerIntent.putExtra(CITY_PICKER_TAG, city);
         setResult(RESULT_OK, answerIntent);
@@ -368,19 +354,4 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         return true;
     }
 
-    //    public static class ErrorDialogFragment extends DialogFragment {
-//        public ErrorDialogFragment(){}
-//
-//        @Override
-//        public Dialog onCreateDialog(Bundle savedInstanceState) {
-//            int errorCode = this.getArguments().getInt(PlaceProvider.DIALOG_ERROR);
-//            return GoogleApiAvailability.getInstance().getErrorDialog(
-//                    this.getActivity(), errorCode, PlaceProvider.REQUEST_RESOLVE_ERROR);
-//        }
-//
-//        @Override
-//        public void onDismiss(DialogInterface dialog) {
-//            ((CityPickerActivity)getActivity()).mPlaceProvider.onDialogDismissed();
-//        }
-//    }
 }
