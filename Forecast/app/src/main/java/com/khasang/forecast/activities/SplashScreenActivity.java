@@ -98,7 +98,6 @@ public class SplashScreenActivity
 //                }
 //            }, SPLASH_DISPLAY_LENGTH);
 //        }
-
     }
 
     private boolean checkPlayServices() {
