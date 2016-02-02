@@ -408,15 +408,56 @@ public class PositionManager {
             return false;
         }
         Geocoder geocoder = new Geocoder(MyApplication.getAppContext());
-        LocationManager manager = ((LocationManager) MyApplication.getAppContext().getSystemService(Context.LOCATION_SERVICE));
+        List <Address> list;
         try {
-            List <Address> list = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+            list = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 5);
+            Log.d("LOCATION", "список " +list.get(0));
+            Log.d("LOCATION", "список " +list.get(1));
+            Log.d("LOCATION", "список " +list.get(2));
+            Log.d("LOCATION", "список " +list.get(3));
+            Log.d("LOCATION", "список " +list.get(4));
             if (list.size() > 0) {
-                currentLocation.setLocationName(list.get(0).getLocality());
+                currentLocation.setLocationName(buildCurrentLocationName(list.get(0)));
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+    /*} catch (IOException ioException) {
+        // Catch network or other I/O problems.
+        errorMessage = getString(R.string.service_not_available);
+        Log.e(TAG, errorMessage, ioException);
+    } catch (IllegalArgumentException illegalArgumentException) {
+        // Catch invalid latitude or longitude values.
+        errorMessage = getString(R.string.invalid_lat_long_used);
+        Log.e(TAG, errorMessage + ". " +
+                "Latitude = " + location.getLatitude() +
+                ", Longitude = " +
+                location.getLongitude(), illegalArgumentException);
+    }
+
+     if (addresses == null || addresses.size()  == 0) {
+        if (errorMessage.isEmpty()) {
+            errorMessage = getString(R.string.no_address_found);
+            Log.e(TAG, errorMessage);
+        }
+        deliverResultToReceiver(Constants.FAILURE_RESULT, errorMessage);
+    } else {
+        Address address = addresses.get(0);
+        ArrayList<String> addressFragments = new ArrayList<String>();
+
+        // Fetch the address lines using getAddressLine,
+        // join them, and send them to the thread.
+        for(int i = 0; i < address.getMaxAddressLineIndex(); i++) {
+            addressFragments.add(address.getAddressLine(i));
+        }
+        Log.i(TAG, getString(R.string.address_found));
+        deliverResultToReceiver(Constants.SUCCESS_RESULT,
+                TextUtils.join(System.getProperty("line.separator"),
+                        addressFragments));
+    }
+    */
+
         currentLocation.setCoordinate(new Coordinate(location.getLatitude(), location.getLongitude()));
         Log.d("LOCATION", "новые координаты " + currentLocation.getLocationName());
         return true;
