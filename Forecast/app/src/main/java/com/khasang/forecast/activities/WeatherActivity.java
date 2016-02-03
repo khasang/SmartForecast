@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -80,6 +81,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     private DailyForecastFragment dailyForecastFragment;
     private FloatingActionButton fab;
     private Toolbar toolbar;
+    private ProgressBar progressbar;
 
     private Drawer result = null;
     private boolean opened = false;
@@ -334,6 +336,8 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         description = (TextView) findViewById(R.id.precipitation);
         wind = (TextView) findViewById(R.id.wind);
         humidity = (TextView) findViewById(R.id.humidity);
+        progressbar = (ProgressBar) findViewById(R.id.progressbar);
+        progressbar.setIndeterminate(true);
 
         /** Слушатели нажатий объектов */
         fab.setOnClickListener(this);
@@ -341,6 +345,9 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         setSupportActionBar(toolbar);
     }
 
+    public void showProgress(boolean loading) {
+        progressbar.setVisibility(loading ? View.VISIBLE : View.GONE);
+    }
 
     private void startAnimation() {
         syncBtn.startAnimation(animationRotateCenter);
@@ -392,6 +399,13 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             default:
                 Logger.println(TAG, "Принят необрабатываемый прогноз");
         }
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                showProgress(false);
+            }
+        }, 1500);
+
     }
 
 
@@ -491,6 +505,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             } else {
                 if (!PositionManager.getInstance().positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {
                     stopRefresh();
+                    showProgress(false);
                 }
             }
         }
@@ -499,9 +514,11 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     /** Анимация обновления */
     @Override
     public void onRefresh() {
+        showProgress(true);
         if (!PositionManager.getInstance().positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {
             Logger.println(TAG, "There is nothing to refresh");
             Toast.makeText(WeatherActivity.this, R.string.msg_no_city, Toast.LENGTH_SHORT).show();
+            showProgress(false);
             return;
         }
 
@@ -512,7 +529,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 PositionManager.getInstance().updateWeather();
             }
         }, 1000);
-
     }
 
     /** Проигрываение анимации всех объектов activity */

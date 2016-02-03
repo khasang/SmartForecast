@@ -15,7 +15,9 @@
 
     <style name="AppTheme.CityPicker" parent="AppTheme"/>
 
-    <style name="AppTheme.Splash" parent="Theme.AppCompat.Light.NoActionBar"/>
+    <style name="AppTheme.Splash" parent="AppTheme">
+        <item name="android:windowBackground">@color/primary_light</item>
+    </style>
 
     <style name="Toolbar" parent="Widget.AppCompat.Toolbar">
         <item name="android:background">?attr/colorPrimary</item>
