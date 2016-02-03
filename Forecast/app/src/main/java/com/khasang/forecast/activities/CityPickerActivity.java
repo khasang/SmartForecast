@@ -112,11 +112,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 int position = recyclerView.getChildAdapterPosition(viewHolder.itemView) - 1;
-                if (position == 0){
-                    Toast.makeText(CityPickerActivity.this, getString(R.string.error_remove_current_location), Toast.LENGTH_SHORT).show();
-                    recyclerAdapter.notifyDataSetChanged();
-                    return;
-                }
                 PositionManager.getInstance().removePosition(cityList.get(position));
                 cityList.remove(position);
                 recyclerAdapter.notifyDataSetChanged();
@@ -218,7 +213,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             cityList.add(city);
         }
         Collections.sort(cityList);
-        cityList.add(0, getString(R.string.drawer_item_current_place));
         return cityList;
     }
 
@@ -272,7 +266,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     private void clearList() {
         PositionManager.getInstance().removePositions();
         cityList.clear();
-        cityList.add(0, getString(R.string.drawer_item_current_place));
     }
 
     private void showChooseCityDialog() {

@@ -69,5 +69,4 @@
     <string name="drawer_item_favorites">Избранное</string>
     <string name="drawer_item_settings">Настройки</string>
     <string name="drawer_item_feedback">Обратная связь</string>
-    <string name="error_remove_current_location">Нельзя удалить \"текущее местоположение\"</string>
 </resources>
