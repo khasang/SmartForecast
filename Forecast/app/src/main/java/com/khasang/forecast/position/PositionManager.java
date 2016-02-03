@@ -14,6 +14,7 @@ import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.R;
 import com.khasang.forecast.activities.WeatherActivity;
 import com.khasang.forecast.location.CurrentLocationManager;
+import com.khasang.forecast.location.LocationParser;
 import com.khasang.forecast.sqlite.SQLiteProcessData;
 import com.khasang.forecast.stations.WeatherStation;
 import com.khasang.forecast.stations.WeatherStationFactory;
@@ -410,14 +411,11 @@ public class PositionManager {
         Geocoder geocoder = new Geocoder(MyApplication.getAppContext());
         List <Address> list;
         try {
-            list = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 5);
-            Log.d("LOCATION", "список " +list.get(0));
-            Log.d("LOCATION", "список " +list.get(1));
-            Log.d("LOCATION", "список " +list.get(2));
-            Log.d("LOCATION", "список " +list.get(3));
-            Log.d("LOCATION", "список " +list.get(4));
+            list = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 3);
             if (list.size() > 0) {
-                currentLocation.setLocationName(buildCurrentLocationName(list.get(0)));
+                currentLocation.setLocationName(new LocationParser(list).parseList().getAddressLine());
+            } else {
+                // TODO обработать ситуацию когда пользователь посреди моря - нет адреса вообще
             }
         } catch (IOException e) {
             e.printStackTrace();

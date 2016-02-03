@@ -1,53 +1,83 @@
 package com.khasang.forecast.location;
 
 import android.location.Address;
-import android.location.Location;
 import android.util.Log;
+
+import java.util.List;
 
 /**
  * Created by roman on 03.02.16.
  */
 public class LocationParser { // кидать ошибку если нехватает элементов
-    Address address;
-    boolean hasResult;
-    public LocationParser(Address address) {
-        this.address = address;
-        hasResult = false;
+    List <Address> list;
+    String country;
+    String region;
+    String subRegion;
+    String city;
+
+    public LocationParser () {
+        this(null);
     }
 
-
-
-    private void parseAddress () {
-
+    public LocationParser(List<Address> list) {
+        this.list = list;
+        country = null;
+        region = null;
+        subRegion = null;
+        city = null;
     }
 
-    private String getCountry () {
-
+    public LocationParser setAddressesList(List<Address> list) {
+        this.list = list;
+        return this;
     }
 
-
-    private String buildCurrentLocationName(Address address) {
-        StringBuilder sb = new StringBuilder(20);
-        for (int i = 0; i < 3; ++i) {
-            String temp = null;
-            if (i == 0) {
-                temp = address.getLocality();
-                if (temp == null) {
-                    temp = address.getSubAdminArea();
-                }
-            } else if (i == 1) {
-                temp = address.getAdminArea();
-            } else if (i == 2) {
-                temp = address.getCountryName();
+    public LocationParser parseList () {
+        for (Address address : list) {
+            if (country == null) {
+                country = address.getCountryName();
             }
-            if (sb.length() > 0) {
-                sb.append(", ");
+            if (region == null) {
+                region = address.getAdminArea();
             }
-            if (!(temp == null)) {
-                Log.d("LOCATION", temp);
-                sb.append(temp);
+            if (subRegion == null) {
+                subRegion = address.getSubAdminArea();
+            }
+            if (city == null) {
+                city = address.getLocality();
             }
         }
+        return this;
+    }
+
+    public String getAddressLine () {
+        StringBuilder sb = new StringBuilder(20);
+        if (city == null) {
+            city = "";
+        }
+        if (subRegion == null) {
+            subRegion = "";
+        }
+        if (region == null) {
+            region = "";
+        }
+        if (country == null) {
+            country = "";
+        }
+
+        if (city.length() > 0) {
+            sb.append(city);
+        } else {
+            sb.append(subRegion);
+        }
+        if (sb.length() > 0) {
+            sb.append(", ");
+        }
+        sb.append(region);
+        if (sb.length() > 0) {
+            sb.append(", ");
+        }
+        sb.append(country);
         return sb.toString();
     }
 }
