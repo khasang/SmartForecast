@@ -69,4 +69,9 @@
     <string name="drawer_item_favorites">Избранное</string>
     <string name="drawer_item_settings">Настройки</string>
     <string name="drawer_item_feedback">Обратная связь</string>
+    <string name="error_service_not_available">Координаты текущего местополодения не обнаружены.\nПроблема сети или другие проблемы ввода/выво  да.</string>
+    <string name="invalid_lang_long_used">Ошибка распознавания координат для текущего местоположения</string>
+    <string name="no_address_found">Адрес текущего местоположения не обнаружен</string>
+    <string name="activate_geographical_service">Хотите активировать сервис для получения географических координат?</string>
+    <string name="location_manager">Location Manager</string>
 </resources>

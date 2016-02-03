@@ -1,11 +1,15 @@
 package com.khasang.forecast.position;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
+import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -14,7 +18,9 @@ import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.R;
 import com.khasang.forecast.activities.WeatherActivity;
 import com.khasang.forecast.location.CurrentLocationManager;
+import com.khasang.forecast.location.EmptyCurrentAddressException;
 import com.khasang.forecast.location.LocationParser;
+import com.khasang.forecast.location.NoAvailableAddressesException;
 import com.khasang.forecast.sqlite.SQLiteProcessData;
 import com.khasang.forecast.stations.WeatherStation;
 import com.khasang.forecast.stations.WeatherStationFactory;
@@ -116,6 +122,7 @@ public class PositionManager {
         currentLocation = new Position();
         currentLocation.setLocationName("Smart Forecast");
         currentLocation.setCityID(0);
+        currentLocation.setCoordinate(null);
         HashMap<String, Coordinate> pos = dbManager.loadTownList();
         initPositions(pos);
     }
@@ -218,7 +225,7 @@ public class PositionManager {
     }
 
     public boolean positionIsPresent(String name) {
-        if (currentLocation.getLocationName().equals(name)){
+        if (currentLocation.getLocationName().equals(name)) {
             return true;
         } else {
             return positions.containsKey(name);
@@ -293,6 +300,10 @@ public class PositionManager {
         }
         if (activePosition == currentLocation) {
             updateCurrentLocationCoordinates();
+            if (currentLocation.getCoordinate() == null){
+                // Что то делать, так как на данный момент нет никаких коорднат для текущего местоположения
+                return;
+            }
         }
         sendRequest();
     }
@@ -300,7 +311,7 @@ public class PositionManager {
     /**
      * Метод, отправляет запрос на обновление погоды
      */
-    private void sendRequest (){
+    private void sendRequest() {
         if (isNetworkAvailable(mActivity)) {
             currStation.updateWeather(activePosition.getCityID(), activePosition.getCoordinate());
             currStation.updateHourlyWeather(activePosition.getCityID(), activePosition.getCoordinate());
@@ -395,84 +406,68 @@ public class PositionManager {
     public void initLocationManager() {
         locationManager = new CurrentLocationManager();
         locationManager.giveGpsAccess(true);
-        updateCurrentLocation(locationManager.getLastLocation());
+        try {
+            updateCurrentLocation(locationManager.getLastLocation());
+        } catch (EmptyCurrentAddressException e) {
+            currentLocation.setCoordinate(null);
+            e.printStackTrace();
+        }
     }
 
     public void setUseGpsModule(boolean useGpsModule) {
         locationManager.giveGpsAccess(useGpsModule);
     }
 
-    private boolean updateCurrentLocation (Location location) {
-        if (location == null) {
-            Log.d ("LOCATION", "нет координат");
-            //TODO сообщить пользователю и еще что нибудь сделать :)
-            return false;
-        }
+    private boolean updateCurrentLocation(Location location) {
         Geocoder geocoder = new Geocoder(MyApplication.getAppContext());
-        List <Address> list;
         try {
-            list = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 3);
-            if (list.size() > 0) {
-                currentLocation.setLocationName(new LocationParser(list).parseList().getAddressLine());
-            } else {
-                // TODO обработать ситуацию когда пользователь посреди моря - нет адреса вообще
-            }
+            List<Address> list = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 3);
+            currentLocation.setLocationName(new LocationParser(list).parseList().getAddressLine());
+            currentLocation.setCoordinate(new Coordinate(location.getLatitude(), location.getLongitude()));
+            return true;
         } catch (IOException e) {
+            Toast.makeText(MyApplication.getAppContext(), R.string.error_service_not_available, Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }catch (IllegalArgumentException e) {
+            Toast.makeText(MyApplication.getAppContext(), R.string.invalid_lang_long_used, Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        } catch (EmptyCurrentAddressException | NoAvailableAddressesException e) {
+            Toast.makeText(MyApplication.getAppContext(), R.string.no_address_found, Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
-
-    /*} catch (IOException ioException) {
-        // Catch network or other I/O problems.
-        errorMessage = getString(R.string.service_not_available);
-        Log.e(TAG, errorMessage, ioException);
-    } catch (IllegalArgumentException illegalArgumentException) {
-        // Catch invalid latitude or longitude values.
-        errorMessage = getString(R.string.invalid_lat_long_used);
-        Log.e(TAG, errorMessage + ". " +
-                "Latitude = " + location.getLatitude() +
-                ", Longitude = " +
-                location.getLongitude(), illegalArgumentException);
+        currentLocation.setCoordinate(null);
+        return false;
     }
 
-     if (addresses == null || addresses.size()  == 0) {
-        if (errorMessage.isEmpty()) {
-            errorMessage = getString(R.string.no_address_found);
-            Log.e(TAG, errorMessage);
-        }
-        deliverResultToReceiver(Constants.FAILURE_RESULT, errorMessage);
-    } else {
-        Address address = addresses.get(0);
-        ArrayList<String> addressFragments = new ArrayList<String>();
-
-        // Fetch the address lines using getAddressLine,
-        // join them, and send them to the thread.
-        for(int i = 0; i < address.getMaxAddressLineIndex(); i++) {
-            addressFragments.add(address.getAddressLine(i));
-        }
-        Log.i(TAG, getString(R.string.address_found));
-        deliverResultToReceiver(Constants.SUCCESS_RESULT,
-                TextUtils.join(System.getProperty("line.separator"),
-                        addressFragments));
-    }
-    */
-
-        currentLocation.setCoordinate(new Coordinate(location.getLatitude(), location.getLongitude()));
-        Log.d("LOCATION", "новые координаты " + currentLocation.getLocationName());
-        return true;
-    }
-
-    private void updateCurrentLocationCoordinates () {
+    private void updateCurrentLocationCoordinates() {
         if (locationManager.checkProviders()) {
             Log.d("LOCATION", "Запрос");
             locationManager.updateCurrentLocationCoordinates();
         } else {
-            Log.d("LOCATION", "Запрос не послан нет провайдеров. сообщить и отправить юзера включать");
-            // TODO включить gps или  network
+            AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+            builder.setTitle(R.string.location_manager);
+            builder.setMessage(R.string.activate_geographical_service);
+            builder.setPositiveButton(R.string.btn_yes, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //Launch settings, allowing user to make a change
+                    Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    mActivity.startActivity(i);
+                }
+            });
+            builder.setNegativeButton(R.string.btn_no, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //No location service, no Activity
+                    dialog.cancel();
+                }
+            });
+            builder.create().show();
         }
     }
 
     public void setCurrentLocationCoordinates(Location location) {
-        if (updateCurrentLocation(location) && activePosition == currentLocation){
+        if (updateCurrentLocation(location) && activePosition == currentLocation) {
             sendRequest();
         }
     }

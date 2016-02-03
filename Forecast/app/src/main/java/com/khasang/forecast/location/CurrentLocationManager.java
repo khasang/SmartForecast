@@ -45,7 +45,7 @@ public class CurrentLocationManager {
      *
      * @return объект типа {@link Location}, указывающий на последнее обнаруженное каким либо провайдером местоположение
      */
-    public Location getLastLocation() {
+    public Location getLastLocation() throws EmptyCurrentAddressException {
         if (ActivityCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -69,7 +69,9 @@ public class CurrentLocationManager {
                 }
             }
         }
-        Log.d("LOCATION", "getLastKnownLocation: " + recentLocation.toString());
+        if (recentLocation == null) {
+            throw new EmptyCurrentAddressException ();
+        }
         return recentLocation;
     }
 
