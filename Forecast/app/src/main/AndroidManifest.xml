@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-    package="com.khasang.forecast"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest package="com.khasang.forecast"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -15,38 +14,45 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".activities.SplashScreenActivity"
+            android:noHistory="true"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Splash"
-            android:noHistory="true">
+            android:theme="@style/AppTheme.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
         <activity
             android:name=".activities.WeatherActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Main">
         </activity>
-
         <activity
             android:name=".activities.CityPickerActivity"
             android:parentActivityName=".activities.WeatherActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.CityPicker">
-        <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value=".activities.WeatherActivity"/>
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.WeatherActivity"/>
         </activity>
 
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="763d0e7ee5e3a91a0e52380e1107d8f6013f33c2" />
+            android:value="763d0e7ee5e3a91a0e52380e1107d8f6013f33c2"/>
+
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".activities.WeatherActivity"
+            android:theme="@style/AppTheme.Settings">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.khasang.forecast.activities.WeatherActivity"/>
+        </activity>
     </application>
 
 </manifest>
