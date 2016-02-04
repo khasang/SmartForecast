@@ -69,9 +69,26 @@
     <string name="drawer_item_favorites">Избранное</string>
     <string name="drawer_item_settings">Настройки</string>
     <string name="drawer_item_feedback">Обратная связь</string>
+
     <string name="error_service_not_available">Координаты текущего местополодения не обнаружены.\nПроблема сети или другие проблемы ввода/выво  да.</string>
     <string name="invalid_lang_long_used">Ошибка распознавания координат для текущего местоположения</string>
     <string name="no_address_found">Адрес текущего местоположения не обнаружен</string>
     <string name="activate_geographical_service">Хотите активировать сервис для получения географических координат?</string>
     <string name="location_manager">Location Manager</string>
+
+
+    <!-- App settings -->
+    <string name="title_activity_settings">Settings</string>
+
+    <string name="pref_header_general">General</string>
+
+    <string name="pref_title_enable_gps">Use GPS</string>
+    <string name="pref_description_enable_gps">Use GPS to determine your location</string>
+
+    <string name="pref_title_units">Temperature Units</string>
+    <string name="pref_units_key" translatable="false">units</string>
+    <string name="pref_units_metric" translatable="false">metric</string>
+    <string name="pref_units_imperial" translatable="false">imperial</string>
+    <string name="pref_units_label_metric">Metric</string>
+    <string name="pref_units_label_imperial">Imperial</string>
 </resources>
