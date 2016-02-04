@@ -7,10 +7,8 @@ import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.provider.Settings;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.khasang.forecast.AppUtils;
@@ -18,9 +16,9 @@ import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.R;
 import com.khasang.forecast.activities.WeatherActivity;
 import com.khasang.forecast.location.CurrentLocationManager;
-import com.khasang.forecast.location.EmptyCurrentAddressException;
+import com.khasang.forecast.location.exceptions.EmptyCurrentAddressException;
 import com.khasang.forecast.location.LocationParser;
-import com.khasang.forecast.location.NoAvailableAddressesException;
+import com.khasang.forecast.location.exceptions.NoAvailableAddressesException;
 import com.khasang.forecast.sqlite.SQLiteProcessData;
 import com.khasang.forecast.stations.WeatherStation;
 import com.khasang.forecast.stations.WeatherStationFactory;
@@ -128,9 +126,9 @@ public class PositionManager {
     }
 
     /**
-     * Метод инициализации списка местоположений, которые добавлены в "Избранное" (городов)
+     * Метод инициализации списка местоположений, которые добавлены в список городов
      *
-     * @param favorites коллекция {@link List} типа {@link String}, содержащий названия городов
+     * @param favorites коллекция {@link List} типа {@link String}, содержащая названия городов
      */
     private void initPositions(HashMap<String, Coordinate> favorites) {
         PositionFactory positionFactory = new PositionFactory();
@@ -142,6 +140,7 @@ public class PositionManager {
         }
         positions = positionFactory.getPositions();
         String currPositionName = dbManager.loadСurrentTown();
+        // TODO если сохранять будем координаты текущего местоположения то необходимо переделать
         if (!currPositionName.isEmpty() && positionIsPresent(currPositionName)) {
             activePosition = positions.get(currPositionName);
         }
@@ -220,7 +219,7 @@ public class PositionManager {
         } else if (positions.containsKey(name)) {
             activePosition = positions.get(name);
         } else {
-            // TODO что нибудь наверное надо сделать, хотя не факт :-)
+            Toast.makeText(MyApplication.getAppContext(), "Не могу определить координаты запрашиваемого местоположения", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -424,6 +423,7 @@ public class PositionManager {
             List<Address> list = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 3);
             currentLocation.setLocationName(new LocationParser(list).parseList().getAddressLine());
             currentLocation.setCoordinate(new Coordinate(location.getLatitude(), location.getLongitude()));
+            currentCoordinatesDetected = true;
             return true;
         } catch (IOException e) {
             Toast.makeText(MyApplication.getAppContext(), R.string.error_service_not_available, Toast.LENGTH_SHORT).show();
@@ -436,12 +436,12 @@ public class PositionManager {
             e.printStackTrace();
         }
         currentLocation.setCoordinate(null);
+        currentCoordinatesDetected = false;
         return false;
     }
 
     private void updateCurrentLocationCoordinates() {
         if (locationManager.checkProviders()) {
-            Log.d("LOCATION", "Запрос");
             locationManager.updateCurrentLocationCoordinates();
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
@@ -467,7 +467,7 @@ public class PositionManager {
     }
 
     public void setCurrentLocationCoordinates(Location location) {
-        if (updateCurrentLocation(location) && activePosition == currentLocation) {
+        if (updateCurrentLocation(location) && activePosition == currentLocation ) {
             sendRequest();
         }
     }

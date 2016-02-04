@@ -12,6 +12,7 @@ import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
 import com.khasang.forecast.MyApplication;
+import com.khasang.forecast.location.exceptions.EmptyCurrentAddressException;
 import com.khasang.forecast.position.PositionManager;
 
 import java.util.List;
@@ -116,9 +117,7 @@ public class CurrentLocationManager {
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        String provider = getTheBestProvider(); //// TODO: потом убрать
-        locationManager.requestLocationUpdates(provider, 0, 0, locationListener);
-        Log.d("LOCATION", "запрос: " + provider);
+        locationManager.requestLocationUpdates(getTheBestProvider(), 0, 0, locationListener);
     }
 
     private void coordinatesUpdated(Location location) {

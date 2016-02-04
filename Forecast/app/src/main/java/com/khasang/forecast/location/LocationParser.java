@@ -2,6 +2,9 @@ package com.khasang.forecast.location;
 
 import android.location.Address;
 
+import com.khasang.forecast.location.exceptions.EmptyCurrentAddressException;
+import com.khasang.forecast.location.exceptions.NoAvailableAddressesException;
+
 import java.util.List;
 
 /**
