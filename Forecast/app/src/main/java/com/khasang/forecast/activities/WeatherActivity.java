@@ -197,7 +197,9 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                             opened = !opened;
                             break;
                             case 3:
-                                Toast.makeText(WeatherActivity.this, "Intent for settings ", Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(WeatherActivity.this, "Intent for settings ", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(WeatherActivity.this, SettingsActivity.class);
+                                startActivity(intent);
                                 break;
                             case 4:
                                 //TODO add unselect item
@@ -404,8 +406,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             public void run() {
                 showProgress(false);
             }
-        }, 1500);
-
+        }, 1250);
     }
 
 
