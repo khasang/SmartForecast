@@ -68,6 +68,7 @@ public class PositionManager {
         temperatureMetric = dbManager.loadTemperatureMetrics();
         speedMetric = dbManager.loadSpeedMetrics();
         pressureMetric = dbManager.loadPressureMetrics();
+        initCurrentLocation();
         initPositions();
         initLocationManager();
         initStations();
@@ -112,15 +113,17 @@ public class PositionManager {
         currStation = stations.get(dbManager.loadStation());
     }
 
+    private void initCurrentLocation() {
+        currentLocation = new Position();
+        currentLocation.setLocationName("Smart Forecast");
+        currentLocation.setCityID(0);
+        currentLocation.setCoordinate(null);
+    }
 
     /**
      * Метод инициализации списка местоположений, вызывается из активити
      */
     private void initPositions() {
-        currentLocation = new Position();
-        currentLocation.setLocationName("Smart Forecast");
-        currentLocation.setCityID(0);
-        currentLocation.setCoordinate(null);
         HashMap<String, Coordinate> pos = dbManager.loadTownList();
         initPositions(pos);
     }
@@ -139,11 +142,12 @@ public class PositionManager {
             }
         }
         positions = positionFactory.getPositions();
-        String currPositionName = dbManager.loadСurrentTown();
+        //      String currPositionName = dbManager.loadСurrentTown();
         // TODO если сохранять будем координаты текущего местоположения то необходимо переделать
-        if (!currPositionName.isEmpty() && positionIsPresent(currPositionName)) {
-            activePosition = positions.get(currPositionName);
-        }
+        //      if (!currPositionName.isEmpty() && positionIsPresent(currPositionName)) {
+        //       activePosition = positions.get(currPositionName);
+        //    }
+        activePosition = currentLocation;
     }
 
     /**
@@ -299,12 +303,16 @@ public class PositionManager {
         }
         if (activePosition == currentLocation) {
             updateCurrentLocationCoordinates();
-            if (currentLocation.getCoordinate() == null){
+            if (currentLocation.getCoordinate() == null) {
                 // Что то делать, так как на данный момент нет никаких коорднат для текущего местоположения
                 return;
             }
         }
-        sendRequest();
+        if (activePosition.getCoordinate() != null) {
+            sendRequest();
+        } else {
+            Toast.makeText(MyApplication.getAppContext(), "Coordinates = null", Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
@@ -411,6 +419,7 @@ public class PositionManager {
             currentLocation.setCoordinate(null);
             e.printStackTrace();
         }
+  //      updateCurrentLocationCoordinates();
     }
 
     public void setUseGpsModule(boolean useGpsModule) {
@@ -428,7 +437,7 @@ public class PositionManager {
         } catch (IOException e) {
             Toast.makeText(MyApplication.getAppContext(), R.string.error_service_not_available, Toast.LENGTH_SHORT).show();
             e.printStackTrace();
-        }catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             Toast.makeText(MyApplication.getAppContext(), R.string.invalid_lang_long_used, Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         } catch (EmptyCurrentAddressException | NoAvailableAddressesException e) {
@@ -467,7 +476,7 @@ public class PositionManager {
     }
 
     public void setCurrentLocationCoordinates(Location location) {
-        if (updateCurrentLocation(location) && activePosition == currentLocation ) {
+        if (updateCurrentLocation(location) && activePosition == currentLocation) {
             sendRequest();
         }
     }
