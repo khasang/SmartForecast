@@ -7,6 +7,13 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true">
+    </uses-feature>
 
     <application
         android:name=".MyApplication"
@@ -46,6 +53,14 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="763d0e7ee5e3a91a0e52380e1107d8f6013f33c2" />
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyAvVXrZgkfpfSiki74xE2J2M9xUfH7pZRc" />
     </application>
 
 </manifest>

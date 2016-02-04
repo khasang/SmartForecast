@@ -8,6 +8,7 @@ import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,8 +16,6 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.transition.Fade;
-import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,6 +31,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.khasang.forecast.Maps;
 import com.khasang.forecast.position.Coordinate;
 import com.khasang.forecast.Logger;
 import com.khasang.forecast.PlaceProvider;
@@ -48,6 +48,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
+
 
 /**
  * Created by CopyPasteStd on 29.11.15.
@@ -67,11 +68,13 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     private FloatingActionButton fabBtn;
     private PlaceProvider mPlaceProvider;
 
+    private Maps maps;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_city_picker);
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         //TODO fix NullPointerException
@@ -333,6 +336,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             }
         });
         dialog.show();
+        maps = new Maps(this);
     }
 
     @Override

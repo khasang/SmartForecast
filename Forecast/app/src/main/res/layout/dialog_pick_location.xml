@@ -5,23 +5,44 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.khasang.forecast.view.DelayedAutoCompleteTextView
-        android:id="@+id/editTextCityName"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:ems="10"
-        android:imeOptions="flagNoExtractUi|actionSearch">
-        <requestFocus/>
-    </com.khasang.forecast.view.DelayedAutoCompleteTextView>
+        android:layout_height="fill_parent">
 
-    <ProgressBar
-        android:id="@+id/autocomplete_progressbar"
-        style="?android:attr/progressBarStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical|right"
-        android:layout_marginRight="16dp"
-        android:visibility="gone"/>
+        <com.khasang.forecast.view.DelayedAutoCompleteTextView
+            android:id="@+id/editTextCityName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:imeOptions="flagNoExtractUi|actionSearch"
+            android:layout_below="@+id/autocomplete_progressbar"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true">
+            <requestFocus/>
+        </com.khasang.forecast.view.DelayedAutoCompleteTextView>
+
+        <ProgressBar
+            android:id="@+id/autocomplete_progressbar"
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|right"
+            android:layout_marginRight="16dp"
+            android:visibility="gone"/>
+
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="476dp"
+            android:layout_below="@+id/editTextCityName"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="24dp">
+        </fragment>
+    </RelativeLayout>
 
 </FrameLayout>
