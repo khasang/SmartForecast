@@ -47,7 +47,8 @@
         <activity
             android:name=".activities.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".activities.WeatherActivity">
+            android:parentActivityName=".activities.WeatherActivity"
+            android:theme="@style/AppTheme.Settings">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.khasang.forecast.activities.WeatherActivity"/>

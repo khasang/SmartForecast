@@ -20,6 +20,8 @@
         <item name="android:windowBackground">@color/primary_light</item>
     </style>
 
+    <style name="AppTheme.Settings" parent="AppTheme"/>
+
     <style name="Toolbar" parent="Widget.AppCompat.Toolbar">
         <item name="android:background">?attr/colorPrimary</item>
         <item name="popupTheme">@style/Theme.AppCompat.Light</item>

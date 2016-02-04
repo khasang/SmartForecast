@@ -198,8 +198,8 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                             break;
                             case 3:
 //                                Toast.makeText(WeatherActivity.this, "Intent for settings ", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(WeatherActivity.this, SettingsActivity.class);
-                                startActivity(intent);
+                                startSettingsActivity();
+                                result.closeDrawer();
                                 break;
                             case 4:
                                 //TODO add unselect item
@@ -328,6 +328,13 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(this)
                     .toBundle();
         ActivityCompat.startActivityForResult(this, intent, CHOOSE_CITY, bundle);
+    }
+
+    private void startSettingsActivity() {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(this)
+                .toBundle();
+        ActivityCompat.startActivity(this, intent, bundle);
     }
 
     private void initFields() {
