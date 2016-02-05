@@ -1,17 +1,24 @@
 package com.khasang.forecast.location;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.khasang.forecast.MyApplication;
+import com.khasang.forecast.R;
 import com.khasang.forecast.location.exceptions.EmptyCurrentAddressException;
 import com.khasang.forecast.position.PositionManager;
 
@@ -48,6 +55,7 @@ public class CurrentLocationManager {
      */
     public Location getLastLocation() throws EmptyCurrentAddressException {
         if (ActivityCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            giveMessageAboutPermission();
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -101,13 +109,15 @@ public class CurrentLocationManager {
     public boolean checkProviders() {
         gps_enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         network_enabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        Log.d("LOCATION", "gps: " + gps_enabled);
-        Log.d("LOCATION", "network: " + network_enabled);
+        if (!isGpsAccessGranted){
+            gps_enabled = false;
+        }
         return (gps_enabled || network_enabled);
     }
 
-    public void updateCurrentLocationCoordinates() {
+    public void updateCurrentLocationCoordinates(final Activity witherAtivity) {
         if (ActivityCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            giveMessageAboutPermission();
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -117,11 +127,34 @@ public class CurrentLocationManager {
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
+        if (!checkProviders()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(witherAtivity);
+            builder.setTitle(R.string.location_manager);
+            builder.setMessage(R.string.activate_geographical_service);
+            builder.setPositiveButton(R.string.btn_yes, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //Launch settings, allowing user to make a change
+                    Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    witherAtivity.startActivity(i);
+                }
+            });
+            builder.setNegativeButton(R.string.btn_no, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //No location service, no Activity
+                    dialog.cancel();
+                }
+            });
+            builder.create().show();
+        }
+        locationManager.removeUpdates(locationListener);
         locationManager.requestLocationUpdates(getTheBestProvider(), 0, 0, locationListener);
     }
 
     private void coordinatesUpdated(Location location) {
         if (ActivityCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            giveMessageAboutPermission();
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -133,6 +166,10 @@ public class CurrentLocationManager {
         }
         locationManager.removeUpdates(locationListener);
         PositionManager.getInstance().setCurrentLocationCoordinates(location);
+    }
+
+    private void giveMessageAboutPermission () {
+        Toast.makeText(MyApplication.getAppContext(), MyApplication.getAppContext().getString(R.string.error_gps_permission), Toast.LENGTH_SHORT).show();
     }
 
     private LocationListener locationListener = new LocationListener() {

@@ -147,6 +147,8 @@ public class PositionManager {
         //      if (!currPositionName.isEmpty() && positionIsPresent(currPositionName)) {
         //       activePosition = positions.get(currPositionName);
         //    }
+
+        // Сейчас активная позиция всегда текущая локация
         activePosition = currentLocation;
     }
 
@@ -412,18 +414,27 @@ public class PositionManager {
 
     public void initLocationManager() {
         locationManager = new CurrentLocationManager();
-        locationManager.giveGpsAccess(true);
+        locationManager.giveGpsAccess(false); // TODO Прочитать из настроек
         try {
             updateCurrentLocation(locationManager.getLastLocation());
         } catch (EmptyCurrentAddressException e) {
             currentLocation.setCoordinate(null);
             e.printStackTrace();
         }
-  //      updateCurrentLocationCoordinates();
     }
 
     public void setUseGpsModule(boolean useGpsModule) {
         locationManager.giveGpsAccess(useGpsModule);
+    }
+
+    public void updateCurrentLocationCoordinates() {
+        locationManager.updateCurrentLocationCoordinates(mActivity);
+    }
+
+    public void setCurrentLocationCoordinates(Location location) {
+        if (updateCurrentLocation(location) && activePosition == currentLocation) {
+            sendRequest();
+        }
     }
 
     private boolean updateCurrentLocation(Location location) {
@@ -447,37 +458,5 @@ public class PositionManager {
         currentLocation.setCoordinate(null);
         currentCoordinatesDetected = false;
         return false;
-    }
-
-    private void updateCurrentLocationCoordinates() {
-        if (locationManager.checkProviders()) {
-            locationManager.updateCurrentLocationCoordinates();
-        } else {
-            AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-            builder.setTitle(R.string.location_manager);
-            builder.setMessage(R.string.activate_geographical_service);
-            builder.setPositiveButton(R.string.btn_yes, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    //Launch settings, allowing user to make a change
-                    Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    mActivity.startActivity(i);
-                }
-            });
-            builder.setNegativeButton(R.string.btn_no, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    //No location service, no Activity
-                    dialog.cancel();
-                }
-            });
-            builder.create().show();
-        }
-    }
-
-    public void setCurrentLocationCoordinates(Location location) {
-        if (updateCurrentLocation(location) && activePosition == currentLocation) {
-            sendRequest();
-        }
     }
 }

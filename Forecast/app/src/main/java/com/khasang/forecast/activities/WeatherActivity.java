@@ -93,6 +93,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather_material);
         PositionManager.getInstance().configureManager(this);
+        PositionManager.getInstance().updateCurrentLocationCoordinates();
         if (findViewById(R.id.fragment_container) != null) {
             if (savedInstanceState != null) {
                 return;
