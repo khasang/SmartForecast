@@ -15,6 +15,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.khasang.forecast.activities.CityPickerActivity;
 
 /**
@@ -37,7 +38,7 @@ public class Maps {
         if (setMap()) {
             setMapSettings();
             getCurrentLocation();
-            initLogs();
+            setMapClickListeners();
             setCameraPosition(currentLatitude, currentLongtitude, 13, 0, 0);
         };
     }
@@ -108,11 +109,19 @@ public class Maps {
         map.animateCamera(cameraUpdate);
     }
 
-    private void initLogs() {
+    public void setMarker(double latitude, double longtitude) {
+        map.clear();
+        map.addMarker(new MarkerOptions().position(new LatLng(latitude, longtitude)).draggable(true));
+    }
+
+    private void setMapClickListeners() {
         map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
 
             @Override
             public void onMapClick(LatLng latLng) {
+                currentLatitude = latLng.latitude;
+                currentLongtitude = latLng.longitude;
+                setMarker(currentLatitude, currentLongtitude);
                 Log.d(TAG, "onMapClick: " + latLng.latitude + "," + latLng.longitude);
             }
         });
