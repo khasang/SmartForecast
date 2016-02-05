@@ -79,11 +79,11 @@ public class SQLiteFields {
 
     public static final String QUERY_DELETE_OLD_DATA_WEATHER =
             "DELETE FROM " + TABLE_WEATHER +
-            " WHERE " + STATION_NAME + " = ? and " + TOWN + " = ? and " + DATE + " < (SELECT MAX(" + DATE + ") FROM " + TABLE_WEATHER + " WHERE " + DATE + " < ? )";
+                    " WHERE " + STATION_NAME + " = ? and " + TOWN + " = ? and " + DATE + " < (SELECT MAX(" + DATE + ") FROM " + TABLE_WEATHER + " WHERE " + DATE + " < ? )";
 
     public static final String QUERY_DELETE_DOUBLE_WEATHER =
             "DELETE FROM " + TABLE_WEATHER +
-            " WHERE " + STATION_NAME + " = ? and " + TOWN + " = ? and " + DATE + " = ? ";
+                    " WHERE " + STATION_NAME + " = ? and " + TOWN + " = ? and " + DATE + " = ? ";
 
     public static final String QUERY_DELETE_DATA_TOWNS = "DELETE FROM " + TABLE_TOWNS;
     public static final String QUERY_DELETE_DATA_TOWN = "DELETE FROM " + TABLE_TOWNS + " WHERE " + TOWN + " = ? ";
@@ -103,15 +103,24 @@ public class SQLiteFields {
 
     public static final String QUERY_SELECT_WEATHER =
             "SELECT * FROM " + TABLE_WEATHER +
-            " WHERE " + STATION_NAME + " = ? and " + TOWN + " = ? " +
-            " ORDER BY ABS( CAST(strftime('%s', " + DATE + ") AS int) - CAST(strftime('%s', ?) AS int) ) ASC " +
-            " LIMIT 1";
+                    " WHERE " + STATION_NAME + " = ? and " + TOWN + " = ? " +
+                    " ORDER BY ABS( CAST(strftime('%s', " + DATE + ") AS int) - CAST(strftime('%s', ?) AS int) ) ASC " +
+                    " LIMIT 1";
 
     public static final String QUERY_INSERT_TOWN = "INSERT INTO " + TABLE_TOWNS + " (" +
             TOWN + "," +
             LATITUDE + "," +
             LONGTITUDE + ") " +
             " VALUES ( ? , ? , ? )";
+
+    public static final String QUERY_INSERT_FULL_TOWN = "INSERT INTO " + TABLE_TOWNS + " (" +
+            TOWN + "," +
+            LATITUDE + "," +
+            LONGTITUDE + "," +
+            SUNRISE + "," +
+            SUNSET + "," +
+            FAVORITE + ") " +
+            " VALUES ( ? , ? , ? , ? , ? , ? )";
 
     public static final String QUERY_UPDATE_TOWN_SUNTIME = "UPDATE " + TABLE_TOWNS + " SET " +
             SUNRISE + " = ? , " +
@@ -145,6 +154,14 @@ public class SQLiteFields {
             CURRENT_PRESSURE_METRICS + ") " +
             " VALUES ( ? , ? , ? , ? , ? )";
 
+    public static final String QUERY_UPDATE_SETTINGS = "UPDATE " + TABLE_SETTINGS + " SET " +
+            CURRENT_STATION + " = ? ," +
+            CURRENT_TOWN + " = ? ," +
+            CURRENT_TEMPIRATURE_METRICS + " = ? ," +
+            CURRENT_SPEED_METRICS + " = ? ," +
+            CURRENT_PRESSURE_METRICS + " = ? " +
+            " WHERE " + ID + " = 1";
+
     public static final String QUERY_UPDATE_CURRCITY_SETTING = "UPDATE " + TABLE_SETTINGS + " SET " +
             CURRENT_TOWN + " = ? " +
             " WHERE " + ID + " = 1";
@@ -161,5 +178,5 @@ public class SQLiteFields {
 
     public static final String QUERY_SELECT_SETTINGS =
             "SELECT * FROM " + TABLE_SETTINGS +
-            " WHERE ID = (SELECT MAX(" + ID + ") FROM " + TABLE_SETTINGS + ")";
+                    " WHERE ID = (SELECT MAX(" + ID + ") FROM " + TABLE_SETTINGS + ")";
 }
