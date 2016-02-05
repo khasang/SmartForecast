@@ -93,6 +93,7 @@ public class SQLiteFields {
 
     public static final String QUERY_OBJECTS_COUNT = "SELECT COUNT(*) FROM SQLITE_MASTER WHERE TYPE = ? AND NAME = ? ";
     public static final String QUERY_SELECT_TOWNS = "SELECT * FROM " + TABLE_TOWNS;
+    public static final String QUERY_SELECT_FAVORITE_TOWN = "SELECT * FROM " + TABLE_TOWNS + " WHERE " + FAVORITE + " = ? ";
     public static final String QUERY_SELECT_DATA_TOWN = "SELECT * FROM " + TABLE_TOWNS + " WHERE " + TOWN + " = ? ";
 
     /*

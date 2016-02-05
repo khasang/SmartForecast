@@ -15,6 +15,7 @@ import com.khasang.forecast.position.Wind;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
@@ -227,7 +228,7 @@ public class SQLiteProcessData {
         return weatherDate;
     }
 
-    // Запись наличия города в избранном.
+    // Добавление города в избранное.
     public void saveTownFavourite(boolean isFavourite, String townName) {
         String favourite = "0";
         if(isFavourite) {
@@ -236,7 +237,7 @@ public class SQLiteProcessData {
         SQLiteWork.getInstance().qExExec(SQLiteFields.QUERY_UPDATE_TOWN_FAVORITE, new String[]{favourite, townName});
     }
 
-    // Запись наличия города в избранном.
+    // Наличие города в избранном.
     public boolean getTownFavourite(String townName) {
         Cursor dataset = SQLiteWork.getInstance().queryOpen(SQLiteFields.QUERY_SELECT_DATA_TOWN, new String[]{townName});
         try {
@@ -285,6 +286,26 @@ public class SQLiteProcessData {
             }
         }
         return hashMap;
+    }
+
+    // Загрузка списка избранных городов.
+    public ArrayList<String> loadFavoriteTownList() {
+        ArrayList<String> list = new ArrayList<String>();
+        Cursor dataset = SQLiteWork.getInstance().queryOpen(SQLiteFields.QUERY_SELECT_FAVORITE_TOWN, new String[]{"1"});
+        try {
+            if (dataset != null && dataset.getCount() != 0) {
+                if (dataset.moveToFirst()) {
+                    do {
+                        list.add(dataset.getString(dataset.getColumnIndex(SQLiteFields.TOWN)));
+                    } while (dataset.moveToNext());
+                }
+            }
+        } finally {
+            if (dataset != null) {
+                dataset.close();
+            }
+        }
+        return list;
     }
 
     // Загрузка погоды.
