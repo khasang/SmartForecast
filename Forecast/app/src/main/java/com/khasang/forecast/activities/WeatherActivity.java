@@ -507,7 +507,8 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
      */
     public void changeDisplayedCity(String newCity) {
         PositionManager.getInstance().setCurrentPosition(newCity);
-        PositionManager.getInstance().saveCurrPosition();
+//  TODO закомментировал так как текущий пока "текущее местоположение"
+//        PositionManager.getInstance().saveCurrPosition();
         onRefresh();
     }
 

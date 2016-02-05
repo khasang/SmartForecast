@@ -414,7 +414,7 @@ public class PositionManager {
 
     public void initLocationManager() {
         locationManager = new CurrentLocationManager();
-        locationManager.giveGpsAccess(false); // TODO Прочитать из настроек
+        locationManager.giveGpsAccess(true); // TODO Прочитать из настроек
         try {
             updateCurrentLocation(locationManager.getLastLocation());
         } catch (EmptyCurrentAddressException e) {
