@@ -81,6 +81,11 @@ public class SQLiteFields {
             "DELETE FROM " + TABLE_WEATHER +
                     " WHERE " + STATION_NAME + " = ? and " + TOWN + " = ? and " + DATE + " < (SELECT MAX(" + DATE + ") FROM " + TABLE_WEATHER + " WHERE " + DATE + " < ? )";
 
+
+    public static final String QUERY_DELETE_OLD_DATA_WEATHER_ALL_TOWNS =
+            "DELETE FROM " + TABLE_WEATHER +
+                    " WHERE " + STATION_NAME + " = ? and " + DATE + " < (SELECT MAX(" + DATE + ") FROM " + TABLE_WEATHER + " WHERE " + DATE + " < ? )";
+
     public static final String QUERY_DELETE_DOUBLE_WEATHER =
             "DELETE FROM " + TABLE_WEATHER +
                     " WHERE " + STATION_NAME + " = ? and " + TOWN + " = ? and " + DATE + " = ? ";

@@ -158,6 +158,11 @@ public class SQLiteProcessData {
         SQLiteWork.getInstance().qExExec(SQLiteFields.QUERY_DELETE_OLD_DATA_WEATHER, new String[]{serviceType.name(), townName, dtFormat.format(date.getTime())});
     }
 
+    // Очистка таблицы от данных, старше определенной даты.
+    public void deleteOldWeatherAllTowns(WeatherStationFactory.ServiceType serviceType, Calendar date) {
+        SQLiteWork.getInstance().qExExec(SQLiteFields.QUERY_DELETE_OLD_DATA_WEATHER_ALL_TOWNS, new String[]{serviceType.name(), dtFormat.format(date.getTime())});
+    }
+
     // Очистка таблицы от старых данных, чтобы не было дублей.
     public void deleteDoubleWeather(WeatherStationFactory.ServiceType serviceType, String cityName, Calendar date) {
         SQLiteWork.getInstance().qExExec(SQLiteFields.QUERY_DELETE_DOUBLE_WEATHER, new String[]{serviceType.name(), cityName, dtFormat.format(date.getTime())});
