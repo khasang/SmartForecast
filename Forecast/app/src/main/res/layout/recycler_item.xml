@@ -27,6 +27,6 @@
         android:layout_gravity="end"
         android:padding="8dp"
         android:gravity="end"
-        android:src="@android:drawable/btn_star"/>
+        tools:src="@android:drawable/btn_star"/>
 
 </android.support.v7.widget.CardView>

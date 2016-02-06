@@ -3,6 +3,7 @@ package com.khasang.forecast.activities;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -62,6 +64,8 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
     private Toolbar toolbar;
     private FloatingActionButton fabBtn;
+    private boolean stared = false;
+    ImageButton btnStar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +83,8 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         swapVisibilityTextOrList();
+
+
 
         /** Вычисляет степень прокрутки и выполняет нужное действие.*/
         recyclerView.addOnScrollListener(new HidingScrollListener() {
@@ -161,16 +167,42 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 showChooseCityDialog();
                 break;
             case R.id.recycler_item:
-                Logger.println(TAG, "STAR");
+             /*   Logger.println(TAG, "STAR");
                 final int position = recyclerView.getChildAdapterPosition(v);
                 Intent answerIntent = new Intent();
                 answerIntent.putExtra(CITY_PICKER_TAG, cityList.get(position - 1));
                 setResult(RESULT_OK, answerIntent);
-                ActivityCompat.finishAfterTransition(this);
+                ActivityCompat.finishAfterTransition(this);*/
+                btnStar = (ImageButton) findViewById(R.id.starBtn);
+
+
+                if (stared) {
+                    Logger.println(TAG, String.valueOf(stared));
+                    //btnStar.setImageResource(android.R.drawable.btn_star);
+                    btnStar.setBackgroundColor(Color.RED);
+                    stared = false;
+                } else {
+                    //btnStar.setBackgroundResource(android.R.drawable.dark_header);
+                    Logger.println(TAG, String.valueOf(stared));
+                    btnStar.setBackgroundColor(Color.GREEN);
+                    stared = true;
+                    //star_flag = true;
+                }
+                //Toast.makeText(this, "STAR", Toast.LENGTH_SHORT).show();
+
+
                 break;
             case R.id.starBtn:
+       /*         if (!star_flag) {
+                    btnStar.setImageResource(android.R.drawable.btn_star);
+                    star_flag = true;
+                    Logger.println(TAG, "STAR true");
+                } else {
+                    btnStar.setBackgroundResource(android.R.drawable.btn_star_big_on);
+                    star_flag = false;
+                    Logger.println(TAG, "STAR false");
+                }*/
                 Toast.makeText(this, "STAR", Toast.LENGTH_SHORT).show();
-                Logger.println(TAG, "STAR");
                 break;
         }
     }
