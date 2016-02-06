@@ -16,6 +16,7 @@ import com.khasang.forecast.stations.WeatherStation;
 import com.khasang.forecast.stations.WeatherStationFactory;
 
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,6 +61,16 @@ public class PositionManager {
         initPositions();
         initLocationManager();
         initStations();
+    }
+
+    public List<String> getFavouritesList (){
+        List <String> favouritesPositions = dbManager.loadFavoriteTownList();
+        Collections.sort(favouritesPositions);
+        return favouritesPositions;
+    }
+
+    public void setFavouriteCity(String cityName, boolean isFavourite) {
+        dbManager.saveTownFavourite(isFavourite, cityName);
     }
 
     public void configureManager(WeatherActivity activity) {
@@ -297,7 +308,7 @@ public class PositionManager {
         if (position != null) {
             for (Map.Entry<Calendar, Weather> entry : weather.entrySet()) {
                 if (rType == WeatherStation.ResponseType.CURRENT) {
-                    dbManager.deleteOldWeather(serviceType, position.getLocationName(), entry.getKey());
+                    dbManager.deleteOldWeatherAllTowns(serviceType, entry.getKey());
                 }
                 dbManager.saveWeather(serviceType, position.getLocationName(), entry.getKey(), entry.getValue());
             }
