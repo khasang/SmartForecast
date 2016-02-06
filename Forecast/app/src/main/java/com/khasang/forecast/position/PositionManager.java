@@ -36,6 +36,7 @@ public class PositionManager {
     private HashMap<WeatherStationFactory.ServiceType, WeatherStation> stations;
     private volatile Position currentLocation;
     private volatile HashMap<String, Position> positions;
+    List <String> favouritesPositions;
     private WeatherActivity mActivity;
     private SQLiteProcessData dbManager;
     private boolean lastResponseIsFailure;
@@ -64,13 +65,17 @@ public class PositionManager {
     }
 
     public List<String> getFavouritesList (){
-        List <String> favouritesPositions = dbManager.loadFavoriteTownList();
+        favouritesPositions = dbManager.loadFavoriteTownList();
         Collections.sort(favouritesPositions);
         return favouritesPositions;
     }
 
     public void setFavouriteCity(String cityName, boolean isFavourite) {
         dbManager.saveTownFavourite(isFavourite, cityName);
+    }
+
+    public boolean isFavouriteCity(String cityName) {
+        return favouritesPositions.contains(cityName);
     }
 
     public void configureManager(WeatherActivity activity) {
