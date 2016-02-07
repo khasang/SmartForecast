@@ -19,7 +19,7 @@
         android:padding="8dp"
         tools:text="Berlin"/>
 
-<!--    <ImageButton
+    <ImageButton
         android:id="@+id/starBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -27,9 +27,9 @@
         android:layout_gravity="end"
         android:padding="8dp"
         android:gravity="end"
-        android:src="@android:drawable/btn_star"/>-->
+        android:src="@android:drawable/btn_star_big_off"/>
 
-    <com.mikepenz.iconics.view.IconicsButton
+<!--    <com.mikepenz.iconics.view.IconicsButton
         android:text="{cmd_star_outline}"
         android:id="@+id/starBtn"
         android:layout_width="60dp"
@@ -38,6 +38,6 @@
         android:background="@null"
         android:padding="8dp"
         android:gravity="center"
-        android:scaleType="fitXY" />
+        android:scaleType="fitXY" />-->
 
 </android.support.v7.widget.CardView>

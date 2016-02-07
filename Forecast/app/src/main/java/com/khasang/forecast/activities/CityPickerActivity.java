@@ -27,6 +27,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -67,8 +68,8 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     private Toolbar toolbar;
     private FloatingActionButton fabBtn;
     private boolean stared = false;
-    //ImageButton btnStar;
-    IconicsButton btnStar;
+    ImageButton starBtn;
+    //IconicsButton btnStar;
     String favoriteCity;
 
     @Override
@@ -180,12 +181,12 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             case R.id.recycler_item:
 
                 //TODO DON'T REMOVE
-             /*   Logger.println(TAG, "STAR");
+                Logger.println(TAG, "STAR");
                 final int position = recyclerView.getChildAdapterPosition(v);
                 Intent answerIntent = new Intent();
                 answerIntent.putExtra(CITY_PICKER_TAG, cityList.get(position - 1));
                 setResult(RESULT_OK, answerIntent);
-                ActivityCompat.finishAfterTransition(this);*/
+                ActivityCompat.finishAfterTransition(this);
 
                 /*btnStar = (IconicsButton) findViewById(R.id.starBtn);
                 btnStar.setBackgroundColor(Color.YELLOW);
@@ -233,12 +234,17 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
                 break;
             case R.id.starBtn:
-                int position = 1;
-                String city = cityList.get(position - 1);
+                int pos = 1;
+                String city = cityList.get(pos - 1);
                 //String city = cityList.get(position - 1);
                 //String city = "Doha, Qatar";
                 //String city2 = "Moscow, Russia";
                 PositionManager.getInstance().flipFavCity(city);
+                starBtn = (ImageButton)findViewById(R.id.starBtn);
+                starBtn.setImageResource(android.R.drawable.btn_star_big_on);
+                //btnStar.setImageResource(android.R.drawable.star_big_off);
+
+
                 //PositionManager.getInstance().flipFavCity(city2);
 
        /*         if (!star_flag) {
@@ -274,7 +280,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
                 }*/
 
-                Toast.makeText(this, "STAR" + city, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "STAR" + city, Toast.LENGTH_SHORT).show();
                 break;
         }
     }
