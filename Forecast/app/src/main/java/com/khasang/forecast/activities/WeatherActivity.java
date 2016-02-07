@@ -236,7 +236,8 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     /** Запрос на список избранныъ городов из PositionManager */
     private void getFavaritesList() {
         favCityList = new ArrayList<>();
-        Set<String> cities = PositionManager.getInstance().getPositions();
+        //Set<String> cities = PositionManager.getInstance().getPositions();
+        List<String> cities = PositionManager.getInstance().getFavouritesList();
         for (String city : cities) {
             this.favCityList.add(city);
         }

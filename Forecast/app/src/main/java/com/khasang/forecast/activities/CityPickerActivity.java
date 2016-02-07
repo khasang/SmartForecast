@@ -176,14 +176,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 break;
             case R.id.recycler_item:
 
-
-            /*    for (String city : cityList) {
-                    commaSepValueBuilder.append(cityList);
-                }
-                Logger.println(TAG, "List: " + commaSepValueBuilder.toString());*/
-
-
-
                 //TODO DON'T REMOVE
              /*   Logger.println(TAG, "STAR");
                 final int position = recyclerView.getChildAdapterPosition(v);
@@ -192,57 +184,35 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 setResult(RESULT_OK, answerIntent);
                 ActivityCompat.finishAfterTransition(this);*/
 
-
-    /*            final int position = recyclerView.getChildAdapterPosition(v);
-                favoriteCity = cityList.get(position - 1);
-                Logger.println(TAG, favoriteCity);
-                PositionManager.getInstance().setFavouriteCity(favoriteCity, true);*/
-
-                //btnStar = (ImageButton) findViewById(R.id.starBtn);
                 btnStar = (IconicsButton) findViewById(R.id.starBtn);
+                btnStar.setBackgroundColor(Color.YELLOW);
+
+                TextView cityTW = (TextView) findViewById(R.id.cityTW);
+
+                cityTW.setBackgroundColor(Color.GREEN);
 
                 final int position = recyclerView.getChildAdapterPosition(v);
                 favoriteCity = cityList.get(position - 1);
-                Logger.println(TAG, favoriteCity);
-                PositionManager.getInstance().isFavouriteCity("TEST");
-                //Logger.println(TAG, String.valueOf(PositionManager.getInstance().isFavouriteCity(favoriteCity)));
-                //if (PositionManager.getInstance().isFavouriteCity(favoriteCity)) {
-                if (!stared) {
-                //if (!PositionManager.getInstance().isFavouriteCity(favoriteCity)) {
+
+                PositionManager.getInstance().setFavouriteCity(favoriteCity, true);
+
+                Logger.println(TAG, position + " OnClick "+ favoriteCity);
+                Logger.println(TAG, String.valueOf("Checking " + String.valueOf(PositionManager.getInstance().isFavouriteCity(favoriteCity))));
+                Logger.println(TAG, String.valueOf("!!!Checking " + String.valueOf(!PositionManager.getInstance().isFavouriteCity(favoriteCity))));
+                if (PositionManager.getInstance().isFavouriteCity(favoriteCity)) {
+
+
                     PositionManager.getInstance().setFavouriteCity(favoriteCity, true);
                     btnStar.setBackgroundColor(Color.GREEN);
-                    //if (PositionManager.getInstance().isFavouriteCity(recyclerView.getChildItemId(re))) {
-                    //btnStar.setBackgroundResource(Ionicons.Icon.ion_navigate);
-                    //btnStar.setBackground(null);
-                    //btnStar.setBackgroundResource(android.R.drawable.btn_default);
-                    //btnStar.setBackgroundResource(android.R.drawable.btn_star_big_on);
-                    //btnStar.setBackgroundColor(Color.GREEN);
-                    stared = true;
-                    Logger.println(TAG, String.valueOf("green " + stared));
-                    //star_flag = true;
+                    Logger.println(TAG, String.valueOf("green " + String.valueOf(PositionManager.getInstance().isFavouriteCity(favoriteCity))));
+
                 } else {
+
                     PositionManager.getInstance().setFavouriteCity(favoriteCity, false);
                     btnStar.setBackgroundColor(Color.RED);
-                    //btnStar.setBackground(null);
-                    //btnStar.setBackgroundResource(android.R.drawable.btn_default);
-                    //btnStar.setImageResource(android.R.drawable.btn_star);
-                    //btnStar.setBackgroundColor(Color.RED);
-                    stared = false;
-                    Logger.println(TAG, String.valueOf("red " + stared));
-                }
-                //Toast.makeText(this, "STAR", Toast.LENGTH_SHORT).show();
+                    Logger.println(TAG, String.valueOf("red " + String.valueOf(PositionManager.getInstance().isFavouriteCity(favoriteCity))));
 
-
-                List<String> favCities = PositionManager.getInstance().getFavouritesList();
-                for (String city : favCities) {
-                    favCityList.add(city);
                 }
-                Collections.sort(favCityList);
-                StringBuilder commaSepValueBuilder = new StringBuilder();
-                for (String city : favCities) {
-                    commaSepValueBuilder.append(city);
-                }
-                Logger.println(TAG, "ListFav: " + commaSepValueBuilder.toString());
 
                 break;
             case R.id.starBtn:
@@ -255,6 +225,30 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                     star_flag = false;
                     Logger.println(TAG, "STAR false");
                 }*/
+
+           /*     btnStar = (IconicsButton) findViewById(R.id.starBtn);
+                btnStar.setBackgroundColor(Color.YELLOW);
+
+
+                final int position = recyclerView.getChildAdapterPosition(v);
+                favoriteCity = cityList.get(position - 1);
+                Logger.println(TAG, position + " OnClick "+ favoriteCity);
+                Logger.println(TAG, String.valueOf("Checking " + String.valueOf(PositionManager.getInstance().isFavouriteCity(favoriteCity))));
+                Logger.println(TAG, String.valueOf("!!!Checking " + String.valueOf(!PositionManager.getInstance().isFavouriteCity(favoriteCity))));
+                if (PositionManager.getInstance().isFavouriteCity(favoriteCity)) {
+
+                    PositionManager.getInstance().setFavouriteCity(favoriteCity, true);
+                    //btnStar.setBackgroundColor(Color.GREEN);
+                    Logger.println(TAG, String.valueOf("green " + String.valueOf(PositionManager.getInstance().isFavouriteCity(favoriteCity))));
+
+                } else {
+
+                    PositionManager.getInstance().setFavouriteCity(favoriteCity, false);
+                    //btnStar.setBackgroundColor(Color.RED);
+                    Logger.println(TAG, String.valueOf("red " + String.valueOf(PositionManager.getInstance().isFavouriteCity(favoriteCity))));
+
+                }*/
+
                 Toast.makeText(this, "STAR", Toast.LENGTH_SHORT).show();
                 break;
         }
