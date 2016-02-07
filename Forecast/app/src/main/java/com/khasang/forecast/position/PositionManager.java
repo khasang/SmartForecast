@@ -75,7 +75,12 @@ public class PositionManager {
     }
 
     public boolean isFavouriteCity(String cityName) {
-        return favouritesPositions.contains(cityName);
+        try {
+            return favouritesPositions.contains(cityName);
+        } catch (NullPointerException | ClassCastException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public void configureManager(WeatherActivity activity) {
@@ -218,7 +223,12 @@ public class PositionManager {
     }
 
     public boolean positionIsPresent(String name) {
-        return positions.containsKey(name);
+        try {
+            return positions.containsKey(name);
+        } catch (ClassCastException | NullPointerException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     /**
