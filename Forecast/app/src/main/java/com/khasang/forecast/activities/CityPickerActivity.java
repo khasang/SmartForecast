@@ -31,9 +31,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.khasang.forecast.models.City;
 import com.khasang.forecast.position.Coordinate;
 import com.khasang.forecast.Logger;
-import com.khasang.forecast.position.Position;
 import com.khasang.forecast.position.PositionManager;
 import com.khasang.forecast.R;
 import com.khasang.forecast.adapters.RecyclerAdapter;
@@ -91,10 +91,10 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
 
         //TEST
-        PositionManager.getInstance().setFavouriteCity("Doha, Qatar", true);
+        //PositionManager.getInstance().setFavouriteCity("Doha, Qatar", true);
         //PositionManager.getInstance().setFavouriteCity("Doha, Qatar", false);
-        PositionManager.getInstance().setFavouriteCity("Moscow, Russia", true);
-        PositionManager.getInstance().setFavouriteCity("Berlin, Russia", true);
+        //PositionManager.getInstance().setFavouriteCity("Moscow, Russia", true);
+        //PositionManager.getInstance().setFavouriteCity("Berlin, Russia", true);
 
 
         /** Вычисляет степень прокрутки и выполняет нужное действие.*/
@@ -180,14 +180,14 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             case R.id.recycler_item:
 
                 //TODO DON'T REMOVE
-                Logger.println(TAG, "STAR");
+             /*   Logger.println(TAG, "STAR");
                 final int position = recyclerView.getChildAdapterPosition(v);
                 Intent answerIntent = new Intent();
                 answerIntent.putExtra(CITY_PICKER_TAG, cityList.get(position - 1));
                 setResult(RESULT_OK, answerIntent);
-                ActivityCompat.finishAfterTransition(this);
+                ActivityCompat.finishAfterTransition(this);*/
 
-      /*          btnStar = (IconicsButton) findViewById(R.id.starBtn);
+                /*btnStar = (IconicsButton) findViewById(R.id.starBtn);
                 btnStar.setBackgroundColor(Color.YELLOW);
 
                 TextView cityTW = (TextView) findViewById(R.id.cityTW);
@@ -205,7 +205,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
 
                 favoriteCity = cityList.get(position - 1);
-                PositionManager.getInstance().setFavouriteCity(favoriteCity, true);
+                PositionManager.getInstance().flipFavCity(favoriteCity);
 
 
                 for (String city : favCityList) {
@@ -219,13 +219,13 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 if (PositionManager.getInstance().isFavouriteCity(favoriteCity)) {
 
 
-                    PositionManager.getInstance().setFavouriteCity(favoriteCity, true);
+                    PositionManager.getInstance().flipFavCity(favoriteCity);
                     btnStar.setBackgroundColor(Color.GREEN);
                     Logger.println(TAG, String.valueOf("green " + String.valueOf(PositionManager.getInstance().isFavouriteCity(favoriteCity))));
 
                 } else {
 
-                    PositionManager.getInstance().setFavouriteCity(favoriteCity, false);
+                    PositionManager.getInstance().flipFavCity(favoriteCity);
                     btnStar.setBackgroundColor(Color.RED);
                     Logger.println(TAG, String.valueOf("red " + String.valueOf(PositionManager.getInstance().isFavouriteCity(favoriteCity))));
 
@@ -233,6 +233,14 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
                 break;
             case R.id.starBtn:
+                int position = 1;
+                String city = cityList.get(position - 1);
+                //String city = cityList.get(position - 1);
+                //String city = "Doha, Qatar";
+                //String city2 = "Moscow, Russia";
+                PositionManager.getInstance().flipFavCity(city);
+                //PositionManager.getInstance().flipFavCity(city2);
+
        /*         if (!star_flag) {
                     btnStar.setImageResource(android.R.drawable.btn_star);
                     star_flag = true;
@@ -266,7 +274,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
                 }*/
 
-                Toast.makeText(this, "STAR", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "STAR" + city, Toast.LENGTH_SHORT).show();
                 break;
         }
     }

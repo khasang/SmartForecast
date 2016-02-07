@@ -83,7 +83,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
     private Drawer result = null;
     private boolean opened = false;
-    private List<String> favCityList;
+    //private List<String> favCityList;
     private final int subItemIndex = 2000;
 
     @Override
@@ -110,8 +110,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         startAnimations();
         initNavigationDrawer();
 
-
-        PositionManager.getInstance().setFavouriteCity("Doha, Qatar", true);
+        //PositionManager.getInstance().flipFavCity("Doha, Qatar");
         //PositionManager.getInstance().setFavouriteCity("Moscow, Russia", true);
         //PositionManager.getInstance().setFavouriteCity("Berlin, Russia", true);
 
@@ -128,7 +127,8 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         final DividerDrawerItem divider = new DividerDrawerItem();
         final PrimaryDrawerItem currentPlace = new PrimaryDrawerItem().withName(R.string.drawer_item_current_place).withIcon(Ionicons.Icon.ion_navigate).withIdentifier(0);
         final PrimaryDrawerItem cityList = new PrimaryDrawerItem().withName(R.string.drawer_item_city_list).withIcon(CommunityMaterial.Icon.cmd_city).withIdentifier(1);
-        final PrimaryDrawerItem favorites = new PrimaryDrawerItem().withName(R.string.drawer_item_favorites).withIcon(MaterialDesignIconic.Icon.gmi_star).withBadge(String.valueOf(this.favCityList.size())).withIdentifier(2);
+        //final PrimaryDrawerItem favorites = new PrimaryDrawerItem().withName(R.string.drawer_item_favorites).withIcon(MaterialDesignIconic.Icon.gmi_star).withBadge(String.valueOf(this.favCityList.size())).withIdentifier(2);
+        final PrimaryDrawerItem favorites = new PrimaryDrawerItem().withName(R.string.drawer_item_favorites).withIcon(MaterialDesignIconic.Icon.gmi_star).withBadge(String.valueOf(PositionManager.getInstance().getFavouritesList().size())).withIdentifier(2);
         final SecondaryDrawerItem settings = new SecondaryDrawerItem().withName(R.string.drawer_item_settings).withIcon(FontAwesome.Icon.faw_cog).withIdentifier(3);
         final SecondaryDrawerItem feedBack = new SecondaryDrawerItem().withName(R.string.drawer_item_feedback).withIcon(GoogleMaterial.Icon.gmd_feedback).withIdentifier(4);
 
@@ -151,7 +151,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 .withOnDrawerListener(new Drawer.OnDrawerListener() {
                     @Override
                     public void onDrawerOpened(View drawerView) {
-                        result.updateBadge(2, new StringHolder(String.valueOf(favCityList.size())));
+                        result.updateBadge(2, new StringHolder(String.valueOf(PositionManager.getInstance().getFavouritesList().size())));
                     }
 
                     @Override
@@ -181,14 +181,14 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                                 break;
                             case 2:
                             if (opened) {
-                                    for (int i = WeatherActivity.this.favCityList.size() - 1; i >= 0; i--) {
+                                    for (int i = PositionManager.getInstance().getFavouritesList().size() - 1; i >= 0; i--) {
                                         result.removeItems(subItemIndex + i);
                                     }
                                 } else {
                                     int curPos = result.getPosition(drawerItem);
-                                    if (!WeatherActivity.this.favCityList.isEmpty()) {
-                                        for (int i = WeatherActivity.this.favCityList.size() - 1; i >= 0; i--) {
-                                            String city = WeatherActivity.this.favCityList.get(i).split(",")[0];
+                                    if (!PositionManager.getInstance().getFavouritesList().isEmpty()) {
+                                        for (int i = PositionManager.getInstance().getFavouritesList().size() - 1; i >= 0; i--) {
+                                            String city = PositionManager.getInstance().getFavouritesList().get(i).split(",")[0];
                                             result.addItemsAtPosition(
                                                     curPos,
                                                     new SecondaryDrawerItem().withLevel(2).withName(city).withIdentifier(subItemIndex + i)
@@ -219,7 +219,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                                 result.closeDrawer();
                                 break;
                             default:
-                                String newCity = WeatherActivity.this.favCityList.get(drawerItem.getIdentifier() - subItemIndex);
+                                String newCity = PositionManager.getInstance().getFavouritesList().get(drawerItem.getIdentifier() - subItemIndex);
                                 changeDisplayedCity(newCity);
                                 result.closeDrawer();
                                 break;
@@ -241,13 +241,14 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
     /** Запрос на список избранныъ городов из PositionManager */
     private void getFavaritesList() {
-        favCityList = new ArrayList<>();
+   /*     favCityList = new ArrayList<>();
         //Set<String> cities = PositionManager.getInstance().getPositions();
         List<String> cities = PositionManager.getInstance().getFavouritesList();
         for (String city : cities) {
             this.favCityList.add(city);
         }
-        Collections.sort(this.favCityList);
+        Collections.sort(this.favCityList);*/
+        //PositionManager.getInstance().getFavouritesList();
     }
 
     @Override
@@ -259,7 +260,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onPause() {
         super.onPause();
-        for (int i = WeatherActivity.this.favCityList.size() - 1; i >= 0; i--) {
+        for (int i = PositionManager.getInstance().getFavouritesList().size() - 1; i >= 0; i--) {
             result.removeItems(subItemIndex + i); }
         if (opened) opened = !opened;
     }

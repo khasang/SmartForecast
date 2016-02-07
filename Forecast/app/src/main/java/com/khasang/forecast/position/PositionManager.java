@@ -70,7 +70,7 @@ public class PositionManager {
         return favouritesPositions;
     }
 
-    public void changeFavouriteCity(String cityName) {
+    public void flipFavCity(String cityName) {
         if (isFavouriteCity(cityName)){
             dbManager.saveTownFavourite(false, cityName);
         } else {
