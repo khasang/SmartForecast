@@ -91,7 +91,10 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
 
         //TEST
+        PositionManager.getInstance().setFavouriteCity("Doha, Qatar", true);
         //PositionManager.getInstance().setFavouriteCity("Doha, Qatar", false);
+        PositionManager.getInstance().setFavouriteCity("Moscow, Russia", true);
+        PositionManager.getInstance().setFavouriteCity("Berlin, Russia", true);
 
 
         /** Вычисляет степень прокрутки и выполняет нужное действие.*/
@@ -177,14 +180,14 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             case R.id.recycler_item:
 
                 //TODO DON'T REMOVE
-             /*   Logger.println(TAG, "STAR");
+                Logger.println(TAG, "STAR");
                 final int position = recyclerView.getChildAdapterPosition(v);
                 Intent answerIntent = new Intent();
                 answerIntent.putExtra(CITY_PICKER_TAG, cityList.get(position - 1));
                 setResult(RESULT_OK, answerIntent);
-                ActivityCompat.finishAfterTransition(this);*/
+                ActivityCompat.finishAfterTransition(this);
 
-                btnStar = (IconicsButton) findViewById(R.id.starBtn);
+      /*          btnStar = (IconicsButton) findViewById(R.id.starBtn);
                 btnStar.setBackgroundColor(Color.YELLOW);
 
                 TextView cityTW = (TextView) findViewById(R.id.cityTW);
@@ -193,8 +196,22 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
                 final int position = recyclerView.getChildAdapterPosition(v);
                 favoriteCity = cityList.get(position - 1);
+                StringBuilder inFav = new StringBuilder();
 
+                for (String city : favCityList) {
+                    inFav.append(city);
+                }
+                Logger.println(TAG, "inFav before: " + inFav.toString());
+
+
+                favoriteCity = cityList.get(position - 1);
                 PositionManager.getInstance().setFavouriteCity(favoriteCity, true);
+
+
+                for (String city : favCityList) {
+                    inFav.append(city);
+                }
+                Logger.println(TAG, "inFav after: " + inFav.toString());
 
                 Logger.println(TAG, position + " OnClick "+ favoriteCity);
                 Logger.println(TAG, String.valueOf("Checking " + String.valueOf(PositionManager.getInstance().isFavouriteCity(favoriteCity))));
@@ -212,7 +229,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                     btnStar.setBackgroundColor(Color.RED);
                     Logger.println(TAG, String.valueOf("red " + String.valueOf(PositionManager.getInstance().isFavouriteCity(favoriteCity))));
 
-                }
+                }*/
 
                 break;
             case R.id.starBtn:

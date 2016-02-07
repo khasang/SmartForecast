@@ -109,6 +109,12 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         setAnimationForWidgets();
         startAnimations();
         initNavigationDrawer();
+
+
+        PositionManager.getInstance().setFavouriteCity("Doha, Qatar", true);
+        //PositionManager.getInstance().setFavouriteCity("Moscow, Russia", true);
+        //PositionManager.getInstance().setFavouriteCity("Berlin, Russia", true);
+
     }
 
     /** Инициализация Navigation Drawer
