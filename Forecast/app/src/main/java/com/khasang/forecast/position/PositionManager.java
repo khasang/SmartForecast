@@ -70,8 +70,13 @@ public class PositionManager {
         return favouritesPositions;
     }
 
-    public void setFavouriteCity(String cityName, boolean isFavourite) {
-        dbManager.saveTownFavourite(isFavourite, cityName);
+    public void changeFavouriteCity(String cityName) {
+        if (isFavouriteCity(cityName)){
+            dbManager.saveTownFavourite(false, cityName);
+        } else {
+            dbManager.saveTownFavourite(true, cityName);
+        }
+        getFavouritesList();
     }
 
     public boolean isFavouriteCity(String cityName) {
