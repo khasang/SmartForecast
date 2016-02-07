@@ -5,11 +5,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 
 import com.khasang.forecast.R;
 import com.khasang.forecast.adapters.view_holders.RecyclerHeaderViewHolder;
 import com.khasang.forecast.adapters.view_holders.RecyclerItemViewHolder;
+import com.khasang.forecast.position.PositionManager;
 
 import java.util.List;
 
@@ -24,8 +24,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private List<String> mItemList;
     private final View.OnClickListener mListener;
     private final View.OnLongClickListener mLongListener;
-
-
 
     public RecyclerAdapter(List<String> itemList, View.OnClickListener mListener, View.OnLongClickListener mLongListener) {
         mItemList = itemList;
@@ -52,6 +50,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (!isPositionHeader(position)) {
             RecyclerItemViewHolder holder = (RecyclerItemViewHolder) viewHolder;
             String itemText = mItemList.get(position - 1); // we are taking header in to account so all of our items are correctly positioned
+            holder.setItemFavoriteState(PositionManager.getInstance().isFavouriteCity(itemText));
             holder.setItemText(itemText);
         }
     }

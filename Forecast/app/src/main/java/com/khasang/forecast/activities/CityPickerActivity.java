@@ -3,7 +3,6 @@ package com.khasang.forecast.activities;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -32,7 +31,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.khasang.forecast.models.City;
 import com.khasang.forecast.position.Coordinate;
 import com.khasang.forecast.Logger;
 import com.khasang.forecast.position.PositionManager;
@@ -41,7 +39,6 @@ import com.khasang.forecast.adapters.RecyclerAdapter;
 import com.khasang.forecast.adapters.etc.HidingScrollListener;
 import com.khasang.forecast.adapters.GooglePlacesAutocompleteAdapter;
 import com.khasang.forecast.view.DelayedAutoCompleteTextView;
-import com.mikepenz.iconics.view.IconicsButton;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -67,10 +64,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
     private Toolbar toolbar;
     private FloatingActionButton fabBtn;
-    private boolean stared = false;
-    ImageButton starBtn;
-    //IconicsButton btnStar;
-    String favoriteCity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,14 +83,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         swapVisibilityTextOrList();
 
-
-        //TEST
-        //PositionManager.getInstance().setFavouriteCity("Doha, Qatar", true);
-        //PositionManager.getInstance().setFavouriteCity("Doha, Qatar", false);
-        //PositionManager.getInstance().setFavouriteCity("Moscow, Russia", true);
-        //PositionManager.getInstance().setFavouriteCity("Berlin, Russia", true);
-
-
         /** Вычисляет степень прокрутки и выполняет нужное действие.*/
         recyclerView.addOnScrollListener(new HidingScrollListener() {
             @Override
@@ -114,7 +99,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         fabBtn.setOnClickListener(this);
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.simple_grow);
         createItemList();
-        //Logger.println(TAG, String.valueOf(PositionManager.getInstance().getPositions()));
 
         ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
@@ -187,51 +171,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 answerIntent.putExtra(CITY_PICKER_TAG, cityList.get(position - 1));
                 setResult(RESULT_OK, answerIntent);
                 ActivityCompat.finishAfterTransition(this);
-
-                /*btnStar = (IconicsButton) findViewById(R.id.starBtn);
-                btnStar.setBackgroundColor(Color.YELLOW);
-
-                TextView cityTW = (TextView) findViewById(R.id.cityTW);
-
-                cityTW.setBackgroundColor(Color.GREEN);
-
-                final int position = recyclerView.getChildAdapterPosition(v);
-                favoriteCity = cityList.get(position - 1);
-                StringBuilder inFav = new StringBuilder();
-
-                for (String city : favCityList) {
-                    inFav.append(city);
-                }
-                Logger.println(TAG, "inFav before: " + inFav.toString());
-
-
-                favoriteCity = cityList.get(position - 1);
-                PositionManager.getInstance().flipFavCity(favoriteCity);
-
-
-                for (String city : favCityList) {
-                    inFav.append(city);
-                }
-                Logger.println(TAG, "inFav after: " + inFav.toString());
-
-                Logger.println(TAG, position + " OnClick "+ favoriteCity);
-                Logger.println(TAG, String.valueOf("Checking " + String.valueOf(PositionManager.getInstance().isFavouriteCity(favoriteCity))));
-                Logger.println(TAG, String.valueOf("!!!Checking " + String.valueOf(!PositionManager.getInstance().isFavouriteCity(favoriteCity))));
-                if (PositionManager.getInstance().isFavouriteCity(favoriteCity)) {
-
-
-                    PositionManager.getInstance().flipFavCity(favoriteCity);
-                    btnStar.setBackgroundColor(Color.GREEN);
-                    Logger.println(TAG, String.valueOf("green " + String.valueOf(PositionManager.getInstance().isFavouriteCity(favoriteCity))));
-
-                } else {
-
-                    PositionManager.getInstance().flipFavCity(favoriteCity);
-                    btnStar.setBackgroundColor(Color.RED);
-                    Logger.println(TAG, String.valueOf("red " + String.valueOf(PositionManager.getInstance().isFavouriteCity(favoriteCity))));
-
-                }*/
-
                 break;
             case R.id.starBtn:
                 final int pos = recyclerView.getChildAdapterPosition((View) v.getParent());
