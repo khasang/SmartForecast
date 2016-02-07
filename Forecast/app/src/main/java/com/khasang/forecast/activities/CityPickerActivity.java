@@ -40,6 +40,9 @@ import com.khasang.forecast.adapters.RecyclerAdapter;
 import com.khasang.forecast.adapters.etc.HidingScrollListener;
 import com.khasang.forecast.adapters.GooglePlacesAutocompleteAdapter;
 import com.khasang.forecast.view.DelayedAutoCompleteTextView;
+import com.mikepenz.iconics.Iconics;
+import com.mikepenz.iconics.view.IconicsButton;
+import com.mikepenz.ionicons_typeface_library.Ionicons;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -65,7 +68,8 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     private Toolbar toolbar;
     private FloatingActionButton fabBtn;
     private boolean stared = false;
-    ImageButton btnStar;
+    //ImageButton btnStar;
+    IconicsButton btnStar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,20 +177,26 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 answerIntent.putExtra(CITY_PICKER_TAG, cityList.get(position - 1));
                 setResult(RESULT_OK, answerIntent);
                 ActivityCompat.finishAfterTransition(this);*/
-                btnStar = (ImageButton) findViewById(R.id.starBtn);
 
 
-                if (stared) {
-                    Logger.println(TAG, String.valueOf(stared));
-                    //btnStar.setImageResource(android.R.drawable.btn_star);
-                    btnStar.setBackgroundColor(Color.RED);
-                    stared = false;
-                } else {
-                    //btnStar.setBackgroundResource(android.R.drawable.dark_header);
-                    Logger.println(TAG, String.valueOf(stared));
-                    btnStar.setBackgroundColor(Color.GREEN);
+                //btnStar = (ImageButton) findViewById(R.id.starBtn);
+                btnStar = (IconicsButton) findViewById(R.id.starBtn);
+                if (!stared) {
+                    //btnStar.setBackgroundResource(Ionicons.Icon.ion_navigate);
+                    //btnStar.setBackground(null);
+                    //btnStar.setBackgroundResource(android.R.drawable.btn_default);
+                    //btnStar.setBackgroundResource(android.R.drawable.btn_star_big_on);
+                    //btnStar.setBackgroundColor(Color.GREEN);
                     stared = true;
+                    Logger.println(TAG, String.valueOf("green " + stared));
                     //star_flag = true;
+                } else {
+                    //btnStar.setBackground(null);
+                    //btnStar.setBackgroundResource(android.R.drawable.btn_default);
+                    //btnStar.setImageResource(android.R.drawable.btn_star);
+                    //btnStar.setBackgroundColor(Color.RED);
+                    stared = false;
+                    Logger.println(TAG, String.valueOf("red " + stared));
                 }
                 //Toast.makeText(this, "STAR", Toast.LENGTH_SHORT).show();
 
