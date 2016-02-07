@@ -27,22 +27,20 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.khasang.forecast.position.Coordinate;
 import com.khasang.forecast.Logger;
+import com.khasang.forecast.position.Position;
 import com.khasang.forecast.position.PositionManager;
 import com.khasang.forecast.R;
 import com.khasang.forecast.adapters.RecyclerAdapter;
 import com.khasang.forecast.adapters.etc.HidingScrollListener;
 import com.khasang.forecast.adapters.GooglePlacesAutocompleteAdapter;
 import com.khasang.forecast.view.DelayedAutoCompleteTextView;
-import com.mikepenz.iconics.Iconics;
 import com.mikepenz.iconics.view.IconicsButton;
-import com.mikepenz.ionicons_typeface_library.Ionicons;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -64,12 +62,14 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     private RecyclerView recyclerView;
     private RecyclerAdapter recyclerAdapter;
     List<String> cityList;
+    List<String> favCityList;
 
     private Toolbar toolbar;
     private FloatingActionButton fabBtn;
     private boolean stared = false;
     //ImageButton btnStar;
     IconicsButton btnStar;
+    String favoriteCity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,11 +83,15 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         infoTV = (TextView) findViewById(R.id.infoTV);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         cityList = new ArrayList<>();
+        favCityList = new ArrayList<>();
         recyclerAdapter = new RecyclerAdapter(cityList, this, this);
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         swapVisibilityTextOrList();
 
+
+        //TEST
+        //PositionManager.getInstance().setFavouriteCity("Doha, Qatar", false);
 
 
         /** Вычисляет степень прокрутки и выполняет нужное действие.*/
@@ -106,7 +110,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         fabBtn.setOnClickListener(this);
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.simple_grow);
         createItemList();
-        Logger.println(TAG, String.valueOf(PositionManager.getInstance().getPositions()));
+        //Logger.println(TAG, String.valueOf(PositionManager.getInstance().getPositions()));
 
         ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
@@ -171,6 +175,16 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 showChooseCityDialog();
                 break;
             case R.id.recycler_item:
+
+
+            /*    for (String city : cityList) {
+                    commaSepValueBuilder.append(cityList);
+                }
+                Logger.println(TAG, "List: " + commaSepValueBuilder.toString());*/
+
+
+
+                //TODO DON'T REMOVE
              /*   Logger.println(TAG, "STAR");
                 final int position = recyclerView.getChildAdapterPosition(v);
                 Intent answerIntent = new Intent();
@@ -179,9 +193,25 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 ActivityCompat.finishAfterTransition(this);*/
 
 
+    /*            final int position = recyclerView.getChildAdapterPosition(v);
+                favoriteCity = cityList.get(position - 1);
+                Logger.println(TAG, favoriteCity);
+                PositionManager.getInstance().setFavouriteCity(favoriteCity, true);*/
+
                 //btnStar = (ImageButton) findViewById(R.id.starBtn);
                 btnStar = (IconicsButton) findViewById(R.id.starBtn);
+
+                final int position = recyclerView.getChildAdapterPosition(v);
+                favoriteCity = cityList.get(position - 1);
+                Logger.println(TAG, favoriteCity);
+                PositionManager.getInstance().isFavouriteCity("TEST");
+                //Logger.println(TAG, String.valueOf(PositionManager.getInstance().isFavouriteCity(favoriteCity)));
+                //if (PositionManager.getInstance().isFavouriteCity(favoriteCity)) {
                 if (!stared) {
+                //if (!PositionManager.getInstance().isFavouriteCity(favoriteCity)) {
+                    PositionManager.getInstance().setFavouriteCity(favoriteCity, true);
+                    btnStar.setBackgroundColor(Color.GREEN);
+                    //if (PositionManager.getInstance().isFavouriteCity(recyclerView.getChildItemId(re))) {
                     //btnStar.setBackgroundResource(Ionicons.Icon.ion_navigate);
                     //btnStar.setBackground(null);
                     //btnStar.setBackgroundResource(android.R.drawable.btn_default);
@@ -191,6 +221,8 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                     Logger.println(TAG, String.valueOf("green " + stared));
                     //star_flag = true;
                 } else {
+                    PositionManager.getInstance().setFavouriteCity(favoriteCity, false);
+                    btnStar.setBackgroundColor(Color.RED);
                     //btnStar.setBackground(null);
                     //btnStar.setBackgroundResource(android.R.drawable.btn_default);
                     //btnStar.setImageResource(android.R.drawable.btn_star);
@@ -200,6 +232,17 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 }
                 //Toast.makeText(this, "STAR", Toast.LENGTH_SHORT).show();
 
+
+                List<String> favCities = PositionManager.getInstance().getFavouritesList();
+                for (String city : favCities) {
+                    favCityList.add(city);
+                }
+                Collections.sort(favCityList);
+                StringBuilder commaSepValueBuilder = new StringBuilder();
+                for (String city : favCities) {
+                    commaSepValueBuilder.append(city);
+                }
+                Logger.println(TAG, "ListFav: " + commaSepValueBuilder.toString());
 
                 break;
             case R.id.starBtn:

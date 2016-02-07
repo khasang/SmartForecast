@@ -16,6 +16,7 @@ import com.khasang.forecast.stations.WeatherStation;
 import com.khasang.forecast.stations.WeatherStationFactory;
 
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +36,7 @@ public class PositionManager {
     private HashMap<WeatherStationFactory.ServiceType, WeatherStation> stations;
     private volatile Position currentLocation;
     private volatile HashMap<String, Position> positions;
+    List <String> favouritesPositions;
     private WeatherActivity mActivity;
     private SQLiteProcessData dbManager;
     private boolean lastResponseIsFailure;
@@ -60,6 +62,20 @@ public class PositionManager {
         initPositions();
         initLocationManager();
         initStations();
+    }
+
+    public List<String> getFavouritesList (){
+        favouritesPositions = dbManager.loadFavoriteTownList();
+        Collections.sort(favouritesPositions);
+        return favouritesPositions;
+    }
+
+    public void setFavouriteCity(String cityName, boolean isFavourite) {
+        dbManager.saveTownFavourite(isFavourite, cityName);
+    }
+
+    public boolean isFavouriteCity(String cityName) {
+        return favouritesPositions.contains(cityName);
     }
 
     public void configureManager(WeatherActivity activity) {
@@ -297,7 +313,7 @@ public class PositionManager {
         if (position != null) {
             for (Map.Entry<Calendar, Weather> entry : weather.entrySet()) {
                 if (rType == WeatherStation.ResponseType.CURRENT) {
-                    dbManager.deleteOldWeather(serviceType, position.getLocationName(), entry.getKey());
+                    dbManager.deleteOldWeatherAllTowns(serviceType, entry.getKey());
                 }
                 dbManager.saveWeather(serviceType, position.getLocationName(), entry.getKey(), entry.getValue());
             }

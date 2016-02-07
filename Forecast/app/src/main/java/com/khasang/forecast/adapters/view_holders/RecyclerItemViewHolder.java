@@ -13,7 +13,9 @@ import com.khasang.forecast.R;
  */
 public class RecyclerItemViewHolder extends RecyclerView.ViewHolder {
     private final TextView mItemTextView;
+
     //private final ImageButton mItemImageButton;
+
 
 
     //TODO DELETE
@@ -25,6 +27,7 @@ public class RecyclerItemViewHolder extends RecyclerView.ViewHolder {
 
     public RecyclerItemViewHolder (View itemView, View.OnClickListener listener, View.OnLongClickListener longListener) {
         super(itemView);
+
       /*  mItemTextView = (TextView) itemView.findViewById(R.id.cityTW);
         mItemImageButton = (ImageButton) itemView.findViewById(R.id.starBtn);
         ((ImageView) itemView.findViewById(R.id.starBtn)).setOnClickListener(listener);
@@ -35,6 +38,12 @@ public class RecyclerItemViewHolder extends RecyclerView.ViewHolder {
         itemView.findViewById(R.id.starBtn).setOnClickListener(listener);
         itemView.setOnClickListener(listener);
         itemView.setOnLongClickListener(longListener);
+/*=======
+        mItemTextView = (TextView) itemView.findViewById(R.id.cityTW);
+        ((ImageView) itemView.findViewById(R.id.starBtn)).setOnClickListener(listener);
+>>>>>>> 8ffed8c0f25547abc22b8d6cfe5906c61fe6ab35
+        itemView.setOnClickListener(listener);
+        itemView.setOnLongClickListener(longListener);*/
     }
 
 
