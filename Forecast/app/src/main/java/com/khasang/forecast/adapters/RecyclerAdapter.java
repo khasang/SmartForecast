@@ -78,4 +78,5 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private boolean isPositionHeader(int position) {
         return position == 0;
     }
+
 }

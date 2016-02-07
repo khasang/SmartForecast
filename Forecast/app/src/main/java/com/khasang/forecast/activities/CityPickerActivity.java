@@ -60,7 +60,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     private RecyclerView recyclerView;
     private RecyclerAdapter recyclerAdapter;
     List<String> cityList;
-    List<String> favCityList;
 
     private Toolbar toolbar;
     private FloatingActionButton fabBtn;
@@ -77,7 +76,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         infoTV = (TextView) findViewById(R.id.infoTV);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         cityList = new ArrayList<>();
-        favCityList = new ArrayList<>();
         recyclerAdapter = new RecyclerAdapter(cityList, this, this);
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

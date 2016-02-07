@@ -83,7 +83,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
     private Drawer result = null;
     private boolean opened = false;
-    //private List<String> favCityList;
     private final int subItemIndex = 2000;
 
     @Override
@@ -109,11 +108,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         setAnimationForWidgets();
         startAnimations();
         initNavigationDrawer();
-
-        //PositionManager.getInstance().flipFavCity("Doha, Qatar");
-        //PositionManager.getInstance().setFavouriteCity("Moscow, Russia", true);
-        //PositionManager.getInstance().setFavouriteCity("Berlin, Russia", true);
-
     }
 
     /** Инициализация Navigation Drawer
@@ -127,10 +121,13 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         final DividerDrawerItem divider = new DividerDrawerItem();
         final PrimaryDrawerItem currentPlace = new PrimaryDrawerItem().withName(R.string.drawer_item_current_place).withIcon(Ionicons.Icon.ion_navigate).withIdentifier(0);
         final PrimaryDrawerItem cityList = new PrimaryDrawerItem().withName(R.string.drawer_item_city_list).withIcon(CommunityMaterial.Icon.cmd_city).withIdentifier(1);
-        //final PrimaryDrawerItem favorites = new PrimaryDrawerItem().withName(R.string.drawer_item_favorites).withIcon(MaterialDesignIconic.Icon.gmi_star).withBadge(String.valueOf(this.favCityList.size())).withIdentifier(2);
         final PrimaryDrawerItem favorites = new PrimaryDrawerItem().withName(R.string.drawer_item_favorites).withIcon(MaterialDesignIconic.Icon.gmi_star).withBadge(String.valueOf(PositionManager.getInstance().getFavouritesList().size())).withIdentifier(2);
         final SecondaryDrawerItem settings = new SecondaryDrawerItem().withName(R.string.drawer_item_settings).withIcon(FontAwesome.Icon.faw_cog).withIdentifier(3);
         final SecondaryDrawerItem feedBack = new SecondaryDrawerItem().withName(R.string.drawer_item_feedback).withIcon(GoogleMaterial.Icon.gmd_feedback).withIdentifier(4);
+
+        if (PositionManager.getInstance().getFavouritesList().isEmpty()) {
+            favorites.withBadge("").withEnabled(false);
+        }
 
         /** Создание Navigation Drawer */
         result = new DrawerBuilder()
@@ -151,11 +148,21 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 .withOnDrawerListener(new Drawer.OnDrawerListener() {
                     @Override
                     public void onDrawerOpened(View drawerView) {
+                        if (PositionManager.getInstance().getFavouritesList().isEmpty()) {
+                            favorites.withBadge("").withEnabled(false);
+                            return;
+                        }
+                        favorites.withEnabled(true);
                         result.updateBadge(2, new StringHolder(String.valueOf(PositionManager.getInstance().getFavouritesList().size())));
                     }
 
                     @Override
                     public void onDrawerClosed(View drawerView) {
+                        if (PositionManager.getInstance().getFavouritesList().isEmpty()) {
+                            favorites.withBadge("").withEnabled(false);
+                            return;
+                        }
+                        favorites.withEnabled(true);
                         result.updateBadge(2, new StringHolder(String.valueOf("")));
 
                     }
@@ -183,6 +190,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                             if (opened) {
                                     for (int i = PositionManager.getInstance().getFavouritesList().size() - 1; i >= 0; i--) {
                                         result.removeItems(subItemIndex + i);
+
                                     }
                                 } else {
                                     int curPos = result.getPosition(drawerItem);
@@ -198,6 +206,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                                         Logger.println(TAG, "favCityList is empty");
                                     }
                                 }
+
                             opened = !opened;
                             break;
                             case 3:
