@@ -70,16 +70,17 @@ public class PositionManager {
         return favouritesPositions;
     }
 
-    public void flipFavCity(String cityName) {
+    public boolean flipFavCity(String cityName) {
+        boolean state;
         if (isFavouriteCity(cityName)){
-            dbManager.saveTownFavourite(false, cityName);
+            state = false;
             favouritesPositions.remove(cityName);
-            Log.d("FAV", cityName + " false");
         } else {
-            dbManager.saveTownFavourite(true, cityName);
+            state = true;
             favouritesPositions.add(cityName);
-            Log.d("FAV", cityName + " true");
         }
+        dbManager.saveTownFavourite(state, cityName);
+        return state;
     }
 
     public boolean isFavouriteCity(String cityName) {

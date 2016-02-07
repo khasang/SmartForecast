@@ -236,9 +236,11 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             case R.id.starBtn:
                 final int pos = recyclerView.getChildAdapterPosition((View) v.getParent());
                 String city = cityList.get(pos - 1);
-                Log.d("FAV", pos + " " + city);
-                PositionManager.getInstance().flipFavCity(city);
-                ((ImageButton)v).setImageResource(android.R.drawable.btn_star_big_on);
+                int starImageRes = android.R.drawable.btn_star_big_off;
+                if (PositionManager.getInstance().flipFavCity(city)) {
+                    starImageRes = android.R.drawable.btn_star_big_on;
+                }
+                ((ImageButton)v).setImageResource(starImageRes);
                 break;
         }
     }
