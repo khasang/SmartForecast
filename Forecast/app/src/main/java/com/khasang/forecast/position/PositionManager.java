@@ -73,10 +73,13 @@ public class PositionManager {
     public void flipFavCity(String cityName) {
         if (isFavouriteCity(cityName)){
             dbManager.saveTownFavourite(false, cityName);
+            favouritesPositions.remove(cityName);
+            Log.d("FAV", cityName + " false");
         } else {
             dbManager.saveTownFavourite(true, cityName);
+            favouritesPositions.add(cityName);
+            Log.d("FAV", cityName + " true");
         }
-        getFavouritesList();
     }
 
     public boolean isFavouriteCity(String cityName) {
