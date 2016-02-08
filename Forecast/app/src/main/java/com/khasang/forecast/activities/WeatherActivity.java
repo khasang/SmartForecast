@@ -144,26 +144,25 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                         settings,
                         feedBack
                 )
-                .withGenerateMiniDrawer(true)
                 .withOnDrawerListener(new Drawer.OnDrawerListener() {
                     @Override
                     public void onDrawerOpened(View drawerView) {
                         if (PositionManager.getInstance().getFavouritesList().isEmpty()) {
                             favorites.withBadge("").withEnabled(false);
+                            result.updateItem(favorites);
+                            Logger.println(TAG, "onDrawerOpened if");
                             return;
                         }
+
                         favorites.withEnabled(true);
+                        Logger.println(TAG, "onDrawerOpened else");
+                        result.updateItem(favorites);
+                        Logger.println(TAG, "onDrawerOpened result");
                         result.updateBadge(2, new StringHolder(String.valueOf(PositionManager.getInstance().getFavouritesList().size())));
                     }
 
                     @Override
                     public void onDrawerClosed(View drawerView) {
-                        if (PositionManager.getInstance().getFavouritesList().isEmpty()) {
-                            favorites.withBadge("").withEnabled(false);
-                            return;
-                        }
-                        favorites.withEnabled(true);
-                        result.updateBadge(2, new StringHolder(String.valueOf("")));
 
                     }
 
@@ -177,13 +176,20 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                     public boolean onItemClick(View v, int position, IDrawerItem drawerItem) {
                         switch (drawerItem.getIdentifier()) {
                             case 0:
-                                changeDisplayedCity("");
-                                result.closeDrawer();
+                                //changeDisplayedCity("");
+                                //result.closeDrawer();
+                                favorites.withEnabled(false);
+                                result.updateItem(favorites);
                                 //TODO add unselect item
                                 break;
                             case 1:
-                                startCityPickerActivity();
-                                result.closeDrawer();
+                                //startCityPickerActivity();
+                                //result.closeDrawer();
+                                favorites.withEnabled(true);
+                                //favorites.isEnabled();
+                                //favorites.isSelectable();
+                                //favorites.withSetSelected(true);
+                                result.updateItem(favorites);
                                 //TODO add unselect item
                                 break;
                             case 2:
