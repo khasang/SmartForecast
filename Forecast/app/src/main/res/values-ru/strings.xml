@@ -35,6 +35,7 @@
     <string name="btn_no">Нет</string>
     <string name="title_choose_city">Введите название города</string>
     <string name="btn_ok">OK</string>
+    <string name="btn_clear">Очистить</string>
     <string name="btn_cancel">Отмена</string>
     <string name="error_empty_location_name">Необходимо ввести название местоположения</string>
     <string name="CELSIUS">°C</string>

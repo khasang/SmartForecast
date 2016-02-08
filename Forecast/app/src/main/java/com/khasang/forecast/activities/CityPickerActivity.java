@@ -8,6 +8,7 @@ import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -46,6 +47,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -69,6 +71,8 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     private PlaceProvider mPlaceProvider;
 
     private Maps maps;
+    private View view;
+    private DelayedAutoCompleteTextView chooseCity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -219,10 +223,36 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         return cityList;
     }
 
+    private Coordinate getTownCoordinates(String city) {
+        Coordinate coordinate = null;
+        if (city.length() <= 0) {
+            Toast.makeText(this, R.string.error_empty_location_name, Toast.LENGTH_SHORT).show();
+            return coordinate;
+        }
+        Geocoder geocoder = new Geocoder(getApplicationContext());
+        List<Address> addresses;
+        try {
+            addresses = geocoder.getFromLocationName(city, 3);
+            if (addresses.size() == 0){
+                Log.i(TAG, "Coordinates not found");
+                Toast.makeText(getApplicationContext(), String.format(getString(R.string.coordinates_not_found), city), Toast.LENGTH_SHORT).show();
+                return coordinate;
+            }
+            Address currentAddress = addresses.get(0);
+            coordinate = new Coordinate();
+            coordinate.setLatitude(currentAddress.getLatitude());
+            coordinate.setLongitude(currentAddress.getLongitude());
+            Logger.println(TAG, "Coordinate of " + city + " lat: " + currentAddress.getLatitude() + ", lon: " + currentAddress.getLongitude());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return coordinate;
+    }
+
     // Вспомогательный метод для добавления города в список
     private void addItem(String city) {
 //        city = city.trim().toLowerCase();
-
+/*
         if (city.length() <= 0) {
 //            Log.w(TAG, "Имя города менее одного символа");
             Toast.makeText(this, R.string.error_empty_location_name, Toast.LENGTH_SHORT).show();
@@ -249,6 +279,15 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         } catch (IOException e) {
             e.printStackTrace();
         }
+*/
+        Coordinate coordinate = getTownCoordinates(city);
+        if (coordinate != null) {
+            if (!PositionManager.getInstance().positionIsPresent(city)) {
+                PositionManager.getInstance().addPosition(city, coordinate);
+            }
+        } else {
+            return;
+        }
 
 /*
         // Делаем каждое слово в имени города с заглавное буквы
@@ -271,12 +310,63 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         cityList.clear();
     }
 
+    private void closeMap() {
+        Fragment frag = getSupportFragmentManager().findFragmentById(R.id.map);
+        if (frag != null) {
+            getSupportFragmentManager().beginTransaction().remove(getSupportFragmentManager().findFragmentById(R.id.map)).commit();
+        }
+    }
+
+    private void setLocationOnMap(String city) {
+        try {
+            Coordinate coordinate = getTownCoordinates(city);
+            maps.setCameraPosition(coordinate.getLatitude(), coordinate.getLongitude(), 11, 0, 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String ConvertPointToLocation(double latitude, double longitude) {
+        String address = "";
+        Geocoder geoCoder = new Geocoder(getBaseContext(), Locale.getDefault());
+        try {
+            List<Address> addresses = geoCoder.getFromLocation(latitude, longitude, 1);
+            if (addresses.size() > 0) {
+       //         address = addresses.get(0).getLocality() + ", " + addresses.get(0).getAdminArea() + ", " + addresses.get(0).getCountryName();
+
+                for (int index = 0; index < addresses.get(0).getMaxAddressLineIndex(); index++) {
+                    address += addresses.get(0).getAddressLine(index);
+                    if (index !=  addresses.get(0).getMaxAddressLineIndex() - 1)
+                        address +=", ";
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return address;
+    }
+
+    public void setLocationAdress(double latitude, double longitude) {
+        try {
+            String location = ConvertPointToLocation(latitude, longitude);
+            if (location.indexOf("null") < 0) {
+                chooseCity.setText(location);
+            } else {
+                chooseCity.setText("");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void showChooseCityDialog() {
         final Pattern pattern = Pattern.compile("^[\\w\\s,`'-]+$");
 
-        final View view = getLayoutInflater().inflate(R.layout.dialog_pick_location, null);
+      //  final View view = getLayoutInflater().inflate(R.layout.dialog_pick_location, null);
+        view = getLayoutInflater().inflate(R.layout.dialog_pick_location, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        final DelayedAutoCompleteTextView chooseCity = (DelayedAutoCompleteTextView) view.findViewById(R.id.editTextCityName);
+        //final DelayedAutoCompleteTextView chooseCity = (DelayedAutoCompleteTextView) view.findViewById(R.id.editTextCityName);
+        chooseCity = (DelayedAutoCompleteTextView) view.findViewById(R.id.editTextCityName);
         chooseCity.setAdapter(new GooglePlacesAutocompleteAdapter(this, R.layout.autocomplete_city_textview_item));
         chooseCity.setLoadingIndicator((ProgressBar) view.findViewById(R.id.autocomplete_progressbar));
         chooseCity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -285,6 +375,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 String description = (String) parent.getItemAtPosition(position);
                 chooseCity.setError(null);
                 chooseCity.setText(description);
+                setLocationOnMap(description);
             }
         });
         builder.setTitle(R.string.title_choose_city)
@@ -298,12 +389,14 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                         } catch (NullPointerException e) {
                             e.printStackTrace();
                         }
+                        closeMap();
                     }
                 })
                 .setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
+                        closeMap();
                     }
                 });
         final AlertDialog dialog = builder.create();

@@ -2,12 +2,16 @@ package com.khasang.forecast;
 
 import android.content.Context;
 import android.location.Criteria;
+import android.location.Geocoder;
 import android.location.Location;
+import android.location.Address;
 import android.location.LocationManager;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -17,6 +21,11 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.khasang.forecast.activities.CityPickerActivity;
+import com.khasang.forecast.view.DelayedAutoCompleteTextView;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by uoles on 03.02.2016.
@@ -45,6 +54,19 @@ public class Maps {
 
     public boolean setMap() {
         myFM = activity.getSupportFragmentManager();
+
+//        Fragment frag = myFM.findFragmentById(R.id.map);
+//        if (frag != null) {
+//            myFM.beginTransaction().remove(myFM.findFragmentById(R.id.map)).commit();
+//        }
+//        map = ((SupportMapFragment) frag).getMap();
+
+//        myFM.beginTransaction().remove(myFM.findFragmentById(R.id.map)).commit();
+
+//        Fragment frag = myFM.findFragmentById(R.id.map);
+//        if (frag == null) {
+//            myFM.beginTransaction().add(R.id.frgmConteiner, myFM.findFragmentById(R.id.map), "Maps").commit();
+//        }
         map = ((SupportMapFragment) myFM.findFragmentById(R.id.map)).getMap();
         if (map == null) {
             return false;
@@ -122,6 +144,12 @@ public class Maps {
                 currentLatitude = latLng.latitude;
                 currentLongtitude = latLng.longitude;
                 setMarker(currentLatitude, currentLongtitude);
+                activity.setLocationAdress(currentLatitude, currentLongtitude);
+
+//                final View view = activity.getLayoutInflater().inflate(R.layout.dialog_pick_location, null);
+//                final DelayedAutoCompleteTextView chooseCity = (DelayedAutoCompleteTextView) view.findViewById(R.id.editTextCityName);
+//                chooseCity.setText(activity.ConvertPointToLocation(currentLatitude, currentLongtitude));
+
                 Log.d(TAG, "onMapClick: " + latLng.latitude + "," + latLng.longitude);
             }
         });

@@ -35,6 +35,7 @@
     <string name="btn_no">Nein</string>
     <string name="title_choose_city">Geben Sie den Namen der Stadt</string>
     <string name="btn_ok">OK</string>
+    <string name="btn_clear">Sauber</string>
     <string name="btn_cancel">Abbrechen</string>
     <string name="error_empty_location_name">Sie müssen einen Standort Namen eingeben</string>
     <string name="CELSIUS">°C</string>

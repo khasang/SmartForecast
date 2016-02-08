@@ -39,6 +39,7 @@
     <string name="btn_no">No</string>
     <string name="title_choose_city">Enter the name of the city</string>
     <string name="btn_ok">OK</string>
+    <string name="btn_clear">Clear</string>
     <string name="btn_cancel">Cancel</string>
     <string name="error_empty_location_name">You must enter the name of the location</string>
     <string name="CELSIUS">°C</string>
