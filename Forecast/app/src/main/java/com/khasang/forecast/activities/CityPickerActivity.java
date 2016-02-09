@@ -15,8 +15,6 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.transition.Fade;
-import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,13 +27,13 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.khasang.forecast.position.Coordinate;
 import com.khasang.forecast.Logger;
-import com.khasang.forecast.PlaceProvider;
 import com.khasang.forecast.position.PositionManager;
 import com.khasang.forecast.R;
 import com.khasang.forecast.adapters.RecyclerAdapter;
@@ -52,7 +50,7 @@ import java.util.regex.Pattern;
 
 /**
  * Created by CopyPasteStd on 29.11.15.
- * <p/>
+ *
  * Activity для выбора местоположения
  */
 public class CityPickerActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
@@ -66,8 +64,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
     private Toolbar toolbar;
     private FloatingActionButton fabBtn;
-    private PlaceProvider mPlaceProvider;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +98,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         fabBtn.setOnClickListener(this);
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.simple_grow);
         createItemList();
-        Logger.println(TAG, String.valueOf(PositionManager.getInstance().getPositions()));
 
         ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
@@ -167,11 +162,23 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 showChooseCityDialog();
                 break;
             case R.id.recycler_item:
+
+                //TODO DON'T REMOVE
+                Logger.println(TAG, "STAR");
                 final int position = recyclerView.getChildAdapterPosition(v);
                 Intent answerIntent = new Intent();
                 answerIntent.putExtra(CITY_PICKER_TAG, cityList.get(position - 1));
                 setResult(RESULT_OK, answerIntent);
                 ActivityCompat.finishAfterTransition(this);
+                break;
+            case R.id.starBtn:
+                final int pos = recyclerView.getChildAdapterPosition((View) v.getParent());
+                String city = cityList.get(pos - 1);
+                int starImageRes = android.R.drawable.btn_star_big_off;
+                if (PositionManager.getInstance().flipFavCity(city)) {
+                    starImageRes = android.R.drawable.btn_star_big_on;
+                }
+                ((ImageButton)v).setImageResource(starImageRes);
                 break;
         }
     }
@@ -219,10 +226,8 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
     // Вспомогательный метод для добавления города в список
     private void addItem(String city) {
-//        city = city.trim().toLowerCase();
 
         if (city.length() <= 0) {
-//            Log.w(TAG, "Имя города менее одного символа");
             Toast.makeText(this, R.string.error_empty_location_name, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -248,16 +253,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             e.printStackTrace();
         }
 
-/*
-        // Делаем каждое слово в имени города с заглавное буквы
-        StringBuilder b = new StringBuilder(city);
-        int i = 0;
-        do {
-            b.replace(i, i + 1, b.substring(i,i + 1).toUpperCase());
-            i =  b.indexOf(" ", i) + 1;
-        } while (i > 0 && i < b.length());
-        city = b.toString();
-*/
         Intent answerIntent = new Intent();
         answerIntent.putExtra(CITY_PICKER_TAG, city);
         setResult(RESULT_OK, answerIntent);
@@ -363,19 +358,4 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         return true;
     }
 
-    //    public static class ErrorDialogFragment extends DialogFragment {
-//        public ErrorDialogFragment(){}
-//
-//        @Override
-//        public Dialog onCreateDialog(Bundle savedInstanceState) {
-//            int errorCode = this.getArguments().getInt(PlaceProvider.DIALOG_ERROR);
-//            return GoogleApiAvailability.getInstance().getErrorDialog(
-//                    this.getActivity(), errorCode, PlaceProvider.REQUEST_RESOLVE_ERROR);
-//        }
-//
-//        @Override
-//        public void onDismiss(DialogInterface dialog) {
-//            ((CityPickerActivity)getActivity()).mPlaceProvider.onDialogDismissed();
-//        }
-//    }
 }

@@ -25,6 +25,7 @@ import com.khasang.forecast.stations.WeatherStationFactory;
 
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +45,7 @@ public class PositionManager {
     private HashMap<WeatherStationFactory.ServiceType, WeatherStation> stations;
     private volatile Position currentLocation; // Здесь лежит текущая по местоположению локация (там где находится пользователь)
     private volatile HashMap<String, Position> positions;
+    List<String> favouritesPositions;
     private WeatherActivity mActivity;
     private SQLiteProcessData dbManager;
     private boolean lastResponseIsFailure;
@@ -72,6 +74,34 @@ public class PositionManager {
         initPositions();
         initLocationManager();
         initStations();
+    }
+
+    public List<String> getFavouritesList() {
+        favouritesPositions = dbManager.loadFavoriteTownList();
+        Collections.sort(favouritesPositions);
+        return favouritesPositions;
+    }
+
+    public boolean flipFavCity(String cityName) {
+        boolean state;
+        if (isFavouriteCity(cityName)) {
+            state = false;
+            favouritesPositions.remove(cityName);
+        } else {
+            state = true;
+            favouritesPositions.add(cityName);
+        }
+        dbManager.saveTownFavourite(state, cityName);
+        return state;
+    }
+
+    public boolean isFavouriteCity(String cityName) {
+        try {
+            return favouritesPositions.contains(cityName);
+        } catch (NullPointerException | ClassCastException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public void configureManager(WeatherActivity activity) {
@@ -233,7 +263,12 @@ public class PositionManager {
         if (currentLocation.getLocationName().equals(name)) {
             return true;
         } else {
-            return positions.containsKey(name);
+            try {
+                return positions.containsKey(name);
+            } catch (ClassCastException | NullPointerException e) {
+                e.printStackTrace();
+                return false;
+            }
         }
     }
 
@@ -243,6 +278,7 @@ public class PositionManager {
      * @param name объект типа {@link String}, хранящий название населенного пункта
      * @return обьект типа {@link Position}
      */
+
     public Position getPosition(String name) {
         return positions.get(name);
     }
@@ -347,7 +383,7 @@ public class PositionManager {
         if (position != null) {
             for (Map.Entry<Calendar, Weather> entry : weather.entrySet()) {
                 if (rType == WeatherStation.ResponseType.CURRENT) {
-                    dbManager.deleteOldWeather(serviceType, position.getLocationName(), entry.getKey());
+                    dbManager.deleteOldWeatherAllTowns(serviceType, entry.getKey());
                 }
                 dbManager.saveWeather(serviceType, position.getLocationName(), entry.getKey(), entry.getValue());
             }

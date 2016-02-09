@@ -45,14 +45,10 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 
 /**
@@ -84,8 +80,8 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     private ProgressBar progressbar;
 
     private Drawer result = null;
+    private PrimaryDrawerItem favorites;
     private boolean opened = false;
-    private List<String> favCityList;
     private final int subItemIndex = 2000;
 
     @Override
@@ -121,16 +117,18 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
      */
     private void initNavigationDrawer() {
 
-        getFavaritesList();
-
         /** Инициализация элементов меню */
         final DividerDrawerItem divider = new DividerDrawerItem();
         final PrimaryDrawerItem currentPlace = new PrimaryDrawerItem().withName(R.string.drawer_item_current_place).withIcon(Ionicons.Icon.ion_navigate).withIdentifier(0);
         final PrimaryDrawerItem cityList = new PrimaryDrawerItem().withName(R.string.drawer_item_city_list).withIcon(CommunityMaterial.Icon.cmd_city).withIdentifier(1);
-        final PrimaryDrawerItem favorites = new PrimaryDrawerItem().withName(R.string.drawer_item_favorites).withIcon(MaterialDesignIconic.Icon.gmi_star).withBadge(String.valueOf(this.favCityList.size())).withIdentifier(2);
+        favorites = new PrimaryDrawerItem().withName(R.string.drawer_item_favorites).withIcon(MaterialDesignIconic.Icon.gmi_star).withBadge(String.valueOf(PositionManager.getInstance().getFavouritesList().size())).withIdentifier(2);
         final SecondaryDrawerItem settings = new SecondaryDrawerItem().withName(R.string.drawer_item_settings).withIcon(FontAwesome.Icon.faw_cog).withIdentifier(3);
         final SecondaryDrawerItem feedBack = new SecondaryDrawerItem().withName(R.string.drawer_item_feedback).withIcon(GoogleMaterial.Icon.gmd_feedback).withIdentifier(4);
 
+    /*    if (PositionManager.getInstance().getFavouritesList().isEmpty()) {
+            favorites.withBadge("").withEnabled(false);
+        }
+*/
         /** Создание Navigation Drawer */
         result = new DrawerBuilder()
                 .withActivity(this)
@@ -146,16 +144,14 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                         settings,
                         feedBack
                 )
-                .withGenerateMiniDrawer(true)
                 .withOnDrawerListener(new Drawer.OnDrawerListener() {
                     @Override
                     public void onDrawerOpened(View drawerView) {
-                        result.updateBadge(2, new StringHolder(String.valueOf(favCityList.size())));
+
                     }
 
                     @Override
                     public void onDrawerClosed(View drawerView) {
-                        result.updateBadge(2, new StringHolder(String.valueOf("")));
 
                     }
 
@@ -179,15 +175,16 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                                 //TODO add unselect item
                                 break;
                             case 2:
-                                if (opened) {
-                                    for (int i = WeatherActivity.this.favCityList.size() - 1; i >= 0; i--) {
+                            	if (opened) {
+                                    for (int i = PositionManager.getInstance().getFavouritesList().size() - 1; i >= 0; i--) {
                                         result.removeItems(subItemIndex + i);
+
                                     }
                                 } else {
                                     int curPos = result.getPosition(drawerItem);
-                                    if (!WeatherActivity.this.favCityList.isEmpty()) {
-                                        for (int i = WeatherActivity.this.favCityList.size() - 1; i >= 0; i--) {
-                                            String city = WeatherActivity.this.favCityList.get(i).split(",")[0];
+                                    if (!PositionManager.getInstance().getFavouritesList().isEmpty()) {
+                                        for (int i = PositionManager.getInstance().getFavouritesList().size() - 1; i >= 0; i--) {
+                                            String city = PositionManager.getInstance().getFavouritesList().get(i).split(",")[0];
                                             result.addItemsAtPosition(
                                                     curPos,
                                                     new SecondaryDrawerItem().withLevel(2).withName(city).withIdentifier(subItemIndex + i)
@@ -197,8 +194,9 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                                         Logger.println(TAG, "favCityList is empty");
                                     }
                                 }
-                                opened = !opened;
-                                break;
+
+                            opened = !opened;
+                            break;
                             case 3:
 //                                Toast.makeText(WeatherActivity.this, "Intent for settings ", Toast.LENGTH_SHORT).show();
                                 startSettingsActivity();
@@ -220,7 +218,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                                 result.closeDrawer();
                                 break;
                             default:
-                                String newCity = WeatherActivity.this.favCityList.get(drawerItem.getIdentifier() - subItemIndex);
+                                String newCity = PositionManager.getInstance().getFavouritesList().get(drawerItem.getIdentifier() - subItemIndex);
                                 changeDisplayedCity(newCity);
                                 result.closeDrawer();
                                 break;
@@ -240,31 +238,32 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    /**
-     * Запрос на список избранныъ городов из PositionManager
-     */
-    private void getFavaritesList() {
-        favCityList = new ArrayList<>();
-        Set<String> cities = PositionManager.getInstance().getPositions();
-        for (String city : cities) {
-            this.favCityList.add(city);
-        }
-        Collections.sort(this.favCityList);
-    }
 
     @Override
     protected void onResume() {
         super.onResume();
-        getFavaritesList();
+        Logger.println(TAG, "OnResume");
+        if (PositionManager.getInstance().getFavouritesList().isEmpty()) {
+            favorites.withBadge("").withEnabled(false);
+            result.updateItem(favorites);
+            return;
+        }
+        favorites.withEnabled(true);
+        result.updateItem(favorites);
+        result.updateBadge(2, new StringHolder(String.valueOf(PositionManager.getInstance().getFavouritesList().size())));
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        for (int i = WeatherActivity.this.favCityList.size() - 1; i >= 0; i--) {
-            result.removeItems(subItemIndex + i);
-        }
+        for (int i = PositionManager.getInstance().getFavouritesList().size() - 1; i >= 0; i--) {
+            result.removeItems(subItemIndex + i); }
         if (opened) opened = !opened;
+
+        //FIXME add unselect item
+  /*      favorites.withSelectable(false);
+        result.updateItem(favorites);*/
     }
 
 
@@ -469,11 +468,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             return;
         }
 
-        /** Получаем текущее время */
-        int hours = date.get(Calendar.HOUR_OF_DAY);
-        int minutes = date.get(Calendar.MINUTE);
-
-        //temperature.setText(String.format("%.0f°C", wCurent.getTemperature()));
         toolbar.setTitle(PositionManager.getInstance().getCurrentPositionName().split(",")[0]);
         temperature.setText(String.format("%.0f%s", wCurent.getTemperature(),
                 PositionManager.getInstance().getTemperatureMetric().toStringValue()));
@@ -486,12 +480,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 AppUtils.isDayFromString(
                         String.format(Locale.getDefault(), "%tR", date)));
         currWeather.setImageResource(iconId == 0 ? R.mipmap.ic_launcher : iconId);
-//
-//        pressure.setText(String.format("%s %.0f %s",
-//                getString(R.string.pressure),
-//                wCurent.getPressure(),
-//                getString(R.string.pressure_measure)));
-//
+
         wind.setText(Html.fromHtml(String.format("%s %.0f%s",
                 wCurent.getWindDirection().getDirectionString(),
                 wCurent.getWindPower(),
