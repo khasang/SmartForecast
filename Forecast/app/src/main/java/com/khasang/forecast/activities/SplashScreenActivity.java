@@ -134,7 +134,6 @@ public class SplashScreenActivity
             Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(SplashScreenActivity.this)
                     .toBundle();
             ActivityCompat.startActivity(SplashScreenActivity.this, intent, bundle);
-            ActivityCompat.finishAfterTransition(SplashScreenActivity.this);
         }
     }
 
