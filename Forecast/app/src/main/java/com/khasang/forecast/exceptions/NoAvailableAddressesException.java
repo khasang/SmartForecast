@@ -1,4 +1,4 @@
-package com.khasang.forecast.location.exceptions;
+package com.khasang.forecast.exceptions;
 
 /**
  * Created by roman on 03.02.16.

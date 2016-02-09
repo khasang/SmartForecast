@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,7 +16,6 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -35,9 +33,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.khasang.forecast.Maps;
+import com.khasang.forecast.MyApplication;
+import com.khasang.forecast.exceptions.EmptyCurrentAddressException;
+import com.khasang.forecast.exceptions.NoAvailableAddressesException;
+import com.khasang.forecast.location.LocationParser;
 import com.khasang.forecast.position.Coordinate;
 import com.khasang.forecast.Logger;
-import com.khasang.forecast.PlaceProvider;
 import com.khasang.forecast.position.PositionManager;
 import com.khasang.forecast.R;
 import com.khasang.forecast.adapters.RecyclerAdapter;
@@ -70,7 +71,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
     private Toolbar toolbar;
     private FloatingActionButton fabBtn;
-    private PlaceProvider mPlaceProvider;
 
     private Maps maps;
     private View view;
@@ -237,59 +237,34 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         Coordinate coordinate = null;
         if (city.length() <= 0) {
             Toast.makeText(this, R.string.error_empty_location_name, Toast.LENGTH_SHORT).show();
-            return coordinate;
+            return null;
         }
         Geocoder geocoder = new Geocoder(getApplicationContext());
         List<Address> addresses;
         try {
             addresses = geocoder.getFromLocationName(city, 3);
             if (addresses.size() == 0){
-                Log.i(TAG, "Coordinates not found");
                 Toast.makeText(getApplicationContext(), String.format(getString(R.string.coordinates_not_found), city), Toast.LENGTH_SHORT).show();
-                return coordinate;
+                return null;
             }
             Address currentAddress = addresses.get(0);
             coordinate = new Coordinate();
             coordinate.setLatitude(currentAddress.getLatitude());
             coordinate.setLongitude(currentAddress.getLongitude());
-            Logger.println(TAG, "Coordinate of " + city + " lat: " + currentAddress.getLatitude() + ", lon: " + currentAddress.getLongitude());
         } catch (IOException e) {
+            Toast.makeText(MyApplication.getAppContext(), R.string.error_geo_service_not_available, Toast.LENGTH_SHORT).show();
             e.printStackTrace();
+            return null;
+        } catch (IllegalArgumentException e) {
+            Toast.makeText(MyApplication.getAppContext(), R.string.invalid_lang_long_used, Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+            return null;
         }
         return coordinate;
     }
 
     // Вспомогательный метод для добавления города в список
-    private void addItem(String city) {
-//        city = city.trim().toLowerCase();
-/*
-        if (city.length() <= 0) {
-            Toast.makeText(this, R.string.error_empty_location_name, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        Geocoder geocoder = new Geocoder(getApplicationContext());
-        List<Address> addresses;
-        try {
-            addresses = geocoder.getFromLocationName(city, 3);
-            if (addresses.size() == 0){
-                Log.i(TAG, "Coordinates not found");
-                Toast.makeText(getApplicationContext(), String.format(getString(R.string.coordinates_not_found), city), Toast.LENGTH_SHORT).show();
-                return;
-            }
-            Address currentAddress = addresses.get(0);
-            Coordinate coordinate = new Coordinate();
-            coordinate.setLatitude(currentAddress.getLatitude());
-            coordinate.setLongitude(currentAddress.getLongitude());
-            Logger.println(TAG, "Coordinate of " + city + " lat: " + currentAddress.getLatitude() + ", lon: " + currentAddress.getLongitude());
-            if (!PositionManager.getInstance().positionIsPresent(city)) {
-                PositionManager.getInstance().addPosition(city, coordinate);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-*/
-        Coordinate coordinate = getTownCoordinates(city);
+    private void addItem(String city, Coordinate coordinate) {
         if (coordinate != null) {
             if (!PositionManager.getInstance().positionIsPresent(city)) {
                 PositionManager.getInstance().addPosition(city, coordinate);
@@ -297,7 +272,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         } else {
             return;
         }
-
+// TODO убрать переход в визер активити при добавлении города
         Intent answerIntent = new Intent();
         answerIntent.putExtra(CITY_PICKER_TAG, city);
         setResult(RESULT_OK, answerIntent);
@@ -329,29 +304,28 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         String address = "";
         Geocoder geoCoder = new Geocoder(getBaseContext(), Locale.getDefault());
         try {
-            List<Address> addresses = geoCoder.getFromLocation(latitude, longitude, 1);
-            if (addresses.size() > 0) {
-       //         address = addresses.get(0).getLocality() + ", " + addresses.get(0).getAdminArea() + ", " + addresses.get(0).getCountryName();
-
-                for (int index = 0; index < addresses.get(0).getMaxAddressLineIndex(); index++) {
-                    address += addresses.get(0).getAddressLine(index);
-                    if (index !=  addresses.get(0).getMaxAddressLineIndex() - 1)
-                        address +=", ";
-                }
-            }
+            List<Address> addresses = geoCoder.getFromLocation(latitude, longitude, 3);
+            address = new LocationParser(addresses).parseList().getAddressLine();
         } catch (IOException e) {
+            Toast.makeText(MyApplication.getAppContext(), R.string.error_service_not_available, Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            Toast.makeText(MyApplication.getAppContext(), R.string.invalid_lang_long_used, Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        } catch (EmptyCurrentAddressException | NoAvailableAddressesException e) {
+            Toast.makeText(MyApplication.getAppContext(), R.string.no_address_found, Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
         return address;
     }
 
-    public void setLocationAdress(double latitude, double longitude) {
+    public void setLocationAddress(double latitude, double longitude) {
         try {
             String location = ConvertPointToLocation(latitude, longitude);
-            if (location.indexOf("null") < 0) {
-                chooseCity.setText(location);
-            } else {
+            if (location.isEmpty()) {
                 chooseCity.setText("");
+            } else {
+                chooseCity.setText(location);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -359,9 +333,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void showChooseCityDialog() {
-        final Pattern pattern = Pattern.compile("^[\\w\\s,`'-]+$");
-
-      //  final View view = getLayoutInflater().inflate(R.layout.dialog_pick_location, null);
+        final Pattern pattern = Pattern.compile("^[\\w\\s,`'()-]+$");
         view = getLayoutInflater().inflate(R.layout.dialog_pick_location, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         //final DelayedAutoCompleteTextView chooseCity = (DelayedAutoCompleteTextView) view.findViewById(R.id.editTextCityName);
@@ -384,7 +356,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                     public void onClick(DialogInterface dialog, int which) {
                         String positionName = chooseCity.getText().toString();
                         try {
-                            addItem(positionName);
+                            addItem(positionName, getTownCoordinates(positionName));
                         } catch (NullPointerException e) {
                             e.printStackTrace();
                         }

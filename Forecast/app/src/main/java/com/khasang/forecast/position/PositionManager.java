@@ -1,14 +1,10 @@
 package com.khasang.forecast.position;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.net.ConnectivityManager;
-import android.provider.Settings;
 import android.widget.Toast;
 
 import com.khasang.forecast.AppUtils;
@@ -16,9 +12,9 @@ import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.R;
 import com.khasang.forecast.activities.WeatherActivity;
 import com.khasang.forecast.location.CurrentLocationManager;
-import com.khasang.forecast.location.exceptions.EmptyCurrentAddressException;
+import com.khasang.forecast.exceptions.EmptyCurrentAddressException;
 import com.khasang.forecast.location.LocationParser;
-import com.khasang.forecast.location.exceptions.NoAvailableAddressesException;
+import com.khasang.forecast.exceptions.NoAvailableAddressesException;
 import com.khasang.forecast.sqlite.SQLiteProcessData;
 import com.khasang.forecast.stations.WeatherStation;
 import com.khasang.forecast.stations.WeatherStationFactory;

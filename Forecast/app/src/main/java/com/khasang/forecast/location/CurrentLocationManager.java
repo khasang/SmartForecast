@@ -14,12 +14,11 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.R;
-import com.khasang.forecast.location.exceptions.EmptyCurrentAddressException;
+import com.khasang.forecast.exceptions.EmptyCurrentAddressException;
 import com.khasang.forecast.position.PositionManager;
 
 import java.util.List;
