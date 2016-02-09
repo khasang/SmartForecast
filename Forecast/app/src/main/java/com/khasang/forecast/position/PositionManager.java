@@ -1,9 +1,14 @@
 package com.khasang.forecast.position;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.net.ConnectivityManager;
-import android.util.Log;
+import android.provider.Settings;
 import android.widget.Toast;
 
 import com.khasang.forecast.AppUtils;
@@ -11,10 +16,14 @@ import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.R;
 import com.khasang.forecast.activities.WeatherActivity;
 import com.khasang.forecast.location.CurrentLocationManager;
+import com.khasang.forecast.location.exceptions.EmptyCurrentAddressException;
+import com.khasang.forecast.location.LocationParser;
+import com.khasang.forecast.location.exceptions.NoAvailableAddressesException;
 import com.khasang.forecast.sqlite.SQLiteProcessData;
 import com.khasang.forecast.stations.WeatherStation;
 import com.khasang.forecast.stations.WeatherStationFactory;
 
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,15 +41,17 @@ public class PositionManager {
     AppUtils.SpeedMetrics speedMetric;
     AppUtils.PressureMetrics pressureMetric;
     private WeatherStation currStation;
-    private Position activePosition;
+    private volatile Position activePosition;            // Здесь лежит "активная" позиция (которая на данный момент активна на экране)
     private HashMap<WeatherStationFactory.ServiceType, WeatherStation> stations;
-    private volatile Position currentLocation;
+    private volatile Position currentLocation; // Здесь лежит текущая по местоположению локация (там где находится пользователь)
     private volatile HashMap<String, Position> positions;
     List <String> favouritesPositions;
     private WeatherActivity mActivity;
     private SQLiteProcessData dbManager;
     private boolean lastResponseIsFailure;
-    CurrentLocationManager locationManager;
+
+    private boolean currentCoordinatesDetected = false;
+    private CurrentLocationManager locationManager;
 
     private static class ManagerHolder {
         private final static PositionManager instance = new PositionManager();
@@ -59,6 +70,7 @@ public class PositionManager {
         temperatureMetric = dbManager.loadTemperatureMetrics();
         speedMetric = dbManager.loadSpeedMetrics();
         pressureMetric = dbManager.loadPressureMetrics();
+        initCurrentLocation();
         initPositions();
         initLocationManager();
         initStations();
@@ -107,7 +119,13 @@ public class PositionManager {
     }
 
     public void saveCurrPosition() {
-        dbManager.saveSettings(activePosition);
+        if (activePosition == currentLocation) {
+            // TODO возможно этот метод вообще не нужен, если по умолчанию будем всегда открывать "текужее метоположение"
+            // если нужен то здесь сохранять текущее метсоположение в качестве последнего открытого
+            // скорее всего для этого надо ввести константу "CURRENT"
+        } else {
+            dbManager.saveSettings(activePosition);
+        }
     }
 
     public void saveCurrStation() {
@@ -125,26 +143,28 @@ public class PositionManager {
         currStation = stations.get(dbManager.loadStation());
     }
 
+    private void initCurrentLocation() {
+        currentLocation = new Position();
+        currentLocation.setLocationName("Smart Forecast");
+        currentLocation.setCityID(0);
+        currentLocation.setCoordinate(null);
+    }
 
     /**
      * Метод инициализации списка местоположений, вызывается из активити
      */
     private void initPositions() {
-        currentLocation = new Position();
-        currentLocation.setLocationName("Current");
-        currentLocation.setCityID(0);
         HashMap<String, Coordinate> pos = dbManager.loadTownList();
         initPositions(pos);
     }
 
     /**
-     * Метод инициализации списка местоположений, которые добавлены в "Избранное" (городов)
+     * Метод инициализации списка местоположений, которые добавлены в список городов
      *
-     * @param favorites коллекция {@link List} типа {@link String}, содержащий названия городов
+     * @param favorites коллекция {@link List} типа {@link String}, содержащая названия городов
      */
     private void initPositions(HashMap<String, Coordinate> favorites) {
         PositionFactory positionFactory = new PositionFactory();
-        positionFactory.addCurrentPosition();
 
         if (favorites.size() != 0) {
             for (HashMap.Entry<String, Coordinate> entry : favorites.entrySet()) {
@@ -152,10 +172,14 @@ public class PositionManager {
             }
         }
         positions = positionFactory.getPositions();
-        String currPositionName = dbManager.loadСurrentTown();
-        if (!currPositionName.isEmpty() && positionIsPresent(currPositionName)) {
-            activePosition = positions.get(currPositionName);
-        }
+        //      String currPositionName = dbManager.loadСurrentTown();
+        // TODO если сохранять будем координаты текущего местоположения то необходимо переделать
+        //      if (!currPositionName.isEmpty() && positionIsPresent(currPositionName)) {
+        //       activePosition = positions.get(currPositionName);
+        //    }
+
+        // Сейчас активная позиция всегда текущая локация
+        activePosition = currentLocation;
     }
 
     /**
@@ -226,19 +250,26 @@ public class PositionManager {
      * @param name объект типа {@link String}, содержащий название города
      */
     public void setCurrentPosition(String name) {
-        if (positions.containsKey(name)) {
+        if (name.isEmpty()) {
+            activePosition = currentLocation;
+        } else if (positions.containsKey(name)) {
             activePosition = positions.get(name);
+        } else {
+            Toast.makeText(MyApplication.getAppContext(), "Не могу определить координаты запрашиваемого местоположения", Toast.LENGTH_SHORT).show();
         }
     }
 
     public boolean positionIsPresent(String name) {
-        try {
+        if (currentLocation.getLocationName().equals(name)) {
+            return true;
+        } else {
+            try {
             return positions.containsKey(name);
         } catch (ClassCastException | NullPointerException e) {
             e.printStackTrace();
             return false;
-        }
-    }
+    	}
+	}
 
     /**
      * Пролучение локации из списка локаций
@@ -306,6 +337,24 @@ public class PositionManager {
             Toast.makeText(mActivity, R.string.update_error_location_not_found, Toast.LENGTH_SHORT).show();
             return;
         }
+        if (activePosition == currentLocation) {
+            updateCurrentLocationCoordinates();
+            if (currentLocation.getCoordinate() == null) {
+                // Что то делать, так как на данный момент нет никаких коорднат для текущего местоположения
+                return;
+            }
+        }
+        if (activePosition.getCoordinate() != null) {
+            sendRequest();
+        } else {
+            Toast.makeText(MyApplication.getAppContext(), "Coordinates = null", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * Метод, отправляет запрос на обновление погоды
+     */
+    private void sendRequest() {
         if (isNetworkAvailable(mActivity)) {
             currStation.updateWeather(activePosition.getCityID(), activePosition.getCoordinate());
             currStation.updateHourlyWeather(activePosition.getCityID(), activePosition.getCoordinate());
@@ -399,29 +448,49 @@ public class PositionManager {
 
     public void initLocationManager() {
         locationManager = new CurrentLocationManager();
-        setCurrentLocationCoordinates(locationManager.getLastLocation());
-        updateCurrentLocationCoordinates();
+        locationManager.giveGpsAccess(true); // TODO Прочитать из настроек
+        try {
+            updateCurrentLocation(locationManager.getLastLocation());
+        } catch (EmptyCurrentAddressException e) {
+            currentLocation.setCoordinate(null);
+            e.printStackTrace();
+        }
     }
 
-    public void updateCurrentLocationCoordinates () {
-        if (locationManager.checkProviders()) {
-            Log.d("LOCATION", "Запрос");
-            locationManager.updateCurrentLocationCoordinates();
-        } else {
-            Log.d("LOCATION", "Запрос не послан");
-            // TODO включить gps или  network
-        }
+    public void setUseGpsModule(boolean useGpsModule) {
+        locationManager.giveGpsAccess(useGpsModule);
+    }
+
+    public void updateCurrentLocationCoordinates() {
+        locationManager.updateCurrentLocationCoordinates(mActivity);
     }
 
     public void setCurrentLocationCoordinates(Location location) {
-        if (location == null) {
-            Log.d ("LOCATION", "нет координат");
-            //TODO сообщить пользователю
-            return;
+        if (updateCurrentLocation(location) && activePosition == currentLocation) {
+            sendRequest();
         }
-        //TODO получить название локации
-        Log.d("LOCATION", "получен ответ: " + location.toString());
-        currentLocation.setLocationName("CURRENT");
-        currentLocation.setCoordinate(new Coordinate(location.getLatitude(), location.getLongitude()));
+    }
+
+    private boolean updateCurrentLocation(Location location) {
+        Geocoder geocoder = new Geocoder(MyApplication.getAppContext());
+        try {
+            List<Address> list = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 3);
+            currentLocation.setLocationName(new LocationParser(list).parseList().getAddressLine());
+            currentLocation.setCoordinate(new Coordinate(location.getLatitude(), location.getLongitude()));
+            currentCoordinatesDetected = true;
+            return true;
+        } catch (IOException e) {
+            Toast.makeText(MyApplication.getAppContext(), R.string.error_service_not_available, Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            Toast.makeText(MyApplication.getAppContext(), R.string.invalid_lang_long_used, Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        } catch (EmptyCurrentAddressException | NoAvailableAddressesException e) {
+            Toast.makeText(MyApplication.getAppContext(), R.string.no_address_found, Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+        currentLocation.setCoordinate(null);
+        currentCoordinatesDetected = false;
+        return false;
     }
 }

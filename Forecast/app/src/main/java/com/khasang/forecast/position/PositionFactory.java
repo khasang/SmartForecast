@@ -27,14 +27,6 @@ public class PositionFactory {
         mPositions = positions;
     }
 
-    public void addCurrentPosition() {
-        Position p = new Position();
-        // Получить название города
-        // и
-        // координаты
-        // positions.add(p);
-    }
-
     public void addFavouritePosition(String name, Coordinate coordinates, SQLiteProcessData dbm) {
         Position p = new Position();
         p.setLocationName(name);

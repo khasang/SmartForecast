@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -76,6 +77,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     private DailyForecastFragment dailyForecastFragment;
     private FloatingActionButton fab;
     private Toolbar toolbar;
+    private ProgressBar progressbar;
 
     private Drawer result = null;
     private PrimaryDrawerItem favorites;
@@ -87,6 +89,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather_material);
         PositionManager.getInstance().configureManager(this);
+        PositionManager.getInstance().updateCurrentLocationCoordinates();
         if (findViewById(R.id.fragment_container) != null) {
             if (savedInstanceState != null) {
                 return;
@@ -107,9 +110,11 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         initNavigationDrawer();
     }
 
-    /** Инициализация Navigation Drawer
+    /**
+     * Инициализация Navigation Drawer
+     *
      * @version beta
-     * */
+     */
     private void initNavigationDrawer() {
 
         /** Инициализация элементов меню */
@@ -170,7 +175,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                                 //TODO add unselect item
                                 break;
                             case 2:
-                            if (opened) {
+                            	if (opened) {
                                     for (int i = PositionManager.getInstance().getFavouritesList().size() - 1; i >= 0; i--) {
                                         result.removeItems(subItemIndex + i);
 
@@ -183,7 +188,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                                             result.addItemsAtPosition(
                                                     curPos,
                                                     new SecondaryDrawerItem().withLevel(2).withName(city).withIdentifier(subItemIndex + i)
-                                                    );
+                                            );
                                         }
                                     } else {
                                         Logger.println(TAG, "favCityList is empty");
@@ -193,7 +198,9 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                             opened = !opened;
                             break;
                             case 3:
-                                Toast.makeText(WeatherActivity.this, "Intent for settings ", Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(WeatherActivity.this, "Intent for settings ", Toast.LENGTH_SHORT).show();
+                                startSettingsActivity();
+                                result.closeDrawer();
                                 break;
                             case 4:
                                 //TODO add unselect item
@@ -324,8 +331,15 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     private void startCityPickerActivity() {
         Intent intent = new Intent(this, CityPickerActivity.class);
         Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(this)
-                    .toBundle();
+                .toBundle();
         ActivityCompat.startActivityForResult(this, intent, CHOOSE_CITY, bundle);
+    }
+
+    private void startSettingsActivity() {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(this)
+                .toBundle();
+        ActivityCompat.startActivity(this, intent, bundle);
     }
 
     private void initFields() {
@@ -336,6 +350,8 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         description = (TextView) findViewById(R.id.precipitation);
         wind = (TextView) findViewById(R.id.wind);
         humidity = (TextView) findViewById(R.id.humidity);
+        progressbar = (ProgressBar) findViewById(R.id.progressbar);
+        progressbar.setIndeterminate(true);
 
         /** Слушатели нажатий объектов */
         fab.setOnClickListener(this);
@@ -343,6 +359,9 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         setSupportActionBar(toolbar);
     }
 
+    public void showProgress(boolean loading) {
+        progressbar.setVisibility(loading ? View.VISIBLE : View.GONE);
+    }
 
     private void startAnimation() {
         syncBtn.startAnimation(animationRotateCenter);
@@ -369,9 +388,12 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    /** Обновление интерфейса Activity при получении новых данных */
+    /**
+     * Обновление интерфейса Activity при получении новых данных
+     */
     public void updateInterface(WeatherStation.ResponseType responseType, Map<Calendar, Weather> forecast) {
-
+        stopRefresh();
+        toolbar.setTitle(PositionManager.getInstance().getCurrentPositionName().split(",")[0]);
         if (forecast == null || forecast.size() == 0) {
             Logger.println(TAG, "Weather is null!");
             return;
@@ -393,10 +415,18 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             default:
                 Logger.println(TAG, "Принят необрабатываемый прогноз");
         }
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                showProgress(false);
+            }
+        }, 1250);
     }
 
 
-    /** Обработчик нажатия объектов */
+    /**
+     * Обработчик нажатия объектов
+     */
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -461,15 +491,20 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     }
 
 
-    /** Изменяет отображаемый город WeatherActivity */
+    /**
+     * Изменяет отображаемый город WeatherActivity
+     */
     public void changeDisplayedCity(String newCity) {
         PositionManager.getInstance().setCurrentPosition(newCity);
-        PositionManager.getInstance().saveCurrPosition();
+//  TODO закомментировал так как текущий пока "текущее местоположение"
+//        PositionManager.getInstance().saveCurrPosition();
         onRefresh();
     }
 
 
-    /** Получаем город из CityPickActivity */
+    /**
+     * Получаем город из CityPickActivity
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -481,17 +516,23 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 changeDisplayedCity(newCity);
             } else {
                 if (!PositionManager.getInstance().positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {
+                    stopRefresh();
+                    showProgress(false);
                 }
             }
         }
     }
 
-    /** Анимация обновления */
+    /**
+     * Анимация обновления
+     */
     @Override
     public void onRefresh() {
+        showProgress(true);
         if (!PositionManager.getInstance().positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {
             Logger.println(TAG, "There is nothing to refresh");
             Toast.makeText(WeatherActivity.this, R.string.msg_no_city, Toast.LENGTH_SHORT).show();
+            showProgress(false);
             return;
         }
 
@@ -504,10 +545,21 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         }, 1000);
     }
 
-    /** Проигрываение анимации всех объектов activity */
+    /**
+     * Проигрываение анимации всех объектов activity
+     */
     private void startAnimations() {
         fab.startAnimation(animationGrow);
     }
+
+    //TODO DELETE
+
+    /**
+     * Останавливаем анимацию
+     */
+    public void stopRefresh() {
+    }
+
 
 }
 

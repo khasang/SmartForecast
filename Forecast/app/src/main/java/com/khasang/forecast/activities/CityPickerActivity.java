@@ -20,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -327,6 +328,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
             }
         });
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         dialog.show();
     }
 
@@ -346,13 +348,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 TextView thisCity = (TextView) recyclerView.getChildAt(position).findViewById(R.id.cityTW);
                 String cityName = String.valueOf(thisCity.getText());
                 Logger.println(TAG, "OnLongClick: город - " + cityName);
-
-                //TODO реализовать удаление города через Context Menu
-    /*            Toast.makeText(this, "click on " + thisCity.getText(), Toast.LENGTH_SHORT).show();
-                favCityList.remove(cityName);
-                recyclerAdapter.notifyDataSetChanged();
-                PositionManager.getInstance().removePosition(cityName);*/
-
         }
         return true;
     }

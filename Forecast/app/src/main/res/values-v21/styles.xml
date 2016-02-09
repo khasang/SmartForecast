@@ -11,4 +11,10 @@
         <item name="android:windowEnterTransition">@transition/location_picker_enter_transition</item>
         <item name="android:windowReturnTransition">@transition/location_picker_exit_transition</item>
     </style>
+
+    <style name="AppTheme.Settings" parent="@style/AppTheme">
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowEnterTransition">@transition/settings_activity_enter_transition</item>
+        <item name="android:windowReturnTransition">@transition/settings_activity_exit_transition</item>
+    </style>
 </resources>
