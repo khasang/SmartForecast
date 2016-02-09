@@ -45,7 +45,7 @@ public class PositionManager {
     private HashMap<WeatherStationFactory.ServiceType, WeatherStation> stations;
     private volatile Position currentLocation; // Здесь лежит текущая по местоположению локация (там где находится пользователь)
     private volatile HashMap<String, Position> positions;
-    List <String> favouritesPositions;
+    List<String> favouritesPositions;
     private WeatherActivity mActivity;
     private SQLiteProcessData dbManager;
     private boolean lastResponseIsFailure;
@@ -76,7 +76,7 @@ public class PositionManager {
         initStations();
     }
 
-    public List<String> getFavouritesList (){
+    public List<String> getFavouritesList() {
         favouritesPositions = dbManager.loadFavoriteTownList();
         Collections.sort(favouritesPositions);
         return favouritesPositions;
@@ -84,7 +84,7 @@ public class PositionManager {
 
     public boolean flipFavCity(String cityName) {
         boolean state;
-        if (isFavouriteCity(cityName)){
+        if (isFavouriteCity(cityName)) {
             state = false;
             favouritesPositions.remove(cityName);
         } else {
@@ -264,12 +264,13 @@ public class PositionManager {
             return true;
         } else {
             try {
-            return positions.containsKey(name);
-        } catch (ClassCastException | NullPointerException e) {
-            e.printStackTrace();
-            return false;
-    	}
-	}
+                return positions.containsKey(name);
+            } catch (ClassCastException | NullPointerException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+    }
 
     /**
      * Пролучение локации из списка локаций
@@ -277,6 +278,7 @@ public class PositionManager {
      * @param name объект типа {@link String}, хранящий название населенного пункта
      * @return обьект типа {@link Position}
      */
+
     public Position getPosition(String name) {
         return positions.get(name);
     }
