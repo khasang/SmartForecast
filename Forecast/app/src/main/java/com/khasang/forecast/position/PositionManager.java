@@ -463,6 +463,10 @@ public class PositionManager {
         locationManager.updateCurrentLocationCoordinates(mActivity);
     }
 
+    public Coordinate getCurrentLocationCoordinates (){
+        return currentLocation.getCoordinate();
+    }
+
     public void setCurrentLocationCoordinates(Location location) {
         if (updateCurrentLocation(location) && activePosition == currentLocation) {
             sendRequest();

@@ -1,9 +1,14 @@
 package com.khasang.forecast;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -13,6 +18,9 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.khasang.forecast.activities.CityPickerActivity;
+import com.khasang.forecast.position.Coordinate;
+import com.khasang.forecast.position.Position;
+import com.khasang.forecast.position.PositionManager;
 
 /**
  * Created by uoles on 03.02.2016.
@@ -33,10 +41,12 @@ public class Maps {
         this.activity = activity;
         if (setMap()) {
             setMapSettings();
-            getCurrentLocation();
             setMapClickListeners();
+            Coordinate coordinate = PositionManager.getInstance().getCurrentLocationCoordinates();
+            currentLatitude = coordinate.getLatitude();
+            currentLongtitude = coordinate.getLongitude();
             setCameraPosition(currentLatitude, currentLongtitude, 13, 0, 0);
-        };
+        }
     }
 
     public boolean setMap() {
@@ -55,18 +65,26 @@ public class Maps {
 //            myFM.beginTransaction().add(R.id.frgmConteiner, myFM.findFragmentById(R.id.map), "Maps").commit();
 //        }
         map = ((SupportMapFragment) myFM.findFragmentById(R.id.map)).getMap();
-        if (map == null) {
-            return false;
-        }
-        return true;
+        return map != null;
     }
 
     public void setMapSettings() {
-        map.setMyLocationEnabled(true);
         map.getUiSettings().setCompassEnabled(true);
         map.getUiSettings().setMyLocationButtonEnabled(true);
         map.getUiSettings().setZoomControlsEnabled(true);
         map.getUiSettings().setAllGesturesEnabled(true);
+        if (ActivityCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            Toast.makeText(MyApplication.getAppContext(), MyApplication.getAppContext().getString(R.string.error_gps_permission), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        map.setMyLocationEnabled(true);
     }
 
     public void setCameraPosition(double latitude, double longtitude, float zoom, float bearing, float tilt) {
@@ -83,17 +101,6 @@ public class Maps {
     public void setNewLatLng(double latitude, double longtitude) {
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(new LatLng(latitude, longtitude));
         map.animateCamera(cameraUpdate);
-    }
-
-    public LatLng getCurrentLocation() {
-        LocationManager locationManager = (LocationManager) activity.getSystemService(activity.LOCATION_SERVICE);
-        Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        if (location != null) {
-            currentLatitude = location.getLatitude();
-            currentLongtitude = location.getLongitude();
-            return new LatLng(currentLatitude, currentLongtitude);
-        }
-        return null;
     }
 
     public double getCurrentLatitude() {

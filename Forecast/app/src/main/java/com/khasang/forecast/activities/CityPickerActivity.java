@@ -80,7 +80,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_city_picker);
-
+        PositionManager.getInstance().updateCurrentLocationCoordinates();
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         //TODO fix NullPointerException
