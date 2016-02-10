@@ -26,7 +26,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -76,7 +75,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     private Maps maps;
     private View view;
     private DelayedAutoCompleteTextView chooseCity;
-    private Button btnClear;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -335,8 +333,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void setBtnClear(View view) {
-        btnClear = (Button) view.findViewById(R.id.btnClear);
-        btnClear.setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.btnClear).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 chooseCity.setText("");

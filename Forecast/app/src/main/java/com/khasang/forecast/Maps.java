@@ -1,10 +1,7 @@
 package com.khasang.forecast;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -19,7 +16,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.khasang.forecast.activities.CityPickerActivity;
 import com.khasang.forecast.position.Coordinate;
-import com.khasang.forecast.position.Position;
 import com.khasang.forecast.position.PositionManager;
 
 /**
@@ -45,7 +41,7 @@ public class Maps {
             Coordinate coordinate = PositionManager.getInstance().getCurrentLocationCoordinates();
             currentLatitude = coordinate.getLatitude();
             currentLongtitude = coordinate.getLongitude();
-            setCameraPosition(currentLatitude, currentLongtitude, 13, 0, 0);
+            setCameraPosition(currentLatitude, currentLongtitude, 8, 0, 0);
         }
     }
 

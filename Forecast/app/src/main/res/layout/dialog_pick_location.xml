@@ -33,16 +33,17 @@
             android:layout_marginRight="16dp"
             android:visibility="gone"/>
 
-        <Button
+        <ImageView
             style="@style/AppTheme.Button"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:text="X"
             android:id="@+id/btnClear"
+            android:src="@android:drawable/ic_input_delete"
             android:layout_alignTop="@+id/editTextCityName"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:layout_alignBottom="@+id/editTextCityName" />
+            android:layout_alignBottom="@+id/editTextCityName"
+            android:contentDescription="@string/clear_new_location_name" />
 
         <fragment
             android:id="@+id/map"
