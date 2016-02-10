@@ -34,10 +34,10 @@
             android:visibility="gone"/>
 
         <Button
-            style="?android:attr/buttonStyleSmall"
+            style="@style/AppTheme.Button"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:text="CLR"
+            android:text="X"
             android:id="@+id/btnClear"
             android:layout_alignTop="@+id/editTextCityName"
             android:layout_alignParentRight="true"

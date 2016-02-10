@@ -16,6 +16,8 @@
 
     <style name="AppTheme.CityPicker" parent="AppTheme"/>
 
+    <style name="AppTheme.Button" parent="AppTheme"/>
+
     <style name="AppTheme.Splash" parent="AppTheme">
         <item name="android:windowBackground">@color/primary_light</item>
     </style>
