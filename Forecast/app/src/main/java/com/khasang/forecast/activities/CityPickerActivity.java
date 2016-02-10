@@ -397,7 +397,10 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!pattern.matcher(s.toString().trim()).matches()) {
+                if (chooseCity.getText().toString().isEmpty()) {
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+                    chooseCity.setError(null);
+                } else if (!pattern.matcher(s.toString().trim()).matches()) {
                     dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
                     chooseCity.setError(getString(R.string.incorrect_city_error));
                 } else {
