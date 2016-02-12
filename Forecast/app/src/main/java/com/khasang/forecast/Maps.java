@@ -129,8 +129,7 @@ public class Maps {
             @Override
             public boolean onMarkerClick(Marker marker) {
                 try {
-                    setNewLatLng(marker.getPosition().latitude, marker.getPosition().longitude);
-                    setNewZoom(8);
+                    setCameraPosition(marker.getPosition().latitude, marker.getPosition().longitude, 8, 0, 0);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
