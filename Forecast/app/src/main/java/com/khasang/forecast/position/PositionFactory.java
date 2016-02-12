@@ -33,7 +33,11 @@ public class PositionFactory {
         p.setCityID(cityIdentificationCounter++);
         p.setCoordinate(coordinates);
         mPositions.put(name, p);
-        dbm.saveTown(name, coordinates.getLatitude(), coordinates.getLongitude());
+        try{
+            dbm.saveTown(name, coordinates.getLatitude(), coordinates.getLongitude());
+        } catch (NullPointerException e){
+            e.printStackTrace();
+        }
     }
 
     public void addFavouritePosition(String name, Coordinate coordinates) {

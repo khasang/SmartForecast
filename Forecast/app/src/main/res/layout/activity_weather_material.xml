@@ -73,7 +73,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="16dp"
-                            android:text="23 km/h"
+                            android:text="--/--"
                             android:textColor="@color/icons"
                             android:id="@+id/wind"/>
                     </LinearLayout>
@@ -97,7 +97,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="16dp"
-                            android:text="96%"
+                            android:text="--/--"
                             android:textColor="@color/icons"
                             android:id="@+id/humidity"/>
                     </LinearLayout>
@@ -124,7 +124,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/temperature"
                         android:maxLines="2"
-                        android:text="Снег"
+                        android:text="--/--"
                         android:textColor="#fff"
                         android:textSize="24sp"
                         android:layout_alignLeft="@+id/temperature"

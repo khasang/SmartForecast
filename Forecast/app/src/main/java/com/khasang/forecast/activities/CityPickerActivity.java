@@ -255,7 +255,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             Toast.makeText(MyApplication.getAppContext(), R.string.error_geo_service_not_available, Toast.LENGTH_SHORT).show();
             e.printStackTrace();
             return null;
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | NullPointerException e) {
             Toast.makeText(MyApplication.getAppContext(), R.string.invalid_lang_long_used, Toast.LENGTH_SHORT).show();
             e.printStackTrace();
             return null;
@@ -294,7 +294,9 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     private void setLocationOnMap(String city) {
         try {
             Coordinate coordinate = getTownCoordinates(city);
-            maps.setCameraPosition(coordinate.getLatitude(), coordinate.getLongitude(), 11, 0, 0);
+            double latitude = coordinate != null ? coordinate.getLatitude() : 0;
+            double longitude = coordinate != null ? coordinate.getLongitude() : 0;
+            maps.setCameraPosition(latitude, longitude, 11, 0, 0);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -26,9 +26,9 @@ public class Maps {
 
     private com.google.android.gms.maps.GoogleMap map;
     private final String TAG = "mapLogs";
-    private double currentLatitude = 0;
-    private double currentLongtitude = 0;
-    private float currentZoom = 0;
+    private double currentLatitude;
+    private double currentLongitude;
+    private float currentZoom;
     private CityPickerActivity activity;
     private FragmentManager myFM;
 
@@ -39,9 +39,16 @@ public class Maps {
             setMapSettings();
             setMapClickListeners();
             Coordinate coordinate = PositionManager.getInstance().getCurrentLocationCoordinates();
-            currentLatitude = coordinate.getLatitude();
-            currentLongtitude = coordinate.getLongitude();
-            setCameraPosition(currentLatitude, currentLongtitude, 8, 0, 0);
+            try {
+                currentLatitude = coordinate.getLatitude();
+                currentLongitude = coordinate.getLongitude();
+                currentZoom = 8;
+            } catch (NullPointerException e) {
+                currentLongitude = 37.59;
+                currentLatitude = 55.74;
+                currentZoom = 3;
+            }
+            setCameraPosition(currentLatitude, currentLongitude, currentZoom, 0, 0);
         }
     }
 
@@ -103,8 +110,8 @@ public class Maps {
         return currentLatitude;
     }
 
-    public double getCurrentLongtitude() {
-        return currentLongtitude;
+    public double getCurrentLongitude() {
+        return currentLongitude;
     }
 
     public float getCurrentZoom() {
@@ -132,13 +139,13 @@ public class Maps {
             @Override
             public void onMapClick(LatLng latLng) {
                 currentLatitude = latLng.latitude;
-                currentLongtitude = latLng.longitude;
-                setMarker(currentLatitude, currentLongtitude);
-                activity.setLocationAddress(currentLatitude, currentLongtitude);
+                currentLongitude = latLng.longitude;
+                setMarker(currentLatitude, currentLongitude);
+                activity.setLocationAddress(currentLatitude, currentLongitude);
 
 //                final View view = activity.getLayoutInflater().inflate(R.layout.dialog_pick_location, null);
 //                final DelayedAutoCompleteTextView chooseCity = (DelayedAutoCompleteTextView) view.findViewById(R.id.editTextCityName);
-//                chooseCity.setText(activity.ConvertPointToLocation(currentLatitude, currentLongtitude));
+//                chooseCity.setText(activity.ConvertPointToLocation(currentLatitude, currentLongtitde));
 
                 Log.d(TAG, "onMapClick: " + latLng.latitude + "," + latLng.longitude);
             }

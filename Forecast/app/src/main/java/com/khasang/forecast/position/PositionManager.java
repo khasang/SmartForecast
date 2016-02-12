@@ -345,7 +345,7 @@ public class PositionManager {
         if (activePosition.getCoordinate() != null) {
             sendRequest();
         } else {
-            Toast.makeText(MyApplication.getAppContext(), "Coordinates = null", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MyApplication.getAppContext(), R.string.coordinates_error, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -487,7 +487,7 @@ public class PositionManager {
         } catch (IllegalArgumentException e) {
             Toast.makeText(MyApplication.getAppContext(), R.string.invalid_lang_long_used, Toast.LENGTH_SHORT).show();
             e.printStackTrace();
-        } catch (EmptyCurrentAddressException | NoAvailableAddressesException e) {
+        } catch (EmptyCurrentAddressException | NoAvailableAddressesException | NullPointerException e) {
             Toast.makeText(MyApplication.getAppContext(), R.string.no_address_found, Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }

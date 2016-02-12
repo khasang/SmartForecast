@@ -95,4 +95,5 @@
     <string name="pref_units_label_imperial">Imperial</string>
     <string name="error_gps_permission">Определение местоположения невозможно.\nОтсутсвуют права на использование gps и ресурсы оператора связи</string>
     <string name="clear_new_location_name">Очистить поле ввода</string>
+    <string name="coordinates_error">Не корректные координаты местоположения</string>
 </resources>
