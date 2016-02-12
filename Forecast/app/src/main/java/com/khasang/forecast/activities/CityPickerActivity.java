@@ -60,6 +60,7 @@ import java.util.regex.Pattern;
  *
  * Activity для выбора местоположения
  */
+
 public class CityPickerActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
     private final String TAG = this.getClass().getSimpleName();
     public final static String CITY_PICKER_TAG = "com.khasang.forecast.activities.CityPickerActivity";
@@ -343,6 +344,22 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         });
     }
 
+    private void setMarkersOnMap() {
+        int itemsCount = chooseCity.getAdapter().getCount();
+        if ((itemsCount > 0) && (itemsCount < 5)) {
+            maps.deleteAllMarkers();
+            maps.setNewZoom(1);
+            for (int i = 0; i < itemsCount; i++) {
+                try {
+                    Coordinate coordinate = getTownCoordinates(chooseCity.getAdapter().getItem(i).toString());
+                    maps.setNewMarker(coordinate.getLatitude(), coordinate.getLongitude());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
     private void showChooseCityDialog() {
         final Pattern pattern = Pattern.compile("^[\\w\\s,`'()-]+$");
         view = getLayoutInflater().inflate(R.layout.dialog_pick_location, null);
@@ -396,9 +413,9 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
             }
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                setMarkersOnMap();
                 if (chooseCity.getText().toString().isEmpty()) {
                     dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
                     chooseCity.setError(null);
@@ -410,7 +427,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                     chooseCity.setError(null);
                 }
             }
-
             @Override
             public void afterTextChanged(Editable s) {
 
