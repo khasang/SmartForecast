@@ -122,7 +122,11 @@ public class Maps {
     }
 
     public void setNewMarker(double latitude, double longitude) {
-        map.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).draggable(true));
+        map.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).draggable(false));
+    }
+
+    public void setNewMarker(double latitude, double longitude, String text) {
+        map.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(text).draggable(false));
     }
 
     private void setMapClickListeners() {
@@ -132,6 +136,7 @@ public class Maps {
             public boolean onMarkerClick(Marker marker) {
                 try {
                     setCameraPosition(marker.getPosition().latitude, marker.getPosition().longitude, 8, 0, 0);
+                    marker.showInfoWindow();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -146,8 +151,6 @@ public class Maps {
                 try {
                     currentLatitude = latLng.latitude;
                     currentLongitude = latLng.longitude;
-                    deleteAllMarkers();
-                    setNewMarker(currentLatitude, currentLongitude);
                     activity.setLocationAddress(currentLatitude, currentLongitude);
                     Log.d(TAG, "onMapClick: " + latLng.latitude + "," + latLng.longitude);
                 } catch (Exception e) {

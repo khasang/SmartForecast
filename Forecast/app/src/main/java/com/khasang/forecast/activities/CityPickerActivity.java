@@ -329,6 +329,8 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 chooseCity.setText("");
             } else {
                 chooseCity.setText(location);
+                maps.deleteAllMarkers();
+                maps.setNewMarker(latitude, longitude, location);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -352,7 +354,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             for (int i = 0; i < itemsCount; i++) {
                 try {
                     Coordinate coordinate = getTownCoordinates(chooseCity.getAdapter().getItem(i).toString());
-                    maps.setNewMarker(coordinate.getLatitude(), coordinate.getLongitude());
+                    maps.setNewMarker(coordinate.getLatitude(), coordinate.getLongitude(), chooseCity.getAdapter().getItem(i).toString());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -415,7 +417,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             }
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                setMarkersOnMap();
                 if (chooseCity.getText().toString().isEmpty()) {
                     dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
                     chooseCity.setError(null);
@@ -429,7 +430,9 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             }
             @Override
             public void afterTextChanged(Editable s) {
+                setMarkersOnMap();
 
+                s.
             }
         });
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
