@@ -431,8 +431,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void afterTextChanged(Editable s) {
                 setMarkersOnMap();
-
-                s.
             }
         });
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
