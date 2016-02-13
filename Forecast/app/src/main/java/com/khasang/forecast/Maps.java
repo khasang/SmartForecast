@@ -20,7 +20,9 @@ import com.khasang.forecast.position.Coordinate;
 import com.khasang.forecast.position.PositionManager;
 
 /**
- * Created by uoles on 03.02.2016.
+ * Класс предоставляет методы для работы с Google maps.
+ *
+ * @author maxim.kulikov
  */
 
 public class Maps {

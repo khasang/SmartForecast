@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by maxim.kulikov on 02.12.15.
+ * Класс наследник SQLiteOpenHelper для создания/изменения БД.
+ *
+ * @author maxim.kulikov
  */
 
 public class SQLiteOpen extends SQLiteOpenHelper {
