@@ -300,7 +300,10 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             Coordinate coordinate = getTownCoordinates(city);
             double latitude = coordinate != null ? coordinate.getLatitude() : 0;
             double longitude = coordinate != null ? coordinate.getLongitude() : 0;
-            maps.setCameraPosition(latitude, longitude, 11, 0, 0);
+
+            maps.deleteAllMarkers();
+            maps.setNewMarker(latitude, longitude, city);
+            maps.setCameraPosition(latitude, longitude, 5, 0, 0);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -351,7 +354,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
     private void setMarkersOnMap() {
         int itemsCount = chooseCity.getAdapter().getCount();
-        if ((itemsCount > 0) && (itemsCount < 5)) {
+        if ((itemsCount > 0) && (itemsCount < 7)) {
             maps.deleteAllMarkers();
             maps.setNewZoom(1);
             for (int i = 0; i < itemsCount; i++) {
@@ -424,7 +427,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         chooseCity.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                setMarkersOnMap();
+
             }
 
             @Override
@@ -443,7 +446,9 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                if ((!chooseCity.getText().toString().isEmpty()) && (chooseCity.getText().toString().length() > 3)) {
+                    setMarkersOnMap();
+                }
             }
         });
         dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
@@ -455,7 +460,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                             hideSoftKeyboard(getApplicationContext());
                             break;
                         default:
-                            break;
+                            return false;
                     }
                 }
                 return true;

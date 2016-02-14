@@ -135,7 +135,7 @@ public class Maps {
             @Override
             public boolean onMarkerClick(Marker marker) {
                 try {
-                    setCameraPosition(marker.getPosition().latitude, marker.getPosition().longitude, 8, 0, 0);
+                    setCameraPosition(marker.getPosition().latitude, marker.getPosition().longitude, 5, 0, 0);
                     marker.showInfoWindow();
                 } catch (Exception e) {
                     e.printStackTrace();
