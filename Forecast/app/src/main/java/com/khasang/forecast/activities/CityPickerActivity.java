@@ -1,6 +1,7 @@
 package com.khasang.forecast.activities;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
@@ -16,6 +17,7 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,6 +27,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -362,11 +365,18 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
+    // Метод скрытия клавиатуры
+    public void hideSoftKeyboard(Context context) {
+        if(getCurrentFocus() != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
+            inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+        }
+    }
+
     private void showChooseCityDialog() {
         final Pattern pattern = Pattern.compile("^[\\w\\s,`'()-]+$");
         view = getLayoutInflater().inflate(R.layout.dialog_pick_location, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        //final DelayedAutoCompleteTextView chooseCity = (DelayedAutoCompleteTextView) view.findViewById(R.id.editTextCityName);
 
         setBtnClear(view);
 
@@ -380,6 +390,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 chooseCity.setError(null);
                 chooseCity.setText(description);
                 setLocationOnMap(description);
+                hideSoftKeyboard(getApplicationContext());
             }
         });
         builder.setTitle(R.string.title_choose_city)
@@ -413,8 +424,9 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         chooseCity.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                setMarkersOnMap();
             }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (chooseCity.getText().toString().isEmpty()) {
@@ -428,9 +440,25 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                     chooseCity.setError(null);
                 }
             }
+
             @Override
             public void afterTextChanged(Editable s) {
-                setMarkersOnMap();
+
+            }
+        });
+        dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+            @Override
+            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                    switch (keyCode) {
+                        case KeyEvent.KEYCODE_ENTER:
+                            hideSoftKeyboard(getApplicationContext());
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                return true;
             }
         });
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
