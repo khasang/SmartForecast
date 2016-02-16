@@ -149,6 +149,7 @@ public class OpenWeatherMap extends WeatherStation {
                         cityID,
                         serviceType,
                         AppUtils.convertToWeather(response.body()));
+                updateHourlyWeather(cityID, coordinate);
             }
 
             @Override
@@ -180,6 +181,7 @@ public class OpenWeatherMap extends WeatherStation {
                         cityID,
                         serviceType,
                         AppUtils.convertToHourlyWeather(response.body()));
+                updateWeeklyWeather(cityID, coordinate);
             }
 
             @Override

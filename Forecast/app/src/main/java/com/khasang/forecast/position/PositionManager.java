@@ -355,8 +355,8 @@ public class PositionManager {
     private void sendRequest() {
         if (isNetworkAvailable(mActivity)) {
             currStation.updateWeather(activePosition.getCityID(), activePosition.getCoordinate());
-            currStation.updateHourlyWeather(activePosition.getCityID(), activePosition.getCoordinate());
-            currStation.updateWeeklyWeather(activePosition.getCityID(), activePosition.getCoordinate());
+//            currStation.updateHourlyWeather(activePosition.getCityID(), activePosition.getCoordinate());
+//            currStation.updateWeeklyWeather(activePosition.getCityID(), activePosition.getCoordinate());
         } else {
             mActivity.updateInterface(WeatherStation.ResponseType.CURRENT, getCurrentWeatherFromDB(currStation.getServiceType(), activePosition.getLocationName(), Calendar.getInstance()));
             mActivity.updateInterface(WeatherStation.ResponseType.HOURLY, getHourlyWeatherFromDB(currStation.getServiceType(), activePosition.getLocationName(), Calendar.getInstance()));
