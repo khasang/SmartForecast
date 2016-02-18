@@ -2,6 +2,8 @@ package com.khasang.forecast.stations;
 
 import com.khasang.forecast.position.Coordinate;
 
+import java.util.LinkedList;
+
 /**
  * Created by novoselov on 24.11.2015.
  */
@@ -21,9 +23,9 @@ public abstract class WeatherStation {
         return weatherStationName;
     }
 
-    public abstract void updateWeather(int cityID, Coordinate coordinate);
+    public abstract void updateWeather(LinkedList<ResponseType> requestQueue, int cityID, Coordinate coordinate);
 
-    public abstract void updateHourlyWeather(int cityID, Coordinate coordinate);
+    public abstract void updateHourlyWeather(LinkedList<ResponseType> requestList, int cityID, Coordinate coordinate);
 
-    public abstract void updateWeeklyWeather(int cityID, Coordinate coordinate);
+    public abstract void updateWeeklyWeather(LinkedList<ResponseType> requestList, int cityID, Coordinate coordinate);
 }
