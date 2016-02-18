@@ -134,7 +134,7 @@ public class OpenWeatherMap extends WeatherStation {
     /**
      * Метод для асинхронного получения текущего прогноза погоды.
      *
-     * @param requestQueue
+     * @param requestQueue коллекция типа {@link LinkedList}, содержащая элементы {@link com.khasang.forecast.stations.WeatherStation.ResponseType}, хранит очередность запросов (текущий прогноз, прогноз на день или неделю)
      * @param cityID     внутренний идентификатор города.
      * @param coordinate объект типа {@link Coordinate}, содержащий географические координаты
      */
@@ -154,7 +154,7 @@ public class OpenWeatherMap extends WeatherStation {
 
             @Override
             public void onFailure(Throwable t) {
-                PositionManager.getInstance().onFailureResponse(requestQueue, cityID, getWeatherStationName(), getServiceType());
+                PositionManager.getInstance().onFailureResponse(requestQueue, cityID, getServiceType());
             }
         });
     }
@@ -163,7 +163,7 @@ public class OpenWeatherMap extends WeatherStation {
      * Метод для асинхронного получения прогноза погоды с заданым количеством 3-х часовых
      * интервалов.
      *
-     * @param requestList
+     * @param requestList коллекция типа {@link LinkedList}, содержащая элементы {@link com.khasang.forecast.stations.WeatherStation.ResponseType}, хранит очередность запросов (текущий прогноз, прогноз на день или неделю)
      * @param cityID     внутренний идентификатор города.
      * @param coordinate объект типа {@link Coordinate}, содержащий географические координаты
      */
@@ -184,7 +184,7 @@ public class OpenWeatherMap extends WeatherStation {
 
             @Override
             public void onFailure(Throwable t) {
-                PositionManager.getInstance().onFailureResponse(requestList, cityID, getWeatherStationName(), getServiceType());
+                PositionManager.getInstance().onFailureResponse(requestList, cityID, getServiceType());
             }
         });
     }
@@ -192,7 +192,7 @@ public class OpenWeatherMap extends WeatherStation {
     /**
      * Метод для асинхронного получения прогноза погоды с заданным количеством дней.
      *
-     * @param requestList
+     * @param requestList коллекция типа {@link LinkedList}, содержащая элементы {@link com.khasang.forecast.stations.WeatherStation.ResponseType}, хранит очередность запросов (текущий прогноз, прогноз на день или неделю)
      * @param cityID     внутренний идентификатор города.
      * @param coordinate объект типа {@link Coordinate}, содержащий географические координаты
      */
@@ -213,7 +213,7 @@ public class OpenWeatherMap extends WeatherStation {
 
             @Override
             public void onFailure(Throwable t) {
-                PositionManager.getInstance().onFailureResponse(requestList, cityID, getWeatherStationName(), getServiceType());
+                PositionManager.getInstance().onFailureResponse(requestList, cityID, getServiceType());
             }
         });
     }

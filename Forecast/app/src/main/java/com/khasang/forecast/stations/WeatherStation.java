@@ -9,7 +9,6 @@ import java.util.LinkedList;
  */
 
 public abstract class WeatherStation {
-    String weatherStationName;
 
     public enum ResponseType {CURRENT, HOURLY, DAILY};
 
@@ -20,7 +19,7 @@ public abstract class WeatherStation {
     }
 
     public String getWeatherStationName() {
-        return weatherStationName;
+        return serviceType.toString();
     }
 
     public abstract void updateWeather(LinkedList<ResponseType> requestQueue, int cityID, Coordinate coordinate);
