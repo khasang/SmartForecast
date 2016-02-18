@@ -25,7 +25,7 @@ public class GooglePlacesAutocompleteAdapter extends ArrayAdapter
     private final static int MAX_RESULT = 10;
     private Context mContext;
 
-    public GooglePlacesAutocompleteAdapter(Context context, int textViewResourceId){
+    public GooglePlacesAutocompleteAdapter(Context context, int textViewResourceId) {
         super(context, textViewResourceId);
         mContext = context;
         resultList = new ArrayList<String>();
@@ -44,7 +44,7 @@ public class GooglePlacesAutocompleteAdapter extends ArrayAdapter
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if (convertView == null){
+        if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(mContext);
             convertView = inflater.inflate(R.layout.autocomplete_city_textview_item, parent, false);
         }
@@ -59,7 +59,7 @@ public class GooglePlacesAutocompleteAdapter extends ArrayAdapter
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
                 FilterResults filterResults = new FilterResults();
-                if(constraint != null){
+                if (constraint != null) {
                     List<String> predictions = mPlaceProvider.autocomplete(constraint.toString());
                     filterResults.values = predictions;
                     filterResults.count = predictions.size();
@@ -69,7 +69,7 @@ public class GooglePlacesAutocompleteAdapter extends ArrayAdapter
 
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
-                if(results != null && results.count > 0){
+                if (results != null && results.count > 0) {
                     resultList = (List<String>) results.values;
                     notifyDataSetChanged();
                 } else {

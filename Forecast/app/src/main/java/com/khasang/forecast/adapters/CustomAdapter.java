@@ -21,7 +21,7 @@ import java.util.ArrayList;
  * на конкрентное время
  * и конкретнкую дату
  */
-public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder>{
+public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
     private final String TAG = this.getClass().getSimpleName();
 
     private final DrawUtils utils;
@@ -61,7 +61,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         int iconId = dataset.get(position).getPrecipitation().getIconResId(AppUtils.isDayFromString(dayOfWeek));
         holder.ivWeatherIcon.setImageResource(iconId == 0 ? R.mipmap.ic_launcher : iconId);
         String description = dataset.get(position).getDescription();
-        String capitalizedDescription = description.substring(0,1).toUpperCase() + description.substring(1);
+        String capitalizedDescription = description.substring(0, 1).toUpperCase() + description.substring(1);
         holder.tvWeatherDescription.setText(capitalizedDescription);
 
     }
