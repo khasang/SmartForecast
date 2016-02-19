@@ -175,7 +175,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                                 //TODO add unselect item
                                 break;
                             case 2:
-                            	if (opened) {
+                                if (opened) {
                                     for (int i = PositionManager.getInstance().getFavouritesList().size() - 1; i >= 0; i--) {
                                         result.removeItems(subItemIndex + i);
 
@@ -195,8 +195,8 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                                     }
                                 }
 
-                            opened = !opened;
-                            break;
+                                opened = !opened;
+                                break;
                             case 3:
 //                                Toast.makeText(WeatherActivity.this, "Intent for settings ", Toast.LENGTH_SHORT).show();
                                 startSettingsActivity();
@@ -258,7 +258,8 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     protected void onPause() {
         super.onPause();
         for (int i = PositionManager.getInstance().getFavouritesList().size() - 1; i >= 0; i--) {
-            result.removeItems(subItemIndex + i); }
+            result.removeItems(subItemIndex + i);
+        }
         if (opened) opened = !opened;
 
         //FIXME add unselect item
@@ -297,6 +298,10 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                     .commit();
             fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_by_day));
         }
+    }
+
+    public boolean isHourlyForecastActive() {
+        return dailyForecastFragment.isHidden();
     }
 
     @Override
