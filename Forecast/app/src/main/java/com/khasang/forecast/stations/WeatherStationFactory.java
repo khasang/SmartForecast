@@ -1,12 +1,25 @@
 package com.khasang.forecast.stations;
 
+import com.khasang.forecast.MyApplication;
+import com.khasang.forecast.R;
+
 import java.util.HashMap;
 
 /**
  * Created by Роман on 26.11.2015.
  */
 public class WeatherStationFactory {
-    public enum ServiceType {OPEN_WEATHER_MAP}
+    public enum ServiceType {
+        OPEN_WEATHER_MAP {
+            @Override
+            public String toString() {
+                return MyApplication.getAppContext().getString(R.string.service_name_open_weather_map);
+            }
+        };
+
+        @Override
+        public abstract String toString();
+    }
 
     private HashMap<ServiceType, WeatherStation> stations;
 
@@ -14,9 +27,8 @@ public class WeatherStationFactory {
         stations = new HashMap<ServiceType, WeatherStation>();
     }
 
-    public WeatherStationFactory addOpenWeatherMap(String name) {
+    public WeatherStationFactory addOpenWeatherMap() {
         WeatherStation ws = new OpenWeatherMap();
-        ws.weatherStationName = name;
         ws.serviceType = ServiceType.OPEN_WEATHER_MAP;
         stations.put(ServiceType.OPEN_WEATHER_MAP, ws);
         return this;
