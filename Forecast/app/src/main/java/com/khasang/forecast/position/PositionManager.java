@@ -369,11 +369,15 @@ public class PositionManager {
             }
             currStation.updateWeather(requestQueue, activePosition.getCityID(), activePosition.getCoordinate());
         } else {
-            mActivity.updateInterface(WeatherStation.ResponseType.CURRENT, getCurrentWeatherFromDB(currStation.getServiceType(), activePosition.getLocationName(), Calendar.getInstance()));
-            mActivity.updateInterface(WeatherStation.ResponseType.HOURLY, getHourlyWeatherFromDB(currStation.getServiceType(), activePosition.getLocationName(), Calendar.getInstance()));
-            mActivity.updateInterface(WeatherStation.ResponseType.DAILY, getDailyWeatherFromDB(currStation.getServiceType(), activePosition.getLocationName(), Calendar.getInstance()));
+            updateWeatherFromDB();
             Toast.makeText(mActivity, R.string.update_error_net_not_availble, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void updateWeatherFromDB (){
+        mActivity.updateInterface(WeatherStation.ResponseType.CURRENT, getCurrentWeatherFromDB(currStation.getServiceType(), activePosition.getLocationName()));
+        mActivity.updateInterface(WeatherStation.ResponseType.HOURLY, getHourlyWeatherFromDB(currStation.getServiceType(), activePosition.getLocationName()));
+        mActivity.updateInterface(WeatherStation.ResponseType.DAILY, getDailyWeatherFromDB(currStation.getServiceType(), activePosition.getLocationName()));
     }
 
     /**
@@ -426,13 +430,13 @@ public class PositionManager {
         if (activePosition.getCityID() == cityID && currStation.getServiceType() == sType && position != null) {
             switch (rType) {
                 case CURRENT:
-                    mActivity.updateInterface(WeatherStation.ResponseType.CURRENT, getCurrentWeatherFromDB(sType, position.getLocationName(), Calendar.getInstance()));
+                    mActivity.updateInterface(WeatherStation.ResponseType.CURRENT, getCurrentWeatherFromDB(sType, position.getLocationName()));
                     break;
                 case HOURLY:
-                    mActivity.updateInterface(WeatherStation.ResponseType.HOURLY, getHourlyWeatherFromDB(sType, position.getLocationName(), Calendar.getInstance()));
+                    mActivity.updateInterface(WeatherStation.ResponseType.HOURLY, getHourlyWeatherFromDB(sType, position.getLocationName()));
                     break;
                 case DAILY:
-                    mActivity.updateInterface(WeatherStation.ResponseType.DAILY, getDailyWeatherFromDB(sType, position.getLocationName(), Calendar.getInstance()));
+                    mActivity.updateInterface(WeatherStation.ResponseType.DAILY, getDailyWeatherFromDB(sType, position.getLocationName()));
             }
 
             rType = requestList.peekFirst();
@@ -444,14 +448,14 @@ public class PositionManager {
         }
     }
 
-    private HashMap<Calendar, Weather> getCurrentWeatherFromDB(WeatherStationFactory.ServiceType sType, String locationName, Calendar date) {
-        return dbManager.loadWeather(sType, locationName, date, temperatureMetric, speedMetric, pressureMetric);
+    private HashMap<Calendar, Weather> getCurrentWeatherFromDB(WeatherStationFactory.ServiceType sType, String locationName) {
+        return dbManager.loadWeather(sType, locationName, Calendar.getInstance(), temperatureMetric, speedMetric, pressureMetric);
     }
 
-    private HashMap<Calendar, Weather> getHourlyWeatherFromDB(WeatherStationFactory.ServiceType sType, String locationName, Calendar date) {
+    private HashMap<Calendar, Weather> getHourlyWeatherFromDB(WeatherStationFactory.ServiceType sType, String locationName) {
         final int HOUR_PERIOD = 3;
         final int FORECASTS_COUNT = 8;
-        Calendar calendar = date;
+        Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.HOUR_OF_DAY, HOUR_PERIOD);
         calendar.set(Calendar.MINUTE, 0);
         HashMap<Calendar, Weather> forecast = new HashMap<>();
@@ -467,10 +471,10 @@ public class PositionManager {
     }
 
 
-    private HashMap<Calendar, Weather> getDailyWeatherFromDB(WeatherStationFactory.ServiceType sType, String locationName, Calendar date) {
+    private HashMap<Calendar, Weather> getDailyWeatherFromDB(WeatherStationFactory.ServiceType sType, String locationName) {
         final int DAY_PERIOD = 1;
         final int FORECASTS_COUNT = 7;
-        Calendar calendar = date;
+        Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, 12);
         calendar.set(Calendar.MINUTE, 0);
         HashMap<Calendar, Weather> forecast = new HashMap<>();
