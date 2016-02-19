@@ -42,7 +42,7 @@ public class OpenWeatherMap extends WeatherStation {
     private static final String API_BASE_URL = "http://api.openweathermap.org";
 
     /** API ключ. */
-    private static final String APP_ID = "96dd81a807540894eb4c96c05f17ed01";
+    private static final String APP_ID = "850f0bd2560d6ea117167544e52ea59d";
 
     /** Количество 3-х часовых интервалов для запроса к API. */
     private static final int TIME_PERIOD = 8;
