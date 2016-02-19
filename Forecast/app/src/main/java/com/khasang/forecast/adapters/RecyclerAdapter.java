@@ -62,7 +62,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        if (!isPositionHeader(position) && !isLastPosition(position)) {
+        if (!(isPositionHeader(position) || isLastPosition(position))) {
             RecyclerItemViewHolder holder = (RecyclerItemViewHolder) viewHolder;
             String itemText = mItemList.get(position - 1); // we are taking header in to account so all of our items are correctly positioned
             holder.setItemFavoriteState(PositionManager.getInstance().isFavouriteCity(itemText));
