@@ -137,11 +137,14 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         itemTouchHelper.attachToRecyclerView(recyclerView);
         fabBtn.startAnimation(animation);
 
+        setupFooter();
+    }
+
+    /** Задает размер для Footer */
+    private void setupFooter() {
         FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) fabBtn.getLayoutParams();
         int fabBottomMargin = lp.bottomMargin;
         recyclerAdapter.setFooterHeight(fabBottomMargin);
-        Logger.println(TAG, String.valueOf(fabBottomMargin + "FAB " + fabBtn.getHeight()));
-
     }
 
     private void swapVisibilityTextOrList() {
