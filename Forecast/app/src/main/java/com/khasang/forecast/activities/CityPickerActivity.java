@@ -83,7 +83,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_city_picker);
-//        PositionManager.getInstance().updateCurrentLocationCoordinates();
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         //TODO fix NullPointerException
@@ -96,8 +95,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         swapVisibilityTextOrList();
-
-
 
         /** Вычисляет степень прокрутки и выполняет нужное действие.*/
         recyclerView.addOnScrollListener(new HidingScrollListener() {
