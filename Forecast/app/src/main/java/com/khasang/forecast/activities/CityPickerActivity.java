@@ -212,11 +212,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.clear_favorite:
-                Logger.println("Update", "onOptionsItemSelected");
-                recyclerAdapter.notifyDataSetChanged();
-                recyclerView.invalidate();
-
-       /*         AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage(R.string.msg_clear_city_list);
                 builder.setCancelable(false);
                 builder.setPositiveButton(R.string.btn_yes, new DialogInterface.OnClickListener() {
@@ -234,7 +230,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                     }
                 });
                 AlertDialog dialog = builder.create();
-                dialog.show();*/
+                dialog.show();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -292,17 +288,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             }
         }
 
-// TODO убрать переход в визер активити при добавлении города
-/*        Intent answerIntent = new Intent();
-        answerIntent.putExtra(CITY_PICKER_TAG, city);
-        setResult(RESULT_OK, answerIntent);
-        ActivityCompat.finishAfterTransition(this);
-
-        final int position = recyclerView.getChildAdapterPosition(v);
-        Intent answerIntent = new Intent();
-        answerIntent.putExtra(CITY_PICKER_TAG, cityList.get(position - 1));
-        setResult(RESULT_OK, answerIntent);
-        ActivityCompat.finishAfterTransition(this);*/
     }
 
     private void clearList() {
@@ -378,27 +363,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         setBtnClear(view);
 
         chooseCity = (DelayedAutoCompleteTextView) view.findViewById(R.id.editTextCityName);
-/*        EditText dialogEditText = (EditText) findViewById(R.id.autocomplete_list_item);
-        dialogEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId,
-                                          KeyEvent event) {
-                if (event != null&& (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-                    InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-
-                    // NOTE: In the author's example, he uses an identifier
-                    // called searchBar. If setting this code on your EditText
-                    // then use v.getWindowToken() as a reference to your
-                    // EditText is passed into this callback as a TextView
-
-
-                    // Must return true here to consume event
-                    return true;
-
-                }
-                return false;
-            }
-        });*/
         chooseCity.setAdapter(new GooglePlacesAutocompleteAdapter(this, R.layout.autocomplete_city_textview_item));
         chooseCity.setLoadingIndicator((ProgressBar) view.findViewById(R.id.autocomplete_progressbar));
         chooseCity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -421,10 +385,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                         } catch (NullPointerException e) {
                             e.printStackTrace();
                         }
-                        //recyclerView.invalidate();
-                        //recyclerAdapter.notify();
                         closeMap();
-                        recyclerAdapter.notifyDataSetChanged();
                     }
                 })
                 .setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
