@@ -110,6 +110,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         fabBtn = (FloatingActionButton) findViewById(R.id.fabBtn);
         fabBtn.setOnClickListener(this);
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.simple_grow);
+        setupFooter();
         createItemList();
 
         ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
@@ -134,8 +135,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
         fabBtn.startAnimation(animation);
-
-        setupFooter();
     }
 
     /** Задает размер для Footer */
