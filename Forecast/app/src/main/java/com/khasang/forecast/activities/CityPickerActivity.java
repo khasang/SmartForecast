@@ -3,6 +3,7 @@ package com.khasang.forecast.activities;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
@@ -73,7 +75,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     private FloatingActionButton fabBtn;
 
     private Maps maps;
-    private View view;
     private DelayedAutoCompleteTextView chooseCity;
 
     @Override
@@ -93,6 +94,8 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         swapVisibilityTextOrList();
+
+
 
         /** Вычисляет степень прокрутки и выполняет нужное действие.*/
         recyclerView.addOnScrollListener(new HidingScrollListener() {
@@ -133,6 +136,12 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
         fabBtn.startAnimation(animation);
+
+        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) fabBtn.getLayoutParams();
+        int fabBottomMargin = lp.bottomMargin;
+        recyclerAdapter.setFooterHeight(fabBottomMargin);
+        Logger.println(TAG, String.valueOf(fabBottomMargin + "FAB " + fabBtn.getHeight()));
+
     }
 
     private void swapVisibilityTextOrList() {
@@ -154,6 +163,10 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         int fabBottomMargin = lp.bottomMargin;
         fabBtn.animate().translationY(fabBtn.getHeight() +
                 fabBottomMargin).setInterpolator(new AccelerateInterpolator(2)).start();
+
+        Logger.println(TAG, String.valueOf("FAB " + fabBtn.getHeight()));
+
+
     }
 
     private void showViews() {
@@ -165,6 +178,9 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     protected void onResume() {
         super.onResume();
         swapVisibilityTextOrList();
+
+        Logger.println(TAG, String.valueOf("FAB " + fabBtn.getHeight()));
+
     }
 
     @Override
@@ -345,7 +361,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
     private void showChooseCityDialog() {
         final Pattern pattern = Pattern.compile("^[\\w\\s,`'()-]+$");
-        view = getLayoutInflater().inflate(R.layout.dialog_pick_location, null);
+        final View view = getLayoutInflater().inflate(R.layout.dialog_pick_location, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         //final DelayedAutoCompleteTextView chooseCity = (DelayedAutoCompleteTextView) view.findViewById(R.id.editTextCityName);
 
