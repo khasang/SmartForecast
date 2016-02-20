@@ -73,7 +73,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     private FloatingActionButton fabBtn;
 
     private Maps maps;
-    private View view;
     private DelayedAutoCompleteTextView chooseCity;
 
     @Override
@@ -94,6 +93,8 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         swapVisibilityTextOrList();
 
+
+
         /** Вычисляет степень прокрутки и выполняет нужное действие.*/
         recyclerView.addOnScrollListener(new HidingScrollListener() {
             @Override
@@ -109,6 +110,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         fabBtn = (FloatingActionButton) findViewById(R.id.fabBtn);
         fabBtn.setOnClickListener(this);
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.simple_grow);
+        setupFooter();
         createItemList();
 
         ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
@@ -133,6 +135,13 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
         fabBtn.startAnimation(animation);
+    }
+
+    /** Задает размер для Footer */
+    private void setupFooter() {
+        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) fabBtn.getLayoutParams();
+        int fabBottomMargin = lp.bottomMargin;
+        recyclerAdapter.setFooterHeight(fabBottomMargin);
     }
 
     private void swapVisibilityTextOrList() {
@@ -345,7 +354,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
     private void showChooseCityDialog() {
         final Pattern pattern = Pattern.compile("^[\\w\\s,`'()-]+$");
-        view = getLayoutInflater().inflate(R.layout.dialog_pick_location, null);
+        final View view = getLayoutInflater().inflate(R.layout.dialog_pick_location, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         //final DelayedAutoCompleteTextView chooseCity = (DelayedAutoCompleteTextView) view.findViewById(R.id.editTextCityName);
 

@@ -19,6 +19,8 @@ import java.util.List;
  */
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    int footerHeight;
+
     private enum ItemType {
         CARD_VIEW {
             @Override
@@ -30,6 +32,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             @Override
             public int number() {
                 return 2;
+            }
+        },
+        FOOTER {
+            @Override
+            public int number() {
+                return 3;
             }
         };
 
@@ -54,7 +62,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     inflate(R.layout.recycler_item, parent, false);
             return new RecyclerItemViewHolder(view, mListener, mLongListener);
         } else if (viewType == ItemType.EMPTY.number()) {
-            final View view = LayoutInflater.from(context).inflate(R.layout.recycler_empty, parent, false);
+            final View view = LayoutInflater.from(context).inflate(R.layout.recycler_header, parent, false);
+            return new RecyclerHeaderViewHolder(view);
+        } else if (viewType == ItemType.FOOTER.number()) {
+            final View view = LayoutInflater.from(context).inflate(R.layout.recycler_footer, parent, false);
+            ViewGroup.LayoutParams params = view.getLayoutParams();
+            params.height = footerHeight;
+            view.requestLayout();
             return new RecyclerHeaderViewHolder(view);
         }
         throw new RuntimeException("There is no type that matches the type " + viewType + " + make sure your using types correctly");
@@ -83,8 +97,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     // returns viewType for a given position
     @Override
     public int getItemViewType(int position) {
-        if (isPositionHeader(position) || isLastPosition(position)) {
+        if (isPositionHeader(position)) {
             return ItemType.EMPTY.number();
+        }
+        if (isLastPosition(position)) {
+            return ItemType.FOOTER.number();
         }
         return ItemType.CARD_VIEW.number();
     }
@@ -96,5 +113,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private boolean isLastPosition(int position) {
         return position == getItemCount() - 1;
+    }
+
+    public void setFooterHeight(int height) {
+        footerHeight = height * 4;
     }
 }
