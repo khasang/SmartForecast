@@ -3,7 +3,6 @@ package com.khasang.forecast.activities;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -21,7 +20,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
@@ -166,10 +164,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         int fabBottomMargin = lp.bottomMargin;
         fabBtn.animate().translationY(fabBtn.getHeight() +
                 fabBottomMargin).setInterpolator(new AccelerateInterpolator(2)).start();
-
-        Logger.println(TAG, String.valueOf("FAB " + fabBtn.getHeight()));
-
-
     }
 
     private void showViews() {
@@ -181,9 +175,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     protected void onResume() {
         super.onResume();
         swapVisibilityTextOrList();
-
-        Logger.println(TAG, String.valueOf("FAB " + fabBtn.getHeight()));
-
     }
 
     @Override

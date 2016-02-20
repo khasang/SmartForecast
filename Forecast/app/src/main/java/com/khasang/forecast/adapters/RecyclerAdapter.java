@@ -1,14 +1,11 @@
 package com.khasang.forecast.adapters;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
-import com.khasang.forecast.Logger;
 import com.khasang.forecast.R;
 import com.khasang.forecast.adapters.view_holders.RecyclerHeaderViewHolder;
 import com.khasang.forecast.adapters.view_holders.RecyclerItemViewHolder;
@@ -65,7 +62,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     inflate(R.layout.recycler_item, parent, false);
             return new RecyclerItemViewHolder(view, mListener, mLongListener);
         } else if (viewType == ItemType.EMPTY.number()) {
-            final View view = LayoutInflater.from(context).inflate(R.layout.recycler_empty, parent, false);
+            final View view = LayoutInflater.from(context).inflate(R.layout.recycler_header, parent, false);
             return new RecyclerHeaderViewHolder(view);
         } else if (viewType == ItemType.FOOTER.number()) {
             final View view = LayoutInflater.from(context).inflate(R.layout.recycler_footer, parent, false);
@@ -118,7 +115,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return position == getItemCount() - 1;
     }
 
-    public int setFooterHeight(int height) {
-        return footerHeight = height * 4;
+    public void setFooterHeight(int height) {
+        footerHeight = height * 4;
     }
 }
