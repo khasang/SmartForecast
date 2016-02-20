@@ -79,7 +79,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_city_picker);
-//        PositionManager.getInstance().updateCurrentLocationCoordinates();
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         //TODO fix NullPointerException
@@ -92,8 +91,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         swapVisibilityTextOrList();
-
-
 
         /** Вычисляет степень прокрутки и выполняет нужное действие.*/
         recyclerView.addOnScrollListener(new HidingScrollListener() {
@@ -274,18 +271,16 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
     // Вспомогательный метод для добавления города в список
     private void addItem(String city, Coordinate coordinate) {
+        Logger.println("Update", "notifyDataSetChanged");
         if (coordinate != null) {
             if (!PositionManager.getInstance().positionIsPresent(city)) {
                 PositionManager.getInstance().addPosition(city, coordinate);
+                cityList.add(city);
+                Collections.sort(cityList);
+                recyclerAdapter.notifyDataSetChanged();
             }
-        } else {
-            return;
         }
-// TODO убрать переход в визер активити при добавлении города
-        Intent answerIntent = new Intent();
-        answerIntent.putExtra(CITY_PICKER_TAG, city);
-        setResult(RESULT_OK, answerIntent);
-        ActivityCompat.finishAfterTransition(this);
+
     }
 
     private void clearList() {
