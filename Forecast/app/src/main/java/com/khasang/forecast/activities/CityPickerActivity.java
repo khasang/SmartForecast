@@ -283,13 +283,13 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     // Вспомогательный метод для добавления города в список
     private void addItem(String city, Coordinate coordinate) {
         Logger.println("Update", "notifyDataSetChanged");
-        recyclerAdapter.notifyDataSetChanged();
         if (coordinate != null) {
             if (!PositionManager.getInstance().positionIsPresent(city)) {
                 PositionManager.getInstance().addPosition(city, coordinate);
+                cityList.add(city);
+                Collections.sort(cityList);
+                recyclerAdapter.notifyDataSetChanged();
             }
-        } else {
-            return;
         }
 
 // TODO убрать переход в визер активити при добавлении города
