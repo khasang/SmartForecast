@@ -450,7 +450,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                     default:
                         temp_measure = getString(R.string.CELSIUS);
                 }
-                PositionManager.getInstance().updateWeather();
+                PositionManager.getInstance().updateWeatherFromDB();
                 break;
             case R.id.pressure:
                 switch (PositionManager.getInstance().changePressureMetric()) {

@@ -374,10 +374,24 @@ public class PositionManager {
         }
     }
 
-    private void updateWeatherFromDB (){
-        mActivity.updateInterface(WeatherStation.ResponseType.CURRENT, getCurrentWeatherFromDB(currStation.getServiceType(), activePosition.getLocationName()));
-        mActivity.updateInterface(WeatherStation.ResponseType.HOURLY, getHourlyWeatherFromDB(currStation.getServiceType(), activePosition.getLocationName()));
-        mActivity.updateInterface(WeatherStation.ResponseType.DAILY, getDailyWeatherFromDB(currStation.getServiceType(), activePosition.getLocationName()));
+    public void updateWeatherFromDB(WeatherStation.ResponseType responseType, Position position) {
+        switch (responseType) {
+            case CURRENT:
+                mActivity.updateInterface(responseType, getCurrentWeatherFromDB(currStation.getServiceType(), position.getLocationName()));
+                break;
+            case HOURLY:
+                mActivity.updateInterface(responseType, getHourlyWeatherFromDB(currStation.getServiceType(), position.getLocationName()));
+                break;
+            case DAILY:
+                mActivity.updateInterface(responseType, getDailyWeatherFromDB(currStation.getServiceType(), position.getLocationName()));
+                break;
+        }
+    }
+
+    public void updateWeatherFromDB() {
+        updateWeatherFromDB(WeatherStation.ResponseType.CURRENT, activePosition);
+        updateWeatherFromDB(WeatherStation.ResponseType.HOURLY, activePosition);
+        updateWeatherFromDB(WeatherStation.ResponseType.DAILY, activePosition);
     }
 
     /**
@@ -397,16 +411,20 @@ public class PositionManager {
         Position position = getPosition(cityId);
         if (activePosition.getCityID() == cityId && currStation.getServiceType() == serviceType && position != null) {
             for (Map.Entry<Calendar, Weather> entry : weather.entrySet()) {
-                entry.setValue(AppUtils.formatWeather(entry.getValue(), temperatureMetric, speedMetric, pressureMetric));
-            }
-            mActivity.updateInterface(rType, weather);
-
-            for (Map.Entry<Calendar, Weather> entry : weather.entrySet()) {
                 if (rType == WeatherStation.ResponseType.CURRENT) {
                     dbManager.deleteOldWeatherAllTowns(serviceType, entry.getKey());
+                    // Для CURRENT погоды сохраняем дополнительно погоду с текущим локальным временем,
+                    // иначе возможно расхождение с погодой из БД, например при смене метрик
+                    // (ближайшая в БД может отличаться от "текущей" погоды со станции)
+                    dbManager.saveWeather(serviceType, position.getLocationName(), Calendar.getInstance(), entry.getValue());
                 }
                 dbManager.saveWeather(serviceType, position.getLocationName(), entry.getKey(), entry.getValue());
             }
+
+            for (Map.Entry<Calendar, Weather> entry : weather.entrySet()) {
+                entry.setValue(AppUtils.formatWeather(entry.getValue(), temperatureMetric, speedMetric, pressureMetric));
+            }
+            mActivity.updateInterface(rType, weather);
 
             rType = requestList.peekFirst();
             if (rType == WeatherStation.ResponseType.HOURLY) {
@@ -428,17 +446,7 @@ public class PositionManager {
         }
         Position position = getPosition(cityID);
         if (activePosition.getCityID() == cityID && currStation.getServiceType() == sType && position != null) {
-            switch (rType) {
-                case CURRENT:
-                    mActivity.updateInterface(WeatherStation.ResponseType.CURRENT, getCurrentWeatherFromDB(sType, position.getLocationName()));
-                    break;
-                case HOURLY:
-                    mActivity.updateInterface(WeatherStation.ResponseType.HOURLY, getHourlyWeatherFromDB(sType, position.getLocationName()));
-                    break;
-                case DAILY:
-                    mActivity.updateInterface(WeatherStation.ResponseType.DAILY, getDailyWeatherFromDB(sType, position.getLocationName()));
-            }
-
+            updateWeatherFromDB(rType, position);
             rType = requestList.peekFirst();
             if (rType == WeatherStation.ResponseType.HOURLY) {
                 currStation.updateHourlyWeather(requestList, cityID, position.getCoordinate());
