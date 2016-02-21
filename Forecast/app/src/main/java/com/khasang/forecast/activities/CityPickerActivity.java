@@ -367,7 +367,8 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 setLocationOnMap(description);
             }
         });
-        builder.setTitle(R.string.title_choose_city)
+        builder
+                //.setTitle(R.string.title_choose_city)
                 .setView(view)
                 .setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
                     @Override
