@@ -1,12 +1,13 @@
 package com.khasang.forecast.adapters.view_holders;
 
 import android.graphics.Color;
-import android.support.v7.widget.CardView;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.R;
 
 /**
@@ -41,11 +42,11 @@ public class RecyclerItemViewHolder extends RecyclerView.ViewHolder {
         mItemImageButton.setImageResource(starImageRes);
     }
 
-    public void markCityAsNew (boolean mark) {
+    public void markCityAsNew(boolean mark) {
         if (mark) {
-            ((CardView) cardView).setBackgroundColor(Color.YELLOW);
+            cardView.setBackgroundColor(ContextCompat.getColor(MyApplication.getAppContext(), R.color.md_amber_50));
         } else {
-            ((CardView) cardView).setBackgroundColor(Color.WHITE);
+            cardView.setBackgroundColor(Color.WHITE);
         }
     }
 
