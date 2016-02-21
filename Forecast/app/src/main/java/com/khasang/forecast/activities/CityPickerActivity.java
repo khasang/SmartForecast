@@ -275,6 +275,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         if (coordinate != null) {
             if (!PositionManager.getInstance().positionIsPresent(city)) {
                 PositionManager.getInstance().addPosition(city, coordinate);
+                recyclerAdapter.addCityToNewLocationsList(city);
                 cityList.add(city);
                 Collections.sort(cityList);
                 recyclerAdapter.notifyDataSetChanged();

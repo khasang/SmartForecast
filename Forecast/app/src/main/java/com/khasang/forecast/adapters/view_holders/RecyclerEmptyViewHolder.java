@@ -9,8 +9,8 @@ import android.view.View;
  * Верхний заголовок для модификации адаптера
  * (сокрытие Toolbar при прокрутке)
  */
-public class RecyclerHeaderViewHolder extends RecyclerView.ViewHolder {
-    public RecyclerHeaderViewHolder(View itemView) {
+public class RecyclerEmptyViewHolder extends RecyclerView.ViewHolder {
+    public RecyclerEmptyViewHolder(View itemView) {
         super(itemView);
     }
 }
