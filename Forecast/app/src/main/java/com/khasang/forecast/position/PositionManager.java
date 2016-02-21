@@ -413,6 +413,10 @@ public class PositionManager {
             for (Map.Entry<Calendar, Weather> entry : weather.entrySet()) {
                 if (rType == WeatherStation.ResponseType.CURRENT) {
                     dbManager.deleteOldWeatherAllTowns(serviceType, entry.getKey());
+                    // Для CURRENT погоды сохраняем дополнительно погоду с текущим локальным временем,
+                    // иначе возможно расхождение с погодой из БД, например при смене метрик
+                    // (ближайшая в БД может отличаться от "текущей" погоды со станции)
+                    dbManager.saveWeather(serviceType, position.getLocationName(), Calendar.getInstance(), entry.getValue());
                 }
                 dbManager.saveWeather(serviceType, position.getLocationName(), entry.getKey(), entry.getValue());
             }
