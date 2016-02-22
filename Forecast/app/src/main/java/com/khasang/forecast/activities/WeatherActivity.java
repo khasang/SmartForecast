@@ -29,6 +29,7 @@ import com.khasang.forecast.Logger;
 import com.khasang.forecast.R;
 import com.khasang.forecast.fragments.DailyForecastFragment;
 import com.khasang.forecast.fragments.HourlyForecastFragment;
+import com.khasang.forecast.position.Position;
 import com.khasang.forecast.position.PositionManager;
 import com.khasang.forecast.position.Weather;
 import com.khasang.forecast.stations.WeatherStation;
@@ -102,6 +103,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                     .hide(dailyForecastFragment)
                     .commit();
         }
+//        PositionManager.getInstance().updateWeatherFromDB(PositionManager.getInstance().getCurrentLocationName());
         initStartingMetrics();
         initFields();
         initFirstAppearance();
@@ -501,8 +503,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
      */
     public void changeDisplayedCity(String newCity) {
         PositionManager.getInstance().setCurrentPosition(newCity);
-//  TODO закомментировал так как текущий пока "текущее местоположение"
-//        PositionManager.getInstance().saveCurrPosition();
         onRefresh();
     }
 

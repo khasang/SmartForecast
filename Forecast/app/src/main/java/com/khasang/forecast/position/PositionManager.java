@@ -109,6 +109,7 @@ public class PositionManager {
     public void saveSettings() {
         saveCurrStation();
         saveMetrics();
+        saveCurrPosition();
     }
 
     public void saveMetrics() {
@@ -116,12 +117,10 @@ public class PositionManager {
     }
 
     public void saveCurrPosition() {
-        if (activePosition == currentLocation) {
-            // TODO возможно этот метод вообще не нужен, если по умолчанию будем всегда открывать "текужее метоположение"
-            // если нужен то здесь сохранять текущее метсоположение в качестве последнего открытого
-            // скорее всего для этого надо ввести константу "CURRENT"
-        } else {
-            dbManager.saveSettings(activePosition);
+        try {
+            dbManager.saveLastCurrentLocationName(currentLocation.getLocationName());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -141,10 +140,14 @@ public class PositionManager {
     }
 
     private void initCurrentLocation() {
+        String locName = dbManager.loadСurrentTown();
         currentLocation = new Position();
         currentLocation.setLocationName("Smart Forecast");
         currentLocation.setCityID(0);
         currentLocation.setCoordinate(null);
+        if (!locName.isEmpty()) {
+            currentLocation.setLocationName(locName);
+        }
     }
 
     /**
@@ -374,24 +377,32 @@ public class PositionManager {
         }
     }
 
-    public void updateWeatherFromDB(WeatherStation.ResponseType responseType, Position position) {
+    public void updateWeatherFromDB(WeatherStation.ResponseType responseType, String positionName) {
         switch (responseType) {
             case CURRENT:
-                mActivity.updateInterface(responseType, getCurrentWeatherFromDB(currStation.getServiceType(), position.getLocationName()));
+                mActivity.updateInterface(responseType, getCurrentWeatherFromDB(currStation.getServiceType(), positionName));
                 break;
             case HOURLY:
-                mActivity.updateInterface(responseType, getHourlyWeatherFromDB(currStation.getServiceType(), position.getLocationName()));
+                mActivity.updateInterface(responseType, getHourlyWeatherFromDB(currStation.getServiceType(), positionName));
                 break;
             case DAILY:
-                mActivity.updateInterface(responseType, getDailyWeatherFromDB(currStation.getServiceType(), position.getLocationName()));
+                mActivity.updateInterface(responseType, getDailyWeatherFromDB(currStation.getServiceType(), positionName));
                 break;
         }
     }
 
+    public void updateWeatherFromDB(WeatherStation.ResponseType responseType, Position position) {
+        updateWeatherFromDB(responseType, position.getLocationName());
+    }
+
     public void updateWeatherFromDB() {
-        updateWeatherFromDB(WeatherStation.ResponseType.CURRENT, activePosition);
-        updateWeatherFromDB(WeatherStation.ResponseType.HOURLY, activePosition);
-        updateWeatherFromDB(WeatherStation.ResponseType.DAILY, activePosition);
+        updateWeatherFromDB(activePosition.getLocationName());
+    }
+
+    public void updateWeatherFromDB(String locationName) {
+        updateWeatherFromDB(WeatherStation.ResponseType.CURRENT, locationName);
+        updateWeatherFromDB(WeatherStation.ResponseType.HOURLY, locationName);
+        updateWeatherFromDB(WeatherStation.ResponseType.DAILY, locationName);
     }
 
     /**
@@ -518,6 +529,10 @@ public class PositionManager {
 
     public Coordinate getCurrentLocationCoordinates() {
         return currentLocation.getCoordinate();
+    }
+
+    public String getCurrentLocationName () {
+        return currentLocation.getLocationName();
     }
 
     public void setCurrentLocationCoordinates(Location location) {
