@@ -13,25 +13,27 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.khasang.forecast.activities.CityPickerActivity;
 import com.khasang.forecast.position.Coordinate;
 import com.khasang.forecast.position.PositionManager;
 
 /**
- * Created by uoles on 03.02.2016.
+ * Класс предоставляет методы для работы с Google maps.
+ *
+ * @author maxim.kulikov
  */
 
 public class Maps {
 
     private com.google.android.gms.maps.GoogleMap map;
     private final String TAG = "mapLogs";
-    private double currentLatitude;
-    private double currentLongitude;
-    private float currentZoom;
+    private double currentLatitude = 0;
+    private double currentLongitude = 0;
+    private float currentZoom = 0;
     private CityPickerActivity activity;
     private FragmentManager myFM;
-
 
     public Maps(CityPickerActivity activity) {
         this.activity = activity;
@@ -48,25 +50,12 @@ public class Maps {
                 currentLatitude = 55.74;
                 currentZoom = 3;
             }
-            setCameraPosition(currentLatitude, currentLongitude, currentZoom, 0, 0);
+            setCameraPosition(currentLatitude, currentLongitude, 8, 0, 0);
         }
     }
 
     public boolean setMap() {
         myFM = activity.getSupportFragmentManager();
-
-//        Fragment frag = myFM.findFragmentById(R.id.map);
-//        if (frag != null) {
-//            myFM.beginTransaction().remove(myFM.findFragmentById(R.id.map)).commit();
-//        }
-//        map = ((SupportMapFragment) frag).getMap();
-
-//        myFM.beginTransaction().remove(myFM.findFragmentById(R.id.map)).commit();
-
-//        Fragment frag = myFM.findFragmentById(R.id.map);
-//        if (frag == null) {
-//            myFM.beginTransaction().add(R.id.frgmConteiner, myFM.findFragmentById(R.id.map), "Maps").commit();
-//        }
         map = ((SupportMapFragment) myFM.findFragmentById(R.id.map)).getMap();
         return map != null;
     }
@@ -90,9 +79,9 @@ public class Maps {
         map.setMyLocationEnabled(true);
     }
 
-    public void setCameraPosition(double latitude, double longtitude, float zoom, float bearing, float tilt) {
+    public void setCameraPosition(double latitude, double longitude, float zoom, float bearing, float tilt) {
         CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(new LatLng(latitude, longtitude))
+                .target(new LatLng(latitude, longitude))
                 .zoom(zoom)
                 .bearing(bearing)
                 .tilt(tilt)
@@ -101,8 +90,8 @@ public class Maps {
         map.animateCamera(cameraUpdate);
     }
 
-    public void setNewLatLng(double latitude, double longtitude) {
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(new LatLng(latitude, longtitude));
+    public void setNewLatLng(double latitude, double longitude) {
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(new LatLng(latitude, longitude));
         map.animateCamera(cameraUpdate);
     }
 
@@ -118,8 +107,8 @@ public class Maps {
         return currentZoom;
     }
 
-    public void setNewLatLngZoom(double latitude, double longtitude, float zoom) {
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longtitude), zoom);
+    public void setNewLatLngZoom(double latitude, double longitude, float zoom) {
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), zoom);
         map.animateCamera(cameraUpdate);
     }
 
@@ -128,39 +117,58 @@ public class Maps {
         map.animateCamera(cameraUpdate);
     }
 
-    public void setMarker(double latitude, double longtitude) {
+    public void deleteAllMarkers() {
         map.clear();
-        map.addMarker(new MarkerOptions().position(new LatLng(latitude, longtitude)).draggable(true));
+    }
+
+    public void setNewMarker(double latitude, double longitude) {
+        map.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).draggable(false));
+    }
+
+    public void setNewMarker(double latitude, double longitude, String text) {
+        map.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(text).draggable(false));
     }
 
     private void setMapClickListeners() {
-        map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-
+        // Клик на маркер
+        map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
-            public void onMapClick(LatLng latLng) {
-                currentLatitude = latLng.latitude;
-                currentLongitude = latLng.longitude;
-                setMarker(currentLatitude, currentLongitude);
-                activity.setLocationAddress(currentLatitude, currentLongitude);
-
-//                final View view = activity.getLayoutInflater().inflate(R.layout.dialog_pick_location, null);
-//                final DelayedAutoCompleteTextView chooseCity = (DelayedAutoCompleteTextView) view.findViewById(R.id.editTextCityName);
-//                chooseCity.setText(activity.ConvertPointToLocation(currentLatitude, currentLongtitde));
-
-                Log.d(TAG, "onMapClick: " + latLng.latitude + "," + latLng.longitude);
+            public boolean onMarkerClick(Marker marker) {
+                try {
+                    setCameraPosition(marker.getPosition().latitude, marker.getPosition().longitude, 5, 0, 0);
+                    marker.showInfoWindow();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return true;
             }
         });
 
-        map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+        // Клик по карте
+        map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                try {
+                    currentLatitude = latLng.latitude;
+                    currentLongitude = latLng.longitude;
+                    activity.setLocationAddress(currentLatitude, currentLongitude);
+                    Log.d(TAG, "onMapClick: " + latLng.latitude + "," + latLng.longitude);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
+        // Долгое нажатие на карту
+        map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
                 Log.d(TAG, "onMapLongClick: " + latLng.latitude + "," + latLng.longitude);
             }
         });
 
+        // Смера камеры
         map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
-
             @Override
             public void onCameraChange(CameraPosition camera) {
                 Log.d(TAG, "onCameraChange: lat " + camera.target.latitude + ", lng " + camera.target.longitude + ", zoom " + camera.zoom);

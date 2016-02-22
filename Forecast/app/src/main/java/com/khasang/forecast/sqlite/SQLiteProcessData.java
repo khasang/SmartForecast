@@ -6,7 +6,6 @@ import android.database.Cursor;
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.position.Coordinate;
 import com.khasang.forecast.position.Position;
-import com.khasang.forecast.position.PositionManager;
 import com.khasang.forecast.position.Precipitation;
 import com.khasang.forecast.position.Weather;
 import com.khasang.forecast.stations.WeatherStation;
@@ -20,7 +19,9 @@ import java.util.Calendar;
 import java.util.HashMap;
 
 /**
- * Created by maxim.kulikov on 02.12.15.
+ * Класс-обертка, предоставляет методы для записи/загрузки/удаления информации в БД.
+ *
+ * @author maxim.kulikov
  */
 
 public class SQLiteProcessData {

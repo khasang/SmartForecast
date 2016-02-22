@@ -43,7 +43,7 @@
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:id="@+id/btnClear"
-            android:src="@android:drawable/ic_input_delete"
+            android:src="@drawable/ic_clear_left"
             android:layout_alignTop="@+id/editTextCityName"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"

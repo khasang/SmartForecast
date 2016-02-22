@@ -8,12 +8,15 @@ import android.os.AsyncTask;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by maxim.kulikov on 02.12.15.
+ * Класс для работы с запросами БД.
+ *
+ * @author maxim.kulikov
  */
 
 public class SQLiteWork {
 
-    private SQLiteDatabase sqlDatabase;
+    private SQLiteDatabase sqlDatabaseRead;
+    private SQLiteDatabase sqlDatabaseWrite;
     private SQLiteOpen dbWork;
     private SQLiteExecAsyncTask execAsyncTask;
     private SQLiteExExecAsyncTask exExecAsyncTask;
@@ -32,9 +35,9 @@ public class SQLiteWork {
         dbWork = new SQLiteOpen(context, dbName, newVersion);
     }
 
-    public void checkOpenDatabase() {
-        if (sqlDatabase != null && sqlDatabase.isOpen()) {
-            sqlDatabase.close();
+    public void checkOpenDatabaseRead() {
+        if (sqlDatabaseRead != null && sqlDatabaseRead.isOpen()) {
+            sqlDatabaseRead.close();
         }
     }
 
@@ -55,34 +58,35 @@ public class SQLiteWork {
     }
 
     public synchronized void queryExec(String query) {
+        sqlDatabaseWrite = dbWork.getWritableDatabase();
         try {
-            checkOpenDatabase();
-            sqlDatabase = dbWork.getWritableDatabase();
-            sqlDatabase.execSQL(query);
+            sqlDatabaseWrite.execSQL(query);
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            sqlDatabaseWrite.close();
         }
     }
 
     public synchronized void queryExExec(String query, Object[] bindArgs) {
+        sqlDatabaseWrite = dbWork.getWritableDatabase();
         try {
-            checkOpenDatabase();
-            sqlDatabase = dbWork.getWritableDatabase();
-            sqlDatabase.execSQL(query, bindArgs);
+            sqlDatabaseWrite.execSQL(query, bindArgs);
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            sqlDatabaseWrite.close();
         }
     }
 
     public synchronized Cursor queryOpen(String query, String[] bindArgs) {
-        Cursor cursor = null;
+        checkOpenDatabaseRead();
+        sqlDatabaseRead = dbWork.getReadableDatabase();
         try {
-            checkOpenDatabase();
-            sqlDatabase = dbWork.getReadableDatabase();
-            cursor = sqlDatabase.rawQuery(query, bindArgs);
-        } catch(Exception e) {
+            return sqlDatabaseRead.rawQuery(query, bindArgs);
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return cursor;
+        return null;
     }
 }

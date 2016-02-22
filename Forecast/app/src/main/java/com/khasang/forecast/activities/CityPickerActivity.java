@@ -1,6 +1,7 @@
 package com.khasang.forecast.activities;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
@@ -16,6 +17,7 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,6 +27,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -60,6 +63,7 @@ import java.util.regex.Pattern;
  * <p/>
  * Activity для выбора местоположения
  */
+
 public class CityPickerActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
     private final String TAG = this.getClass().getSimpleName();
     public final static String CITY_PICKER_TAG = "com.khasang.forecast.activities.CityPickerActivity";
@@ -300,7 +304,10 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             Coordinate coordinate = getTownCoordinates(city);
             double latitude = coordinate != null ? coordinate.getLatitude() : 0;
             double longitude = coordinate != null ? coordinate.getLongitude() : 0;
-            maps.setCameraPosition(latitude, longitude, 11, 0, 0);
+
+            maps.deleteAllMarkers();
+            maps.setNewMarker(latitude, longitude, city);
+            maps.setCameraPosition(latitude, longitude, 5, 0, 0);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -332,6 +339,8 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 chooseCity.setText("");
             } else {
                 chooseCity.setText(location);
+                maps.deleteAllMarkers();
+                maps.setNewMarker(latitude, longitude, location);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -347,11 +356,49 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         });
     }
 
+    private void setMarkersOnMap() {
+        int itemsCount = chooseCity.getAdapter().getCount();
+        if ((itemsCount > 0) && (itemsCount < 7)) {
+            maps.deleteAllMarkers();
+            maps.setNewZoom(1);
+            for (int i = 0; i < itemsCount; i++) {
+                try {
+                    Coordinate coordinate = getTownCoordinates(chooseCity.getAdapter().getItem(i).toString());
+                    maps.setNewMarker(coordinate.getLatitude(), coordinate.getLongitude(), chooseCity.getAdapter().getItem(i).toString());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    // Метод скрытия клавиатуры
+    public void hideSoftKeyboard(Context context) {
+        if(getCurrentFocus() != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
+            inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+        }
+    }
+
     private void showChooseCityDialog() {
         final Pattern pattern = Pattern.compile("^[\\w\\s,`'()-]+$");
         final View view = getLayoutInflater().inflate(R.layout.dialog_pick_location, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         setBtnClear(view);
+
+        chooseCity = (DelayedAutoCompleteTextView) view.findViewById(R.id.editTextCityName);
+        chooseCity.setAdapter(new GooglePlacesAutocompleteAdapter(this, R.layout.autocomplete_city_textview_item));
+        chooseCity.setLoadingIndicator((ProgressBar) view.findViewById(R.id.autocomplete_progressbar));
+        chooseCity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String description = (String) parent.getItemAtPosition(position);
+                chooseCity.setError(null);
+                chooseCity.setText(description);
+                setLocationOnMap(description);
+                hideSoftKeyboard(getApplicationContext());
+            }
+        });
         builder.setView(view)
                 //.setTitle(R.string.title_choose_city)
                 .setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
@@ -374,21 +421,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                     }
                 });
         final AlertDialog dialog = builder.create();
-        chooseCity = (DelayedAutoCompleteTextView) view.findViewById(R.id.editTextCityName);
-        chooseCity.setAdapter(new GooglePlacesAutocompleteAdapter(this, R.layout.autocomplete_city_textview_item));
-        chooseCity.setLoadingIndicator((ProgressBar) view.findViewById(R.id.autocomplete_progressbar));
-        chooseCity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String description = (String) parent.getItemAtPosition(position);
-                chooseCity.setError(null);
-                chooseCity.setText(description);
-                //dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-                chooseCity.setEnabled(false);
-                chooseCity.setEnabled(true);
-                setLocationOnMap(description);
-            }
-        });
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialog) {
@@ -417,7 +449,24 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                if ((!chooseCity.getText().toString().isEmpty()) && (chooseCity.getText().toString().length() > 3)) {
+                    setMarkersOnMap();
+                }
+            }
+        });
+        dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+            @Override
+            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                    switch (keyCode) {
+                        case KeyEvent.KEYCODE_ENTER:
+                            hideSoftKeyboard(getApplicationContext());
+                            break;
+                        default:
+                            return false;
+                    }
+                }
+                return true;
             }
         });
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);

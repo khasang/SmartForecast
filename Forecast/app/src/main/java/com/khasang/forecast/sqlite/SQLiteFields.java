@@ -1,7 +1,9 @@
 package com.khasang.forecast.sqlite;
 
 /**
- * Created by maxim.kulikov on 02.12.15.
+ * Класс для хранения SQL запросов и полей таблиц.
+ *
+ * @author maxim.kulikov
  */
 
 public class SQLiteFields {

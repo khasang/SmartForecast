@@ -1,10 +1,11 @@
 package com.khasang.forecast.sqlite;
 
-import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 
 /**
- * Created by uoles on 19.01.2016.
+ * Класс для выполнения метода SQLiteWork.getInstance().queryExec в отдельном AsyncTask потоке.
+ *
+ * @author maxim.kulikov
  */
 
 public class SQLiteExecAsyncTask extends AsyncTask<Void, Void, Void> {
