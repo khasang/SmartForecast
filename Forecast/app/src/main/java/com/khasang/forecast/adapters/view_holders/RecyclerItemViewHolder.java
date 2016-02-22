@@ -1,10 +1,14 @@
 package com.khasang.forecast.adapters.view_holders;
 
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.R;
 
 /**
@@ -13,15 +17,17 @@ import com.khasang.forecast.R;
 public class RecyclerItemViewHolder extends RecyclerView.ViewHolder {
     private final TextView mItemTextView;
     private final ImageButton mItemImageButton;
+    CardView cardView;
 
 
     public RecyclerItemViewHolder(View itemView, View.OnClickListener listener, View.OnLongClickListener longListener) {
         super(itemView);
-        mItemTextView = (TextView) itemView.findViewById(R.id.cityTW);
-        mItemImageButton = ((ImageButton) itemView.findViewById(R.id.starBtn));
+        cardView = (CardView)itemView;
+        mItemTextView = (TextView) cardView.findViewById(R.id.cityTW);
+        mItemImageButton = ((ImageButton) cardView.findViewById(R.id.starBtn));
         mItemImageButton.setOnClickListener(listener);
-        itemView.setOnClickListener(listener);
-        itemView.setOnLongClickListener(longListener);
+        cardView.setOnClickListener(listener);
+        cardView.setOnLongClickListener(longListener);
     }
 
 
@@ -35,6 +41,14 @@ public class RecyclerItemViewHolder extends RecyclerView.ViewHolder {
             starImageRes = android.R.drawable.btn_star_big_on;
         }
         mItemImageButton.setImageResource(starImageRes);
+    }
+
+    public void markCityAsNew(boolean mark) {
+        if (mark) {
+            cardView.setCardBackgroundColor(ContextCompat.getColor(MyApplication.getAppContext(),R.color.new_city_card));
+        } else {
+            cardView.setCardBackgroundColor(Color.WHITE);
+        }
     }
 
 }

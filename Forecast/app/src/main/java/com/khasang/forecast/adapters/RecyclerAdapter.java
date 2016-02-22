@@ -7,10 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.khasang.forecast.R;
-import com.khasang.forecast.adapters.view_holders.RecyclerHeaderViewHolder;
+import com.khasang.forecast.adapters.view_holders.RecyclerEmptyViewHolder;
 import com.khasang.forecast.adapters.view_holders.RecyclerItemViewHolder;
 import com.khasang.forecast.position.PositionManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,6 +21,7 @@ import java.util.List;
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     int footerHeight;
+    List <String> newCities;
 
     private enum ItemType {
         CARD_VIEW {
@@ -28,7 +30,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 return 1;
             }
         },
-        EMPTY {
+        HEADER {
             @Override
             public int number() {
                 return 2;
@@ -52,6 +54,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         mItemList = itemList;
         this.mListener = mListener;
         this.mLongListener = mLongListener;
+        newCities = new ArrayList<>();
     }
 
     @Override
@@ -61,15 +64,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             final View view = LayoutInflater.from(parent.getContext()).
                     inflate(R.layout.recycler_item, parent, false);
             return new RecyclerItemViewHolder(view, mListener, mLongListener);
-        } else if (viewType == ItemType.EMPTY.number()) {
+        } else if (viewType == ItemType.HEADER.number()) {
             final View view = LayoutInflater.from(context).inflate(R.layout.recycler_header, parent, false);
-            return new RecyclerHeaderViewHolder(view);
+            return new RecyclerEmptyViewHolder(view);
         } else if (viewType == ItemType.FOOTER.number()) {
             final View view = LayoutInflater.from(context).inflate(R.layout.recycler_footer, parent, false);
             ViewGroup.LayoutParams params = view.getLayoutParams();
             params.height = footerHeight;
             view.requestLayout();
-            return new RecyclerHeaderViewHolder(view);
+            return new RecyclerEmptyViewHolder(view);
         }
         throw new RuntimeException("There is no type that matches the type " + viewType + " + make sure your using types correctly");
     }
@@ -79,6 +82,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (!(isPositionHeader(position) || isLastPosition(position))) {
             RecyclerItemViewHolder holder = (RecyclerItemViewHolder) viewHolder;
             String itemText = mItemList.get(position - 1); // we are taking header in to account so all of our items are correctly positioned
+            if (newCities.contains(itemText)) {
+                holder.markCityAsNew(true);
+            } else {
+                holder.markCityAsNew(false);
+            }
             holder.setItemFavoriteState(PositionManager.getInstance().isFavouriteCity(itemText));
             holder.setItemText(itemText);
         }
@@ -98,7 +106,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public int getItemViewType(int position) {
         if (isPositionHeader(position)) {
-            return ItemType.EMPTY.number();
+            return ItemType.HEADER.number();
         }
         if (isLastPosition(position)) {
             return ItemType.FOOTER.number();
@@ -117,5 +125,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public void setFooterHeight(int height) {
         footerHeight = height * 4;
+    }
+
+    public void addCityToNewLocationsList(String city) {
+        newCities.add(city);
     }
 }
