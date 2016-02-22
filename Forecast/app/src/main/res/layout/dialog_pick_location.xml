@@ -8,7 +8,9 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="fill_parent">
-<!--              android:imeOptions="flagNoExtractUi|actionSearch|actionDone"  -->
+<!--              android:imeOptions="flagNoExtractUi|actionSearch|actionDone"
+
+android:layout_below="@+id/autocomplete_progressbar"-->
         <com.khasang.forecast.view.DelayedAutoCompleteTextView
             android:id="@+id/editTextCityName"
             android:layout_width="wrap_content"
@@ -17,7 +19,6 @@
             android:ems="10"
             android:singleLine="true"
             android:imeOptions="flagNoExtractUi|actionDone"
-            android:layout_below="@+id/autocomplete_progressbar"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="2dp"
@@ -28,7 +29,7 @@
             android:layout_toStartOf="@+id/btnClear">
             <requestFocus/>
         </com.khasang.forecast.view.DelayedAutoCompleteTextView>
-
+<!--
         <ProgressBar
             android:id="@+id/autocomplete_progressbar"
             style="?android:attr/progressBarStyleSmall"
@@ -37,7 +38,7 @@
             android:layout_gravity="center_vertical|right"
             android:layout_marginRight="16dp"
             android:visibility="gone"/>
-
+-->
         <ImageView
             style="@style/AppTheme.Button"
             android:layout_width="50dp"
