@@ -326,9 +326,9 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_item_change_location:
-                startCityPickerActivity();
-                return true;
+//            case R.id.menu_item_change_location:
+//                startCityPickerActivity();
+//                return true;
             case R.id.menu_item_refresh:
                 startAnimation();
                 onRefresh();
