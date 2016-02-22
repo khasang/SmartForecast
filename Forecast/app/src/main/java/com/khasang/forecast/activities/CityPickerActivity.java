@@ -179,7 +179,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 showChooseCityDialog();
                 break;
             case R.id.starBtn:
-                final int pos = recyclerView.getChildAdapterPosition((View) v.getParent());
+                final int pos = recyclerView.getChildAdapterPosition((View) v.getParent().getParent());
                 String city = cityList.get(pos - 1);
                 int starImageRes = android.R.drawable.btn_star_big_off;
                 if (PositionManager.getInstance().flipFavCity(city)) {
