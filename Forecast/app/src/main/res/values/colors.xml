@@ -9,6 +9,7 @@
     <color name="icons">#FFFFFF</color>
     <color name="divider">#B6B6B6</color>
     <color name="grey_100">#FFF5F5F5</color>
+    <color name="new_city_card">#FFF8E1</color>
 
     <color name="background_splash">#D8A893</color>
 </resources>
