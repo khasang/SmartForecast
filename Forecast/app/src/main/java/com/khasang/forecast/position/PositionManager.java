@@ -5,6 +5,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.net.ConnectivityManager;
+import android.os.Handler;
 import android.widget.Toast;
 
 import com.khasang.forecast.AppUtils;
@@ -23,6 +24,7 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -108,6 +110,7 @@ public class PositionManager {
     public void saveSettings() {
         saveCurrStation();
         saveMetrics();
+        saveCurrPosition();
     }
 
     public void saveMetrics() {
@@ -115,12 +118,10 @@ public class PositionManager {
     }
 
     public void saveCurrPosition() {
-        if (activePosition == currentLocation) {
-            // TODO возможно этот метод вообще не нужен, если по умолчанию будем всегда открывать "текужее метоположение"
-            // если нужен то здесь сохранять текущее метсоположение в качестве последнего открытого
-            // скорее всего для этого надо ввести константу "CURRENT"
-        } else {
-            dbManager.saveSettings(activePosition);
+        try {
+            dbManager.saveLastCurrentLocationName(currentLocation.getLocationName());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -134,16 +135,20 @@ public class PositionManager {
     private void initStations() {
         WeatherStationFactory wsf = new WeatherStationFactory();
         stations = wsf
-                .addOpenWeatherMap(MyApplication.getAppContext().getString(R.string.service_name_open_weather_map))
+                .addOpenWeatherMap()
                 .create();
         currStation = stations.get(dbManager.loadStation());
     }
 
     private void initCurrentLocation() {
+        String locName = dbManager.loadСurrentTown();
         currentLocation = new Position();
         currentLocation.setLocationName("Smart Forecast");
         currentLocation.setCityID(0);
         currentLocation.setCoordinate(null);
+        if (!locName.isEmpty()) {
+            currentLocation.setLocationName(locName);
+        }
     }
 
     /**
@@ -301,6 +306,9 @@ public class PositionManager {
      * @return обьект типа {@link Position}
      */
     private Position getPosition(int cityID) {
+        if (cityID == 0) {
+            return currentLocation;
+        }
         for (Position pos : positions.values()) {
             if (pos.getCityID() == cityID) {
                 return pos;
@@ -342,75 +350,135 @@ public class PositionManager {
                 return;
             }
         }
-        if (activePosition.getCoordinate() != null) {
-            sendRequest();
-        } else {
-            Toast.makeText(MyApplication.getAppContext(), R.string.coordinates_error, Toast.LENGTH_SHORT).show();
-        }
+        sendRequest();
     }
 
     /**
      * Метод, отправляет запрос на обновление погоды
      */
-    private void sendRequest() {
-        if (isNetworkAvailable(mActivity)) {
-            currStation.updateWeather(activePosition.getCityID(), activePosition.getCoordinate());
-            currStation.updateHourlyWeather(activePosition.getCityID(), activePosition.getCoordinate());
-            currStation.updateWeeklyWeather(activePosition.getCityID(), activePosition.getCoordinate());
-        } else {
-            mActivity.updateInterface(WeatherStation.ResponseType.CURRENT, getCurrentWeatherFromDB(currStation.getServiceType(), activePosition.getLocationName(), Calendar.getInstance()));
-            mActivity.updateInterface(WeatherStation.ResponseType.HOURLY, getHourlyWeatherFromDB(currStation.getServiceType(), activePosition.getLocationName(), Calendar.getInstance()));
-            mActivity.updateInterface(WeatherStation.ResponseType.DAILY, getDailyWeatherFromDB(currStation.getServiceType(), activePosition.getLocationName(), Calendar.getInstance()));
+    public void sendRequest() {
+        if (activePosition.getCoordinate() == null) {
+            if (!activePosition.getLocationName().isEmpty()) {
+                updateWeatherFromDB();
+            }
+            Toast.makeText(MyApplication.getAppContext(), R.string.coordinates_error, Toast.LENGTH_SHORT).show();
+        } else if (!isNetworkAvailable(mActivity)) {
+            if (!activePosition.getLocationName().isEmpty()) {
+                updateWeatherFromDB();
+            }
             Toast.makeText(mActivity, R.string.update_error_net_not_availble, Toast.LENGTH_SHORT).show();
+        } else {
+            LinkedList<WeatherStation.ResponseType> requestQueue = new LinkedList<>();
+            requestQueue.add(WeatherStation.ResponseType.CURRENT);
+            if (mActivity.isHourlyForecastActive()) {
+                requestQueue.addLast(WeatherStation.ResponseType.HOURLY);
+                requestQueue.addLast(WeatherStation.ResponseType.DAILY);
+            } else {
+                requestQueue.addLast(WeatherStation.ResponseType.DAILY);
+                requestQueue.addLast(WeatherStation.ResponseType.HOURLY);
+            }
+            currStation.updateWeather(requestQueue, activePosition.getCityID(), activePosition.getCoordinate());
         }
+    }
+
+    public void updateWeatherFromDB(WeatherStation.ResponseType responseType, String positionName) {
+        switch (responseType) {
+            case CURRENT:
+                mActivity.updateInterface(responseType, getCurrentWeatherFromDB(currStation.getServiceType(), positionName));
+                break;
+            case HOURLY:
+                mActivity.updateInterface(responseType, getHourlyWeatherFromDB(currStation.getServiceType(), positionName));
+                break;
+            case DAILY:
+                mActivity.updateInterface(responseType, getDailyWeatherFromDB(currStation.getServiceType(), positionName));
+                break;
+        }
+    }
+
+    public void updateWeatherFromDB(WeatherStation.ResponseType responseType, Position position) {
+        updateWeatherFromDB(responseType, position.getLocationName());
+    }
+
+    public void updateWeatherFromDB() {
+        updateWeatherFromDB(activePosition.getLocationName());
+    }
+
+    public void updateWeatherFromDB(String locationName) {
+        updateWeatherFromDB(WeatherStation.ResponseType.CURRENT, locationName);
+        updateWeatherFromDB(WeatherStation.ResponseType.HOURLY, locationName);
+        updateWeatherFromDB(WeatherStation.ResponseType.DAILY, locationName);
     }
 
     /**
      * Метод для обновления погодных данных. Вызывается погодным сервисом, когда приходят актуальные данные
      *
-     * @param rType       переменая типа {@link WeatherStation.ResponseType}, характеризующая тип ответа (текущий прогноз, прогноз на день или неделю)
+     * @param requestList коллекция типа {@link LinkedList}, содержащая элементы {@link com.khasang.forecast.stations.WeatherStation.ResponseType}, хранит очередность запросов (текущий прогноз, прогноз на день или неделю)
      * @param cityId      внутренний идентификатор города, передается в погодную станцию во время запроса погоды
      * @param serviceType идентификатор погодного сервиса
      * @param weather     обьект типа {@link Weather}, содержащий погодные характеристики
      */
-    public void onResponseReceived(WeatherStation.ResponseType rType, int cityId, WeatherStationFactory.ServiceType serviceType, Map<Calendar, Weather> weather) {
+    public void onResponseReceived(LinkedList<WeatherStation.ResponseType> requestList, int cityId, WeatherStationFactory.ServiceType serviceType, Map<Calendar, Weather> weather) {
         lastResponseIsFailure = false;
+        WeatherStation.ResponseType rType = requestList.pollFirst();
+        if (rType == null) {
+            return;
+        }
         Position position = getPosition(cityId);
-        if (position != null) {
+        if (activePosition.getCityID() == cityId && currStation.getServiceType() == serviceType && position != null) {
             for (Map.Entry<Calendar, Weather> entry : weather.entrySet()) {
                 if (rType == WeatherStation.ResponseType.CURRENT) {
                     dbManager.deleteOldWeatherAllTowns(serviceType, entry.getKey());
+                    // Для CURRENT погоды сохраняем дополнительно погоду с текущим локальным временем,
+                    // иначе возможно расхождение с погодой из БД, например при смене метрик
+                    // (ближайшая в БД может отличаться от "текущей" погоды со станции)
+                    dbManager.saveWeather(serviceType, position.getLocationName(), Calendar.getInstance(), entry.getValue());
                 }
                 dbManager.saveWeather(serviceType, position.getLocationName(), entry.getKey(), entry.getValue());
             }
-        }
-        if (activePosition.getCityID() == cityId && currStation.getServiceType() == serviceType) {
+
             for (Map.Entry<Calendar, Weather> entry : weather.entrySet()) {
                 entry.setValue(AppUtils.formatWeather(entry.getValue(), temperatureMetric, speedMetric, pressureMetric));
             }
             mActivity.updateInterface(rType, weather);
+
+            rType = requestList.peekFirst();
+            if (rType == WeatherStation.ResponseType.HOURLY) {
+                currStation.updateHourlyWeather(requestList, cityId, position.getCoordinate());
+            } else if (rType == WeatherStation.ResponseType.DAILY) {
+                currStation.updateWeeklyWeather(requestList, cityId, position.getCoordinate());
+            }
         }
     }
 
-    public void onFailureResponse(int cityID, String weatherStationName, WeatherStationFactory.ServiceType sType) {
+    public void onFailureResponse(LinkedList<WeatherStation.ResponseType> requestList, int cityID, WeatherStationFactory.ServiceType sType) {
         if (!lastResponseIsFailure) {
-            Toast.makeText(mActivity, mActivity.getString(R.string.update_error_from) + weatherStationName, Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, mActivity.getString(R.string.update_error_from) + sType.toString(), Toast.LENGTH_SHORT).show();
             lastResponseIsFailure = true;
-            //  Вернуть это в интерфейс ближайшую погоду
-            mActivity.updateInterface(WeatherStation.ResponseType.CURRENT, getCurrentWeatherFromDB(sType, getPosition(cityID).getLocationName(), Calendar.getInstance()));
-            mActivity.updateInterface(WeatherStation.ResponseType.HOURLY, getHourlyWeatherFromDB(sType, getPosition(cityID).getLocationName(), Calendar.getInstance()));
-            mActivity.updateInterface(WeatherStation.ResponseType.DAILY, getDailyWeatherFromDB(sType, getPosition(cityID).getLocationName(), Calendar.getInstance()));
+        }
+        WeatherStation.ResponseType rType = requestList.pollFirst();
+        if (rType == null) {
+            return;
+        }
+        Position position = getPosition(cityID);
+        if (activePosition.getCityID() == cityID && currStation.getServiceType() == sType && position != null) {
+            updateWeatherFromDB(rType, position);
+            rType = requestList.peekFirst();
+            if (rType == WeatherStation.ResponseType.HOURLY) {
+                currStation.updateHourlyWeather(requestList, cityID, position.getCoordinate());
+            } else if (rType == WeatherStation.ResponseType.DAILY) {
+                currStation.updateWeeklyWeather(requestList, cityID, position.getCoordinate());
+            }
         }
     }
 
-    private HashMap<Calendar, Weather> getCurrentWeatherFromDB(WeatherStationFactory.ServiceType sType, String locationName, Calendar date) {
-        return dbManager.loadWeather(sType, locationName, date, temperatureMetric, speedMetric, pressureMetric);
+    private HashMap<Calendar, Weather> getCurrentWeatherFromDB(WeatherStationFactory.ServiceType sType, String locationName) {
+        return dbManager.loadWeather(sType, locationName, Calendar.getInstance(), temperatureMetric, speedMetric, pressureMetric);
     }
 
-    private HashMap<Calendar, Weather> getHourlyWeatherFromDB(WeatherStationFactory.ServiceType sType, String locationName, Calendar date) {
+    private HashMap<Calendar, Weather> getHourlyWeatherFromDB(WeatherStationFactory.ServiceType sType, String locationName) {
         final int HOUR_PERIOD = 3;
         final int FORECASTS_COUNT = 8;
-        Calendar calendar = date;
+        Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.HOUR_OF_DAY, HOUR_PERIOD);
         calendar.set(Calendar.MINUTE, 0);
         HashMap<Calendar, Weather> forecast = new HashMap<>();
@@ -426,10 +494,10 @@ public class PositionManager {
     }
 
 
-    private HashMap<Calendar, Weather> getDailyWeatherFromDB(WeatherStationFactory.ServiceType sType, String locationName, Calendar date) {
+    private HashMap<Calendar, Weather> getDailyWeatherFromDB(WeatherStationFactory.ServiceType sType, String locationName) {
         final int DAY_PERIOD = 1;
         final int FORECASTS_COUNT = 7;
-        Calendar calendar = date;
+        Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, 12);
         calendar.set(Calendar.MINUTE, 0);
         HashMap<Calendar, Weather> forecast = new HashMap<>();
@@ -463,13 +531,22 @@ public class PositionManager {
         locationManager.updateCurrentLocationCoordinates(mActivity);
     }
 
-    public Coordinate getCurrentLocationCoordinates (){
+    public Coordinate getCurrentLocationCoordinates() {
         return currentLocation.getCoordinate();
+    }
+
+    public String getCurrentLocationName() {
+        return currentLocation.getLocationName();
     }
 
     public void setCurrentLocationCoordinates(Location location) {
         if (updateCurrentLocation(location) && activePosition == currentLocation) {
-            sendRequest();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    sendRequest();
+                }
+            }, 1000);
         }
     }
 

@@ -7,10 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.khasang.forecast.R;
-import com.khasang.forecast.adapters.view_holders.RecyclerHeaderViewHolder;
+import com.khasang.forecast.adapters.view_holders.RecyclerEmptyViewHolder;
 import com.khasang.forecast.adapters.view_holders.RecyclerItemViewHolder;
 import com.khasang.forecast.position.PositionManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,8 +19,32 @@ import java.util.List;
  * Адаптер для выбора карточек городов
  */
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private static final int TYPE_HEADER = 2;
-    private static final int TYPE_ITEM = 1;
+
+    int footerHeight;
+    List <String> newCities;
+
+    private enum ItemType {
+        CARD_VIEW {
+            @Override
+            public int number() {
+                return 1;
+            }
+        },
+        HEADER {
+            @Override
+            public int number() {
+                return 2;
+            }
+        },
+        FOOTER {
+            @Override
+            public int number() {
+                return 3;
+            }
+        };
+
+        public abstract int number();
+    }
 
     private List<String> mItemList;
     private final View.OnClickListener mListener;
@@ -29,27 +54,39 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         mItemList = itemList;
         this.mListener = mListener;
         this.mLongListener = mLongListener;
+        newCities = new ArrayList<>();
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
-        if (viewType == TYPE_ITEM) {
+        if (viewType == ItemType.CARD_VIEW.number()) {
             final View view = LayoutInflater.from(parent.getContext()).
                     inflate(R.layout.recycler_item, parent, false);
             return new RecyclerItemViewHolder(view, mListener, mLongListener);
-        } else if (viewType == TYPE_HEADER) {
+        } else if (viewType == ItemType.HEADER.number()) {
             final View view = LayoutInflater.from(context).inflate(R.layout.recycler_header, parent, false);
-            return new RecyclerHeaderViewHolder(view);
+            return new RecyclerEmptyViewHolder(view);
+        } else if (viewType == ItemType.FOOTER.number()) {
+            final View view = LayoutInflater.from(context).inflate(R.layout.recycler_footer, parent, false);
+            ViewGroup.LayoutParams params = view.getLayoutParams();
+            params.height = footerHeight;
+            view.requestLayout();
+            return new RecyclerEmptyViewHolder(view);
         }
-        throw new RuntimeException("There is no type that matches the type " + viewType + " + make sure your using types    correctly");
+        throw new RuntimeException("There is no type that matches the type " + viewType + " + make sure your using types correctly");
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        if (!isPositionHeader(position)) {
+        if (!(isPositionHeader(position) || isLastPosition(position))) {
             RecyclerItemViewHolder holder = (RecyclerItemViewHolder) viewHolder;
             String itemText = mItemList.get(position - 1); // we are taking header in to account so all of our items are correctly positioned
+            if (newCities.contains(itemText)) {
+                holder.markCityAsNew(true);
+            } else {
+                holder.markCityAsNew(false);
+            }
             holder.setItemFavoriteState(PositionManager.getInstance().isFavouriteCity(itemText));
             holder.setItemText(itemText);
         }
@@ -62,16 +99,19 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     //our new getItemCount() that includes header View
     @Override
     public int getItemCount() {
-        return getBasicItemCount() + 1; // header
+        return getBasicItemCount() + 1 + 1; // header
     }
 
     // returns viewType for a given position
     @Override
     public int getItemViewType(int position) {
         if (isPositionHeader(position)) {
-            return TYPE_HEADER;
+            return ItemType.HEADER.number();
         }
-        return TYPE_ITEM;
+        if (isLastPosition(position)) {
+            return ItemType.FOOTER.number();
+        }
+        return ItemType.CARD_VIEW.number();
     }
 
     // check if given position is a header
@@ -79,4 +119,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return position == 0;
     }
 
+    private boolean isLastPosition(int position) {
+        return position == getItemCount() - 1;
+    }
+
+    public void setFooterHeight(int height) {
+        footerHeight = height * 4;
+    }
+
+    public void addCityToNewLocationsList(String city) {
+        newCities.add(city);
+    }
 }

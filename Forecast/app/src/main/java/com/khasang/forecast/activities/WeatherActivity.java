@@ -29,6 +29,7 @@ import com.khasang.forecast.Logger;
 import com.khasang.forecast.R;
 import com.khasang.forecast.fragments.DailyForecastFragment;
 import com.khasang.forecast.fragments.HourlyForecastFragment;
+import com.khasang.forecast.position.Position;
 import com.khasang.forecast.position.PositionManager;
 import com.khasang.forecast.position.Weather;
 import com.khasang.forecast.stations.WeatherStation;
@@ -89,7 +90,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather_material);
         PositionManager.getInstance().configureManager(this);
-        PositionManager.getInstance().updateCurrentLocationCoordinates();
         if (findViewById(R.id.fragment_container) != null) {
             if (savedInstanceState != null) {
                 return;
@@ -104,10 +104,10 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         }
         initStartingMetrics();
         initFields();
-        initFirstAppearance();
         setAnimationForWidgets();
         startAnimations();
         initNavigationDrawer();
+        initFirstAppearance();
     }
 
     /**
@@ -175,7 +175,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                                 //TODO add unselect item
                                 break;
                             case 2:
-                            	if (opened) {
+                                if (opened) {
                                     for (int i = PositionManager.getInstance().getFavouritesList().size() - 1; i >= 0; i--) {
                                         result.removeItems(subItemIndex + i);
 
@@ -195,8 +195,8 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                                     }
                                 }
 
-                            opened = !opened;
-                            break;
+                                opened = !opened;
+                                break;
                             case 3:
 //                                Toast.makeText(WeatherActivity.this, "Intent for settings ", Toast.LENGTH_SHORT).show();
                                 startSettingsActivity();
@@ -238,6 +238,11 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        onRefresh();
+    }
 
     @Override
     protected void onResume() {
@@ -251,14 +256,14 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         favorites.withEnabled(true);
         result.updateItem(favorites);
         result.updateBadge(2, new StringHolder(String.valueOf(PositionManager.getInstance().getFavouritesList().size())));
-
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         for (int i = PositionManager.getInstance().getFavouritesList().size() - 1; i >= 0; i--) {
-            result.removeItems(subItemIndex + i); }
+            result.removeItems(subItemIndex + i);
+        }
         if (opened) opened = !opened;
 
         //FIXME add unselect item
@@ -299,6 +304,10 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
+    public boolean isHourlyForecastActive() {
+        return dailyForecastFragment.isHidden();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_activity_weather, menu);
@@ -317,9 +326,9 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_item_change_location:
-                startCityPickerActivity();
-                return true;
+//            case R.id.menu_item_change_location:
+//                startCityPickerActivity();
+//                return true;
             case R.id.menu_item_refresh:
                 startAnimation();
                 onRefresh();
@@ -367,7 +376,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         syncBtn.startAnimation(animationRotateCenter);
     }
 
-
     private void setAnimationForWidgets() {
         /** Анимация объектов */
         animationRotateCenter = AnimationUtils.loadAnimation(this, R.anim.rotate_center);
@@ -376,21 +384,24 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
     private void initFirstAppearance() {
         temperature.setText("--/--");
-        if (PositionManager.getInstance().getPositions().size() == 0) {
+/*      if (PositionManager.getInstance().getPositions().size() == 0) {
             startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
         } else if (!PositionManager.getInstance().positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {
             Toast.makeText(this, R.string.msg_choose_city, Toast.LENGTH_SHORT).show();
             startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
-        } else {
-            if (!PositionManager.getInstance().getCurrentPositionName().isEmpty()) {
-                onRefresh();
+        } else { }        */
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                PositionManager.getInstance().sendRequest();
             }
-        }
+        }, 200);
     }
 
     /**
      * Обновление интерфейса Activity при получении новых данных
      */
+
     public void updateInterface(WeatherStation.ResponseType responseType, Map<Calendar, Weather> forecast) {
         stopRefresh();
         toolbar.setTitle(PositionManager.getInstance().getCurrentPositionName().split(",")[0]);
@@ -445,7 +456,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                     default:
                         temp_measure = getString(R.string.CELSIUS);
                 }
-                PositionManager.getInstance().updateWeather();
+                PositionManager.getInstance().updateWeatherFromDB();
                 break;
             case R.id.pressure:
                 switch (PositionManager.getInstance().changePressureMetric()) {
@@ -456,7 +467,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                     default:
                         press_measure = getString(R.string.pressure_measure_hpa);
                 }
-                PositionManager.getInstance().updateWeather();
+                PositionManager.getInstance().updateWeatherFromDB();
                 break;
         }
     }
@@ -496,8 +507,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
      */
     public void changeDisplayedCity(String newCity) {
         PositionManager.getInstance().setCurrentPosition(newCity);
-//  TODO закомментировал так как текущий пока "текущее местоположение"
-//        PositionManager.getInstance().saveCurrPosition();
         onRefresh();
     }
 

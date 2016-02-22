@@ -56,13 +56,17 @@ public class SQLiteProcessData {
         SQLiteWork.getInstance().qExExec(SQLiteFields.QUERY_UPDATE_CURRSTATION_SETTING, new String[]{currentStation.getServiceType().name()});
     }
 
+    public void saveSettings(AppUtils.TemperatureMetrics temperatureMetrics,
+                             AppUtils.SpeedMetrics speedMetrics, AppUtils.PressureMetrics pressureMetrics) {
+        SQLiteWork.getInstance().qExExec(SQLiteFields.QUERY_UPDATE_METRICS_SETTINGS, new String[]{temperatureMetrics.name(), speedMetrics.name(), pressureMetrics.name()});
+    }
+
     public void saveSettings(Position currPosition) {
         SQLiteWork.getInstance().qExExec(SQLiteFields.QUERY_UPDATE_CURRCITY_SETTING, new String[]{currPosition.getLocationName()});
     }
 
-    public void saveSettings(AppUtils.TemperatureMetrics temperatureMetrics,
-                             AppUtils.SpeedMetrics speedMetrics, AppUtils.PressureMetrics pressureMetrics) {
-        SQLiteWork.getInstance().qExExec(SQLiteFields.QUERY_UPDATE_METRICS_SETTINGS, new String[]{temperatureMetrics.name(), speedMetrics.name(), pressureMetrics.name()});
+    public void saveLastCurrentLocationName(String currLocation) {
+        SQLiteWork.getInstance().qExExec(SQLiteFields.QUERY_UPDATE_CURRCITY_SETTING, new String[]{currLocation});
     }
 
     // Загрузка CurrentTown.

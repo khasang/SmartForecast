@@ -1,32 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/recycler_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_gravity="center"
     android:layout_margin="8dp"
-    card_view:cardCornerRadius="4dp"
-    android:id="@+id/recycler_item">
+    card_view:cardCornerRadius="4dp">
 
-    <TextView
-        android:id="@+id/cityTW"
-        style="@style/Base.TextAppearance.AppCompat.Body2"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/listPreferredItemHeight"
-        android:gravity="center_vertical"
-        android:padding="8dp"
-        tools:text="Berlin"/>
-
-    <ImageButton
-        android:id="@+id/starBtn"
-        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:background="@null"
-        android:layout_gravity="end"
-        android:padding="8dp"
-        android:gravity="end"
-        android:src="@android:drawable/btn_star_big_off"/>
+        android:orientation="horizontal">
 
+        <TextView
+            android:id="@+id/cityTW"
+            style="@style/Base.TextAppearance.AppCompat.Body2"
+            android:width="0dp"
+            android:layout_width="0dp"
+            android:layout_height="?attr/listPreferredItemHeight"
+            android:gravity="center_vertical|left"
+            android:padding="8dp"
+            android:layout_weight="1"
+            tools:text="Berlin"/>
+
+        <ImageButton
+            android:id="@+id/starBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:background="@null"
+            android:gravity="end"
+            android:padding="8dp"
+            android:src="@android:drawable/btn_star_big_off" />
+    </LinearLayout>
 </android.support.v7.widget.CardView>
