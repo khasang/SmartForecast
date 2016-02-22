@@ -122,9 +122,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 PositionManager.getInstance().removePosition(cityList.get(position));
                 cityList.remove(position);
                 recyclerAdapter.notifyDataSetChanged();
-
-                //TODO Не работает отображение infoTV при очистке favCityList
-                Logger.println(TAG, String.valueOf(cityList.size()));
                 swapVisibilityTextOrList();
             }
         };
@@ -179,13 +176,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             case R.id.fabBtn:
                 showChooseCityDialog();
                 break;
-            case R.id.recycler_item:
-                final int position = recyclerView.getChildAdapterPosition(v);
-                Intent answerIntent = new Intent();
-                answerIntent.putExtra(CITY_PICKER_TAG, cityList.get(position - 1));
-                setResult(RESULT_OK, answerIntent);
-                ActivityCompat.finishAfterTransition(this);
-                break;
             case R.id.starBtn:
                 final int pos = recyclerView.getChildAdapterPosition((View) v.getParent());
                 String city = cityList.get(pos - 1);
@@ -194,6 +184,13 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                     starImageRes = android.R.drawable.btn_star_big_on;
                 }
                 ((ImageButton)v).setImageResource(starImageRes);
+                break;
+            case R.id.recycler_item:
+                final int position = recyclerView.getChildAdapterPosition(v);
+                Intent answerIntent = new Intent();
+                answerIntent.putExtra(CITY_PICKER_TAG, cityList.get(position - 1));
+                setResult(RESULT_OK, answerIntent);
+                ActivityCompat.finishAfterTransition(this);
                 break;
         }
     }
@@ -213,7 +210,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                     public void onClick(DialogInterface dialog, int which) {
                         CityPickerActivity.this.clearList();
                         recyclerAdapter.notifyDataSetChanged();
-                        swapVisibilityTextOrList();
                     }
                 });
                 builder.setNegativeButton(R.string.btn_no, new DialogInterface.OnClickListener() {
@@ -281,12 +277,13 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 recyclerAdapter.notifyDataSetChanged();
             }
         }
-
+        swapVisibilityTextOrList();
     }
 
     private void clearList() {
         PositionManager.getInstance().removePositions();
         cityList.clear();
+        swapVisibilityTextOrList();
     }
 
     private void closeMap() {
