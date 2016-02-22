@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.Logger;
 import com.khasang.forecast.R;
+import com.khasang.forecast.activities.etc.NavigationDrawer;
 import com.khasang.forecast.fragments.DailyForecastFragment;
 import com.khasang.forecast.fragments.HourlyForecastFragment;
 import com.khasang.forecast.position.Position;
@@ -107,7 +108,13 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         setAnimationForWidgets();
         startAnimations();
         initNavigationDrawer();
+        initNavigationDrawer2();
         initFirstAppearance();
+    }
+
+    private void initNavigationDrawer2() {
+        NavigationDrawer drawer = new NavigationDrawer();
+        //drawer.init(this, toolbar);
     }
 
     /**
