@@ -2,6 +2,7 @@ package com.khasang.forecast.adapters.view_holders;
 
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageButton;
@@ -16,12 +17,12 @@ import com.khasang.forecast.R;
 public class RecyclerItemViewHolder extends RecyclerView.ViewHolder {
     private final TextView mItemTextView;
     private final ImageButton mItemImageButton;
-    View cardView;
+    CardView cardView;
 
 
     public RecyclerItemViewHolder(View itemView, View.OnClickListener listener, View.OnLongClickListener longListener) {
         super(itemView);
-        cardView = itemView;
+        cardView = (CardView)itemView;
         mItemTextView = (TextView) cardView.findViewById(R.id.cityTW);
         mItemImageButton = ((ImageButton) cardView.findViewById(R.id.starBtn));
         mItemImageButton.setOnClickListener(listener);
@@ -44,9 +45,9 @@ public class RecyclerItemViewHolder extends RecyclerView.ViewHolder {
 
     public void markCityAsNew(boolean mark) {
         if (mark) {
-            cardView.setBackgroundColor(ContextCompat.getColor(MyApplication.getAppContext(), R.color.new_city_card));
+            cardView.setCardBackgroundColor(ContextCompat.getColor(MyApplication.getAppContext(),R.color.new_city_card));
         } else {
-            cardView.setBackgroundColor(Color.WHITE);
+            cardView.setCardBackgroundColor(Color.WHITE);
         }
     }
 

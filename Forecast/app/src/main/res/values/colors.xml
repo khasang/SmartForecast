@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="new_city_card">#FFF8E1</color>
     <color name="primary">#4CAF50</color>
     <color name="primary_dark">#388E3C</color>
     <color name="primary_light">#C8E6C9</color>
@@ -9,7 +10,6 @@
     <color name="icons">#FFFFFF</color>
     <color name="divider">#B6B6B6</color>
     <color name="grey_100">#FFF5F5F5</color>
-    <color name="new_city_card">#FFF8E1</color>
 
     <color name="background_splash">#D8A893</color>
 </resources>
