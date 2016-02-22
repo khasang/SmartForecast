@@ -376,7 +376,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         syncBtn.startAnimation(animationRotateCenter);
     }
 
-
     private void setAnimationForWidgets() {
         /** Анимация объектов */
         animationRotateCenter = AnimationUtils.loadAnimation(this, R.anim.rotate_center);
@@ -385,24 +384,24 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
     private void initFirstAppearance() {
         temperature.setText("--/--");
-        if (PositionManager.getInstance().getPositions().size() == 0) {
+/*      if (PositionManager.getInstance().getPositions().size() == 0) {
             startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
         } else if (!PositionManager.getInstance().positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {
             Toast.makeText(this, R.string.msg_choose_city, Toast.LENGTH_SHORT).show();
             startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
-        } else {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    PositionManager.getInstance().sendRequest();
-                }
-            }, 200);
-        }
+        } else { }        */
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                PositionManager.getInstance().sendRequest();
+            }
+        }, 200);
     }
 
     /**
      * Обновление интерфейса Activity при получении новых данных
      */
+
     public void updateInterface(WeatherStation.ResponseType responseType, Map<Calendar, Weather> forecast) {
         stopRefresh();
         toolbar.setTitle(PositionManager.getInstance().getCurrentPositionName().split(",")[0]);
