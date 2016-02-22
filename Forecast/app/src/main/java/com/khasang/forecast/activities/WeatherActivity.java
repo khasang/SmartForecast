@@ -90,7 +90,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather_material);
         PositionManager.getInstance().configureManager(this);
-        PositionManager.getInstance().updateCurrentLocationCoordinates();
         if (findViewById(R.id.fragment_container) != null) {
             if (savedInstanceState != null) {
                 return;
@@ -103,13 +102,12 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                     .hide(dailyForecastFragment)
                     .commit();
         }
-//        PositionManager.getInstance().updateWeatherFromDB(PositionManager.getInstance().getCurrentLocationName());
         initStartingMetrics();
         initFields();
-        initFirstAppearance();
         setAnimationForWidgets();
         startAnimations();
         initNavigationDrawer();
+        initFirstAppearance();
     }
 
     /**
@@ -240,6 +238,11 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        onRefresh();
+    }
 
     @Override
     protected void onResume() {
@@ -253,7 +256,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         favorites.withEnabled(true);
         result.updateItem(favorites);
         result.updateBadge(2, new StringHolder(String.valueOf(PositionManager.getInstance().getFavouritesList().size())));
-
     }
 
     @Override
@@ -389,9 +391,12 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             Toast.makeText(this, R.string.msg_choose_city, Toast.LENGTH_SHORT).show();
             startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
         } else {
-            if (!PositionManager.getInstance().getCurrentPositionName().isEmpty()) {
-                onRefresh();
-            }
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    PositionManager.getInstance().sendRequest();
+                }
+            }, 200);
         }
     }
 
@@ -463,7 +468,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                     default:
                         press_measure = getString(R.string.pressure_measure_hpa);
                 }
-                PositionManager.getInstance().updateWeather();
+                PositionManager.getInstance().updateWeatherFromDB();
                 break;
         }
     }

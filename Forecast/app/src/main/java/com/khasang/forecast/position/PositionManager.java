@@ -5,6 +5,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.net.ConnectivityManager;
+import android.os.Handler;
 import android.widget.Toast;
 
 import com.khasang.forecast.AppUtils;
@@ -349,18 +350,24 @@ public class PositionManager {
                 return;
             }
         }
-        if (activePosition.getCoordinate() != null) {
-            sendRequest();
-        } else {
-            Toast.makeText(MyApplication.getAppContext(), R.string.coordinates_error, Toast.LENGTH_SHORT).show();
-        }
+        sendRequest();
     }
 
     /**
      * Метод, отправляет запрос на обновление погоды
      */
-    private void sendRequest() {
-        if (isNetworkAvailable(mActivity)) {
+    public void sendRequest() {
+        if (activePosition.getCoordinate() == null) {
+            if (!activePosition.getLocationName().isEmpty()) {
+                updateWeatherFromDB();
+            }
+            Toast.makeText(MyApplication.getAppContext(), R.string.coordinates_error, Toast.LENGTH_SHORT).show();
+        } else if (!isNetworkAvailable(mActivity)) {
+            if (!activePosition.getLocationName().isEmpty()) {
+                updateWeatherFromDB();
+            }
+            Toast.makeText(mActivity, R.string.update_error_net_not_availble, Toast.LENGTH_SHORT).show();
+        } else {
             LinkedList<WeatherStation.ResponseType> requestQueue = new LinkedList<>();
             requestQueue.add(WeatherStation.ResponseType.CURRENT);
             if (mActivity.isHourlyForecastActive()) {
@@ -371,9 +378,6 @@ public class PositionManager {
                 requestQueue.addLast(WeatherStation.ResponseType.HOURLY);
             }
             currStation.updateWeather(requestQueue, activePosition.getCityID(), activePosition.getCoordinate());
-        } else {
-            updateWeatherFromDB();
-            Toast.makeText(mActivity, R.string.update_error_net_not_availble, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -531,13 +535,18 @@ public class PositionManager {
         return currentLocation.getCoordinate();
     }
 
-    public String getCurrentLocationName () {
+    public String getCurrentLocationName() {
         return currentLocation.getLocationName();
     }
 
     public void setCurrentLocationCoordinates(Location location) {
         if (updateCurrentLocation(location) && activePosition == currentLocation) {
-            sendRequest();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    sendRequest();
+                }
+            }, 1000);
         }
     }
 
