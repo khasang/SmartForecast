@@ -57,7 +57,7 @@ import java.util.regex.Pattern;
 
 /**
  * Created by CopyPasteStd on 29.11.15.
- *
+ * <p/>
  * Activity для выбора местоположения
  */
 public class CityPickerActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
@@ -131,7 +131,9 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         fabBtn.startAnimation(animation);
     }
 
-    /** Задает размер для Footer */
+    /**
+     * Задает размер для Footer
+     */
     private void setupFooter() {
         FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) fabBtn.getLayoutParams();
         int fabBottomMargin = lp.bottomMargin;
@@ -183,7 +185,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 if (PositionManager.getInstance().flipFavCity(city)) {
                     starImageRes = android.R.drawable.btn_star_big_on;
                 }
-                ((ImageButton)v).setImageResource(starImageRes);
+                ((ImageButton) v).setImageResource(starImageRes);
                 break;
             case R.id.recycler_item:
                 final int position = recyclerView.getChildAdapterPosition(v);
@@ -245,7 +247,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         List<Address> addresses;
         try {
             addresses = geocoder.getFromLocationName(city, 3);
-            if (addresses.size() == 0){
+            if (addresses.size() == 0) {
                 Toast.makeText(getApplicationContext(), String.format(getString(R.string.coordinates_not_found), city), Toast.LENGTH_SHORT).show();
                 return null;
             }
@@ -349,24 +351,9 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         final Pattern pattern = Pattern.compile("^[\\w\\s,`'()-]+$");
         final View view = getLayoutInflater().inflate(R.layout.dialog_pick_location, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        //final DelayedAutoCompleteTextView chooseCity = (DelayedAutoCompleteTextView) view.findViewById(R.id.editTextCityName);
-
         setBtnClear(view);
-
-        chooseCity = (DelayedAutoCompleteTextView) view.findViewById(R.id.editTextCityName);
-        chooseCity.setAdapter(new GooglePlacesAutocompleteAdapter(this, R.layout.autocomplete_city_textview_item));
-        chooseCity.setLoadingIndicator((ProgressBar) view.findViewById(R.id.autocomplete_progressbar));
-        chooseCity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String description = (String) parent.getItemAtPosition(position);
-                chooseCity.setError(null);
-                chooseCity.setText(description);
-                setLocationOnMap(description);
-            }
-        });
-        builder.setTitle(R.string.title_choose_city)
-                .setView(view)
+        builder.setView(view)
+                //.setTitle(R.string.title_choose_city)
                 .setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -387,6 +374,21 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                     }
                 });
         final AlertDialog dialog = builder.create();
+        chooseCity = (DelayedAutoCompleteTextView) view.findViewById(R.id.editTextCityName);
+        chooseCity.setAdapter(new GooglePlacesAutocompleteAdapter(this, R.layout.autocomplete_city_textview_item));
+        chooseCity.setLoadingIndicator((ProgressBar) view.findViewById(R.id.autocomplete_progressbar));
+        chooseCity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String description = (String) parent.getItemAtPosition(position);
+                chooseCity.setError(null);
+                chooseCity.setText(description);
+                //dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                chooseCity.setEnabled(false);
+                chooseCity.setEnabled(true);
+                setLocationOnMap(description);
+            }
+        });
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialog) {
@@ -418,7 +420,8 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
             }
         });
-        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        //dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         dialog.show();
         maps = new Maps(this);
     }
