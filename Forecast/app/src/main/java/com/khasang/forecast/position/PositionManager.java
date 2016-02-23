@@ -355,7 +355,7 @@ public class PositionManager {
         if (activePosition == currentLocation) {
             updateCurrentLocationCoordinates();
             if (currentLocation.getCoordinate() == null) {
-                // Что то делать, так как на данный момент нет никаких коорднат для текущего местоположения
+                updateWeatherFromDB();
                 return;
             }
         }
@@ -555,7 +555,7 @@ public class PositionManager {
                 public void run() {
                     sendRequest();
                 }
-            }, 1000);
+            }, 3000);
         }
     }
 

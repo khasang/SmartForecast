@@ -140,6 +140,9 @@ public class OpenWeatherMap extends WeatherStation {
      */
     @Override
     public void updateWeather(final LinkedList<ResponseType> requestQueue, final int cityID, final Coordinate coordinate) {
+        if (coordinate == null) {
+            PositionManager.getInstance().onFailureResponse(requestQueue, cityID, getServiceType());
+        }
         Call<OpenWeatherMapResponse> call = service.getCurrent(coordinate.getLatitude(),
                 coordinate.getLongitude());
         call.enqueue(new Callback<OpenWeatherMapResponse>() {
@@ -169,6 +172,9 @@ public class OpenWeatherMap extends WeatherStation {
      */
     @Override
     public void updateHourlyWeather(final LinkedList<ResponseType> requestList, final int cityID, final Coordinate coordinate) {
+        if (coordinate == null) {
+            PositionManager.getInstance().onFailureResponse(requestList, cityID, getServiceType());
+        }
         Call<OpenWeatherMapResponse> call = service.getHourly(coordinate.getLatitude(),
                 coordinate.getLongitude(),
                 TIME_PERIOD);
@@ -198,6 +204,9 @@ public class OpenWeatherMap extends WeatherStation {
      */
     @Override
     public void updateWeeklyWeather(final LinkedList<ResponseType> requestList, final int cityID, final Coordinate coordinate) {
+        if (coordinate == null) {
+            PositionManager.getInstance().onFailureResponse(requestList, cityID, getServiceType());
+        }
         Call<DailyResponse> call = service.getDaily(coordinate.getLatitude(),
                 coordinate.getLongitude(),
                 DAYS_PERIOD);

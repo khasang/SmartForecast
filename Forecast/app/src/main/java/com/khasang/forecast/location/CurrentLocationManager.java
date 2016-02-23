@@ -149,7 +149,6 @@ public class CurrentLocationManager {
         }
         locationManager.removeUpdates(locationListener);
         locationManager.requestSingleUpdate(getTheBestProvider(), locationListener, null);
-//        locationManager.requestLocationUpdates(getTheBestProvider(), 0, 0, locationListener);
     }
 
     private void coordinatesUpdated(Location location) {
