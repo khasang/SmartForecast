@@ -1,6 +1,5 @@
 package com.khasang.forecast.activities.etc;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.Toolbar;
@@ -18,6 +17,7 @@ import com.mikepenz.ionicons_typeface_library.Ionicons;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.holder.StringHolder;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
@@ -38,9 +38,10 @@ public class NavigationDrawer {
     private boolean opened = false;
     private final int subItemIndex = 2000;
 
-
+    /**
+     * Инициализация Navigation Drawer
+     */
     public void init(final WeatherActivity activity, Toolbar toolbar) {
-    //public void init(final Activity activity, Toolbar toolbar) {
 
         /** Инициализация элементов меню */
         final DividerDrawerItem divider = new DividerDrawerItem();
@@ -119,7 +120,6 @@ public class NavigationDrawer {
                                 opened = !opened;
                                 break;
                             case 3:
-//                                Toast.makeText(WeatherActivity.this, "Intent for settings ", Toast.LENGTH_SHORT).show();
                                 activity.startSettingsActivity();
                                 result.closeDrawer();
                                 break;
@@ -151,5 +151,37 @@ public class NavigationDrawer {
 
     }
 
+    /** Закрывает открытый Drawer */
+    public boolean isDrawerOpened() {
+        if (result != null && result.isDrawerOpen()) {
+            result.closeDrawer();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /** Обновление Drawer badges */
+    public void updateBadges() {
+        if (PositionManager.getInstance().getFavouritesList().isEmpty()) {
+            favorites.withBadge("").withEnabled(false);
+            result.updateItem(favorites);
+            return;
+        }
+        favorites.withEnabled(true);
+        result.updateItem(favorites);
+        result.updateBadge(2, new StringHolder(String.valueOf(PositionManager.getInstance().getFavouritesList().size())));
+    }
+
+    /** Закрывает открытые Drawer SubItems */
+    public void closeSubItems() {
+        for (int i = PositionManager.getInstance().getFavouritesList().size() - 1; i >= 0; i--) {
+            result.removeItems(subItemIndex + i);
+        }
+        if (opened) opened = !opened;
+        //FIXME add unselect item
+  /*      favorites.withSelectable(false);
+        result.updateItem(favorites);*/
+    }
 
 }
