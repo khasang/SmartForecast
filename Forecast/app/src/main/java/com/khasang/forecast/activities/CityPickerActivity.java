@@ -391,7 +391,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
         chooseCity = (DelayedAutoCompleteTextView) view.findViewById(R.id.editTextCityName);
         chooseCity.setAdapter(new GooglePlacesAutocompleteAdapter(this, R.layout.autocomplete_city_textview_item));
-//        chooseCity.setLoadingIndicator((ProgressBar) view.findViewById(R.id.autocomplete_progressbar));
+        chooseCity.setLoadingIndicator((ProgressBar) view.findViewById(R.id.autocomplete_progressbar));
         chooseCity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

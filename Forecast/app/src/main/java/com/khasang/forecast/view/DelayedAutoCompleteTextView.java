@@ -16,7 +16,7 @@ public class DelayedAutoCompleteTextView extends AutoCompleteTextView {
     private static final int DEFAULT_AUTOCOMPLETE_DELAY = 750;
 
     private int mAutoCompleteDelay = DEFAULT_AUTOCOMPLETE_DELAY;
-//    private ProgressBar mLoadingIndicator;
+    private ProgressBar mLoadingIndicator;
 
     private final Handler mHandler = new Handler(){
         @Override
@@ -31,7 +31,7 @@ public class DelayedAutoCompleteTextView extends AutoCompleteTextView {
 
 
     public void setLoadingIndicator(ProgressBar progressBar) {
-//        mLoadingIndicator = progressBar;
+        mLoadingIndicator = progressBar;
     }
 
     public void setAutoCompleteDelay(int autoCompleteDelay) {
@@ -41,7 +41,7 @@ public class DelayedAutoCompleteTextView extends AutoCompleteTextView {
     @Override
     protected void performFiltering(CharSequence text, int keyCode) {
 //        if(mLoadingIndicator != null){
-//            mLoadingIndicator.setVisibility(VISIBLE);
+            mLoadingIndicator.setVisibility(VISIBLE);
 //        }
         mHandler.removeMessages(MESSAGE_TEXT_CHANGED);
         mHandler.sendMessageDelayed(mHandler.obtainMessage(MESSAGE_TEXT_CHANGED, text), mAutoCompleteDelay);
@@ -51,7 +51,7 @@ public class DelayedAutoCompleteTextView extends AutoCompleteTextView {
     @Override
     public void onFilterComplete(int count) {
 //        if (mLoadingIndicator != null){
-//            mLoadingIndicator.setVisibility(GONE);
+            mLoadingIndicator.setVisibility(GONE);
 //        }
         super.onFilterComplete(count);
     }
