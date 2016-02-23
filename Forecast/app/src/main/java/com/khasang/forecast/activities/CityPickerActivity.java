@@ -57,7 +57,6 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-
 /**
  * Created by CopyPasteStd on 29.11.15.
  * <p/>
@@ -242,6 +241,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     }
 
     private Coordinate getTownCoordinates(String city) {
+
         Coordinate coordinate = null;
         if (city.length() <= 0) {
             Toast.makeText(this, R.string.error_empty_location_name, Toast.LENGTH_SHORT).show();
@@ -273,9 +273,8 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
     // Вспомогательный метод для добавления города в список
     private void addItem(String city, Coordinate coordinate) {
-        Logger.println("Update", "notifyDataSetChanged");
         if (coordinate != null) {
-            if (!PositionManager.getInstance().positionIsPresent(city)) {
+            if (!PositionManager.getInstance().positionInListPresent(city)) {
                 PositionManager.getInstance().addPosition(city, coordinate);
                 recyclerAdapter.addCityToNewLocationsList(city);
                 cityList.add(city);
@@ -307,7 +306,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
             maps.deleteAllMarkers();
             maps.setNewMarker(latitude, longitude, city);
-            maps.setCameraPosition(latitude, longitude, 5, 0, 0);
+            maps.setCameraPosition(latitude, longitude, maps.getCurrentZoom(), 0, 0);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -378,6 +377,10 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
             inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         }
+    }
+
+    public void setChooseCityText(String text) {
+        chooseCity.setText(text);
     }
 
     private void showChooseCityDialog() {

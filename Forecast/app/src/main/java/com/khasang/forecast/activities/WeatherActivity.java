@@ -109,7 +109,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onStart() {
         super.onStart();
-        onRefresh();
+        PositionManager.getInstance().updateWeatherFromDB();
     }
 
     @Override
@@ -117,6 +117,8 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         super.onResume();
         Logger.println(TAG, "OnResume");
         drawer.updateBadges();
+        onRefresh();
+
     }
 
     @Override
@@ -179,9 +181,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-//            case R.id.menu_item_change_location:
-//                startCityPickerActivity();
-//                return true;
             case R.id.menu_item_refresh:
                 startAnimation();
                 onRefresh();
@@ -243,12 +242,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             Toast.makeText(this, R.string.msg_choose_city, Toast.LENGTH_SHORT).show();
             startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
         } else { }        */
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                PositionManager.getInstance().sendRequest();
-            }
-        }, 200);
     }
 
     /**
@@ -404,7 +397,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 Logger.println(TAG, "Start animation");
                 PositionManager.getInstance().updateWeather();
             }
-        }, 1000);
+        }, 500);
     }
 
     /**

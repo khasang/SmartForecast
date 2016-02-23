@@ -31,7 +31,7 @@ public class Maps {
     private final String TAG = "mapLogs";
     private double currentLatitude = 0;
     private double currentLongitude = 0;
-    private float currentZoom = 0;
+    private float defaultZoom = 0;
     private CityPickerActivity activity;
     private FragmentManager myFM;
 
@@ -44,13 +44,13 @@ public class Maps {
             try {
                 currentLatitude = coordinate.getLatitude();
                 currentLongitude = coordinate.getLongitude();
-                currentZoom = 8;
+                defaultZoom = 8;
             } catch (NullPointerException e) {
                 currentLongitude = 37.59;
                 currentLatitude = 55.74;
-                currentZoom = 3;
+                defaultZoom = 3;
             }
-            setCameraPosition(currentLatitude, currentLongitude, 8, 0, 0);
+            setCameraPosition(currentLatitude, currentLongitude, defaultZoom, 0, 0);
         }
     }
 
@@ -96,15 +96,15 @@ public class Maps {
     }
 
     public double getCurrentLatitude() {
-        return currentLatitude;
+        return map.getCameraPosition().target.latitude;
     }
 
     public double getCurrentLongitude() {
-        return currentLongitude;
+        return map.getCameraPosition().target.longitude;
     }
 
     public float getCurrentZoom() {
-        return currentZoom;
+        return map.getCameraPosition().zoom;
     }
 
     public void setNewLatLngZoom(double latitude, double longitude, float zoom) {
@@ -135,8 +135,9 @@ public class Maps {
             @Override
             public boolean onMarkerClick(Marker marker) {
                 try {
-                    setCameraPosition(marker.getPosition().latitude, marker.getPosition().longitude, 5, 0, 0);
+                    setCameraPosition(marker.getPosition().latitude, marker.getPosition().longitude, getCurrentZoom(), 0, 0);
                     marker.showInfoWindow();
+                    activity.setChooseCityText(marker.getTitle());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
