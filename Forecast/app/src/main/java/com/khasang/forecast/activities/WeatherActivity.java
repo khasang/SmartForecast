@@ -1,6 +1,7 @@
 package com.khasang.forecast.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -10,6 +11,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
@@ -66,6 +68,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     private FloatingActionButton fab;
     private Toolbar toolbar;
     private ProgressBar progressbar;
+    private SharedPreferences sp;
 
     private NavigationDrawer drawer = new NavigationDrawer();
 
@@ -117,8 +120,15 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         super.onResume();
         Logger.println(TAG, "OnResume");
         drawer.updateBadges();
+        PositionManager.getInstance().setUseGpsModule(sp.getBoolean("gps_switch", true));
+        if (sp.getString("units", "default").equals("metric")) {
+            PositionManager.getInstance().setTemperatureMetric(AppUtils.TemperatureMetrics.CELSIUS);
+            PositionManager.getInstance().setSpeedMetric(AppUtils.SpeedMetrics.METER_PER_SECOND);
+        } else if (sp.getString("units", "default").equals("imperial")) {
+            PositionManager.getInstance().setTemperatureMetric(AppUtils.TemperatureMetrics.FAHRENHEIT);
+            PositionManager.getInstance().setSpeedMetric(AppUtils.SpeedMetrics.MILES_PER_HOURS);
+        }
         onRefresh();
-
     }
 
     @Override
@@ -204,6 +214,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void initFields() {
+        sp = PreferenceManager.getDefaultSharedPreferences(this);
         toolbar = (Toolbar) findViewById(R.id.toolbar_material);
         fab = (FloatingActionButton) findViewById(R.id.fab);
         currWeather = (ImageView) findViewById(R.id.iv_curr_weather);
@@ -341,12 +352,11 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         wind.setText(Html.fromHtml(String.format("%s %.0f%s",
                 wCurent.getWindDirection().getDirectionString(),
                 wCurent.getWindPower(),
-                getString(R.string.wind_measure))));
+                PositionManager.getInstance().getSpeedMetric().toStringValue())));
 
         humidity.setText(String.format("%s%%",
                 wCurent.getHumidity()));
     }
-
 
     /**
      * Изменяет отображаемый город WeatherActivity

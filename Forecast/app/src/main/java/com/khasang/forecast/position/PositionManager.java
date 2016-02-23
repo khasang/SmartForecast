@@ -335,8 +335,20 @@ public class PositionManager {
         return pressureMetric;
     }
 
+    public void setSpeedMetric(AppUtils.SpeedMetrics sm) {
+        speedMetric = sm;
+    }
+
+    public AppUtils.SpeedMetrics getSpeedMetric() {
+        return speedMetric;
+    }
+
     public AppUtils.TemperatureMetrics getTemperatureMetric() {
         return temperatureMetric;
+    }
+
+    public void setTemperatureMetric(AppUtils.TemperatureMetrics tm) {
+        temperatureMetric = tm;
     }
 
     public AppUtils.TemperatureMetrics changeTemperatureMetric() {

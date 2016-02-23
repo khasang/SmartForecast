@@ -10,7 +10,6 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.khasang.forecast.R;
 
@@ -61,7 +60,6 @@ public class SettingsActivity extends AppCompatActivity {
                 ListPreference listPreference = (ListPreference) preference;
                 int prefIndex = listPreference.findIndexOfValue(sharedPreferences.getString(key, ""));
                 if (prefIndex >= 0) {
-                    Toast.makeText(getActivity(), "Change", Toast.LENGTH_SHORT).show();
                     preference.setSummary(listPreference.getEntries()[prefIndex]);
                 }
             }

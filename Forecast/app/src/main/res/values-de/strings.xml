@@ -7,7 +7,10 @@
     <string name="timeStamp">erneuert</string>
     <string name="pressure_measure">mmHg</string>
     <string name="pressure_measure_hpa">HPa</string>
-    <string name="wind_measure"><![CDATA[<sup><small>m</small></sup>/<small>s</small>]]></string>
+    <string name="wind_measure_m_s"><![CDATA[<sup><small>m</small></sup>/<small>s</small>]]></string>
+    <string name="wind_measure_km_h"><![CDATA[<sup><small>km</small></sup>/<small>h</small>]]></string>
+    <string name="wind_measure_mph">mph</string>
+    <string name="wind_measure_fps">fps</string>
 
     <string name="clear_sky">Klar</string> 
     <string name="few_clouds">Die kleine Bewölktheit</string>
