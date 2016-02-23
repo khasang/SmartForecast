@@ -7,6 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.khasang.forecast.Logger;
+import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.R;
 import com.khasang.forecast.activities.WeatherActivity;
 import com.khasang.forecast.position.PositionManager;
@@ -39,7 +40,7 @@ public class NavigationDrawer {
 
 
     public void init(final WeatherActivity activity, Toolbar toolbar) {
-    public void init(final Activity activity, Toolbar toolbar) {
+    //public void init(final Activity activity, Toolbar toolbar) {
 
         /** Инициализация элементов меню */
         final DividerDrawerItem divider = new DividerDrawerItem();
@@ -85,12 +86,12 @@ public class NavigationDrawer {
                     public boolean onItemClick(View v, int position, IDrawerItem drawerItem) {
                         switch (drawerItem.getIdentifier()) {
                             case 0:
-                                ((WeatherActivity)activity).changeDisplayedCity("");
+                                activity.changeDisplayedCity("");
                                 result.closeDrawer();
                                 //TODO add unselect item
                                 break;
                             case 1:
-                                ((WeatherActivity)activity).startCityPickerActivity();
+                                activity.startCityPickerActivity();
                                 result.closeDrawer();
                                 //TODO add unselect item
                                 break;
@@ -119,7 +120,7 @@ public class NavigationDrawer {
                                 break;
                             case 3:
 //                                Toast.makeText(WeatherActivity.this, "Intent for settings ", Toast.LENGTH_SHORT).show();
-                                ((WeatherActivity)activity).startSettingsActivity();
+                                activity.startSettingsActivity();
                                 result.closeDrawer();
                                 break;
                             case 4:
@@ -128,10 +129,10 @@ public class NavigationDrawer {
                                 Intent feedbackIntent = null;
                                 switch (Locale.getDefault().getLanguage()) {
                                     case "ru":
-                                        feedbackIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.google_form_ru)));
+                                        feedbackIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(MyApplication.getAppContext().getString(R.string.google_form_ru)));
                                         break;
                                     default:
-                                        feedbackIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.google_form_en)));
+                                        feedbackIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(MyApplication.getAppContext().getString(R.string.google_form_en)));
                                         break;
                                 }
                                 activity.startActivity(feedbackIntent);
@@ -139,7 +140,7 @@ public class NavigationDrawer {
                                 break;
                             default:
                                 String newCity = PositionManager.getInstance().getFavouritesList().get(drawerItem.getIdentifier() - subItemIndex);
-                                ((WeatherActivity)activity).changeDisplayedCity(newCity);
+                                activity.changeDisplayedCity(newCity);
                                 result.closeDrawer();
                                 break;
                         }
