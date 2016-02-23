@@ -241,6 +241,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     }
 
     private Coordinate getTownCoordinates(String city) {
+
         Coordinate coordinate = null;
         if (city.length() <= 0) {
             Toast.makeText(this, R.string.error_empty_location_name, Toast.LENGTH_SHORT).show();
@@ -272,9 +273,8 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
     // Вспомогательный метод для добавления города в список
     private void addItem(String city, Coordinate coordinate) {
-        Logger.println("Update", "notifyDataSetChanged");
         if (coordinate != null) {
-            if (!PositionManager.getInstance().positionIsPresent(city)) {
+            if (!PositionManager.getInstance().positionInListPresent(city)) {
                 PositionManager.getInstance().addPosition(city, coordinate);
                 recyclerAdapter.addCityToNewLocationsList(city);
                 cityList.add(city);

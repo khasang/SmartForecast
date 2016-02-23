@@ -191,7 +191,7 @@ public class PositionManager {
      * @param coordinates геграфические координаты местоположения
      */
     public void addPosition(String name, Coordinate coordinates) {
-        if (positionIsPresent(name)) {
+        if (positionInListPresent(name)) {
             Toast.makeText(mActivity, R.string.city_exist, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -257,6 +257,15 @@ public class PositionManager {
             activePosition = positions.get(name);
         } else {
             Toast.makeText(MyApplication.getAppContext(), "Не могу определить координаты запрашиваемого местоположения", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public boolean positionInListPresent(String name) {
+        try {
+            return positions.containsKey(name);
+        } catch (ClassCastException | NullPointerException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 
