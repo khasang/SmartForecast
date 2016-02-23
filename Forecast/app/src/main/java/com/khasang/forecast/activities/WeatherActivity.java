@@ -344,14 +344,14 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         return false;
     }
 
-    private void startCityPickerActivity() {
+    public void startCityPickerActivity() {
         Intent intent = new Intent(this, CityPickerActivity.class);
         Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(this)
                 .toBundle();
         ActivityCompat.startActivityForResult(this, intent, CHOOSE_CITY, bundle);
     }
 
-    private void startSettingsActivity() {
+    public void startSettingsActivity() {
         Intent intent = new Intent(this, SettingsActivity.class);
         Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(this)
                 .toBundle();

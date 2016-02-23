@@ -37,7 +37,9 @@ public class NavigationDrawer {
     private boolean opened = false;
     private final int subItemIndex = 2000;
 
-    public void init(Activity activity, Toolbar toolbar) {
+
+    public void init(final WeatherActivity activity, Toolbar toolbar) {
+    public void init(final Activity activity, Toolbar toolbar) {
 
         /** Инициализация элементов меню */
         final DividerDrawerItem divider = new DividerDrawerItem();
@@ -83,12 +85,12 @@ public class NavigationDrawer {
                     public boolean onItemClick(View v, int position, IDrawerItem drawerItem) {
                         switch (drawerItem.getIdentifier()) {
                             case 0:
-                                activity.changeDisplayedCity("");
+                                ((WeatherActivity)activity).changeDisplayedCity("");
                                 result.closeDrawer();
                                 //TODO add unselect item
                                 break;
                             case 1:
-                                activity.startCityPickerActivity();
+                                ((WeatherActivity)activity).startCityPickerActivity();
                                 result.closeDrawer();
                                 //TODO add unselect item
                                 break;
@@ -117,7 +119,7 @@ public class NavigationDrawer {
                                 break;
                             case 3:
 //                                Toast.makeText(WeatherActivity.this, "Intent for settings ", Toast.LENGTH_SHORT).show();
-                                activity.startSettingsActivity();
+                                ((WeatherActivity)activity).startSettingsActivity();
                                 result.closeDrawer();
                                 break;
                             case 4:
@@ -137,7 +139,7 @@ public class NavigationDrawer {
                                 break;
                             default:
                                 String newCity = PositionManager.getInstance().getFavouritesList().get(drawerItem.getIdentifier() - subItemIndex);
-                                activity.changeDisplayedCity(newCity);
+                                ((WeatherActivity)activity).changeDisplayedCity(newCity);
                                 result.closeDrawer();
                                 break;
                         }
