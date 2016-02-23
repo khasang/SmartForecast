@@ -124,7 +124,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onPause() {
         super.onPause();
-       drawer.closeSubItems();
+        drawer.closeSubItems();
     }
 
     @Override
