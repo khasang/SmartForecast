@@ -120,11 +120,11 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         super.onResume();
         Logger.println(TAG, "OnResume");
         drawer.updateBadges();
-        PositionManager.getInstance().setUseGpsModule(sp.getBoolean("gps_switch", true));
-        if (sp.getString("units", "default").equals("metric")) {
+        PositionManager.getInstance().setUseGpsModule(sp.getBoolean(getString(R.string.pref_gps_key), true));
+        if (sp.getString(getString(R.string.pref_units_key), getString(R.string.pref_units_metric)).equals(getString(R.string.pref_units_metric))) {
             PositionManager.getInstance().setTemperatureMetric(AppUtils.TemperatureMetrics.CELSIUS);
             PositionManager.getInstance().setSpeedMetric(AppUtils.SpeedMetrics.METER_PER_SECOND);
-        } else if (sp.getString("units", "default").equals("imperial")) {
+        } else if (sp.getString(getString(R.string.pref_units_key), getString(R.string.pref_units_metric)).equals(getString(R.string.pref_units_imperial))) {
             PositionManager.getInstance().setTemperatureMetric(AppUtils.TemperatureMetrics.FAHRENHEIT);
             PositionManager.getInstance().setSpeedMetric(AppUtils.SpeedMetrics.MILES_PER_HOURS);
         }

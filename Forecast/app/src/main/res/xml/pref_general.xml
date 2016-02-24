@@ -1,8 +1,8 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <SwitchPreference
-        android:defaultValue="true"
-        android:key="gps_switch"
+        android:defaultValue="@string/pref_gps_default"
+        android:key="@string/pref_gps_key"
         android:summary="@string/pref_description_enable_gps"
         android:title="@string/pref_title_enable_gps"/>
 

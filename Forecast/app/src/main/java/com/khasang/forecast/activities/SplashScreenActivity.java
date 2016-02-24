@@ -1,8 +1,11 @@
 package com.khasang.forecast.activities;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -15,6 +18,7 @@ import android.widget.ImageView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.R;
 import com.khasang.forecast.position.PositionManager;
 
@@ -25,6 +29,7 @@ public class SplashScreenActivity
 
     private final static String TAG = SplashScreenActivity.class.getSimpleName();
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    private static final int PERMISSIONS_REQUEST_LOCATION = 10;
     private final int SPLASH_DISPLAY_LENGTH = 1500;
 
     @Override
@@ -55,6 +60,10 @@ public class SplashScreenActivity
         Animation anim_splash_smile = AnimationUtils.loadAnimation(this, R.anim.anim_splash_smile);
         Animation anim_splash_wink = AnimationUtils.loadAnimation(this, R.anim.anim_splash_wink);
 
+        if (ActivityCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSIONS_REQUEST_LOCATION);
+        }
+
         // Запуск анимации
         splash_cloud.startAnimation(anim_splash_cloud);
         splash_left_cloud.startAnimation(anim_splash_left_cloud);
@@ -64,40 +73,18 @@ public class SplashScreenActivity
         splash_wink.startAnimation(anim_splash_wink);
         PositionManager.getInstance().initManager();
         anim_splash_wink.setAnimationListener(this);
-        //TODO FOR TEST
-        //splash_left_cloud.setVisibility(View.GONE);
-        //splash_right_cloud.setVisibility(View.GONE);
-        //splash_rainbow.setVisibility(View.GONE);
-        //splash_smile.setVisibility(View.GONE);
+    }
 
-        //TODO FOR TEST
-       /* final ImageView mImageViewFilling = (ImageView) findViewById(R.id.imageview_animation_list_face);
-        mImageViewFilling.animate().setStartDelay(1000);
-        ((AnimationDrawable) mImageViewFilling.getBackground()).start();*/
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_LOCATION:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-        //TODO DELETE
-     /*   mImageViewFilling.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mImageViewFilling.setActivated(!mImageViewFilling.isActivated());
-            }
-        });*/
-
-        /** New Handler запускает  Splash-Screen Activity
-         * и закрывает его после нескольких секунд ожидания.*/
-//        if (checkPlayServices()){
-//            new Handler().postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    Intent intent = new Intent(SplashScreenActivity.this, WeatherActivity.class);
-////                    startActivity(intent);
-//                    Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(SplashScreenActivity.this)
-//                            .toBundle();
-//                    ActivityCompat.startActivity(SplashScreenActivity.this, intent, bundle);
-//                    finish();
-//                }
-//            }, SPLASH_DISPLAY_LENGTH);
-//        }
+                }
+                break;
+        }
     }
 
     private boolean checkPlayServices() {
