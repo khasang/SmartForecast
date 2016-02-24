@@ -115,20 +115,19 @@ public class SQLiteFields {
                     " ORDER BY ABS( CAST(strftime('%s', " + DATE + ") AS int) - CAST(strftime('%s', ?) AS int) ) ASC " +
                     " LIMIT 1";
 
-    public static final String QUERY_INSERT_TOWN = "INSERT INTO " + TABLE_TOWNS + " (" +
+    public static final String QUERY_INSERT_TOWN_1 = "INSERT INTO " + TABLE_TOWNS + " (" +
             TOWN + "," +
             LATITUDE + "," +
             LONGTITUDE + ") " +
             " VALUES ( ? , ? , ? )";
 
-    public static final String QUERY_INSERT_FULL_TOWN = "INSERT INTO " + TABLE_TOWNS + " (" +
+    public static final String QUERY_INSERT_TOWN_2 = "INSERT INTO " + TABLE_TOWNS + " (" +
             TOWN + "," +
             LATITUDE + "," +
             LONGTITUDE + "," +
-            SUNRISE + "," +
-            SUNSET + "," +
             FAVORITE + ") " +
-            " VALUES ( ? , ? , ? , ? , ? , ? )";
+            " VALUES ( ? , ? , ? , ? )";
+
 
     public static final String QUERY_UPDATE_TOWN_SUNTIME = "UPDATE " + TABLE_TOWNS + " SET " +
             SUNRISE + " = ? , " +
