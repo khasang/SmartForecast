@@ -452,7 +452,11 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
             @Override
             public void afterTextChanged(Editable s) {
-                if ((!chooseCity.getText().toString().trim().isEmpty()) && (chooseCity.getText().toString().trim().length() % 4 == 0)) {
+                if (chooseCity.getText().toString().trim().isEmpty()){
+                    return;
+                }
+                char lastSym = s.toString().toCharArray()[s.length()-1];
+                if ((chooseCity.getText().toString().trim().length() % 4 == 0) || (lastSym == ' ') || (lastSym == '-')) {
                     setMarkersOnMap();
                 }
             }
