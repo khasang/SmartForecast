@@ -373,12 +373,19 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
     // Метод скрытия клавиатуры
     public void hideSoftKeyboard(Context context) {
+        if (chooseCity.isFocused()) {
+            InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
+            inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+        }
+    }
+/*
+    public void hideSoftKeyboard(Context context) {
         if (getCurrentFocus() != null) {
             InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
             inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         }
     }
-
+*/
     public void setChooseCityText(String text) {
         chooseCity.setText(text);
     }
@@ -452,10 +459,10 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (chooseCity.getText().toString().trim().isEmpty()){
+                if (chooseCity.getText().toString().trim().isEmpty()) {
                     return;
                 }
-                char lastSym = s.toString().toCharArray()[s.length()-1];
+                char lastSym = s.toString().toCharArray()[s.length() - 1];
                 if ((chooseCity.getText().toString().trim().length() % 4 == 0) || (lastSym == ' ') || (lastSym == '-')) {
                     setMarkersOnMap();
                 }

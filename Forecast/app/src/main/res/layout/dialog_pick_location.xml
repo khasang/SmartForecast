@@ -28,8 +28,8 @@
                 android:ems="10"
                 android:hint="@string/title_choose_city"
                 android:imeOptions="flagNoExtractUi|actionDone"
-                android:inputType="textCapSentences"
-                android:singleLine="true">
+                android:inputType="textCapSentences|textMultiLine"
+                android:singleLine="false">
 
                 <requestFocus />
             </com.khasang.forecast.view.DelayedAutoCompleteTextView>
