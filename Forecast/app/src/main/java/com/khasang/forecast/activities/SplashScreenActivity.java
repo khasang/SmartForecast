@@ -65,13 +65,13 @@ public class SplashScreenActivity
         }
 
         // Запуск анимации
+        PositionManager.getInstance().initManager();
         splash_cloud.startAnimation(anim_splash_cloud);
         splash_left_cloud.startAnimation(anim_splash_left_cloud);
         splash_right_cloud.startAnimation(anim_splash_right_cloud);
         splash_rainbow.startAnimation(anim_splash_rainbow);
         splash_smile.startAnimation(anim_splash_smile);
         splash_wink.startAnimation(anim_splash_wink);
-        PositionManager.getInstance().initManager();
         anim_splash_wink.setAnimationListener(this);
     }
 

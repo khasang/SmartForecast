@@ -417,11 +417,19 @@ public class PositionManager {
     }
 
     public void updateWeatherFromDB(WeatherStation.ResponseType responseType, Position position) {
-        updateWeatherFromDB(responseType, position.getLocationName());
+        try {
+            updateWeatherFromDB(responseType, position.getLocationName());
+        } catch (NullPointerException e){
+            e.printStackTrace();
+        }
     }
 
     public void updateWeatherFromDB() {
-        updateWeatherFromDB(activePosition.getLocationName());
+        try {
+            updateWeatherFromDB(activePosition.getLocationName());
+        } catch (NullPointerException e){
+            e.printStackTrace();
+        }
     }
 
     public void updateWeatherFromDB(String locationName) {
