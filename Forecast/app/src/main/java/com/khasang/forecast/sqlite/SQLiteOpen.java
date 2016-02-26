@@ -79,7 +79,7 @@ public class SQLiteOpen extends SQLiteOpenHelper {
                     });
 
                     /*  TODO Для третьего релиза!
-                    db.execSQL(SQLiteFields.QUERY_INSERT_FULL_TOWN, new String[]{
+                    db.execSQL(SQLiteFields.QUERY_INSERT_TOWN_2, new String[]{
                             map.get(SQLiteFields.TOWN),
                             map.get(SQLiteFields.LATITUDE),
                             map.get(SQLiteFields.LONGTITUDE),
