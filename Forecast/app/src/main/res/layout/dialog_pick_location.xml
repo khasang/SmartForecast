@@ -30,8 +30,6 @@
                 android:imeOptions="flagNoExtractUi|actionDone"
                 android:inputType="textCapSentences|textMultiLine"
                 android:singleLine="false">
-
-                <requestFocus />
             </com.khasang.forecast.view.DelayedAutoCompleteTextView>
 
             <ProgressBar
