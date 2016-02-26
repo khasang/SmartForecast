@@ -151,7 +151,9 @@ public class NavigationDrawer {
 
     }
 
-    /** Закрывает открытый Drawer */
+    /**
+     * Закрывает открытый Drawer
+     */
     public boolean isDrawerOpened() {
         if (result != null && result.isDrawerOpen()) {
             result.closeDrawer();
@@ -161,7 +163,9 @@ public class NavigationDrawer {
         }
     }
 
-    /** Обновление Drawer badges */
+    /**
+     * Обновление Drawer badges
+     */
     public void updateBadges() {
         if (PositionManager.getInstance().getFavouritesList().isEmpty()) {
             favorites.withBadge("").withEnabled(false);
@@ -173,12 +177,16 @@ public class NavigationDrawer {
         result.updateBadge(2, new StringHolder(String.valueOf(PositionManager.getInstance().getFavouritesList().size())));
     }
 
-    /** Закрывает открытые Drawer SubItems */
+    /**
+     * Закрывает открытые Drawer SubItems
+     */
     public void closeSubItems() {
         for (int i = PositionManager.getInstance().getFavouritesList().size() - 1; i >= 0; i--) {
             result.removeItems(subItemIndex + i);
         }
-        if (opened) opened = !opened;
+        if (opened) {
+            opened = false;
+        }
         //FIXME add unselect item
   /*      favorites.withSelectable(false);
         result.updateItem(favorites);*/

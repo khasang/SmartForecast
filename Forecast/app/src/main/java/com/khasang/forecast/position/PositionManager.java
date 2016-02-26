@@ -74,9 +74,12 @@ public class PositionManager {
         initStations();
     }
 
-    public List<String> getFavouritesList() {
+    public void updateFavoritesList () {
         favouritesPositions = dbManager.loadFavoriteTownList();
         Collections.sort(favouritesPositions);
+    }
+
+    public List<String> getFavouritesList() {
         return favouritesPositions;
     }
 
@@ -104,6 +107,7 @@ public class PositionManager {
 
     public void configureManager(WeatherActivity activity) {
         this.mActivity = activity;
+        updateFavoritesList();
     }
 
     // Пока заглушка, потом настрки сохранять при их смене в настройках

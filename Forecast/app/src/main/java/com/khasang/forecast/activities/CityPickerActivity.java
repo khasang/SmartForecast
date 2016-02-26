@@ -176,6 +176,12 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        PositionManager.getInstance().updateFavoritesList();
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fabBtn:
