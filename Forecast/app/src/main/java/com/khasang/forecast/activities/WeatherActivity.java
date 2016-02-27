@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.Logger;
+import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.R;
 import com.khasang.forecast.fragments.DailyForecastFragment;
 import com.khasang.forecast.fragments.HourlyForecastFragment;
@@ -45,6 +46,7 @@ import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
+import com.squareup.leakcanary.RefWatcher;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -227,6 +229,9 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                     }
                 })
                 .build();
+
+        RefWatcher refWatcher = MyApplication.getRefWatcher(this);
+        refWatcher.watch(result);
     }
 
     @Override
