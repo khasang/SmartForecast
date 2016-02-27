@@ -25,7 +25,6 @@
     <string name="snow">Snow</string> 
     <string name="mist">Mist</string>
 
-    <string name="choose_city_label"></string>
     <string name="clear_favorite">To remove all cities</string>
     <string name="refresh">Refresh</string>
     <string name="change_location">Change Location</string>
