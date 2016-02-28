@@ -83,6 +83,7 @@ dependencies {
     /* Others */
     compile 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
     compile 'com.squareup.okhttp:logging-interceptor:2.6.0'
+    compile 'com.facebook.stetho:stetho-okhttp:1.2.0'
     compile 'jp.wasabeef:recyclerview-animators:2.1.0'
     compile 'com.github.gabrielemariotti.recyclerview:recyclerview-animators:0.3.0-SNAPSHOT@aar'
 
