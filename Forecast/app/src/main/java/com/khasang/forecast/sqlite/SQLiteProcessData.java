@@ -36,7 +36,7 @@ public class SQLiteProcessData {
 
     // Сохранение города с координатами (перед сохранением списка нужно очистить старый)
     public void saveTown(String town, double latitude, double longitude) {
-        SQLiteWork.getInstance().qExExec(SQLiteFields.QUERY_INSERT_TOWN, new String[]{town, Double.toString(latitude), Double.toString(longitude)});
+        SQLiteWork.getInstance().qExExec(SQLiteFields.QUERY_INSERT_TOWN_1, new String[]{town, Double.toString(latitude), Double.toString(longitude)});
     }
 
     // Сохранение погоды, удаление старой погоды.

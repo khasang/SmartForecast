@@ -74,9 +74,12 @@ public class PositionManager {
         initStations();
     }
 
-    public List<String> getFavouritesList() {
+    public void updateFavoritesList () {
         favouritesPositions = dbManager.loadFavoriteTownList();
         Collections.sort(favouritesPositions);
+    }
+
+    public List<String> getFavouritesList() {
         return favouritesPositions;
     }
 
@@ -104,6 +107,7 @@ public class PositionManager {
 
     public void configureManager(WeatherActivity activity) {
         this.mActivity = activity;
+        updateFavoritesList();
     }
 
     // Пока заглушка, потом настрки сохранять при их смене в настройках
@@ -335,8 +339,20 @@ public class PositionManager {
         return pressureMetric;
     }
 
+    public void setSpeedMetric(AppUtils.SpeedMetrics sm) {
+        speedMetric = sm;
+    }
+
+    public AppUtils.SpeedMetrics getSpeedMetric() {
+        return speedMetric;
+    }
+
     public AppUtils.TemperatureMetrics getTemperatureMetric() {
         return temperatureMetric;
+    }
+
+    public void setTemperatureMetric(AppUtils.TemperatureMetrics tm) {
+        temperatureMetric = tm;
     }
 
     public AppUtils.TemperatureMetrics changeTemperatureMetric() {
@@ -405,11 +421,19 @@ public class PositionManager {
     }
 
     public void updateWeatherFromDB(WeatherStation.ResponseType responseType, Position position) {
-        updateWeatherFromDB(responseType, position.getLocationName());
+        try {
+            updateWeatherFromDB(responseType, position.getLocationName());
+        } catch (NullPointerException e){
+            e.printStackTrace();
+        }
     }
 
     public void updateWeatherFromDB() {
-        updateWeatherFromDB(activePosition.getLocationName());
+        try {
+            updateWeatherFromDB(activePosition.getLocationName());
+        } catch (NullPointerException e){
+            e.printStackTrace();
+        }
     }
 
     public void updateWeatherFromDB(String locationName) {

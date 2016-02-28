@@ -7,7 +7,10 @@
     <string name="timeStamp">erneuert</string>
     <string name="pressure_measure">mmHg</string>
     <string name="pressure_measure_hpa">HPa</string>
-    <string name="wind_measure"><![CDATA[<sup><small>m</small></sup>/<small>s</small>]]></string>
+    <string name="wind_measure_m_s"><![CDATA[<sup><small>m</small></sup>/<small>s</small>]]></string>
+    <string name="wind_measure_km_h"><![CDATA[<sup><small>km</small></sup>/<small>h</small>]]></string>
+    <string name="wind_measure_mph">mph</string>
+    <string name="wind_measure_fps">fps</string>
 
     <string name="clear_sky">Klar</string> 
     <string name="few_clouds">Die kleine Bewölktheit</string>
@@ -52,6 +55,36 @@
     <string name="SW">SW</string>
     <string name="W">W</string>
     <string name="NW">NW</string>
+
+    <string name="action_settings">Einstellungen</string>
+
     <string name="today">Heute</string>
     <string name="tomorrow">Morgen</string>
+
+    <string name="drawer_item_current_place">Aktueller Platz</string>
+    <string name="drawer_item_city_list">Liste der Städte</string>
+    <string name="drawer_item_favorites">Favorites</string>
+    <string name="drawer_item_settings">Einstellungen</string>
+    <string name="drawer_item_feedback">Entgegengesetztes Band</string>
+
+    <string name="error_service_not_available">Die Koordinaten der aktuellen Position sind nicht gefunden.\nNetzwerk  oder andere I/O Problem .</string>
+    <string name="error_geo_service_not_available">Die Koordinaten der Position sind nicht gefunden.\nNetzwerk  oder andere I/O Problem .</string>
+    <string name="invalid_lang_long_used">Das Fehler der Erkennung Koordinaten für einen Standort</string>
+    <string name="no_address_found">Die Adresse von aktuellen Standort ist nicht gefunden</string>
+    <string name="activate_geographical_service">Wollen Sie den Service für die geographischen Koordinaten zu aktivieren?</string>
+
+    <string name="title_activity_settings">Einstellungen</string>
+
+    <string name="pref_header_general">Haupt</string>
+
+    <string name="pref_title_enable_gps">GPS verwenden</string>
+    <string name="pref_description_enable_gps">GPS verwenden um Ihren Standort zu bestimmen</string>
+
+    <string name="pref_title_units">Temperatureinheiten</string>
+    <string name="pref_units_label_metric">Metrisch</string>
+    <string name="pref_units_label_imperial">Imperisch</string>
+    <string name="error_gps_permission">Die Positionierung ist nicht möglich.\nEs gibt keine Rechte um GPS und Betreiberressourcen zu benutzen.</string>
+    <string name="clear_new_location_name">Eingabefeld sauber machen</string>
+    <string name="coordinates_error">Nicht korrekte Ortskoordinaten</string>
+    <string name="error_gps_disabled">In Anwendungseinstellungen ist die Möglichkeit deaktiviert um die Koordinaten aus dem GPS zu erhalten</string>
 </resources>

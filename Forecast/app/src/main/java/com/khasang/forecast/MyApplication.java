@@ -15,7 +15,7 @@ import io.fabric.sdk.android.Fabric;
 public class MyApplication extends Application {
 
     private static Context context;
-    boolean debugMode = true;
+    boolean debugMode = false;
 
     public static RefWatcher getRefWatcher(Context context) {
         MyApplication application = (MyApplication) context.getApplicationContext();

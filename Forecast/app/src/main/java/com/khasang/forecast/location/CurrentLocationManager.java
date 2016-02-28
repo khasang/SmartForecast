@@ -109,7 +109,7 @@ public class CurrentLocationManager {
         gps_enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         network_enabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
         if (!isGpsAccessGranted){
-            gps_enabled = false;
+            return network_enabled;
         }
         return (gps_enabled || network_enabled);
     }
@@ -127,6 +127,9 @@ public class CurrentLocationManager {
             return;
         }
         if (!checkProviders()) {
+            if (!isGpsAccessGranted) {
+                Toast.makeText(MyApplication.getAppContext(), R.string.error_gps_disabled,Toast.LENGTH_LONG).show();
+            }
             AlertDialog.Builder builder = new AlertDialog.Builder(witherAtivity);
             builder.setTitle(R.string.location_manager);
             builder.setMessage(R.string.activate_geographical_service);

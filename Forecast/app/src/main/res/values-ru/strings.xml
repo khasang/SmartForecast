@@ -7,7 +7,10 @@
     <string name="timeStamp">Обновлено</string>
     <string name="pressure_measure">мм рт.ст.</string>
     <string name="pressure_measure_hpa">HPa</string>
-    <string name="wind_measure"><![CDATA[<sup><small>м</small></sup>/<small>c</small>]]></string>
+    <string name="wind_measure_m_s"><![CDATA[<sup><small>м</small></sup>/<small>c</small>]]></string>
+    <string name="wind_measure_km_h"><![CDATA[<sup><small>км</small></sup>/<small>ч</small>]]></string>
+    <string name="wind_measure_mph"><![CDATA[<sup><small>миль</small></sup>/<small>ч</small>]]></string>
+    <string name="wind_measure_fps"><![CDATA[<sup><small>фут</small></sup>/<small>с</small>]]></string>
 
     <string name="clear_sky">Ясно</string> 
     <string name="few_clouds">Небольшая облачность</string>
@@ -52,6 +55,36 @@
     <string name="SW">ЮЗ</string>
     <string name="W">З</string>
     <string name="NW">СЗ</string>
+
+    <string name="action_settings">Настройки</string>
+
     <string name="today">Сегодня</string>
     <string name="tomorrow">Завтра</string>
+
+    <string name="drawer_item_current_place">Текущее место</string>
+    <string name="drawer_item_city_list">Список городов</string>
+    <string name="drawer_item_favorites">Избранное</string>
+    <string name="drawer_item_settings">Настройки</string>
+    <string name="drawer_item_feedback">Обратная связь</string>
+
+    <string name="error_service_not_available">Координаты текущего местоположения не обнаружены.\nПроблема сети или другие проблемы ввода/вывода.</string>
+    <string name="error_geo_service_not_available">Координаты местоположения не обнаружены.\nПроблема сети или другие проблемы ввода/вывода.</string>
+    <string name="invalid_lang_long_used">Ошибка распознавания координат для местоположения</string>
+    <string name="no_address_found">Адрес текущего местоположения не обнаружен</string>
+    <string name="activate_geographical_service">Хотите активировать сервис для получения географических координат?</string>
+
+    <string name="title_activity_settings">Настройки</string>
+
+    <string name="pref_header_general">Главные</string>
+
+    <string name="pref_title_enable_gps">Использовать GPS</string>
+    <string name="pref_description_enable_gps">Использовать GPS для определения Вашего местоположения</string>
+
+    <string name="pref_title_units">Единицы измерения температуры</string>
+    <string name="pref_units_label_metric">Метрические</string>
+    <string name="pref_units_label_imperial">Имперические</string>
+    <string name="error_gps_permission">Определение местоположения невозможно.\nОтсутсвуют права на использование gps и ресурсы оператора связи</string>
+    <string name="clear_new_location_name">Очистить поле ввода</string>
+    <string name="coordinates_error">Не корректные координаты местоположения</string>
+    <string name="error_gps_disabled">В настройках приложения отключена возможность получения координат от GPS</string>
 </resources>

@@ -73,7 +73,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     List<String> cityList;
 
     private Toolbar toolbar;
-    private FloatingActionButton fabBtn;
+    private volatile FloatingActionButton fabBtn;
 
     private Maps maps;
     private DelayedAutoCompleteTextView chooseCity;
@@ -176,9 +176,16 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        PositionManager.getInstance().updateFavoritesList();
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fabBtn:
+                fabBtn.setEnabled(false);
                 showChooseCityDialog();
                 break;
             case R.id.starBtn:
@@ -373,12 +380,19 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
     // Метод скрытия клавиатуры
     public void hideSoftKeyboard(Context context) {
-        if(getCurrentFocus() != null) {
+        if (chooseCity.isFocused()) {
             InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
             inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         }
     }
-
+/*
+    public void hideSoftKeyboard(Context context) {
+        if (getCurrentFocus() != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
+            inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+        }
+    }
+*/
     public void setChooseCityText(String text) {
         chooseCity.setText(text);
     }
@@ -388,9 +402,9 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         final View view = getLayoutInflater().inflate(R.layout.dialog_pick_location, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         setBtnClear(view);
-
+        final GooglePlacesAutocompleteAdapter googlePlacesAutocompleteAdapter = new GooglePlacesAutocompleteAdapter(this, R.layout.autocomplete_city_textview_item);
         chooseCity = (DelayedAutoCompleteTextView) view.findViewById(R.id.editTextCityName);
-        chooseCity.setAdapter(new GooglePlacesAutocompleteAdapter(this, R.layout.autocomplete_city_textview_item));
+        chooseCity.setAdapter(googlePlacesAutocompleteAdapter);
         chooseCity.setLoadingIndicator((ProgressBar) view.findViewById(R.id.autocomplete_progressbar));
         chooseCity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -400,6 +414,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 chooseCity.setText(description);
                 setLocationOnMap(description);
                 hideSoftKeyboard(getApplicationContext());
+                googlePlacesAutocompleteAdapter.clear();
             }
         });
         builder.setView(view)
@@ -412,13 +427,16 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                             addItem(positionName, getTownCoordinates(positionName));
                         } catch (NullPointerException e) {
                             e.printStackTrace();
+                        } finally {
+                            fabBtn.setEnabled(true);
+                            closeMap();
                         }
-                        closeMap();
                     }
                 })
                 .setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        fabBtn.setEnabled(true);
                         dialog.cancel();
                         closeMap();
                     }
@@ -430,6 +448,14 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
             }
         });
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                fabBtn.setEnabled(true);
+                dialog.cancel();
+                closeMap();
+            }
+        });
         chooseCity.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -438,7 +464,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (chooseCity.getText().toString().isEmpty()) {
+                if (chooseCity.getText().toString().trim().isEmpty()) {
                     dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
                     chooseCity.setError(null);
                 } else if (!pattern.matcher(s.toString().trim()).matches()) {
@@ -452,7 +478,11 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
             @Override
             public void afterTextChanged(Editable s) {
-                if ((!chooseCity.getText().toString().isEmpty()) && (chooseCity.getText().toString().length() > 3)) {
+                if (chooseCity.getText().toString().trim().isEmpty()) {
+                    return;
+                }
+                char lastSym = s.toString().toCharArray()[s.length() - 1];
+                if ((chooseCity.getText().toString().trim().length() % 4 == 0) || (lastSym == ' ') || (lastSym == '-')) {
                     setMarkersOnMap();
                 }
             }
@@ -464,6 +494,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                     switch (keyCode) {
                         case KeyEvent.KEYCODE_ENTER:
                             hideSoftKeyboard(getApplicationContext());
+                            googlePlacesAutocompleteAdapter.clear();
                             break;
                         default:
                             return false;

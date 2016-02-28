@@ -34,26 +34,67 @@ public class AppUtils {
 
     public enum TemperatureMetrics {
         KELVIN {
-            public TemperatureMetrics change() { return CELSIUS; }
-            public String toStringValue() { return MyApplication.getAppContext().getString(R.string.KELVIN); }
+            public TemperatureMetrics change() {
+                return CELSIUS;
+            }
+
+            public String toStringValue() {
+                return MyApplication.getAppContext().getString(R.string.KELVIN);
+            }
         },
         CELSIUS {
             public TemperatureMetrics change() {
                 return FAHRENHEIT;
             }
-            public String toStringValue() { return MyApplication.getAppContext().getString(R.string.CELSIUS); }
+
+            public String toStringValue() {
+                return MyApplication.getAppContext().getString(R.string.CELSIUS);
+            }
 
         },
         FAHRENHEIT {
-            public TemperatureMetrics change() { return KELVIN; }
-            public String toStringValue() { return MyApplication.getAppContext().getString(R.string.FAHRENHEIT); }
+            public TemperatureMetrics change() {
+                return KELVIN;
+            }
+
+            public String toStringValue() {
+                return MyApplication.getAppContext().getString(R.string.FAHRENHEIT);
+            }
         };
 
         public abstract TemperatureMetrics change();
+
         public abstract String toStringValue();
     }
 
-    public enum SpeedMetrics {METER_PER_SECOND, FOOT_PER_SECOND, KM_PER_HOURS, MILES_PER_HOURS}
+    public enum SpeedMetrics {
+        METER_PER_SECOND {
+            @Override
+            public String toStringValue() {
+                return MyApplication.getAppContext().getString(R.string.wind_measure_m_s);
+            }
+        },
+        FOOT_PER_SECOND {
+            @Override
+            public String toStringValue() {
+                return MyApplication.getAppContext().getString(R.string.wind_measure_fps);
+            }
+        },
+        KM_PER_HOURS {
+            @Override
+            public String toStringValue() {
+                return MyApplication.getAppContext().getString(R.string.wind_measure_km_h);
+            }
+        },
+        MILES_PER_HOURS {
+            @Override
+            public String toStringValue() {
+                return MyApplication.getAppContext().getString(R.string.wind_measure_mph);
+            }
+        };
+
+        public abstract String toStringValue();
+    }
 
     public enum PressureMetrics {
         HPA {
@@ -268,7 +309,7 @@ public class AppUtils {
      * @return обьект класса {@link Weather} с преобразованными погодными характеристиками
      */
     public static Weather formatWeather(Weather weather, AppUtils.TemperatureMetrics temperatureMetric, AppUtils.SpeedMetrics speedMetric, AppUtils.PressureMetrics pressureMetric) {
-        weather.setTemperature(formatTemperature(weather.getTemperature(),temperatureMetric));
+        weather.setTemperature(formatTemperature(weather.getTemperature(), temperatureMetric));
         weather.setPressure(formatPressure(weather.getPressure(), pressureMetric));
         weather.setWind(weather.getWindDirection(), formatSpeed(weather.getWindPower(), speedMetric));
         return weather;
@@ -277,7 +318,7 @@ public class AppUtils {
     /**
      * Метод для преобразования температуры в заданную пользователем метрику
      *
-     * @param temperature температура на входе (в Кельвинах)
+     * @param temperature       температура на входе (в Кельвинах)
      * @param temperatureMetric
      * @return температура в выбранной пользователем метрике
      */
@@ -296,7 +337,7 @@ public class AppUtils {
     /**
      * Метод для преобразования скорости ветра в заданную пользователем метрику
      *
-     * @param speed преобразуемая скорость
+     * @param speed       преобразуемая скорость
      * @param speedMetric
      * @return скорость в выбранной пользователем метрике
      */
@@ -317,7 +358,7 @@ public class AppUtils {
     /**
      * Метод для преобразования давления в заданную пользователем метрику
      *
-     * @param pressure преобразуемое давление
+     * @param pressure       преобразуемое давление
      * @param pressureMetric
      * @return давление в выбранной пользователем метрике
      */
@@ -397,19 +438,23 @@ public class AppUtils {
         return mmHg;
     }
 
-    /** Определение времени суток */
+    /**
+     * Определение времени суток
+     */
     public static boolean isDayFromString(String timeString) {
         timeString = timeString.substring(0, 2);
         try {
             int time = Integer.parseInt(timeString);
-            if (time >= 21 || time < 6)return false;
+            if (time >= 21 || time < 6) return false;
             return true;
-        } catch(NumberFormatException nfe) {
+        } catch (NumberFormatException nfe) {
             return true;
         }
     }
 
-    /** Получение дня **/
+    /**
+     * Получение дня
+     **/
     public static String getDayName(Context context, Calendar calendar) {
         int rightnow = Calendar.getInstance(Locale.getDefault()).get(Calendar.DAY_OF_MONTH);
         int today = calendar.get(Calendar.DAY_OF_MONTH);
@@ -420,11 +465,13 @@ public class AppUtils {
         } else {
             SimpleDateFormat dayFormat = new SimpleDateFormat("EEE, d MMMM", Locale.getDefault());
             String myString = dayFormat.format(calendar.getTime());
-            return myString.substring(0,1).toUpperCase() + myString.substring(1);
+            return myString.substring(0, 1).toUpperCase() + myString.substring(1);
         }
     }
 
-    /** Получение времени **/
+    /**
+     * Получение времени
+     **/
     public static String getTime(Context context, Calendar calendar) {
         int rightnow = Calendar.getInstance(Locale.getDefault()).get(Calendar.DAY_OF_MONTH);
         int today = calendar.get(Calendar.DAY_OF_MONTH);

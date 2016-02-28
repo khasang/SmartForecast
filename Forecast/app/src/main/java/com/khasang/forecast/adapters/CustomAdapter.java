@@ -63,7 +63,6 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         String description = dataset.get(position).getDescription();
         String capitalizedDescription = description.substring(0, 1).toUpperCase() + description.substring(1);
         holder.tvWeatherDescription.setText(capitalizedDescription);
-
     }
 
     @Override
