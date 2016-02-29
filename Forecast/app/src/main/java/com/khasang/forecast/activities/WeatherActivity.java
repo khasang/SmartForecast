@@ -99,7 +99,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         initFirstAppearance();
 
         RefWatcher refWatcher = MyApplication.getRefWatcher(this);
-        refWatcher.watch(this);
+        refWatcher.watch(PositionManager.getInstance());
     }
 
 /*    private void initNavigationDrawer() {
