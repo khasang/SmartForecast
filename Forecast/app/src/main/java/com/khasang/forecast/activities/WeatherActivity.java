@@ -72,7 +72,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     private ProgressBar progressbar;
     private SharedPreferences sp;
 
-    private NavigationDrawer drawer = new NavigationDrawer();
+    //private NavigationDrawer drawer = new NavigationDrawer();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,20 +97,23 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         startAnimations();
         //initNavigationDrawer();
         initFirstAppearance();
+
+        RefWatcher refWatcher = MyApplication.getRefWatcher(this);
+        refWatcher.watch(this);
     }
 
-    private void initNavigationDrawer() {
+/*    private void initNavigationDrawer() {
         drawer.init(this, toolbar);
         RefWatcher refWatcher = MyApplication.getRefWatcher(this);
         refWatcher.watch(drawer);
-    }
+    }*/
 
     @Override
     public void onBackPressed() {
-        if (drawer.isDrawerOpened()) {
-        } else {
+        //if (drawer.isDrawerOpened()) {
+        //} else {
             super.onBackPressed();
-        }
+        //}
     }
 
     @Override
@@ -123,7 +126,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     protected void onResume() {
         super.onResume();
         Logger.println(TAG, "OnResume");
-        drawer.updateBadges();
+        //drawer.updateBadges();
         PositionManager.getInstance().setUseGpsModule(sp.getBoolean(getString(R.string.pref_gps_key), true));
         if (sp.getString(getString(R.string.pref_units_key), getString(R.string.pref_units_metric)).equals(getString(R.string.pref_units_metric))) {
             PositionManager.getInstance().setTemperatureMetric(AppUtils.TemperatureMetrics.CELSIUS);
