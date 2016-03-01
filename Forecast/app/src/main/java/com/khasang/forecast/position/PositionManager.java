@@ -47,8 +47,6 @@ public class PositionManager {
     private WeatherActivity mActivity;
     private SQLiteProcessData dbManager;
     private boolean lastResponseIsFailure;
-
-    private boolean currentCoordinatesDetected = false;
     private CurrentLocationManager locationManager;
 
     private static class ManagerHolder {
@@ -64,6 +62,7 @@ public class PositionManager {
     }
 
     public void initManager() {
+        mActivity = null;
         dbManager = new SQLiteProcessData(MyApplication.getAppContext());
         temperatureMetric = dbManager.loadTemperatureMetrics();
         speedMetric = dbManager.loadSpeedMetrics();
@@ -72,6 +71,7 @@ public class PositionManager {
         initPositions();
         initLocationManager();
         initStations();
+        updateFavoritesList();
     }
 
     public void updateFavoritesList () {
@@ -105,9 +105,8 @@ public class PositionManager {
         }
     }
 
-    public void configureManager(WeatherActivity activity) {
+    public void configureActivityFeedback(WeatherActivity activity) {
         this.mActivity = activity;
-        updateFavoritesList();
     }
 
     // Пока заглушка, потом настрки сохранять при их смене в настройках
@@ -589,7 +588,6 @@ public class PositionManager {
             List<Address> list = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 3);
             currentLocation.setLocationName(new LocationParser(list).parseList().getAddressLine());
             currentLocation.setCoordinate(new Coordinate(location.getLatitude(), location.getLongitude()));
-            currentCoordinatesDetected = true;
             return true;
         } catch (IOException e) {
             Toast.makeText(MyApplication.getAppContext(), R.string.error_service_not_available, Toast.LENGTH_SHORT).show();
@@ -602,7 +600,6 @@ public class PositionManager {
             e.printStackTrace();
         }
         currentLocation.setCoordinate(null);
-        currentCoordinatesDetected = false;
         return false;
     }
 }

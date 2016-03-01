@@ -63,8 +63,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     private Animation animationRotateCenter;
     private Animation animationGrow;
 
-    private String temp_measure;
-    private String press_measure;
     private HourlyForecastFragment hourlyForecastFragment;
     private DailyForecastFragment dailyForecastFragment;
     private FloatingActionButton fab;
@@ -78,7 +76,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather_material);
-        PositionManager.getInstance().configureManager(this);
         if (findViewById(R.id.fragment_container) != null) {
             if (savedInstanceState != null) {
                 return;
@@ -91,7 +88,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                     .hide(dailyForecastFragment)
                     .commit();
         }
-        initStartingMetrics();
         initFields();
         setAnimationForWidgets();
         startAnimations();
@@ -125,6 +121,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onResume() {
         super.onResume();
+        PositionManager.getInstance().configureActivityFeedback(this);
         Logger.println(TAG, "OnResume");
         //drawer.updateBadges();
         PositionManager.getInstance().setUseGpsModule(sp.getBoolean(getString(R.string.pref_gps_key), true));
@@ -141,6 +138,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onPause() {
         super.onPause();
+        PositionManager.getInstance().configureActivityFeedback(null);
         //drawer.closeSubItems();
     }
 
@@ -148,17 +146,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     protected void onStop() {
         super.onStop();
         PositionManager.getInstance().saveSettings();
-    }
-
-    private void initStartingMetrics() {
-        switch (PositionManager.getInstance().getPressureMetric()) {
-            case MM_HG:
-                press_measure = getString(R.string.pressure_measure);
-                break;
-            case HPA:
-            default:
-                press_measure = getString(R.string.pressure_measure_hpa);
-        }
     }
 
     private void switchDisplayMode() {
@@ -309,28 +296,11 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 switchDisplayMode();
                 break;
             case R.id.temperature:
-                switch (PositionManager.getInstance().changeTemperatureMetric()) {
-                    case FAHRENHEIT:
-                        temp_measure = getString(R.string.FAHRENHEIT);
-                        break;
-                    case KELVIN:
-                        temp_measure = getString(R.string.KELVIN);
-                        break;
-                    case CELSIUS:
-                    default:
-                        temp_measure = getString(R.string.CELSIUS);
-                }
+                PositionManager.getInstance().changeTemperatureMetric();
                 PositionManager.getInstance().updateWeatherFromDB();
                 break;
             case R.id.pressure:
-                switch (PositionManager.getInstance().changePressureMetric()) {
-                    case MM_HG:
-                        press_measure = getString(R.string.pressure_measure);
-                        break;
-                    case HPA:
-                    default:
-                        press_measure = getString(R.string.pressure_measure_hpa);
-                }
+                PositionManager.getInstance().changePressureMetric();
                 PositionManager.getInstance().updateWeatherFromDB();
                 break;
         }
