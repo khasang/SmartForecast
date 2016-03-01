@@ -95,13 +95,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle(getString(R.string.city_list));
 
-        // Заглушка для решения Black Arrow bug
-        final Drawable upArrow = new IconicsDrawable(this)
-                .icon(GoogleMaterial.Icon.gmd_arrow_back)
-                .color(Color.WHITE)
-                .sizeDp(18);
-        toolbar.setNavigationIcon(upArrow);
-
         infoTV = (TextView) findViewById(R.id.infoTV);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         cityList = new ArrayList<>();
