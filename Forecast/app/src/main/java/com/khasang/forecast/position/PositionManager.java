@@ -49,16 +49,21 @@ public class PositionManager {
     private boolean lastResponseIsFailure;
     private CurrentLocationManager locationManager;
 
-    private static class ManagerHolder {
-        private final static PositionManager instance = new PositionManager();
-    }
+    private static volatile PositionManager instance;
 
     private PositionManager() {
         lastResponseIsFailure = false;
     }
 
     public static PositionManager getInstance() {
-        return ManagerHolder.instance;
+        if (instance == null){
+            synchronized (PositionManager.class){
+                if (instance == null) {
+                    instance = new PositionManager();
+                }
+            }
+        }
+        return instance;
     }
 
     public void initManager() {
@@ -74,7 +79,7 @@ public class PositionManager {
         updateFavoritesList();
     }
 
-    public void updateFavoritesList () {
+    public void updateFavoritesList() {
         favouritesPositions = dbManager.loadFavoriteTownList();
         Collections.sort(favouritesPositions);
     }
@@ -422,7 +427,7 @@ public class PositionManager {
     public void updateWeatherFromDB(WeatherStation.ResponseType responseType, Position position) {
         try {
             updateWeatherFromDB(responseType, position.getLocationName());
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
     }
@@ -430,7 +435,7 @@ public class PositionManager {
     public void updateWeatherFromDB() {
         try {
             updateWeatherFromDB(activePosition.getLocationName());
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
     }
