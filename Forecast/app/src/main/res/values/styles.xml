@@ -10,6 +10,7 @@
         <item name="toolbarStyle">@style/Toolbar</item>
         <item name="android:windowBackground">@color/grey_100</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+        <item name="colorControlNormal">@color/icons</item>
     </style>
 
     <style name="AppTheme.Main" parent="AppTheme"/>
