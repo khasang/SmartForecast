@@ -60,10 +60,15 @@ public class PositionManager {
             synchronized (PositionManager.class){
                 if (instance == null) {
                     instance = new PositionManager();
+                    instance.initManager();
                 }
             }
         }
         return instance;
+    }
+
+    public synchronized void removeInstance () {
+        instance = null;
     }
 
     public void initManager() {

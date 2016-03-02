@@ -1,12 +1,10 @@
 package com.khasang.forecast.activities;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -20,7 +18,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.R;
-import com.khasang.forecast.position.PositionManager;
 
 
 public class SplashScreenActivity
@@ -65,7 +62,6 @@ public class SplashScreenActivity
         }
 
         // Запуск анимации
-        PositionManager.getInstance().initManager();
         splash_cloud.startAnimation(anim_splash_cloud);
         splash_left_cloud.startAnimation(anim_splash_left_cloud);
         splash_right_cloud.startAnimation(anim_splash_right_cloud);

@@ -32,6 +32,7 @@ import com.khasang.forecast.R;
 import com.khasang.forecast.activities.etc.NavigationDrawer;
 import com.khasang.forecast.fragments.DailyForecastFragment;
 import com.khasang.forecast.fragments.HourlyForecastFragment;
+import com.khasang.forecast.position.Position;
 import com.khasang.forecast.position.PositionManager;
 import com.khasang.forecast.position.Weather;
 import com.khasang.forecast.stations.WeatherStation;
@@ -88,6 +89,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                     .hide(dailyForecastFragment)
                     .commit();
         }
+        //PositionManager.getInstance().initManager();
         initFields();
         setAnimationForWidgets();
         startAnimations();
@@ -115,13 +117,13 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onStart() {
         super.onStart();
-        PositionManager.getInstance().updateWeatherFromDB();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         PositionManager.getInstance().configureActivityFeedback(this);
+        PositionManager.getInstance().updateWeatherFromDB();
         Logger.println(TAG, "OnResume");
         //drawer.updateBadges();
         PositionManager.getInstance().setUseGpsModule(sp.getBoolean(getString(R.string.pref_gps_key), true));
@@ -146,6 +148,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     protected void onStop() {
         super.onStop();
         PositionManager.getInstance().saveSettings();
+        PositionManager.getInstance().removeInstance();
     }
 
     private void switchDisplayMode() {
