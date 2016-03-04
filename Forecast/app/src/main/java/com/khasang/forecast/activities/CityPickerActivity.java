@@ -496,7 +496,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                     switch (keyCode) {
                         case KeyEvent.KEYCODE_ENTER:    // 66
                             hideSoftKeyboard(getApplicationContext());
-                            chooseCity.clearListSelection();
+                            googlePlacesAutocompleteAdapter.clear();
                             break;
                         case KeyEvent.KEYCODE_BACK:     // 4
                             dialog.cancel();
