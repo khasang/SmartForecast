@@ -79,6 +79,7 @@ public class SQLiteProcessData {
                 }
             }
         } finally {
+            SQLiteWork.getInstance().checkOpenDatabaseRead();
             if (dataset != null) {
                 dataset.close();
             }
@@ -96,6 +97,7 @@ public class SQLiteProcessData {
                 }
             }
         } finally {
+            SQLiteWork.getInstance().checkOpenDatabaseRead();
             if (dataset != null) {
                 dataset.close();
             }
@@ -114,6 +116,7 @@ public class SQLiteProcessData {
                 }
             }
         } finally {
+            SQLiteWork.getInstance().checkOpenDatabaseRead();
             if (dataset != null) {
                 dataset.close();
             }
@@ -132,6 +135,7 @@ public class SQLiteProcessData {
                 }
             }
         } finally {
+            SQLiteWork.getInstance().checkOpenDatabaseRead();
             if (dataset != null) {
                 dataset.close();
             }
@@ -150,6 +154,7 @@ public class SQLiteProcessData {
                 }
             }
         } finally {
+            SQLiteWork.getInstance().checkOpenDatabaseRead();
             if (dataset != null) {
                 dataset.close();
             }
@@ -207,6 +212,7 @@ public class SQLiteProcessData {
         } catch (ParseException e) {
             e.printStackTrace();
         } finally {
+            SQLiteWork.getInstance().checkOpenDatabaseRead();
             if (dataset != null) {
                 dataset.close();
             }
@@ -231,6 +237,7 @@ public class SQLiteProcessData {
         } catch (ParseException e) {
             e.printStackTrace();
         } finally {
+            SQLiteWork.getInstance().checkOpenDatabaseRead();
             if (dataset != null) {
                 dataset.close();
             }
@@ -261,6 +268,7 @@ public class SQLiteProcessData {
                 }
             }
         } finally {
+            SQLiteWork.getInstance().checkOpenDatabaseRead();
             if (dataset != null) {
                 dataset.close();
             }
@@ -270,12 +278,10 @@ public class SQLiteProcessData {
 
     // Загрузка списка городов.
     public HashMap<String, Coordinate> loadTownList() {
-
         double townLat = 0;
         double townLong = 0;
         String townName = "";
         HashMap hashMap = new HashMap();
-
         Cursor dataset = SQLiteWork.getInstance().queryOpen(SQLiteFields.QUERY_SELECT_TOWNS, null);
         try {
             if (dataset != null && dataset.getCount() != 0) {
@@ -291,6 +297,7 @@ public class SQLiteProcessData {
                 }
             }
         } finally {
+            SQLiteWork.getInstance().checkOpenDatabaseRead();
             if (dataset != null) {
                 dataset.close();
             }
@@ -311,6 +318,7 @@ public class SQLiteProcessData {
                 }
             }
         } finally {
+            SQLiteWork.getInstance().checkOpenDatabaseRead();
             if (dataset != null) {
                 dataset.close();
             }
@@ -320,7 +328,6 @@ public class SQLiteProcessData {
 
     // Загрузка погоды.
     public HashMap<Calendar, Weather> loadWeather(WeatherStationFactory.ServiceType serviceType, String cityName, Calendar date, AppUtils.TemperatureMetrics tm, AppUtils.SpeedMetrics sm, AppUtils.PressureMetrics pm) {
-
         double tempirature = 0;
         double tempirature_max = 0;
         double tempirature_min = 0;
@@ -336,7 +343,6 @@ public class SQLiteProcessData {
         Weather weather = null;
         HashMap hashMap = null;
         Calendar weatherDate = null;
-
         Cursor dataset = SQLiteWork.getInstance().queryOpen(SQLiteFields.QUERY_SELECT_WEATHER, new String[]{serviceType.name(), cityName, dtFormat.format(date.getTime())});
         try {
             if (dataset != null && dataset.getCount() != 0) {
@@ -368,6 +374,7 @@ public class SQLiteProcessData {
         } catch (ParseException e) {
             e.printStackTrace();
         } finally {
+            SQLiteWork.getInstance().checkOpenDatabaseRead();
             if (dataset != null) {
                 dataset.close();
             }

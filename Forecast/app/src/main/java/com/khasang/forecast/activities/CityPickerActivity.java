@@ -315,7 +315,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
             maps.deleteAllMarkers();
             maps.setNewMarker(latitude, longitude, city);
-            maps.setCameraPosition(latitude, longitude, maps.getCurrentZoom(), 0, 0);
+            maps.setCameraPosition(latitude, longitude, maps.getDefaultZoom(), 0, 0);
         } catch (Exception e) {
             e.printStackTrace();
         }
