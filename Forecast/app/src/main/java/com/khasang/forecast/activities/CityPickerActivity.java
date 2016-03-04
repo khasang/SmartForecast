@@ -17,6 +17,7 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -493,6 +494,29 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_DOWN) {
                     switch (keyCode) {
+                        case KeyEvent.KEYCODE_ENTER:    // 66
+                            hideSoftKeyboard(getApplicationContext());
+                            chooseCity.clearListSelection();
+                            break;
+                        case KeyEvent.KEYCODE_BACK:     // 4
+                            dialog.cancel();
+                            closeMap();
+                            break;
+                        default:
+                            Log.i("DIALOG_ENTER", "Key code - " + Integer.toString(keyCode));
+                            return false;
+                    }
+                    Log.i("DIALOG_ENTER", "Key code - " + Integer.toString(keyCode));
+                }
+                return true;
+            }
+        });
+        /*
+        dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+            @Override
+            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                    switch (keyCode) {
                         case KeyEvent.KEYCODE_ENTER:
                             hideSoftKeyboard(getApplicationContext());
                             googlePlacesAutocompleteAdapter.clear();
@@ -504,6 +528,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 return true;
             }
         });
+        */
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         //dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         dialog.show();
