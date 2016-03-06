@@ -107,6 +107,10 @@ public class Maps {
         return map.getCameraPosition().zoom;
     }
 
+    public float getDefaultZoom() {
+        return defaultZoom;
+    }
+
     public void setNewLatLngZoom(double latitude, double longitude, float zoom) {
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), zoom);
         map.animateCamera(cameraUpdate);
