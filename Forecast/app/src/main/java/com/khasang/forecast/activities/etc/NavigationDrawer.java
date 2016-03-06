@@ -53,7 +53,7 @@ public class NavigationDrawer {
 
         /** Создание Navigation Drawer */
         result = new DrawerBuilder()
-         /*       .withActivity(activity)
+                .withActivity(activity)
                 .withToolbar(toolbar)
                 .withSelectedItem(-1)
                 .withActionBarDrawerToggle(true)
@@ -98,13 +98,13 @@ public class NavigationDrawer {
                                 break;
                             case 2:
                                 if (opened) {
-                   *//*                 for (int i = PositionManager.getInstance().getFavouritesList().size() - 1; i >= 0; i--) {
+                                    for (int i = PositionManager.getInstance().getFavouritesList().size() - 1; i >= 0; i--) {
                                         result.removeItems(subItemIndex + i);
 
-                                    }*//*
+                                    }
                                 } else {
                                     int curPos = result.getPosition(drawerItem);
-                *//*                    if (!PositionManager.getInstance().getFavouritesList().isEmpty()) {
+                                    if (!PositionManager.getInstance().getFavouritesList().isEmpty()) {
                                         for (int i = PositionManager.getInstance().getFavouritesList().size() - 1; i >= 0; i--) {
                                             String city = PositionManager.getInstance().getFavouritesList().get(i).split(",")[0];
                                             result.addItemsAtPosition(
@@ -114,7 +114,7 @@ public class NavigationDrawer {
                                         }
                                     } else {
                                         Logger.println(TAG, "favCityList is empty");
-                                    }*//*
+                                    }
                                 }
 
                                 opened = !opened;
@@ -146,7 +146,7 @@ public class NavigationDrawer {
                         }
                         return true;
                     }
-                })*/
+                })
                 .build();
 
     }
@@ -167,29 +167,29 @@ public class NavigationDrawer {
      * Обновление Drawer badges
      */
     public void updateBadges() {
-/*        if (PositionManager.getInstance().getFavouritesList().isEmpty()) {
+        if (PositionManager.getInstance().getFavouritesList().isEmpty()) {
             favorites.withBadge("").withEnabled(false);
             result.updateItem(favorites);
             return;
         }
         favorites.withEnabled(true);
         result.updateItem(favorites);
-        result.updateBadge(2, new StringHolder(String.valueOf(PositionManager.getInstance().getFavouritesList().size())));*/
+        result.updateBadge(2, new StringHolder(String.valueOf(PositionManager.getInstance().getFavouritesList().size())));
     }
 
     /**
      * Закрывает открытые Drawer SubItems
      */
     public void closeSubItems() {
-   /*     for (int i = PositionManager.getInstance().getFavouritesList().size() - 1; i >= 0; i--) {
+        for (int i = PositionManager.getInstance().getFavouritesList().size() - 1; i >= 0; i--) {
             result.removeItems(subItemIndex + i);
         }
         if (opened) {
             opened = false;
-        }*/
+        }
         //FIXME add unselect item
-  /*      favorites.withSelectable(false);
-        result.updateItem(favorites);*/
+        favorites.withSelectable(false);
+        result.updateItem(favorites);
     }
 
 }
