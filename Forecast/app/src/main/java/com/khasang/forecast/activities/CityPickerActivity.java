@@ -289,6 +289,8 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 cityList.add(city);
                 Collections.sort(cityList);
                 recyclerAdapter.notifyDataSetChanged();
+            } else {
+                Toast.makeText(MyApplication.getAppContext(), R.string.city_exist, Toast.LENGTH_SHORT).show();
             }
         }
         swapVisibilityTextOrList();

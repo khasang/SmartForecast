@@ -205,7 +205,7 @@ public class PositionManager {
      */
     public void addPosition(String name, Coordinate coordinates) {
         if (positionInListPresent(name)) {
-            Toast.makeText(mActivity, R.string.city_exist, Toast.LENGTH_SHORT).show();
+            Toast.makeText(MyApplication.getAppContext(), R.string.city_exist, Toast.LENGTH_SHORT).show();
             return;
         }
         PositionFactory positionFactory = new PositionFactory(positions);
@@ -374,7 +374,7 @@ public class PositionManager {
      */
     public void updateWeather() {
         if (activePosition == null || !positionIsPresent(activePosition.getLocationName())) {
-            Toast.makeText(mActivity, R.string.update_error_location_not_found, Toast.LENGTH_SHORT).show();
+            Toast.makeText(MyApplication.getAppContext(), R.string.update_error_location_not_found, Toast.LENGTH_SHORT).show();
             return;
         }
         if (activePosition == currentLocation) {
@@ -396,36 +396,46 @@ public class PositionManager {
                 updateWeatherFromDB();
             }
             Toast.makeText(MyApplication.getAppContext(), R.string.coordinates_error, Toast.LENGTH_SHORT).show();
-        } else if (!isNetworkAvailable(mActivity)) {
+        } else if (!isNetworkAvailable(MyApplication.getAppContext())) {
             if (!activePosition.getLocationName().isEmpty()) {
                 updateWeatherFromDB();
             }
-            Toast.makeText(mActivity, R.string.update_error_net_not_availble, Toast.LENGTH_SHORT).show();
+            Toast.makeText(MyApplication.getAppContext(), R.string.update_error_net_not_availble, Toast.LENGTH_SHORT).show();
         } else {
             LinkedList<WeatherStation.ResponseType> requestQueue = new LinkedList<>();
             requestQueue.add(WeatherStation.ResponseType.CURRENT);
-            if (mActivity.isHourlyForecastActive()) {
-                requestQueue.addLast(WeatherStation.ResponseType.HOURLY);
-                requestQueue.addLast(WeatherStation.ResponseType.DAILY);
-            } else {
-                requestQueue.addLast(WeatherStation.ResponseType.DAILY);
-                requestQueue.addLast(WeatherStation.ResponseType.HOURLY);
+            try {
+                if (mActivity.isHourlyForecastActive()) {
+                    requestQueue.addLast(WeatherStation.ResponseType.HOURLY);
+                    requestQueue.addLast(WeatherStation.ResponseType.DAILY);
+                } else {
+                    requestQueue.addLast(WeatherStation.ResponseType.DAILY);
+                    requestQueue.addLast(WeatherStation.ResponseType.HOURLY);
+                }
+                currStation.updateWeather(requestQueue, activePosition.getCityID(), activePosition.getCoordinate());
+            } catch (NullPointerException e) {
+                // Отсроченный запрос активити уже уничтожено
+                e.printStackTrace();
             }
-            currStation.updateWeather(requestQueue, activePosition.getCityID(), activePosition.getCoordinate());
         }
     }
 
     public void updateWeatherFromDB(WeatherStation.ResponseType responseType, String positionName) {
-        switch (responseType) {
-            case CURRENT:
-                mActivity.updateInterface(responseType, getCurrentWeatherFromDB(currStation.getServiceType(), positionName));
-                break;
-            case HOURLY:
-                mActivity.updateInterface(responseType, getHourlyWeatherFromDB(currStation.getServiceType(), positionName));
-                break;
-            case DAILY:
-                mActivity.updateInterface(responseType, getDailyWeatherFromDB(currStation.getServiceType(), positionName));
-                break;
+        try {
+            switch (responseType) {
+                case CURRENT:
+                    mActivity.updateInterface(responseType, getCurrentWeatherFromDB(currStation.getServiceType(), positionName));
+                    break;
+                case HOURLY:
+                    mActivity.updateInterface(responseType, getHourlyWeatherFromDB(currStation.getServiceType(), positionName));
+                    break;
+                case DAILY:
+                    mActivity.updateInterface(responseType, getDailyWeatherFromDB(currStation.getServiceType(), positionName));
+                    break;
+            }
+        } catch (NullPointerException e) {
+            // Отсроченный запрос активити уже уничтожено
+            e.printStackTrace();
         }
     }
 
@@ -481,7 +491,12 @@ public class PositionManager {
             for (Map.Entry<Calendar, Weather> entry : weather.entrySet()) {
                 entry.setValue(AppUtils.formatWeather(entry.getValue(), temperatureMetric, speedMetric, pressureMetric));
             }
-            mActivity.updateInterface(rType, weather);
+            try {
+                mActivity.updateInterface(rType, weather);
+            } catch (NullPointerException e) {
+                // Ответ пришел, когда активити уже уничтожено
+                e.printStackTrace();
+            }
 
             rType = requestList.peekFirst();
             if (rType == WeatherStation.ResponseType.HOURLY) {
@@ -494,7 +509,7 @@ public class PositionManager {
 
     public void onFailureResponse(LinkedList<WeatherStation.ResponseType> requestList, int cityID, WeatherStationFactory.ServiceType sType) {
         if (!lastResponseIsFailure) {
-            Toast.makeText(mActivity, mActivity.getString(R.string.update_error_from) + sType.toString(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(MyApplication.getAppContext(), R.string.update_error_from + sType.toString(), Toast.LENGTH_SHORT).show();
             lastResponseIsFailure = true;
         }
         WeatherStation.ResponseType rType = requestList.pollFirst();
@@ -570,7 +585,12 @@ public class PositionManager {
     }
 
     public void updateCurrentLocationCoordinates() {
-        locationManager.updateCurrentLocationCoordinates(mActivity);
+        try {
+            locationManager.updateCurrentLocationCoordinates(mActivity);
+        } catch (NullPointerException e) {
+            // Возможно активити уже уничтожено
+            e.printStackTrace();
+        }
     }
 
     public Coordinate getCurrentLocationCoordinates() {

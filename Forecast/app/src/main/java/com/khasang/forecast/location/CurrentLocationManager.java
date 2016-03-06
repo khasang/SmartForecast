@@ -114,7 +114,7 @@ public class CurrentLocationManager {
         return (gps_enabled || network_enabled);
     }
 
-    public void updateCurrentLocationCoordinates(final Activity witherAtivity) {
+    public void updateCurrentLocationCoordinates(final Activity witherAсtivity) {
         if (ActivityCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             giveMessageAboutPermission();
             // TODO: Consider calling
@@ -130,7 +130,7 @@ public class CurrentLocationManager {
             if (!isGpsAccessGranted) {
                 Toast.makeText(MyApplication.getAppContext(), R.string.error_gps_disabled,Toast.LENGTH_LONG).show();
             }
-            AlertDialog.Builder builder = new AlertDialog.Builder(witherAtivity);
+            AlertDialog.Builder builder = new AlertDialog.Builder(witherAсtivity);
             builder.setTitle(R.string.location_manager);
             builder.setMessage(R.string.activate_geographical_service);
             builder.setPositiveButton(R.string.btn_yes, new DialogInterface.OnClickListener() {
@@ -138,7 +138,7 @@ public class CurrentLocationManager {
                 public void onClick(DialogInterface dialog, int which) {
                     //Launch settings, allowing user to make a change
                     Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    witherAtivity.startActivity(i);
+                    witherAсtivity.startActivity(i);
                 }
             });
             builder.setNegativeButton(R.string.btn_no, new DialogInterface.OnClickListener() {

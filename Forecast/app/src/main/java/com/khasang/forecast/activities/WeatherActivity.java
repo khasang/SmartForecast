@@ -117,12 +117,12 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onStart() {
         super.onStart();
+        PositionManager.getInstance().configureActivityFeedback(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        PositionManager.getInstance().configureActivityFeedback(this);
         PositionManager.getInstance().updateWeatherFromDB();
         Logger.println(TAG, "OnResume");
         drawer.updateBadges();
@@ -140,13 +140,13 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onPause() {
         super.onPause();
-        PositionManager.getInstance().configureActivityFeedback(null);
         drawer.closeSubItems();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        PositionManager.getInstance().configureActivityFeedback(null);
         PositionManager.getInstance().saveSettings();
         PositionManager.getInstance().removeInstance();
     }
