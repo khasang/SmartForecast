@@ -1,11 +1,8 @@
 package com.khasang.forecast.sqlite;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
-
-import java.util.concurrent.TimeUnit;
+import com.khasang.forecast.MyApplication;
 
 /**
  * Класс для работы с запросами БД.
@@ -18,9 +15,7 @@ public class SQLiteWork {
     private SQLiteDatabase sqlDatabaseRead;
     private SQLiteDatabase sqlDatabaseWrite;
     private SQLiteOpen dbWork;
-    private SQLiteExecAsyncTask execAsyncTask;
-    private SQLiteExExecAsyncTask exExecAsyncTask;
-    private int newVersion = 4;
+    private final int CURRENT_DB_VERSION = 4;
     private static volatile SQLiteWork instance;
 
     private SQLiteWork() {
@@ -39,7 +34,7 @@ public class SQLiteWork {
     }
 
     public void init() {
-        dbWork = new SQLiteOpen(SQLiteProcessData.mContext, "Forecast.db", newVersion);
+        dbWork = new SQLiteOpen(MyApplication.getAppContext(), "Forecast.db", CURRENT_DB_VERSION);
     }
 
     public synchronized void removeInstance() {
@@ -54,7 +49,7 @@ public class SQLiteWork {
 
     public void qExec(String query) {
         try {
-            execAsyncTask = new SQLiteExecAsyncTask(query);
+            SQLiteExecAsyncTask execAsyncTask = new SQLiteExecAsyncTask(query);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -62,7 +57,7 @@ public class SQLiteWork {
 
     public void qExExec(String query, Object[] bindArgs) {
         try {
-            exExecAsyncTask = new SQLiteExExecAsyncTask(query, bindArgs);
+            SQLiteExExecAsyncTask exExecAsyncTask = new SQLiteExExecAsyncTask(query, bindArgs);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -64,7 +64,7 @@ public class PositionManager {
     }
 
     public void initManager() {
-        dbManager = new SQLiteProcessData(MyApplication.getAppContext());
+        dbManager = new SQLiteProcessData();
         temperatureMetric = dbManager.loadTemperatureMetrics();
         speedMetric = dbManager.loadSpeedMetrics();
         pressureMetric = dbManager.loadPressureMetrics();

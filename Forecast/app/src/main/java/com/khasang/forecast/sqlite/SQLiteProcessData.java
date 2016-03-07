@@ -1,6 +1,5 @@
 package com.khasang.forecast.sqlite;
 
-import android.content.Context;
 import android.database.Cursor;
 
 import com.khasang.forecast.AppUtils;
@@ -26,11 +25,9 @@ import java.util.HashMap;
 
 public class SQLiteProcessData {
 
-    public static Context mContext = null;
     public SimpleDateFormat dtFormat;
 
-    public SQLiteProcessData(Context context) {
-        this.mContext = context;
+    public SQLiteProcessData() {
         dtFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     }
 
