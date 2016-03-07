@@ -49,7 +49,6 @@ import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
-import com.squareup.leakcanary.RefWatcher;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -112,9 +111,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         startAnimations();
         initNavigationDrawer();
         initFirstAppearance();
-
-        RefWatcher refWatcher = MyApplication.getRefWatcher(this);
-        refWatcher.watch(PositionManager.getInstance());
     }
 
     private void initNavigationDrawer() {
@@ -226,9 +222,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                     }
                 })
                 .build();
-
-        RefWatcher refWatcher = MyApplication.getRefWatcher(this);
-        refWatcher.watch(result);
     }
 
     /**
