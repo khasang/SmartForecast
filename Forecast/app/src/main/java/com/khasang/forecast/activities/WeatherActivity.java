@@ -107,7 +107,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                     .hide(dailyForecastFragment)
                     .commit();
         }
-        PositionManager.getInstance().initManager();
         initFields();
         setAnimationForWidgets();
         startAnimations();
@@ -304,6 +303,11 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         super.onStop();
         PositionManager.getInstance().configureActivityFeedback(null);
         PositionManager.getInstance().saveSettings();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
         PositionManager.getInstance().removeInstance();
     }
 
