@@ -1,6 +1,5 @@
 package com.khasang.forecast.sqlite;
 
-import android.content.Context;
 import android.database.Cursor;
 
 import com.khasang.forecast.AppUtils;
@@ -28,10 +27,12 @@ public class SQLiteProcessData {
 
     public SimpleDateFormat dtFormat;
 
-    public SQLiteProcessData(Context context) {
-        SQLiteWork.getInstance();
-        SQLiteWork.getInstance().init(context, "Forecast.db");
+    public SQLiteProcessData() {
         dtFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    }
+
+    public void sqliteClose() {
+        SQLiteWork.getInstance().removeInstance();
     }
 
     // Сохранение города с координатами (перед сохранением списка нужно очистить старый)
