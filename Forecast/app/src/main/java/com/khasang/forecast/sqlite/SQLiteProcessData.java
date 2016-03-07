@@ -26,12 +26,16 @@ import java.util.HashMap;
 
 public class SQLiteProcessData {
 
+    public static Context mContext = null;
     public SimpleDateFormat dtFormat;
 
     public SQLiteProcessData(Context context) {
-        SQLiteWork.getInstance();
-        SQLiteWork.getInstance().init(context, "Forecast.db");
+        this.mContext = context;
         dtFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    }
+
+    public void sqliteClose() {
+        SQLiteWork.getInstance().removeInstance();
     }
 
     // Сохранение города с координатами (перед сохранением списка нужно очистить старый)

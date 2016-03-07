@@ -21,18 +21,29 @@ public class SQLiteWork {
     private SQLiteExecAsyncTask execAsyncTask;
     private SQLiteExExecAsyncTask exExecAsyncTask;
     private int newVersion = 4;
+    private static volatile SQLiteWork instance;
 
-    private static class ManagerHolder {
-        private final static SQLiteWork instance = new SQLiteWork();
+    private SQLiteWork() {
     }
 
     public static SQLiteWork getInstance() {
-        return ManagerHolder.instance;
+        if (instance == null){
+            synchronized (SQLiteWork.class){
+                if (instance == null) {
+                    instance = new SQLiteWork();
+                    instance.init();
+                }
+            }
+        }
+        return instance;
     }
 
-    public void init(Context context, String dbName) {
-        // инициализация класса обёртки
-        dbWork = new SQLiteOpen(context, dbName, newVersion);
+    public void init() {
+        dbWork = new SQLiteOpen(SQLiteProcessData.mContext, "Forecast.db", newVersion);
+    }
+
+    public synchronized void removeInstance() {
+        instance = null;
     }
 
     public void checkOpenDatabaseRead() {
