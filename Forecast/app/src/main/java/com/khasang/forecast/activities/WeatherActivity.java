@@ -30,10 +30,9 @@ import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.Logger;
 import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.R;
-import com.khasang.forecast.activities.etc.NavigationDrawer;
 import com.khasang.forecast.fragments.DailyForecastFragment;
 import com.khasang.forecast.fragments.HourlyForecastFragment;
-import com.khasang.forecast.position.Position;
+import com.khasang.forecast.interfaces.IWeatherReceiver;
 import com.khasang.forecast.position.PositionManager;
 import com.khasang.forecast.position.Weather;
 import com.khasang.forecast.stations.WeatherStation;
@@ -62,7 +61,8 @@ import java.util.Map;
  */
 
 public class WeatherActivity extends AppCompatActivity implements View.OnClickListener,
-        SwipeRefreshLayout.OnRefreshListener {
+        SwipeRefreshLayout.OnRefreshListener,
+        IWeatherReceiver {
     private static final int CHOOSE_CITY = 1;
     private static final String TAG = WeatherActivity.class.getSimpleName();
 
@@ -265,7 +265,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onStart() {
         super.onStart();
-        PositionManager.getInstance().configureActivityFeedback(this);
+        PositionManager.getInstance().setWeatherReceiver(this);
     }
 
     @Override
@@ -294,7 +294,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onStop() {
         super.onStop();
-        PositionManager.getInstance().configureActivityFeedback(null);
+        PositionManager.getInstance().setWeatherReceiver(null);
         PositionManager.getInstance().saveSettings();
     }
 
@@ -317,10 +317,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                     .commit();
             fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_by_day));
         }
-    }
-
-    public boolean isHourlyForecastActive() {
-        return dailyForecastFragment.isHidden();
     }
 
     @Override
@@ -409,6 +405,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
      * Обновление интерфейса Activity при получении новых данных
      */
 
+    @Override
     public void updateInterface(WeatherStation.ResponseType responseType, Map<Calendar, Weather> forecast) {
         stopRefresh();
         toolbar.setTitle(PositionManager.getInstance().getCurrentPositionName().split(",")[0]);
@@ -559,5 +556,9 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     }
 
 
+    @Override
+    public boolean receiveHourlyWeatherFirst() {
+        return dailyForecastFragment.isHidden();
+    }
 }
 
