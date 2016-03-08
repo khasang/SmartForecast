@@ -74,7 +74,6 @@ public class SplashScreenActivity
         LocationManager locationManager = ((LocationManager) MyApplication.getAppContext().getSystemService(Context.LOCATION_SERVICE));
         boolean gps_enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         boolean network_enabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        Log.d("COO", "GPS " + gps_enabled + " NET " + network_enabled);
         return (gps_enabled || network_enabled);
     }
 
@@ -103,6 +102,10 @@ public class SplashScreenActivity
         } else {
             coordinatesServicesChecked = true;
         }
+    }
+
+    private void checkPermissions() {
+        // TODO добавить проверку на рантайм пермишны в АПИ > 23
     }
 
     private boolean checkPlayServices() {
@@ -135,6 +138,7 @@ public class SplashScreenActivity
     public void onAnimationEnd(Animation animation) {
         if (checkPlayServices()) {
             checkCoordinatesServices();
+            checkPermissions();
             startWeatherActivity();
         }
     }
