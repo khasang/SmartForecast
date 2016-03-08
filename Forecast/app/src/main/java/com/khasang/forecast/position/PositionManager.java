@@ -49,11 +49,11 @@ public class PositionManager {
     private boolean lastResponseIsFailure;
     private CurrentLocationManager locationManager;
 
-    public IWeatherReceiver getWeatherReceiver () {
+    public IWeatherReceiver getWeatherReceiver() {
         return weatherReceiver;
     }
 
-    public void setWeatherReceiver (IWeatherReceiver weatherReceiver) {
+    public void setWeatherReceiver(IWeatherReceiver weatherReceiver) {
         this.weatherReceiver = weatherReceiver;
     }
 
@@ -64,8 +64,8 @@ public class PositionManager {
     }
 
     public static PositionManager getInstance() {
-        if (instance == null){
-            synchronized (PositionManager.class){
+        if (instance == null) {
+            synchronized (PositionManager.class) {
                 if (instance == null) {
                     instance = new PositionManager();
                     instance.initManager();
@@ -75,7 +75,7 @@ public class PositionManager {
         return instance;
     }
 
-    public synchronized void removeInstance () {
+    public synchronized void removeInstance() {
         instance = null;
     }
 

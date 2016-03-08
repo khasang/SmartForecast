@@ -78,7 +78,7 @@ public class CurrentLocationManager {
             }
         }
         if (recentLocation == null) {
-            throw new EmptyCurrentAddressException ();
+            throw new EmptyCurrentAddressException();
         }
         return recentLocation;
     }
@@ -108,7 +108,7 @@ public class CurrentLocationManager {
     public boolean checkProviders() {
         gps_enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         network_enabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        if (!isGpsAccessGranted){
+        if (!isGpsAccessGranted) {
             return network_enabled;
         }
         return (gps_enabled || network_enabled);
@@ -128,7 +128,7 @@ public class CurrentLocationManager {
         }
         if (!checkProviders()) {
             if (!isGpsAccessGranted) {
-                Toast.makeText(MyApplication.getAppContext(), R.string.error_gps_disabled,Toast.LENGTH_LONG).show();
+                Toast.makeText(MyApplication.getAppContext(), R.string.error_gps_disabled, Toast.LENGTH_LONG).show();
             }
 
 //            AlertDialog.Builder builder = new AlertDialog.Builder(witherAсtivity);
@@ -171,7 +171,7 @@ public class CurrentLocationManager {
         PositionManager.getInstance().setCurrentLocationCoordinates(location);
     }
 
-    private void giveMessageAboutPermission () {
+    private void giveMessageAboutPermission() {
         Toast.makeText(MyApplication.getAppContext(), MyApplication.getAppContext().getString(R.string.error_gps_permission), Toast.LENGTH_SHORT).show();
     }
 
