@@ -96,4 +96,7 @@
     <string name="clear_new_location_name">Clear the input field</string>
     <string name="coordinates_error">Not correct location coordinates</string>
     <string name="error_gps_disabled">In application settings disabled the ability to get the coordinates from the GPS</string>
+
+    <!-- TODO translate -->
+    <string name="error_location_services_are_not_active">Службы получения координат не активны</string>
 </resources>

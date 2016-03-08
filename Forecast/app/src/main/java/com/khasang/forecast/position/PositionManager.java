@@ -49,10 +49,6 @@ public class PositionManager {
     private boolean lastResponseIsFailure;
     private CurrentLocationManager locationManager;
 
-    public IWeatherReceiver getWeatherReceiver() {
-        return weatherReceiver;
-    }
-
     public void setWeatherReceiver(IWeatherReceiver weatherReceiver) {
         this.weatherReceiver = weatherReceiver;
     }
