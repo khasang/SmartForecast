@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -19,18 +20,22 @@ import android.widget.ImageView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.khasang.forecast.MyApplication;
+import com.khasang.forecast.PermissionChecker;
 import com.khasang.forecast.R;
+import com.khasang.forecast.interfaces.IPermissionCallback;
+
+import static com.khasang.forecast.PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION;
 
 
 public class SplashScreenActivity
         extends AppCompatActivity
-        implements Animation.AnimationListener {
+        implements Animation.AnimationListener, IPermissionCallback {
 
     private final static String TAG = SplashScreenActivity.class.getSimpleName();
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-    private static final int PERMISSIONS_REQUEST_LOCATION = 10;
+    private final int RESPONSE = 0;
     private volatile boolean coordinatesServicesChecked = false;
-    private volatile boolean runtimePermissionChecked = true;
+    private volatile boolean runtimePermissionChecked = false;
 
 
     @Override
@@ -106,6 +111,8 @@ public class SplashScreenActivity
 
     private void checkPermissions() {
         // TODO добавить проверку на рантайм пермишны в АПИ > 23
+        PermissionChecker permissionChecker = new PermissionChecker();
+        permissionChecker.checkForPermissions(this, PERMISSION_REQUEST_FINE_LOCATION, this);
     }
 
     private boolean checkPlayServices() {
@@ -151,9 +158,34 @@ public class SplashScreenActivity
         if (coordinatesServicesChecked && runtimePermissionChecked) {
             Intent intent = new Intent(SplashScreenActivity.this, WeatherActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(SplashScreenActivity.this)
-                    .toBundle();
+            Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(SplashScreenActivity.this).toBundle();
             ActivityCompat.startActivity(SplashScreenActivity.this, intent, bundle);
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_REQUEST_FINE_LOCATION.VALUE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.d("PERMISSION", "Splash screen checkForPermissions granted");
+            } else {
+                Log.d("PERMISSION", "Splash screen checkForPermissions not granted");
+            }
+        }
+        runtimePermissionChecked = true;
+        startWeatherActivity();
+    }
+
+
+    @Override
+    public void permissionGranted(PermissionChecker.RuntimePermissions permission) {
+        runtimePermissionChecked = true;
+        startWeatherActivity();
+    }
+
+    @Override
+    public void permissionDenied(PermissionChecker.RuntimePermissions permission) {
+
     }
 }
