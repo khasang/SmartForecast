@@ -2,6 +2,7 @@ package com.khasang.forecast.activities;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -14,10 +15,15 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
+import com.felipecsl.gifimageview.library.GifImageView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.R;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 
 public class SplashScreenActivity
@@ -28,12 +34,20 @@ public class SplashScreenActivity
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private static final int PERMISSIONS_REQUEST_LOCATION = 10;
     private final int SPLASH_DISPLAY_LENGTH = 1500;
-
+    GifImageView gifView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash_screen);
+        gifView = new GifImageView(this);
+        setContentView(gifView);
+        InputStream inputStream = getResources().openRawResource(R.raw.googleweather);
+        try {
+            gifView.setBytes(streamToByteArray(inputStream));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
+        /*
         ImageView splash_cloud = (ImageView) findViewById(R.id.splash_cloud);
         final ImageView splash_left_cloud = (ImageView) findViewById(R.id.splash_left_cloud);
         ImageView splash_right_cloud = (ImageView) findViewById(R.id.splash_right_cloud);
@@ -69,6 +83,36 @@ public class SplashScreenActivity
         splash_smile.startAnimation(anim_splash_smile);
         splash_wink.startAnimation(anim_splash_wink);
         anim_splash_wink.setAnimationListener(this);
+        */
+    }
+
+    public static byte[] streamToByteArray(InputStream stream) throws IOException {
+
+        byte[] buffer = new byte[1024];
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+
+        int line = 0;
+        // read bytes from stream, and store them in buffer
+        while ((line = stream.read(buffer)) != -1) {
+            // Writes bytes from byte array (buffer) into output stream.
+            os.write(buffer, 0, line);
+        }
+        stream.close();
+        os.flush();
+        os.close();
+        return os.toByteArray();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        gifView.startAnimation();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        gifView.stopAnimation();
     }
 
     @Override
