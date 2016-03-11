@@ -21,6 +21,8 @@ import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.PermissionChecker;
 import com.khasang.forecast.R;
 import com.khasang.forecast.interfaces.IPermissionCallback;
+import com.romainpiel.shimmer.Shimmer;
+import com.romainpiel.shimmer.ShimmerTextView;
 
 import static com.khasang.forecast.PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION;
 
@@ -40,6 +42,7 @@ public class SplashScreenActivity
     private volatile boolean gifIsFinishedPlaying = false;
 
     GifDrawable gifDrawable = null;
+    Shimmer shimmer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,10 +75,18 @@ public class SplashScreenActivity
     @Override
     protected void onResume() {
         super.onResume();
+        shimmer = new Shimmer();
+        shimmer.start(((ShimmerTextView) findViewById(R.id.welcomeText)));
         if (checkPlayServices()) {
             checkCoordinatesServices();
             checkPermissions();
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        shimmer.cancel();
     }
 
     @Override
