@@ -5,7 +5,6 @@ import android.database.Cursor;
 import com.google.android.gms.maps.model.LatLng;
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.position.Coordinate;
-import com.khasang.forecast.position.Position;
 import com.khasang.forecast.position.Precipitation;
 import com.khasang.forecast.position.Weather;
 import com.khasang.forecast.stations.WeatherStation;
@@ -285,7 +284,7 @@ public class SQLiteProcessData {
             if (dataset != null && dataset.getCount() != 0) {
                 if (dataset.moveToFirst()) {
                     do {
-                        if(dataset.getString(dataset.getColumnIndex(SQLiteFields.FAVORITE)) == "1") {
+                        if(dataset.getString(dataset.getColumnIndex(SQLiteFields.FAVORITE)).equals("1")) {
                             return true;
                         }
                     } while (dataset.moveToNext());
@@ -305,7 +304,7 @@ public class SQLiteProcessData {
         double townLat = 0;
         double townLong = 0;
         String townName = "";
-        HashMap hashMap = new HashMap();
+        HashMap<String, Coordinate> hashMap = new HashMap<>();
         Cursor dataset = SQLiteWork.getInstance().queryOpen(SQLiteFields.QUERY_SELECT_TOWNS, null);
         try {
             if (dataset != null && dataset.getCount() != 0) {
@@ -365,7 +364,7 @@ public class SQLiteProcessData {
         Wind wind = null;
         Precipitation precipitation = null;
         Weather weather = null;
-        HashMap hashMap = null;
+        HashMap<Calendar, Weather> hashMap = null;
         Calendar weatherDate = null;
         Cursor dataset = SQLiteWork.getInstance().queryOpen(SQLiteFields.QUERY_SELECT_WEATHER, new String[]{serviceType.name(), cityName, dtFormat.format(date.getTime())});
         try {
@@ -405,7 +404,7 @@ public class SQLiteProcessData {
         }
 
         if (weather != null) {
-            hashMap = new HashMap();
+            hashMap = new HashMap<>();
             hashMap.put(weatherDate, AppUtils.formatWeather(weather, tm, sm, pm));
         }
         return hashMap;
