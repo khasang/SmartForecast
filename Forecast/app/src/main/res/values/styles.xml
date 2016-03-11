@@ -20,7 +20,7 @@
     <style name="AppTheme.Button" parent="AppTheme"/>
 
     <style name="AppTheme.Splash" parent="AppTheme">
-        <item name="android:windowBackground">@color/primary_light</item>
+        <item name="android:windowBackground">@color/background_splash</item>
     </style>
 
     <style name="AppTheme.Settings" parent="AppTheme"/>

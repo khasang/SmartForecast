@@ -14,8 +14,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -26,53 +24,46 @@ import com.khasang.forecast.interfaces.IPermissionCallback;
 
 import static com.khasang.forecast.PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION;
 
+import java.io.IOException;
+
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifImageView;
+
 
 public class SplashScreenActivity
         extends AppCompatActivity
         implements Animation.AnimationListener, IPermissionCallback {
 
-    private final static String TAG = SplashScreenActivity.class.getSimpleName();
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-    private final int RESPONSE = 0;
     private volatile boolean coordinatesServicesChecked = false;
     private volatile boolean runtimePermissionChecked = false;
 
+
+    private GifImageView gifImageView;
+    GifDrawable gifDrawable = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
-        final ImageView splash_cloud = (ImageView) findViewById(R.id.splash_cloud);
-        final ImageView splash_left_cloud = (ImageView) findViewById(R.id.splash_left_cloud);
-        final ImageView splash_right_cloud = (ImageView) findViewById(R.id.splash_right_cloud);
-        final ImageView splash_rainbow = (ImageView) findViewById(R.id.splash_rainbow);
-        final ImageView splash_smile = (ImageView) findViewById(R.id.splash_smile);
-        final ImageView splash_wink = (ImageView) findViewById(R.id.splash_wink);
+        gifImageView = ((GifImageView) findViewById(R.id.gifImageView));
+        try {
+            gifDrawable = new GifDrawable(getResources(), R.raw.splash_screen);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-        // Определение изображение для ImageView
-        splash_cloud.setImageResource(R.drawable.splash_cloud);
-        splash_left_cloud.setImageResource(R.drawable.splash_left_cloud);
-        splash_right_cloud.setImageResource(R.drawable.splash_right_cloud);
-        splash_rainbow.setImageResource(R.drawable.splash_rainbow);
-        splash_smile.setImageResource(R.drawable.splash_smile);
-        splash_wink.setImageResource(R.drawable.splash_wink);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        gifImageView.setImageDrawable(gifDrawable);
+    }
 
-        // Создание анимации
-        Animation anim_splash_cloud = AnimationUtils.loadAnimation(this, R.anim.anim_splash_cloud);
-        Animation anim_splash_left_cloud = AnimationUtils.loadAnimation(this, R.anim.anim_splash_left_cloud);
-        Animation anim_splash_right_cloud = AnimationUtils.loadAnimation(this, R.anim.anim_splash_right_cloud);
-        Animation anim_splash_rainbow = AnimationUtils.loadAnimation(this, R.anim.anim_splash_rainbow);
-        Animation anim_splash_smile = AnimationUtils.loadAnimation(this, R.anim.anim_splash_smile);
-        Animation anim_splash_wink = AnimationUtils.loadAnimation(this, R.anim.anim_splash_wink);
-
-        splash_cloud.startAnimation(anim_splash_cloud);
-        splash_left_cloud.startAnimation(anim_splash_left_cloud);
-        splash_right_cloud.startAnimation(anim_splash_right_cloud);
-        splash_rainbow.startAnimation(anim_splash_rainbow);
-        splash_smile.startAnimation(anim_splash_smile);
-        splash_wink.startAnimation(anim_splash_wink);
-        anim_splash_wink.setAnimationListener(this);
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     private boolean checkProviders() {
