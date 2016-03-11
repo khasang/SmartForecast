@@ -7,13 +7,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.animation.Animation;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -32,14 +32,13 @@ import pl.droidsonroids.gif.GifImageView;
 
 public class SplashScreenActivity
         extends AppCompatActivity
-        implements Animation.AnimationListener, IPermissionCallback {
+        implements IPermissionCallback {
 
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private volatile boolean coordinatesServicesChecked = false;
     private volatile boolean runtimePermissionChecked = false;
+    private volatile boolean gifIsFinishedPlaying = false;
 
-
-    private GifImageView gifImageView;
     GifDrawable gifDrawable = null;
 
     @Override
@@ -47,23 +46,42 @@ public class SplashScreenActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
-        gifImageView = ((GifImageView) findViewById(R.id.gifImageView));
+        GifImageView gifImageView = ((GifImageView) findViewById(R.id.gifImageView));
         try {
             gifDrawable = new GifDrawable(getResources(), R.raw.splash_screen);
+            gifDrawable.stop();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        gifImageView.setImageDrawable(gifDrawable);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        gifDrawable.start();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                gifIsFinishedPlaying = true;
+                startWeatherActivity();
+            }
+        }, gifDrawable.getDuration());
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        gifImageView.setImageDrawable(gifDrawable);
+        if (checkPlayServices()) {
+            checkCoordinatesServices();
+            checkPermissions();
+        }
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onStop() {
+        super.onStop();
+        gifDrawable.stop();
     }
 
     private boolean checkProviders() {
@@ -128,25 +146,8 @@ public class SplashScreenActivity
         return true;
     }
 
-    @Override
-    public void onAnimationStart(Animation animation) {
-    }
-
-    @Override
-    public void onAnimationEnd(Animation animation) {
-        if (checkPlayServices()) {
-            checkCoordinatesServices();
-            checkPermissions();
-            startWeatherActivity();
-        }
-    }
-
-    @Override
-    public void onAnimationRepeat(Animation animation) {
-    }
-
     private void startWeatherActivity() {
-        if (coordinatesServicesChecked && runtimePermissionChecked) {
+        if (coordinatesServicesChecked && runtimePermissionChecked && gifIsFinishedPlaying) {
             Intent intent = new Intent(SplashScreenActivity.this, WeatherActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(SplashScreenActivity.this).toBundle();
