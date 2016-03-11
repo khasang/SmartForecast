@@ -18,5 +18,6 @@
     <pl.droidsonroids.gif.GifImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/gifImageView" />
+        android:id="@+id/gifImageView"
+        android:layout_centerInParent="true"/>
 </RelativeLayout>
