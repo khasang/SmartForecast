@@ -87,7 +87,9 @@ public class SplashScreenActivity
         welcomeText.startAnimation(animation);
         welcomeText.setVisibility(View.VISIBLE);
         shimmer = new Shimmer();
-        shimmer.start(welcomeText);
+        shimmer.setStartDelay(1000)
+            .setRepeatCount(3)
+            .start(welcomeText);
     }
 
     @Override

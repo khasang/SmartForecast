@@ -13,10 +13,11 @@
         android:layout_marginBottom="100dp"
         android:layout_marginTop="100dp"
         android:gravity="center"
-        android:text="ALOHA !!!!!"
+        android:text="ALOHA"
         android:textColor="@color/primary"
         android:textSize="40sp"
         android:visibility="gone"
+        android:fontFamily="sans-serif-thin"
         app:reflectionColor="@color/background_splash" />
 
     <pl.droidsonroids.gif.GifImageView
