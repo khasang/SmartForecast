@@ -15,7 +15,7 @@ public class SQLiteWork {
     private SQLiteDatabase sqlDatabaseRead;
     private SQLiteDatabase sqlDatabaseWrite;
     private SQLiteOpen dbWork;
-    private final int CURRENT_DB_VERSION = 4;
+    private final int CURRENT_DB_VERSION = 5;
     private static volatile SQLiteWork instance;
 
     private SQLiteWork() {
@@ -49,7 +49,7 @@ public class SQLiteWork {
 
     public void qExec(String query) {
         try {
-            SQLiteExecAsyncTask execAsyncTask = new SQLiteExecAsyncTask(query);
+            new SQLiteExecAsyncTask(query);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -57,7 +57,7 @@ public class SQLiteWork {
 
     public void qExExec(String query, Object[] bindArgs) {
         try {
-            SQLiteExExecAsyncTask exExecAsyncTask = new SQLiteExExecAsyncTask(query, bindArgs);
+            new SQLiteExExecAsyncTask(query, bindArgs);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -16,7 +16,7 @@ public class SQLiteFields {
 
     public static final String TOWN = "Town";
     public static final String LATITUDE = "Latitude";
-    public static final String LONGTITUDE = "Longtitude";
+    public static final String LONGITUDE = "Longtitude";
     public static final String SUNRISE = "Sunrise";
     public static final String SUNSET = "Sunset";
     public static final String FAVORITE = "Favorite";
@@ -38,12 +38,14 @@ public class SQLiteFields {
     public static final String CURRENT_PRESSURE_METRICS = "CurrentPressureMetrics";
     public static final String CURRENT_STATION = "CurrentServiceType";
     public static final String CURRENT_TOWN = "Town";
+    public static final String CURRENT_LATITUDE = "CurentLatitude";
+    public static final String CURRENT_LONGITUDE = "CurentLongtitude";
 
     public static final String QUERY_CREATE_TABLE_TOWNS  = "CREATE TABLE " + TABLE_TOWNS + " (" +
             ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
             TOWN + " VARCHAR(255)," +
             LATITUDE + " VARCHAR(30)," +
-            LONGTITUDE + " VARCHAR(30)," +
+            LONGITUDE + " VARCHAR(30)," +
             SUNRISE + " DATETIME," +
             SUNSET + " DATETIME," +
             FAVORITE + " VARCHAR(5))";
@@ -69,7 +71,9 @@ public class SQLiteFields {
             CURRENT_TOWN + " VARCHAR(255)," +
             CURRENT_TEMPIRATURE_METRICS + " VARCHAR(30)," +
             CURRENT_SPEED_METRICS + " VARCHAR(30)," +
-            CURRENT_PRESSURE_METRICS + " VARCHAR(30))";
+            CURRENT_PRESSURE_METRICS + " VARCHAR(30)," +
+            CURRENT_LATITUDE + " VARCHAR(30)," +
+            CURRENT_LONGITUDE + " VARCHAR(30))";
 
     public static final String QUERY_DELETE_TABLE_WEATHER = "DROP TABLE IF EXISTS " + TABLE_WEATHER;
     public static final String QUERY_DELETE_TABLE_TOWNS = "DROP TABLE IF EXISTS " + TABLE_TOWNS;
@@ -118,13 +122,13 @@ public class SQLiteFields {
     public static final String QUERY_INSERT_TOWN_1 = "INSERT INTO " + TABLE_TOWNS + " (" +
             TOWN + "," +
             LATITUDE + "," +
-            LONGTITUDE + ") " +
+            LONGITUDE + ") " +
             " VALUES ( ? , ? , ? )";
 
     public static final String QUERY_INSERT_TOWN_2 = "INSERT INTO " + TABLE_TOWNS + " (" +
             TOWN + "," +
             LATITUDE + "," +
-            LONGTITUDE + "," +
+            LONGITUDE + "," +
             FAVORITE + ") " +
             " VALUES ( ? , ? , ? , ? )";
 
@@ -158,8 +162,10 @@ public class SQLiteFields {
             CURRENT_TOWN + "," +
             CURRENT_TEMPIRATURE_METRICS + "," +
             CURRENT_SPEED_METRICS + "," +
-            CURRENT_PRESSURE_METRICS + ") " +
-            " VALUES ( ? , ? , ? , ? , ? )";
+            CURRENT_PRESSURE_METRICS + ", " +
+            CURRENT_LATITUDE + ", " +
+            CURRENT_LONGITUDE + ") " +
+            " VALUES ( ? , ? , ? , ? , ? , ? , ? )";
 
     public static final String QUERY_UPDATE_SETTINGS = "UPDATE " + TABLE_SETTINGS + " SET " +
             CURRENT_STATION + " = ? ," +
@@ -167,21 +173,26 @@ public class SQLiteFields {
             CURRENT_TEMPIRATURE_METRICS + " = ? ," +
             CURRENT_SPEED_METRICS + " = ? ," +
             CURRENT_PRESSURE_METRICS + " = ? " +
-            " WHERE " + ID + " = 1";
+            " WHERE " + ID + " = (SELECT MAX(" + ID + ") FROM " + TABLE_SETTINGS + ")";
 
     public static final String QUERY_UPDATE_CURRCITY_SETTING = "UPDATE " + TABLE_SETTINGS + " SET " +
             CURRENT_TOWN + " = ? " +
-            " WHERE " + ID + " = 1";
+            " WHERE " + ID + " = (SELECT MAX(" + ID + ") FROM " + TABLE_SETTINGS + ")";
+
+    public static final String QUERY_UPDATE_CURRLATLNG_SETTING = "UPDATE " + TABLE_SETTINGS + " SET " +
+            CURRENT_LATITUDE + " = ? ," +
+            CURRENT_LONGITUDE + " = ? " +
+            " WHERE " + ID + " = (SELECT MAX(" + ID + ") FROM " + TABLE_SETTINGS + ")";
 
     public static final String QUERY_UPDATE_CURRSTATION_SETTING = "UPDATE " + TABLE_SETTINGS + " SET " +
             CURRENT_STATION + " = ? " +
-            " WHERE " + ID + " = 1";
+            " WHERE " + ID + " = (SELECT MAX(" + ID + ") FROM " + TABLE_SETTINGS + ")";
 
     public static final String QUERY_UPDATE_METRICS_SETTINGS = "UPDATE " + TABLE_SETTINGS + " SET " +
             CURRENT_TEMPIRATURE_METRICS + " = ? ," +
             CURRENT_SPEED_METRICS + " = ? ," +
             CURRENT_PRESSURE_METRICS + " = ? " +
-            " WHERE " + ID + " = 1";
+            " WHERE " + ID + " = (SELECT MAX(" + ID + ") FROM " + TABLE_SETTINGS + ")";
 
     public static final String QUERY_SELECT_SETTINGS =
             "SELECT * FROM " + TABLE_SETTINGS +

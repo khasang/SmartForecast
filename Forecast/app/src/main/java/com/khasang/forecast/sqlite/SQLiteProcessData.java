@@ -2,6 +2,7 @@ package com.khasang.forecast.sqlite;
 
 import android.database.Cursor;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.position.Coordinate;
 import com.khasang.forecast.position.Position;
@@ -62,12 +63,13 @@ public class SQLiteProcessData {
         SQLiteWork.getInstance().qExExec(SQLiteFields.QUERY_UPDATE_METRICS_SETTINGS, new String[]{temperatureMetrics.name(), speedMetrics.name(), pressureMetrics.name()});
     }
 
-    public void saveSettings(Position currPosition) {
-        SQLiteWork.getInstance().qExExec(SQLiteFields.QUERY_UPDATE_CURRCITY_SETTING, new String[]{currPosition.getLocationName()});
-    }
-
     public void saveLastCurrentLocationName(String currLocation) {
         SQLiteWork.getInstance().qExExec(SQLiteFields.QUERY_UPDATE_CURRCITY_SETTING, new String[]{currLocation});
+    }
+
+    // Сохранение координат в настройках
+    public void saveLastCurrentLatLng(double latitude, double longitude) {
+        SQLiteWork.getInstance().qExExec(SQLiteFields.QUERY_UPDATE_CURRLATLNG_SETTING, new String[]{Double.toString(latitude), Double.toString(longitude)});
     }
 
     // Загрузка CurrentTown.
@@ -86,6 +88,27 @@ public class SQLiteProcessData {
             }
         }
         return "";
+    }
+
+    // Загрузка последних сохраненных координат из настроек.
+    public LatLng loadCurrentLatLng() {
+        Cursor dataset = SQLiteWork.getInstance().queryOpen(SQLiteFields.QUERY_SELECT_SETTINGS, null);
+        try {
+            if (dataset != null && dataset.getCount() != 0) {
+                if (dataset.moveToFirst()) {
+                    double latitude = dataset.getDouble(dataset.getColumnIndex(SQLiteFields.CURRENT_LATITUDE));
+                    double longitude = dataset.getDouble(dataset.getColumnIndex(SQLiteFields.CURRENT_LONGITUDE));
+
+                    return new LatLng(latitude, longitude);
+                }
+            }
+        } finally {
+            SQLiteWork.getInstance().checkOpenDatabaseRead();
+            if (dataset != null) {
+                dataset.close();
+            }
+        }
+        return null;
     }
 
     // Загрузка TemperatureMetrics.
@@ -290,7 +313,7 @@ public class SQLiteProcessData {
                     do {
                         townName = dataset.getString(dataset.getColumnIndex(SQLiteFields.TOWN));
                         townLat = dataset.getDouble(dataset.getColumnIndex(SQLiteFields.LATITUDE));
-                        townLong = dataset.getDouble(dataset.getColumnIndex(SQLiteFields.LONGTITUDE));
+                        townLong = dataset.getDouble(dataset.getColumnIndex(SQLiteFields.LONGITUDE));
 
                         Coordinate coordinate = new Coordinate(townLat, townLong);
                         hashMap.put(townName, coordinate);
@@ -308,7 +331,7 @@ public class SQLiteProcessData {
 
     // Загрузка списка избранных городов.
     public ArrayList<String> loadFavoriteTownList() {
-        ArrayList<String> list = new ArrayList<String>();
+        ArrayList<String> list = new ArrayList<>();
         Cursor dataset = SQLiteWork.getInstance().queryOpen(SQLiteFields.QUERY_SELECT_FAVORITE_TOWN, new String[]{"1"});
         try {
             if (dataset != null && dataset.getCount() != 0) {
