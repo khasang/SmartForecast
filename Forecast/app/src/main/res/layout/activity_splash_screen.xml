@@ -16,6 +16,7 @@
         android:text="ALOHA !!!!!"
         android:textColor="@color/primary"
         android:textSize="40sp"
+        android:visibility="gone"
         app:reflectionColor="@color/background_splash" />
 
     <pl.droidsonroids.gif.GifImageView
