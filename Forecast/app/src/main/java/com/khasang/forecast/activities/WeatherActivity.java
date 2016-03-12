@@ -1,16 +1,22 @@
 package com.khasang.forecast.activities;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
@@ -29,9 +35,11 @@ import android.widget.Toast;
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.Logger;
 import com.khasang.forecast.MyApplication;
+import com.khasang.forecast.PermissionChecker;
 import com.khasang.forecast.R;
 import com.khasang.forecast.fragments.DailyForecastFragment;
 import com.khasang.forecast.fragments.HourlyForecastFragment;
+import com.khasang.forecast.interfaces.IPermissionCallback;
 import com.khasang.forecast.interfaces.IWeatherReceiver;
 import com.khasang.forecast.position.PositionManager;
 import com.khasang.forecast.position.Weather;
@@ -62,7 +70,7 @@ import java.util.Map;
 
 public class WeatherActivity extends AppCompatActivity implements View.OnClickListener,
         SwipeRefreshLayout.OnRefreshListener,
-        IWeatherReceiver {
+        IWeatherReceiver, IPermissionCallback {
     private static final int CHOOSE_CITY = 1;
     private static final String TAG = WeatherActivity.class.getSimpleName();
 
@@ -111,6 +119,8 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         startAnimations();
         initNavigationDrawer();
         initFirstAppearance();
+        checkCoordinatesServices();
+        checkPermissions();
     }
 
     private void initNavigationDrawer() {
@@ -302,6 +312,66 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     protected void onDestroy() {
         super.onDestroy();
         PositionManager.getInstance().removeInstance();
+    }
+
+    private void checkCoordinatesServices() {
+        if (!checkProviders()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.location_manager);
+            builder.setMessage(R.string.activate_geographical_service);
+            builder.setPositiveButton(R.string.btn_yes, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(i);
+                }
+            });
+            builder.setNegativeButton(R.string.btn_no, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            builder.create().show();
+        }
+    }
+
+    private boolean checkProviders() {
+        LocationManager locationManager = ((LocationManager) MyApplication.getAppContext().getSystemService(Context.LOCATION_SERVICE));
+        boolean gps_enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        boolean network_enabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        return (gps_enabled || network_enabled);
+    }
+
+    private void checkPermissions() {
+        PermissionChecker permissionChecker = new PermissionChecker();
+        permissionChecker.checkForPermissions(this, PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION, this);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION.VALUE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                PositionManager.getInstance().setWeatherReceiver(null);
+                PositionManager.getInstance().removeInstance();
+                PositionManager.getInstance().setWeatherReceiver(this);
+                PositionManager.getInstance().updateWeather();
+                permissionGranted(PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION);
+            } else {
+                permissionDenied(PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION);
+            }
+        }
+    }
+
+    @Override
+    public void permissionGranted(PermissionChecker.RuntimePermissions permission) {
+
+    }
+
+    @Override
+    public void permissionDenied(PermissionChecker.RuntimePermissions permission) {
+
     }
 
     private void switchDisplayMode() {
