@@ -77,6 +77,7 @@ public class SplashScreenActivity
         }
         gifDrawable.addAnimationListener(this);
         gifImageView.setImageDrawable(gifDrawable);
+        gifDrawable.start();
     }
 
     @Override
@@ -94,7 +95,6 @@ public class SplashScreenActivity
     @Override
     protected void onResume() {
         super.onResume();
-        gifDrawable.start();
         if (checkPlayServices()) {
             checkCoordinatesServices();
             checkPermissions();
@@ -109,7 +109,6 @@ public class SplashScreenActivity
     @Override
     protected void onStop() {
         super.onStop();
-        jumpingBeans.stopJumping();
     }
 
     private boolean checkProviders() {
@@ -180,6 +179,7 @@ public class SplashScreenActivity
             animation.setAnimationListener(this);
             shimmer.cancel();
             welcomeText.startAnimation(animation);
+            jumpingBeans.stopJumping();
 
             Intent intent = new Intent(SplashScreenActivity.this, WeatherActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
