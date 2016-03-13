@@ -74,7 +74,6 @@
     <string name="error_geo_service_not_available">The coordinates of the location are not detected.\nNetwork or other I/O problem.</string>
     <string name="invalid_lang_long_used">Error of detection coordinates for a location</string>
     <string name="no_address_found">Address of current location is not found</string>
-    <string name="activate_geographical_service">Do you want to activate the service for the geographic coordinates ?</string>
     <string name="location_manager" translatable="false">Location Manager</string>
 
     <string name="title_activity_settings">Settings</string>
@@ -106,4 +105,5 @@
     <string name="welcome_string_morning">"Доброе утро "</string>
     <string name="welcome_string_day">"Добрый день "</string>
     <string name="welcome_string_evening">"Добрый вечер "</string>
+    <string name="activate_geographical_service">Проверьте настройки телефона и программы. Нет доступных сервисов для получения гографических координат.\n\nОткрыть настройки телефона для активации сервисов определния местоположения?</string>
 </resources>

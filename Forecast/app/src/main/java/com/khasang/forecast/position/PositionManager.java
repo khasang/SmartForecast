@@ -571,13 +571,17 @@ public class PositionManager {
 
     public void initLocationManager() {
         locationManager = new CurrentLocationManager();
-        locationManager.giveGpsAccess(true); // TODO Прочитать из настроек
+        locationManager.giveGpsAccess(true);
         try {
             updateCurrentLocation(locationManager.getLastLocation());
         } catch (EmptyCurrentAddressException e) {
             currentLocation.setCoordinate(null);
             e.printStackTrace();
         }
+    }
+
+    public boolean isSomeLocationProviderAvailable () {
+        return locationManager.checkProviders();
     }
 
     public void setUseGpsModule(boolean useGpsModule) {

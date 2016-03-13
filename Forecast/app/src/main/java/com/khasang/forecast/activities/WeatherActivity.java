@@ -1,11 +1,9 @@
 package com.khasang.forecast.activities;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -117,10 +115,9 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         initFields();
         setAnimationForWidgets();
         startAnimations();
-        initNavigationDrawer();
         initFirstAppearance();
-        checkCoordinatesServices();
         checkPermissions();
+        initNavigationDrawer();
     }
 
     private void initNavigationDrawer() {
@@ -238,6 +235,11 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
      * Обновление Drawer badges
      */
     public void updateBadges() {
+        // TODO Дизейблить пункт "Текущее местоположение" в дровере, если нет прав на получение координат
+//        PermissionChecker permissionChecker = new PermissionChecker();
+//        boolean isLocationPermissionGranted = permissionChecker.isPermissionGranted(this, PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION);
+//         дизейблить пункт на основании переменной isLocationPermissionGranted
+
         if (PositionManager.getInstance().getFavouritesList().isEmpty()) {
             favorites.withBadge("").withEnabled(false);
             result.updateItem(favorites);
@@ -315,7 +317,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void checkCoordinatesServices() {
-        if (!checkProviders()) {
+        if (!PositionManager.getInstance().isSomeLocationProviderAvailable()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.location_manager);
             builder.setMessage(R.string.activate_geographical_service);
@@ -336,13 +338,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    private boolean checkProviders() {
-        LocationManager locationManager = ((LocationManager) MyApplication.getAppContext().getSystemService(Context.LOCATION_SERVICE));
-        boolean gps_enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        boolean network_enabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        return (gps_enabled || network_enabled);
-    }
-
     private void checkPermissions() {
         PermissionChecker permissionChecker = new PermissionChecker();
         permissionChecker.checkForPermissions(this, PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION, this);
@@ -356,6 +351,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 PositionManager.getInstance().setWeatherReceiver(null);
                 PositionManager.getInstance().removeInstance();
                 PositionManager.getInstance().setWeatherReceiver(this);
+                PositionManager.getInstance().updateWeatherFromDB();
                 PositionManager.getInstance().updateWeather();
                 permissionGranted(PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION);
             } else {
@@ -366,7 +362,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void permissionGranted(PermissionChecker.RuntimePermissions permission) {
-
+        checkCoordinatesServices();
     }
 
     @Override
