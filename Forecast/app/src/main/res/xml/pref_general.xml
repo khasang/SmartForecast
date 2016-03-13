@@ -4,15 +4,24 @@
         android:defaultValue="@string/pref_gps_default"
         android:key="@string/pref_gps_key"
         android:summary="@string/pref_description_enable_gps"
-        android:title="@string/pref_title_enable_gps"/>
+        android:title="@string/pref_title_enable_gps" />
 
     <ListPreference
         android:defaultValue="@string/pref_units_metric"
-        android:entryValues="@array/pref_units_values"
         android:entries="@array/pref_units_options"
+        android:entryValues="@array/pref_units_values"
         android:key="@string/pref_units_key"
         android:negativeButtonText="@null"
         android:positiveButtonText="@null"
-        android:title="@string/pref_title_units"/>
+        android:title="@string/pref_title_units" />
+
+    <ListPreference
+        android:defaultValue="@string/pref_location_current"
+        android:entries="@array/pref_location_options"
+        android:entryValues="@array/pref_location_values"
+        android:key="@string/pref_location_key"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="@string/pref_title_location" />
 
 </PreferenceScreen>

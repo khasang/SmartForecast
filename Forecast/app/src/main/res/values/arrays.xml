@@ -9,4 +9,14 @@
         <item>@string/pref_units_label_metric</item>
         <item>@string/pref_units_label_imperial</item>
     </string-array>
+
+    <string-array name="pref_location_options">
+        <item>@string/pref_location_label_current</item>
+        <item>@string/pref_location_label_last</item>
+    </string-array>
+
+    <string-array name="pref_location_values">
+        <item>@string/pref_location_current</item>
+        <item>@string/pref_location_last</item>
+    </string-array>
 </resources>

@@ -96,4 +96,11 @@
     <string name="clear_new_location_name">Clear the input field</string>
     <string name="coordinates_error">Not correct location coordinates</string>
     <string name="error_gps_disabled">In application settings disabled the ability to get the coordinates from the GPS</string>
+
+    <string name="pref_title_location">При запуске показывать погоду для</string>
+    <string name="pref_location_key" translatable="false">default_location</string>
+    <string name="pref_location_current" translatable="false">current_location</string>
+    <string name="pref_location_last" translatable="false">last_location</string>
+    <string name="pref_location_label_current">Текущего местоположения</string>
+    <string name="pref_location_label_last">Последнего активного местоположения</string>
 </resources>
