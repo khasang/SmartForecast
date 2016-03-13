@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
-import android.util.Log;
 
 import com.khasang.forecast.interfaces.IPermissionCallback;
 
@@ -29,7 +28,7 @@ public class PermissionChecker {
         };
         public final int VALUE;
 
-        RuntimePermissions(){
+        RuntimePermissions() {
             VALUE = this.ordinal();
         }
 
@@ -38,46 +37,35 @@ public class PermissionChecker {
         public abstract String showInformationMessage();
     }
 
-    public void checkForPermissions(Activity activity, final RuntimePermissions permission, final IPermissionCallback callback) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            // Do something for API 23 and above versions
-            if (ActivityCompat.checkSelfPermission(activity, permission.toStringValue()) != PackageManager.PERMISSION_GRANTED) {  //check permission
-                Log.d("PERMISSION", "checkForPermissions not granted");
-                if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permission.toStringValue())) {
-                    //  если он отклонил, объясняем зачем нужно
-                    Log.d("PERMISSION", "checkForPermissions not granted – explanation ");
+    public boolean isPermissionGranted(Activity activity, final RuntimePermissions permission) {
+        return Build.VERSION.SDK_INT < Build.VERSION_CODES.M || ActivityCompat.checkSelfPermission(activity, permission.toStringValue()) == PackageManager.PERMISSION_GRANTED;
+    }
 
-                    AlertDialog.Builder d = new AlertDialog.Builder(activity);
-                    d.setMessage(permission.showInformationMessage());
-                    d.setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            callback.permissionGranted(permission);
-                        }
-                    });
+    public void checkForPermissions(Activity activity, final RuntimePermissions permission, final IPermissionCallback callback) {
+        if (!isPermissionGranted(activity, permission)) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permission.toStringValue())) {
+                AlertDialog.Builder d = new AlertDialog.Builder(activity);
+                d.setMessage(permission.showInformationMessage());
+                d.setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                     d.setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
                         public void onDismiss(DialogInterface dialog) {
                             dialog.dismiss();
-                            callback.permissionGranted(permission);
                         }
                     });
-                    d.show();
-                    callback.permissionDenied(permission);
-                } else {
-                    // запросить пермишн
-                    Log.d("PERMISSION", "checkForPermissions not granted – did not ask ");
-                    ActivityCompat.requestPermissions(activity, new String[]{permission.toStringValue()}, permission.ordinal());
                 }
-
+                d.show();
+                callback.permissionDenied(permission);
             } else {
-                //пермишн одобрен
-                Log.d("PERMISSION", "checkForPermissions granted");
-                callback.permissionGranted(permission);
+                ActivityCompat.requestPermissions(activity, new String[]{permission.toStringValue()}, permission.ordinal());
             }
         } else {
-            // do something for phones running an SDK before
             callback.permissionGranted(permission);
         }
     }
