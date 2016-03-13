@@ -2,7 +2,6 @@ package com.khasang.forecast.sqlite;
 
 import android.database.Cursor;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.position.Coordinate;
 import com.khasang.forecast.position.Precipitation;
@@ -66,8 +65,12 @@ public class SQLiteProcessData {
         SQLiteWork.getInstance().qExExec(SQLiteFields.QUERY_UPDATE_CURRCITY_SETTING, new String[]{currLocation});
     }
 
+    public void saveLastPositionCoordinates(Coordinate coordinate) {
+        saveLastPositionCoordinates(coordinate.getLatitude(), coordinate.getLongitude());
+    }
+
     // Сохранение координат в настройках
-    public void saveLastCurrentLatLng(double latitude, double longitude) {
+    public void saveLastPositionCoordinates(double latitude, double longitude) {
         SQLiteWork.getInstance().qExExec(SQLiteFields.QUERY_UPDATE_CURRLATLNG_SETTING, new String[]{Double.toString(latitude), Double.toString(longitude)});
     }
 
@@ -90,7 +93,7 @@ public class SQLiteProcessData {
     }
 
     // Загрузка последних сохраненных координат из настроек.
-    public LatLng loadCurrentLatLng() {
+    public Coordinate loadLastPositionCoordinates() {
         Cursor dataset = SQLiteWork.getInstance().queryOpen(SQLiteFields.QUERY_SELECT_SETTINGS, null);
         try {
             if (dataset != null && dataset.getCount() != 0) {
@@ -98,7 +101,7 @@ public class SQLiteProcessData {
                     double latitude = dataset.getDouble(dataset.getColumnIndex(SQLiteFields.CURRENT_LATITUDE));
                     double longitude = dataset.getDouble(dataset.getColumnIndex(SQLiteFields.CURRENT_LONGITUDE));
 
-                    return new LatLng(latitude, longitude);
+                    return new Coordinate(latitude, longitude);
                 }
             }
         } finally {
