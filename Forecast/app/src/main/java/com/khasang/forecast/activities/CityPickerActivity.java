@@ -86,7 +86,9 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         //TODO fix NullPointerException
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         setTitle(getString(R.string.city_list));
 
         infoTV = (TextView) findViewById(R.id.infoTV);

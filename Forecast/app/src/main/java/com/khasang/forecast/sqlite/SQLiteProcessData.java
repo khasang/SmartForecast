@@ -4,7 +4,6 @@ import android.database.Cursor;
 
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.position.Coordinate;
-import com.khasang.forecast.position.Position;
 import com.khasang.forecast.position.Precipitation;
 import com.khasang.forecast.position.Weather;
 import com.khasang.forecast.stations.WeatherStation;
@@ -37,7 +36,7 @@ public class SQLiteProcessData {
 
     // Сохранение города с координатами (перед сохранением списка нужно очистить старый)
     public void saveTown(String town, double latitude, double longitude) {
-        SQLiteWork.getInstance().qExExec(SQLiteFields.QUERY_INSERT_TOWN_1, new String[]{town, Double.toString(latitude), Double.toString(longitude)});
+        SQLiteWork.getInstance().qExExec(SQLiteFields.QUERY_INSERT_TOWN_v4, new String[]{town, Double.toString(latitude), Double.toString(longitude)});
     }
 
     // Сохранение погоды, удаление старой погоды.
@@ -62,12 +61,17 @@ public class SQLiteProcessData {
         SQLiteWork.getInstance().qExExec(SQLiteFields.QUERY_UPDATE_METRICS_SETTINGS, new String[]{temperatureMetrics.name(), speedMetrics.name(), pressureMetrics.name()});
     }
 
-    public void saveSettings(Position currPosition) {
-        SQLiteWork.getInstance().qExExec(SQLiteFields.QUERY_UPDATE_CURRCITY_SETTING, new String[]{currPosition.getLocationName()});
-    }
-
     public void saveLastCurrentLocationName(String currLocation) {
         SQLiteWork.getInstance().qExExec(SQLiteFields.QUERY_UPDATE_CURRCITY_SETTING, new String[]{currLocation});
+    }
+
+    public void saveLastPositionCoordinates(Coordinate coordinate) {
+        saveLastPositionCoordinates(coordinate.getLatitude(), coordinate.getLongitude());
+    }
+
+    // Сохранение координат в настройках
+    public void saveLastPositionCoordinates(double latitude, double longitude) {
+        SQLiteWork.getInstance().qExExec(SQLiteFields.QUERY_UPDATE_CURRLATLNG_SETTING, new String[]{Double.toString(latitude), Double.toString(longitude)});
     }
 
     // Загрузка CurrentTown.
@@ -86,6 +90,27 @@ public class SQLiteProcessData {
             }
         }
         return "";
+    }
+
+    // Загрузка последних сохраненных координат из настроек.
+    public Coordinate loadLastPositionCoordinates() {
+        Cursor dataset = SQLiteWork.getInstance().queryOpen(SQLiteFields.QUERY_SELECT_SETTINGS, null);
+        try {
+            if (dataset != null && dataset.getCount() != 0) {
+                if (dataset.moveToFirst()) {
+                    double latitude = dataset.getDouble(dataset.getColumnIndex(SQLiteFields.CURRENT_LATITUDE));
+                    double longitude = dataset.getDouble(dataset.getColumnIndex(SQLiteFields.CURRENT_LONGITUDE));
+
+                    return new Coordinate(latitude, longitude);
+                }
+            }
+        } finally {
+            SQLiteWork.getInstance().checkOpenDatabaseRead();
+            if (dataset != null) {
+                dataset.close();
+            }
+        }
+        return null;
     }
 
     // Загрузка TemperatureMetrics.
@@ -262,7 +287,7 @@ public class SQLiteProcessData {
             if (dataset != null && dataset.getCount() != 0) {
                 if (dataset.moveToFirst()) {
                     do {
-                        if(dataset.getString(dataset.getColumnIndex(SQLiteFields.FAVORITE)) == "1") {
+                        if(dataset.getString(dataset.getColumnIndex(SQLiteFields.FAVORITE)).equals("1")) {
                             return true;
                         }
                     } while (dataset.moveToNext());
@@ -282,7 +307,7 @@ public class SQLiteProcessData {
         double townLat = 0;
         double townLong = 0;
         String townName = "";
-        HashMap hashMap = new HashMap();
+        HashMap<String, Coordinate> hashMap = new HashMap<>();
         Cursor dataset = SQLiteWork.getInstance().queryOpen(SQLiteFields.QUERY_SELECT_TOWNS, null);
         try {
             if (dataset != null && dataset.getCount() != 0) {
@@ -290,7 +315,7 @@ public class SQLiteProcessData {
                     do {
                         townName = dataset.getString(dataset.getColumnIndex(SQLiteFields.TOWN));
                         townLat = dataset.getDouble(dataset.getColumnIndex(SQLiteFields.LATITUDE));
-                        townLong = dataset.getDouble(dataset.getColumnIndex(SQLiteFields.LONGTITUDE));
+                        townLong = dataset.getDouble(dataset.getColumnIndex(SQLiteFields.LONGITUDE));
 
                         Coordinate coordinate = new Coordinate(townLat, townLong);
                         hashMap.put(townName, coordinate);
@@ -308,7 +333,7 @@ public class SQLiteProcessData {
 
     // Загрузка списка избранных городов.
     public ArrayList<String> loadFavoriteTownList() {
-        ArrayList<String> list = new ArrayList<String>();
+        ArrayList<String> list = new ArrayList<>();
         Cursor dataset = SQLiteWork.getInstance().queryOpen(SQLiteFields.QUERY_SELECT_FAVORITE_TOWN, new String[]{"1"});
         try {
             if (dataset != null && dataset.getCount() != 0) {
@@ -342,7 +367,7 @@ public class SQLiteProcessData {
         Wind wind = null;
         Precipitation precipitation = null;
         Weather weather = null;
-        HashMap hashMap = null;
+        HashMap<Calendar, Weather> hashMap = null;
         Calendar weatherDate = null;
         Cursor dataset = SQLiteWork.getInstance().queryOpen(SQLiteFields.QUERY_SELECT_WEATHER, new String[]{serviceType.name(), cityName, dtFormat.format(date.getTime())});
         try {
@@ -382,7 +407,7 @@ public class SQLiteProcessData {
         }
 
         if (weather != null) {
-            hashMap = new HashMap();
+            hashMap = new HashMap<>();
             hashMap.put(weatherDate, AppUtils.formatWeather(weather, tm, sm, pm));
         }
         return hashMap;

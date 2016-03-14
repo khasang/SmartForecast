@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Класс наследник SQLiteOpenHelper для создания/изменения БД.
@@ -16,53 +17,21 @@ import java.util.HashMap;
 
 public class SQLiteOpen extends SQLiteOpenHelper {
 
-    ArrayList<HashMap<String, String>> townList = null;
-    HashMap<String, String> settingsMap;
+    private ArrayList<HashMap<String, String>> townList = null;
+    private HashMap<String, String> settingsMap;
+    private int dbOldVersion = 0;
 
     public SQLiteOpen(Context context, String name, int version) {
         super(context, name, null, version);
     }
-/*
-    public void checkTable(String tableName, String query, SQLiteDatabase db) {
-        try {
-            if (!isTableExists(tableName, db)) {
-                db.execSQL(query);
-                if (tableName.equals(SQLiteFields.TABLE_SETTINGS)) {
-                    db.execSQL(SQLiteFields.QUERY_INSERT_SETTINGS, new String[]{"OPEN_WEATHER_MAP", "", "CELSIUS", "METER_PER_SECOND", "HPA"});
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
-    public boolean isTableExists(String tableName, SQLiteDatabase db) {
-        if (tableName == null || db == null || !db.isOpen()) {
-            return false;
-        }
-
-        int count = 0;
-        Cursor cursor = db.rawQuery(SQLiteFields.QUERY_OBJECTS_COUNT, new String[]{"table", tableName});
-        try {
-            if (!cursor.moveToFirst()) {
-                return false;
-            }
-            count = cursor.getInt(0);
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-        return count > 0;
-    }
-*/
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQLiteFields.QUERY_CREATE_TABLE_TOWNS);
         db.execSQL(SQLiteFields.QUERY_CREATE_TABLE_WEATHER);
         db.execSQL(SQLiteFields.QUERY_CREATE_TABLE_SETTINGS);
 
-        db.execSQL(SQLiteFields.QUERY_INSERT_SETTINGS, new String[]{"OPEN_WEATHER_MAP", "", "CELSIUS", "METER_PER_SECOND", "HPA"});
+        db.execSQL(SQLiteFields.QUERY_INSERT_SETTINGS, new String[]{"OPEN_WEATHER_MAP", "", "CELSIUS", "METER_PER_SECOND", "HPA", "", ""});
     }
 
     public void setTownList(SQLiteDatabase db) throws Exception {
@@ -71,21 +40,24 @@ public class SQLiteOpen extends SQLiteOpenHelper {
             if (townList != null) {
                 for (int i = 0; i < townList.size(); i++) {
                     map = townList.get(i);
+                    switch(dbOldVersion) {
+                        case 3:
+                            db.execSQL(SQLiteFields.QUERY_INSERT_TOWN_v4, new String[]{
+                                    map.get(SQLiteFields.TOWN),
+                                    map.get(SQLiteFields.LATITUDE),
+                                    map.get(SQLiteFields.LONGITUDE)
+                            });
+                            break;
 
-                    db.execSQL(SQLiteFields.QUERY_INSERT_TOWN_1, new String[]{
-                            map.get(SQLiteFields.TOWN),
-                            map.get(SQLiteFields.LATITUDE),
-                            map.get(SQLiteFields.LONGTITUDE)
-                    });
-
-                    /*  TODO Для третьего релиза!
-                    db.execSQL(SQLiteFields.QUERY_INSERT_TOWN_2, new String[]{
-                            map.get(SQLiteFields.TOWN),
-                            map.get(SQLiteFields.LATITUDE),
-                            map.get(SQLiteFields.LONGTITUDE),
-                            map.get(SQLiteFields.FAVORITE)
-                    });
-                    */
+                        default:
+                            db.execSQL(SQLiteFields.QUERY_INSERT_TOWN_v5, new String[]{
+                                    map.get(SQLiteFields.TOWN),
+                                    map.get(SQLiteFields.LATITUDE),
+                                    map.get(SQLiteFields.LONGITUDE),
+                                    map.get(SQLiteFields.FAVORITE)
+                            });
+                            break;
+                    }
                 }
             }
         } catch (Exception e) {
@@ -102,11 +74,20 @@ public class SQLiteOpen extends SQLiteOpenHelper {
                     townList = new ArrayList<>();
                     do {
                         map = new HashMap<>();
-                        map.put(SQLiteFields.TOWN, dataset.getString(dataset.getColumnIndex(SQLiteFields.TOWN)));
-                        map.put(SQLiteFields.LATITUDE, dataset.getString(dataset.getColumnIndex(SQLiteFields.LATITUDE)));
-                        map.put(SQLiteFields.LONGTITUDE, dataset.getString(dataset.getColumnIndex(SQLiteFields.LONGTITUDE)));
-                        // TODO Для третьего релиза!
-                        //map.put(SQLiteFields.FAVORITE, dataset.getString(dataset.getColumnIndex(SQLiteFields.FAVORITE)));
+                        switch(dbOldVersion) {
+                            case 3:
+                                map.put(SQLiteFields.TOWN, dataset.getString(dataset.getColumnIndex(SQLiteFields.TOWN)));
+                                map.put(SQLiteFields.LATITUDE, dataset.getString(dataset.getColumnIndex(SQLiteFields.LATITUDE)));
+                                map.put(SQLiteFields.LONGITUDE, dataset.getString(dataset.getColumnIndex(SQLiteFields.LONGITUDE)));
+                                break;
+
+                            default:
+                                map.put(SQLiteFields.TOWN, dataset.getString(dataset.getColumnIndex(SQLiteFields.TOWN)));
+                                map.put(SQLiteFields.LATITUDE, dataset.getString(dataset.getColumnIndex(SQLiteFields.LATITUDE)));
+                                map.put(SQLiteFields.LONGITUDE, dataset.getString(dataset.getColumnIndex(SQLiteFields.LONGITUDE)));
+                                map.put(SQLiteFields.FAVORITE, dataset.getString(dataset.getColumnIndex(SQLiteFields.FAVORITE)));
+                                break;
+                        }
                         townList.add(map);
                     } while (dataset.moveToNext());
                 }
@@ -123,13 +104,29 @@ public class SQLiteOpen extends SQLiteOpenHelper {
     public void setSettings(SQLiteDatabase db) throws Exception {
         try {
             if (settingsMap != null) {
-                db.execSQL(SQLiteFields.QUERY_UPDATE_SETTINGS, new String[]{
-                        settingsMap.get(SQLiteFields.CURRENT_STATION),
-                        settingsMap.get(SQLiteFields.CURRENT_TOWN),
-                        settingsMap.get(SQLiteFields.CURRENT_TEMPIRATURE_METRICS),
-                        settingsMap.get(SQLiteFields.CURRENT_SPEED_METRICS),
-                        settingsMap.get(SQLiteFields.CURRENT_PRESSURE_METRICS),
-                });
+                switch(dbOldVersion) {
+                    case 3:
+                    case 4:
+                        db.execSQL(SQLiteFields.QUERY_UPDATE_SETTINGS_v4, new String[]{
+                                settingsMap.get(SQLiteFields.CURRENT_STATION),
+                                settingsMap.get(SQLiteFields.CURRENT_TOWN),
+                                settingsMap.get(SQLiteFields.CURRENT_TEMPIRATURE_METRICS),
+                                settingsMap.get(SQLiteFields.CURRENT_SPEED_METRICS),
+                                settingsMap.get(SQLiteFields.CURRENT_PRESSURE_METRICS)
+                        });
+                        break;
+
+                    default:
+                        db.execSQL(SQLiteFields.QUERY_UPDATE_SETTINGS_v5, new String[]{
+                                settingsMap.get(SQLiteFields.CURRENT_STATION),
+                                settingsMap.get(SQLiteFields.CURRENT_TOWN),
+                                settingsMap.get(SQLiteFields.CURRENT_TEMPIRATURE_METRICS),
+                                settingsMap.get(SQLiteFields.CURRENT_SPEED_METRICS),
+                                settingsMap.get(SQLiteFields.CURRENT_PRESSURE_METRICS),
+                                settingsMap.get(SQLiteFields.CURRENT_LATITUDE),
+                                settingsMap.get(SQLiteFields.CURRENT_LONGITUDE)
+                        });
+                }
             }
         } catch (Exception e) {
             throw new Exception("setSettings error: " + e.getMessage());
@@ -142,11 +139,26 @@ public class SQLiteOpen extends SQLiteOpenHelper {
             if (dataset != null && dataset.getCount() != 0) {
                 if (dataset.moveToFirst()) {
                     settingsMap = new HashMap<>();
-                    settingsMap.put(SQLiteFields.CURRENT_STATION, dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_STATION)));
-                    settingsMap.put(SQLiteFields.CURRENT_TOWN, dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_TOWN)));
-                    settingsMap.put(SQLiteFields.CURRENT_TEMPIRATURE_METRICS, dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_TEMPIRATURE_METRICS)));
-                    settingsMap.put(SQLiteFields.CURRENT_SPEED_METRICS, dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_SPEED_METRICS)));
-                    settingsMap.put(SQLiteFields.CURRENT_PRESSURE_METRICS, dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_PRESSURE_METRICS)));
+                    switch(dbOldVersion) {
+                        case 3:
+                        case 4:
+                            settingsMap.put(SQLiteFields.CURRENT_STATION, dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_STATION)));
+                            settingsMap.put(SQLiteFields.CURRENT_TOWN, dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_TOWN)));
+                            settingsMap.put(SQLiteFields.CURRENT_TEMPIRATURE_METRICS, dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_TEMPIRATURE_METRICS)));
+                            settingsMap.put(SQLiteFields.CURRENT_SPEED_METRICS, dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_SPEED_METRICS)));
+                            settingsMap.put(SQLiteFields.CURRENT_PRESSURE_METRICS, dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_PRESSURE_METRICS)));
+                            break;
+
+                        default:
+                            settingsMap.put(SQLiteFields.CURRENT_STATION, dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_STATION)));
+                            settingsMap.put(SQLiteFields.CURRENT_TOWN, dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_TOWN)));
+                            settingsMap.put(SQLiteFields.CURRENT_TEMPIRATURE_METRICS, dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_TEMPIRATURE_METRICS)));
+                            settingsMap.put(SQLiteFields.CURRENT_SPEED_METRICS, dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_SPEED_METRICS)));
+                            settingsMap.put(SQLiteFields.CURRENT_PRESSURE_METRICS, dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_PRESSURE_METRICS)));
+                            settingsMap.put(SQLiteFields.CURRENT_LATITUDE, dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_LATITUDE)));
+                            settingsMap.put(SQLiteFields.CURRENT_LONGITUDE, dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_LONGITUDE)));
+                            break;
+                    }
                 }
             }
         } catch (Exception e) {
@@ -161,6 +173,8 @@ public class SQLiteOpen extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         try {
+            dbOldVersion = oldVersion;
+
             // Выгрузка в память списка городов
             getTownList(db);
             // Выгрузка в память настроек

@@ -3,11 +3,13 @@ package com.khasang.forecast.activities;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -40,26 +42,31 @@ public class SplashScreenActivity
     private ShimmerTextView welcomeText;
     private JumpingBeans jumpingBeans;
     boolean isGooglePlayServicesInstalled = false;
+    boolean welcomeStringIsOff;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-        int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-        String text = getString(R.string.welcome_string_hello);
-        if (hour >= 4 && hour <= 9) {
-            text = getString(R.string.welcome_string_morning);
-        } else if (hour <= 17) {
-            text = getString(R.string.welcome_string_day);
-        } else if (hour <= 22) {
-            text = getString(R.string.welcome_string_evening);
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        welcomeStringIsOff = sp.getString(getString(R.string.pref_welcome_key), getString(R.string.pref_welcome_default)).equals(getString(R.string.pref_welcome_off));
+        if (!welcomeStringIsOff) {
+            int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+            String text = getString(R.string.welcome_string_hello);
+            if (hour >= 4 && hour <= 9) {
+                text = getString(R.string.welcome_string_morning);
+            } else if (hour <= 17) {
+                text = getString(R.string.welcome_string_day);
+            } else if (hour <= 22) {
+                text = getString(R.string.welcome_string_evening);
+            }
+            welcomeText = ((ShimmerTextView) findViewById(R.id.welcomeText));
+            welcomeText.setText(text);
+            jumpingBeans = JumpingBeans
+                    .with(welcomeText)
+                    .appendJumpingDots()
+                    .build();
         }
-        welcomeText = ((ShimmerTextView) findViewById(R.id.welcomeText));
-        welcomeText.setText(text);
-        jumpingBeans = JumpingBeans
-                .with(welcomeText)
-                .appendJumpingDots()
-                .build();
         GifImageView gifImageView = ((GifImageView) findViewById(R.id.gifImageView));
         try {
             gifDrawable = new GifDrawable(getResources(), R.raw.splash_screen);
@@ -70,27 +77,30 @@ public class SplashScreenActivity
         gifDrawable.addAnimationListener(this);
         gifImageView.setImageDrawable(gifDrawable);
         gifDrawable.start();
+        gifImageView.setVisibility(View.VISIBLE);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Animation animation = AnimationUtils.loadAnimation(SplashScreenActivity.this, R.anim.welcome_string_disappear);
-                animation.setAnimationListener(SplashScreenActivity.this);
-                welcomeText.startAnimation(animation);
-                jumpingBeans.stopJumping();
-                shimmer.cancel();
-            }
-        }, gifDrawable.getDuration() - 500);
-        Animation animation = AnimationUtils.loadAnimation(this, R.anim.welcome_string_appear);
-        welcomeText.startAnimation(animation);
-        welcomeText.setVisibility(View.VISIBLE);
-        shimmer = new Shimmer();
-        shimmer.setStartDelay(500)
-                .start(welcomeText);
+        if (!welcomeStringIsOff) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Animation animation = AnimationUtils.loadAnimation(SplashScreenActivity.this, R.anim.welcome_string_disappear);
+                    animation.setAnimationListener(SplashScreenActivity.this);
+                    welcomeText.startAnimation(animation);
+                    jumpingBeans.stopJumping();
+                    shimmer.cancel();
+                }
+            }, gifDrawable.getDuration() - 500);
+            Animation animation = AnimationUtils.loadAnimation(this, R.anim.welcome_string_appear);
+            welcomeText.startAnimation(animation);
+            welcomeText.setVisibility(View.VISIBLE);
+            shimmer = new Shimmer();
+            shimmer.setStartDelay(500)
+                    .start(welcomeText);
+        }
     }
 
     @Override

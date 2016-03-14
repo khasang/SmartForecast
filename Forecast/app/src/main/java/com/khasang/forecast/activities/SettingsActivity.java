@@ -28,7 +28,9 @@ public class SettingsActivity extends AppCompatActivity {
     private void setupToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override
@@ -50,7 +52,20 @@ public class SettingsActivity extends AppCompatActivity {
         public void onCreatePreferences(Bundle bundle, String s) {
             addPreferencesFromResource(R.xml.pref_general);
             sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            onSharedPreferenceChanged(sharedPreferences, getString(R.string.pref_units_key));
+            loadInitialListPreferenceValue(sharedPreferences, getString(R.string.pref_units_key));
+            loadInitialListPreferenceValue(sharedPreferences, getString(R.string.pref_location_key));
+            loadInitialListPreferenceValue(sharedPreferences, getString(R.string.pref_welcome_key));
+        }
+
+        private void loadInitialListPreferenceValue(SharedPreferences sharedPreferences, String key) {
+            Preference preference = findPreference(key);
+            if (preference instanceof ListPreference) {
+                ListPreference listPreference = (ListPreference) preference;
+                int prefIndex = listPreference.findIndexOfValue(sharedPreferences.getString(key, ""));
+                if (prefIndex >= 0) {
+                    preference.setSummary(listPreference.getEntries()[prefIndex]);
+                }
+            }
         }
 
         @Override
