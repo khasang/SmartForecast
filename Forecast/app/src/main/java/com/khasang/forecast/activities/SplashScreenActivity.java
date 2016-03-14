@@ -50,7 +50,6 @@ public class SplashScreenActivity
         setContentView(R.layout.activity_splash_screen);
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         welcomeStringIsOff = sp.getString(getString(R.string.pref_welcome_key), getString(R.string.pref_welcome_default)).equals(getString(R.string.pref_welcome_off));
-
         if (!welcomeStringIsOff) {
             int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
             String text = getString(R.string.welcome_string_hello);

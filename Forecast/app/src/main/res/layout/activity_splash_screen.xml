@@ -14,9 +14,9 @@
         android:layout_marginTop="60dp"
         android:fontFamily="sans-serif-thin"
         android:gravity="center"
-        android:text="ALOHA"
+        android:text="@string/welcome_def_str"
         android:textColor="@color/primary"
-        android:textSize="40sp"
+        android:textSize="35sp"
         android:visibility="gone"
         app:reflectionColor="@color/background_splash" />
 
