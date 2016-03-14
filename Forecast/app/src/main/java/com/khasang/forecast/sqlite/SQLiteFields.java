@@ -167,12 +167,22 @@ public class SQLiteFields {
             CURRENT_LONGITUDE + ") " +
             " VALUES ( ? , ? , ? , ? , ? , ? , ? )";
 
-    public static final String QUERY_UPDATE_SETTINGS = "UPDATE " + TABLE_SETTINGS + " SET " +
+    public static final String QUERY_UPDATE_SETTINGS_1 = "UPDATE " + TABLE_SETTINGS + " SET " +
             CURRENT_STATION + " = ? ," +
             CURRENT_TOWN + " = ? ," +
             CURRENT_TEMPIRATURE_METRICS + " = ? ," +
             CURRENT_SPEED_METRICS + " = ? ," +
             CURRENT_PRESSURE_METRICS + " = ? " +
+            " WHERE " + ID + " = (SELECT MAX(" + ID + ") FROM " + TABLE_SETTINGS + ")";
+
+    public static final String QUERY_UPDATE_SETTINGS_2 = "UPDATE " + TABLE_SETTINGS + " SET " +
+            CURRENT_STATION + " = ? ," +
+            CURRENT_TOWN + " = ? ," +
+            CURRENT_TEMPIRATURE_METRICS + " = ? ," +
+            CURRENT_SPEED_METRICS + " = ? ," +
+            CURRENT_PRESSURE_METRICS + " = ? ," +
+            CURRENT_LATITUDE + " = ? ," +
+            CURRENT_LONGITUDE + " = ? " +
             " WHERE " + ID + " = (SELECT MAX(" + ID + ") FROM " + TABLE_SETTINGS + ")";
 
     public static final String QUERY_UPDATE_CURRCITY_SETTING = "UPDATE " + TABLE_SETTINGS + " SET " +
