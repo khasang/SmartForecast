@@ -19,4 +19,14 @@
         <item>@string/pref_location_current</item>
         <item>@string/pref_location_last</item>
     </string-array>
+
+    <string-array name="pref_welcome_values">
+        <item>@string/pref_welcome_off</item>
+        <item>@string/pref_welcome_default</item>
+    </string-array>
+
+    <string-array name="pref_welcome_options">
+        <item>@string/pref_welcome_off_label</item>
+        <item>@string/pref_welcome_default_label</item>
+    </string-array>
 </resources>

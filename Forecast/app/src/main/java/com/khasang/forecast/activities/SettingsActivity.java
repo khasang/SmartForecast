@@ -9,7 +9,6 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.khasang.forecast.R;
@@ -53,8 +52,20 @@ public class SettingsActivity extends AppCompatActivity {
         public void onCreatePreferences(Bundle bundle, String s) {
             addPreferencesFromResource(R.xml.pref_general);
             sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            onSharedPreferenceChanged(sharedPreferences, getString(R.string.pref_units_key));
-            onSharedPreferenceChanged(sharedPreferences, getString(R.string.pref_location_key));
+            loadInitialListPreferenceValue(sharedPreferences, getString(R.string.pref_units_key));
+            loadInitialListPreferenceValue(sharedPreferences, getString(R.string.pref_location_key));
+            loadInitialListPreferenceValue(sharedPreferences, getString(R.string.pref_welcome_key));
+        }
+
+        private void loadInitialListPreferenceValue(SharedPreferences sharedPreferences, String key) {
+            Preference preference = findPreference(key);
+            if (preference instanceof ListPreference) {
+                ListPreference listPreference = (ListPreference) preference;
+                int prefIndex = listPreference.findIndexOfValue(sharedPreferences.getString(key, ""));
+                if (prefIndex >= 0) {
+                    preference.setSummary(listPreference.getEntries()[prefIndex]);
+                }
+            }
         }
 
         @Override

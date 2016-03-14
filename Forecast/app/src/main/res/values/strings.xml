@@ -103,4 +103,11 @@
     <string name="pref_location_last" translatable="false">last_location</string>
     <string name="pref_location_label_current">Текущего местоположения</string>
     <string name="pref_location_label_last">Последнего активного местоположения</string>
+
+    <string name="pref_title_welcome_string">Строка приветствия</string>
+    <string name="pref_welcome_key" translatable="false">welcome_string</string>
+    <string name="pref_welcome_off" translatable="false">welcome_off</string>
+    <string name="pref_welcome_default" translatable="false">welcome_default</string>
+    <string name="pref_welcome_off_label">Приветствие отключено</string>
+    <string name="pref_welcome_default_label">Приветствие включено</string>
 </resources>
