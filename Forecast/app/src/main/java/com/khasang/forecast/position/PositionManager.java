@@ -1,11 +1,13 @@
 package com.khasang.forecast.position;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.os.Handler;
+import android.support.v7.preference.PreferenceManager;
 import android.widget.Toast;
 
 import com.khasang.forecast.AppUtils;
@@ -120,19 +122,25 @@ public class PositionManager {
     }
 
     // Пока заглушка, потом настрки сохранять при их смене в настройках
-    public void saveSettings() {
+    public void saveSettings(boolean saveCurrentLocation) {
         saveCurrStation();
         saveMetrics();
-        saveCurrPosition();
+        saveCurrPosition(saveCurrentLocation);
     }
 
     public void saveMetrics() {
         dbManager.saveSettings(temperatureMetric, speedMetric, pressureMetric);
     }
 
-    public void saveCurrPosition() {
+    public void saveCurrPosition(boolean saveCurrentLocation) {
         try {
-            dbManager.saveLastCurrentLocationName(currentLocation.getLocationName());
+            if (saveCurrentLocation) {
+                dbManager.saveLastCurrentLocationName(currentLocation.getLocationName());
+                dbManager.saveLastPositionCoordinates(currentLocation.getCoordinate());
+            } else {
+                dbManager.saveLastCurrentLocationName(activePosition.getLocationName());
+                dbManager.saveLastPositionCoordinates(activePosition.getCoordinate());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -186,14 +194,21 @@ public class PositionManager {
             }
         }
         positions = positionFactory.getPositions();
-        //      String currPositionName = dbManager.loadСurrentTown();
-        // TODO если сохранять будем координаты текущего местоположения то необходимо переделать
-        //      if (!currPositionName.isEmpty() && positionIsPresent(currPositionName)) {
-        //       activePosition = positions.get(currPositionName);
-        //    }
 
-        // Сейчас активная позиция всегда текущая локация
-        activePosition = currentLocation;
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MyApplication.getAppContext());
+        boolean saveCurrentLocation = sp.getString(MyApplication.getAppContext().getString(R.string.pref_location_key), MyApplication.getAppContext().getString(R.string.pref_location_current)).equals(MyApplication.getAppContext().getString(R.string.pref_location_current));
+        if (saveCurrentLocation) {
+            currentLocation.setLocationName(dbManager.loadСurrentTown());
+            currentLocation.setCoordinate(dbManager.loadLastPositionCoordinates());
+            activePosition = currentLocation;
+        } else {
+            String townName = dbManager.loadСurrentTown();
+            if (!townName.isEmpty() && positionInListPresent(townName)) {
+                activePosition = getPosition(townName);
+            } else {
+                activePosition = currentLocation;
+            }
+        }
     }
 
     /**
@@ -575,7 +590,6 @@ public class PositionManager {
         try {
             updateCurrentLocation(locationManager.getLastLocation());
         } catch (EmptyCurrentAddressException e) {
-            currentLocation.setCoordinate(null);
             e.printStackTrace();
         }
     }
@@ -617,6 +631,9 @@ public class PositionManager {
     }
 
     private boolean updateCurrentLocation(Location location) {
+        if (location == null) {
+            return false;
+        }
         Geocoder geocoder = new Geocoder(MyApplication.getAppContext());
         try {
             List<Address> list = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 3);
@@ -633,7 +650,7 @@ public class PositionManager {
             Toast.makeText(MyApplication.getAppContext(), R.string.no_address_found, Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
-        currentLocation.setCoordinate(null);
+//        currentLocation.setCoordinate(null);
         return false;
     }
 }

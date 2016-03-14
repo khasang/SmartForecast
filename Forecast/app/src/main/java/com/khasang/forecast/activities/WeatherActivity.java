@@ -306,8 +306,10 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onStop() {
         super.onStop();
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean saveCurrentLocation = sp.getString(getString(R.string.pref_location_key), getString(R.string.pref_location_current)).equals(getString(R.string.pref_location_current));
+        PositionManager.getInstance().saveSettings(saveCurrentLocation);
         PositionManager.getInstance().setWeatherReceiver(null);
-        PositionManager.getInstance().saveSettings();
     }
 
     @Override
