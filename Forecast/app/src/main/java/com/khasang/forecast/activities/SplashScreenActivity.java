@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -38,6 +39,7 @@ public class SplashScreenActivity
     private Shimmer shimmer;
     private ShimmerTextView welcomeText;
     private JumpingBeans jumpingBeans;
+    boolean isGooglePlayServicesInstalled = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,18 +75,29 @@ public class SplashScreenActivity
     @Override
     protected void onStart() {
         super.onStart();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Animation animation = AnimationUtils.loadAnimation(SplashScreenActivity.this, R.anim.welcome_string_disappear);
+                animation.setAnimationListener(SplashScreenActivity.this);
+                welcomeText.startAnimation(animation);
+                jumpingBeans.stopJumping();
+                shimmer.cancel();
+            }
+        }, gifDrawable.getDuration() - 500);
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.welcome_string_appear);
         welcomeText.startAnimation(animation);
         welcomeText.setVisibility(View.VISIBLE);
         shimmer = new Shimmer();
-        shimmer.setStartDelay(1000)
-            .start(welcomeText);
+        shimmer.setStartDelay(500)
+                .start(welcomeText);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         if (checkPlayServices()) {
+            isGooglePlayServicesInstalled = true;
             PositionManager.getInstance();
         }
     }
@@ -122,12 +135,6 @@ public class SplashScreenActivity
     }
 
     private void startWeatherActivity() {
-        Animation animation = AnimationUtils.loadAnimation(this, R.anim.welcome_string_disappear);
-        animation.setAnimationListener(this);
-        shimmer.cancel();
-        welcomeText.startAnimation(animation);
-        jumpingBeans.stopJumping();
-
         Intent intent = new Intent(SplashScreenActivity.this, WeatherActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(SplashScreenActivity.this).toBundle();
@@ -152,6 +159,8 @@ public class SplashScreenActivity
     @Override
     public void onAnimationCompleted() {
         gifDrawable.stop();
-        startWeatherActivity();
+        if (isGooglePlayServicesInstalled) {
+            startWeatherActivity();
+        }
     }
 }
