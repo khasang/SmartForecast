@@ -86,4 +86,23 @@
     <string name="clear_new_location_name">Eingabefeld sauber machen</string>
     <string name="coordinates_error">Nicht korrekte Ortskoordinaten</string>
     <string name="error_gps_disabled">In Anwendungseinstellungen ist die Möglichkeit deaktiviert um die Koordinaten aus dem GPS zu erhalten</string>
+
+    <string name="error_location_services_are_not_active">Dienste des Empfangs der Koordinaten sind nicht aktiv</string>
+    <string name="info_message_about_request_permission_fine_location">Die Anwendung erfordert Berechtigungen für die Bestimmung der aktuellen Position</string>
+    <string name="button_permission_granted">Lassen</string>
+    <string name="button_permission_not_granted">Verweigern</string>
+    <string name="welcome_def_str">"Hallo "</string>
+    <string name="welcome_string_hello">"Froh, Sie zu sehen "</string>
+    <string name="welcome_string_morning">"Guten morgen "</string>
+    <string name="welcome_string_day">"Guten Tag "</string>
+    <string name="welcome_string_evening">"Guten Abend "</string>
+    <string name="activate_geographical_service">Überprüfen Sie Ihre Programme und Telefoneinstellungen. Es gibt keine Dienstleistungen um geografische Koordinaten zu bekommen.\n\nDie Einstellungen des Telefons zu Standortdienstaktivierung öffnen?</string>
+
+    <string name="pref_title_location">Beim starten zeigen das Wetter für</string>
+    <string name="pref_location_label_current">Aktuellen Standort</string>
+    <string name="pref_location_label_last">Für den Letzten aktiven Standort</string>
+
+    <string name="pref_title_welcome_string">Zeile der Begrüßung</string>
+    <string name="pref_welcome_off_label">Begrüßung ist deaktiviert</string>
+    <string name="pref_welcome_default_label">Begrüßung ist aktiviert</string>
 </resources>
