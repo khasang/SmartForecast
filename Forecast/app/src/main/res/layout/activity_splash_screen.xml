@@ -12,17 +12,18 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="60dp"
         android:layout_marginTop="60dp"
+        android:fontFamily="sans-serif-thin"
         android:gravity="center"
         android:text="ALOHA"
         android:textColor="@color/primary"
         android:textSize="40sp"
         android:visibility="gone"
-        android:fontFamily="sans-serif-thin"
         app:reflectionColor="@color/background_splash" />
 
     <pl.droidsonroids.gif.GifImageView
         android:id="@+id/gifImageView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true" />
+        android:layout_centerInParent="true"
+        android:visibility="invisible" />
 </RelativeLayout>

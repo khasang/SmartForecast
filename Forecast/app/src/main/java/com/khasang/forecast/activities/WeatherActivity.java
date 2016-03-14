@@ -87,7 +87,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     private FloatingActionButton fab;
     private Toolbar toolbar;
     private ProgressBar progressbar;
-    private SharedPreferences sp;
 
     private Drawer result = null;
     private PrimaryDrawerItem favorites;
@@ -286,6 +285,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         PositionManager.getInstance().updateWeatherFromDB();
         Logger.println(TAG, "OnResume");
         updateBadges();
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         PositionManager.getInstance().setUseGpsModule(sp.getBoolean(getString(R.string.pref_gps_key), true));
         if (sp.getString(getString(R.string.pref_units_key), getString(R.string.pref_units_metric)).equals(getString(R.string.pref_units_metric))) {
             PositionManager.getInstance().setTemperatureMetric(AppUtils.TemperatureMetrics.CELSIUS);
@@ -426,7 +426,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void initFields() {
-        sp = PreferenceManager.getDefaultSharedPreferences(this);
         toolbar = (Toolbar) findViewById(R.id.toolbar_material);
         fab = (FloatingActionButton) findViewById(R.id.fab);
         currWeather = (ImageView) findViewById(R.id.iv_curr_weather);
