@@ -103,7 +103,7 @@
     <string name="welcome_def_str">"Hello "</string>
     <string name="welcome_string_hello">"Glad to see you "</string>
     <string name="welcome_string_morning">"Good morning "</string>
-    <string name="welcome_string_day">"Good afternoon"</string>
+    <string name="welcome_string_day">"Good afternoon "</string>
     <string name="welcome_string_evening">"Good evening "</string>
     <string name="activate_geographical_service">Check tuning of telephone and program. There is no available services for obtaining of coordinates.\n\nTo open phone settings to activate services of location determination?</string>
 

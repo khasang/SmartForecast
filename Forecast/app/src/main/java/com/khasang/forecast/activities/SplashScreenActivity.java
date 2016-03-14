@@ -52,7 +52,7 @@ public class SplashScreenActivity
         welcomeStringIsOff = sp.getString(getString(R.string.pref_welcome_key), getString(R.string.pref_welcome_default)).equals(getString(R.string.pref_welcome_off));
         if (!welcomeStringIsOff) {
             int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-            String text = getString(R.string.welcome_string_hello);
+            String text = getString(R.string.welcome_def_str);
             if (hour >= 4 && hour <= 9) {
                 text = getString(R.string.welcome_string_morning);
             } else if (hour <= 17) {
