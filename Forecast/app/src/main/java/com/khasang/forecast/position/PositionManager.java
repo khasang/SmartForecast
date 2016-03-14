@@ -11,7 +11,7 @@ import android.widget.Toast;
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.R;
-import com.khasang.forecast.activities.WeatherActivity;
+import com.khasang.forecast.interfaces.IWeatherReceiver;
 import com.khasang.forecast.location.CurrentLocationManager;
 import com.khasang.forecast.exceptions.EmptyCurrentAddressException;
 import com.khasang.forecast.location.LocationParser;
@@ -44,10 +44,14 @@ public class PositionManager {
     private volatile Position currentLocation; // Здесь лежит текущая по местоположению локация (там где находится пользователь)
     private volatile HashMap<String, Position> positions;
     List<String> favouritesPositions;
-    private WeatherActivity mActivity;
+    private IWeatherReceiver weatherReceiver;
     private SQLiteProcessData dbManager;
     private boolean lastResponseIsFailure;
     private CurrentLocationManager locationManager;
+
+    public void setWeatherReceiver(IWeatherReceiver weatherReceiver) {
+        this.weatherReceiver = weatherReceiver;
+    }
 
     private static volatile PositionManager instance;
 
@@ -56,8 +60,8 @@ public class PositionManager {
     }
 
     public static PositionManager getInstance() {
-        if (instance == null){
-            synchronized (PositionManager.class){
+        if (instance == null) {
+            synchronized (PositionManager.class) {
                 if (instance == null) {
                     instance = new PositionManager();
                     instance.initManager();
@@ -67,12 +71,12 @@ public class PositionManager {
         return instance;
     }
 
-    public synchronized void removeInstance () {
+    public synchronized void removeInstance() {
         instance = null;
     }
 
     public void initManager() {
-        mActivity = null;
+        weatherReceiver = null;
         dbManager = new SQLiteProcessData();
         temperatureMetric = dbManager.loadTemperatureMetrics();
         speedMetric = dbManager.loadSpeedMetrics();
@@ -113,10 +117,6 @@ public class PositionManager {
             e.printStackTrace();
             return false;
         }
-    }
-
-    public void configureActivityFeedback(WeatherActivity activity) {
-        this.mActivity = activity;
     }
 
     // Пока заглушка, потом настрки сохранять при их смене в настройках
@@ -405,7 +405,7 @@ public class PositionManager {
             LinkedList<WeatherStation.ResponseType> requestQueue = new LinkedList<>();
             requestQueue.add(WeatherStation.ResponseType.CURRENT);
             try {
-                if (mActivity.isHourlyForecastActive()) {
+                if (weatherReceiver.receiveHourlyWeatherFirst()) {
                     requestQueue.addLast(WeatherStation.ResponseType.HOURLY);
                     requestQueue.addLast(WeatherStation.ResponseType.DAILY);
                 } else {
@@ -424,13 +424,13 @@ public class PositionManager {
         try {
             switch (responseType) {
                 case CURRENT:
-                    mActivity.updateInterface(responseType, getCurrentWeatherFromDB(currStation.getServiceType(), positionName));
+                    weatherReceiver.updateInterface(responseType, getCurrentWeatherFromDB(currStation.getServiceType(), positionName));
                     break;
                 case HOURLY:
-                    mActivity.updateInterface(responseType, getHourlyWeatherFromDB(currStation.getServiceType(), positionName));
+                    weatherReceiver.updateInterface(responseType, getHourlyWeatherFromDB(currStation.getServiceType(), positionName));
                     break;
                 case DAILY:
-                    mActivity.updateInterface(responseType, getDailyWeatherFromDB(currStation.getServiceType(), positionName));
+                    weatherReceiver.updateInterface(responseType, getDailyWeatherFromDB(currStation.getServiceType(), positionName));
                     break;
             }
         } catch (NullPointerException e) {
@@ -492,7 +492,7 @@ public class PositionManager {
                 entry.setValue(AppUtils.formatWeather(entry.getValue(), temperatureMetric, speedMetric, pressureMetric));
             }
             try {
-                mActivity.updateInterface(rType, weather);
+                weatherReceiver.updateInterface(rType, weather);
             } catch (NullPointerException e) {
                 // Ответ пришел, когда активити уже уничтожено
                 e.printStackTrace();
@@ -571,7 +571,7 @@ public class PositionManager {
 
     public void initLocationManager() {
         locationManager = new CurrentLocationManager();
-        locationManager.giveGpsAccess(true); // TODO Прочитать из настроек
+        locationManager.giveGpsAccess(true);
         try {
             updateCurrentLocation(locationManager.getLastLocation());
         } catch (EmptyCurrentAddressException e) {
@@ -580,13 +580,17 @@ public class PositionManager {
         }
     }
 
+    public boolean isSomeLocationProviderAvailable () {
+        return locationManager.checkProviders();
+    }
+
     public void setUseGpsModule(boolean useGpsModule) {
         locationManager.giveGpsAccess(useGpsModule);
     }
 
     public void updateCurrentLocationCoordinates() {
         try {
-            locationManager.updateCurrentLocationCoordinates(mActivity);
+            locationManager.updateCurrentLocationCoordinates();
         } catch (NullPointerException e) {
             // Возможно активити уже уничтожено
             e.printStackTrace();

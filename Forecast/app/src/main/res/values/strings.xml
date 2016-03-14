@@ -74,7 +74,6 @@
     <string name="error_geo_service_not_available">The coordinates of the location are not detected.\nNetwork or other I/O problem.</string>
     <string name="invalid_lang_long_used">Error of detection coordinates for a location</string>
     <string name="no_address_found">Address of current location is not found</string>
-    <string name="activate_geographical_service">Do you want to activate the service for the geographic coordinates ?</string>
     <string name="location_manager" translatable="false">Location Manager</string>
 
     <string name="title_activity_settings">Settings</string>
@@ -96,6 +95,17 @@
     <string name="clear_new_location_name">Clear the input field</string>
     <string name="coordinates_error">Not correct location coordinates</string>
     <string name="error_gps_disabled">In application settings disabled the ability to get the coordinates from the GPS</string>
+
+    <!-- TODO translate -->
+    <string name="error_location_services_are_not_active">Службы получения координат не активны</string>
+    <string name="info_message_about_request_permission_fine_location">Приложению необходимы права для определения текущего местоположения</string>
+    <string name="button_permission_granted">Разрешить</string>
+    <string name="button_permission_not_granted">Отказать</string>
+    <string name="welcome_string_hello">"Здравствуйте "</string>
+    <string name="welcome_string_morning">"Доброе утро "</string>
+    <string name="welcome_string_day">"Добрый день "</string>
+    <string name="welcome_string_evening">"Добрый вечер "</string>
+    <string name="activate_geographical_service">Проверьте настройки телефона и программы. Нет доступных сервисов для получения гографических координат.\n\nОткрыть настройки телефона для активации сервисов определния местоположения?</string>
 
     <string name="pref_title_location">При запуске показывать погоду для</string>
     <string name="pref_location_key" translatable="false">default_location</string>

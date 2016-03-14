@@ -1,86 +1,115 @@
 package com.khasang.forecast.activities;
 
-import android.Manifest;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.R;
+import com.khasang.forecast.position.PositionManager;
+import com.romainpiel.shimmer.Shimmer;
+import com.romainpiel.shimmer.ShimmerTextView;
 
+import net.frakbot.jumpingbeans.JumpingBeans;
+
+import java.io.IOException;
+import java.util.Calendar;
+
+import pl.droidsonroids.gif.AnimationListener;
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifImageView;
 
 public class SplashScreenActivity
         extends AppCompatActivity
-        implements Animation.AnimationListener {
+        implements Animation.AnimationListener, AnimationListener {
 
-    private final static String TAG = SplashScreenActivity.class.getSimpleName();
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-    private static final int PERMISSIONS_REQUEST_LOCATION = 10;
-    private final int SPLASH_DISPLAY_LENGTH = 1500;
+
+    private GifDrawable gifDrawable = null;
+    private Shimmer shimmer;
+    private ShimmerTextView welcomeText;
+    private JumpingBeans jumpingBeans;
+    boolean isGooglePlayServicesInstalled = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-
-        ImageView splash_cloud = (ImageView) findViewById(R.id.splash_cloud);
-        final ImageView splash_left_cloud = (ImageView) findViewById(R.id.splash_left_cloud);
-        ImageView splash_right_cloud = (ImageView) findViewById(R.id.splash_right_cloud);
-        ImageView splash_rainbow = (ImageView) findViewById(R.id.splash_rainbow);
-        ImageView splash_smile = (ImageView) findViewById(R.id.splash_smile);
-        ImageView splash_wink = (ImageView) findViewById(R.id.splash_wink);
-
-        // Определение изображение для ImageView
-        splash_cloud.setImageResource(R.drawable.splash_cloud);
-        splash_left_cloud.setImageResource(R.drawable.splash_left_cloud);
-        splash_right_cloud.setImageResource(R.drawable.splash_right_cloud);
-        splash_rainbow.setImageResource(R.drawable.splash_rainbow);
-        splash_smile.setImageResource(R.drawable.splash_smile);
-        splash_wink.setImageResource(R.drawable.splash_wink);
-
-        // Создание анимации
-        Animation anim_splash_cloud = AnimationUtils.loadAnimation(this, R.anim.anim_splash_cloud);
-        Animation anim_splash_left_cloud = AnimationUtils.loadAnimation(this, R.anim.anim_splash_left_cloud);
-        Animation anim_splash_right_cloud = AnimationUtils.loadAnimation(this, R.anim.anim_splash_right_cloud);
-        Animation anim_splash_rainbow = AnimationUtils.loadAnimation(this, R.anim.anim_splash_rainbow);
-        Animation anim_splash_smile = AnimationUtils.loadAnimation(this, R.anim.anim_splash_smile);
-        Animation anim_splash_wink = AnimationUtils.loadAnimation(this, R.anim.anim_splash_wink);
-
-        if (ActivityCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSIONS_REQUEST_LOCATION);
+        int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        String text = getString(R.string.welcome_string_hello);
+        if (hour >= 4 && hour <= 9) {
+            text = getString(R.string.welcome_string_morning);
+        } else if (hour <= 17) {
+            text = getString(R.string.welcome_string_day);
+        } else if (hour <= 22) {
+            text = getString(R.string.welcome_string_evening);
         }
-
-        // Запуск анимации
-        splash_cloud.startAnimation(anim_splash_cloud);
-        splash_left_cloud.startAnimation(anim_splash_left_cloud);
-        splash_right_cloud.startAnimation(anim_splash_right_cloud);
-        splash_rainbow.startAnimation(anim_splash_rainbow);
-        splash_smile.startAnimation(anim_splash_smile);
-        splash_wink.startAnimation(anim_splash_wink);
-        anim_splash_wink.setAnimationListener(this);
+        welcomeText = ((ShimmerTextView) findViewById(R.id.welcomeText));
+        welcomeText.setText(text);
+        jumpingBeans = JumpingBeans
+                .with(welcomeText)
+                .appendJumpingDots()
+                .build();
+        GifImageView gifImageView = ((GifImageView) findViewById(R.id.gifImageView));
+        try {
+            gifDrawable = new GifDrawable(getResources(), R.raw.splash_screen);
+            gifDrawable.stop();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        gifDrawable.addAnimationListener(this);
+        gifImageView.setImageDrawable(gifDrawable);
+        gifDrawable.start();
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case PERMISSIONS_REQUEST_LOCATION:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+    protected void onStart() {
+        super.onStart();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Animation animation = AnimationUtils.loadAnimation(SplashScreenActivity.this, R.anim.welcome_string_disappear);
+                animation.setAnimationListener(SplashScreenActivity.this);
+                welcomeText.startAnimation(animation);
+                jumpingBeans.stopJumping();
+                shimmer.cancel();
+            }
+        }, gifDrawable.getDuration() - 500);
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.welcome_string_appear);
+        welcomeText.startAnimation(animation);
+        welcomeText.setVisibility(View.VISIBLE);
+        shimmer = new Shimmer();
+        shimmer.setStartDelay(500)
+                .start(welcomeText);
+    }
 
-                }
-                break;
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (checkPlayServices()) {
+            isGooglePlayServicesInstalled = true;
+            PositionManager.getInstance();
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 
     private boolean checkPlayServices() {
@@ -105,22 +134,33 @@ public class SplashScreenActivity
         return true;
     }
 
+    private void startWeatherActivity() {
+        Intent intent = new Intent(SplashScreenActivity.this, WeatherActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(SplashScreenActivity.this).toBundle();
+        ActivityCompat.startActivity(SplashScreenActivity.this, intent, bundle);
+    }
+
     @Override
     public void onAnimationStart(Animation animation) {
+
     }
 
     @Override
     public void onAnimationEnd(Animation animation) {
-        if (checkPlayServices()) {
-            Intent intent = new Intent(SplashScreenActivity.this, WeatherActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(SplashScreenActivity.this)
-                    .toBundle();
-            ActivityCompat.startActivity(SplashScreenActivity.this, intent, bundle);
-        }
+        welcomeText.setVisibility(View.GONE);
     }
 
     @Override
     public void onAnimationRepeat(Animation animation) {
+
+    }
+
+    @Override
+    public void onAnimationCompleted() {
+        gifDrawable.stop();
+        if (isGooglePlayServicesInstalled) {
+            startWeatherActivity();
+        }
     }
 }

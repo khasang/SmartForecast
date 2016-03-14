@@ -55,13 +55,6 @@ public class CurrentLocationManager {
     public Location getLastLocation() throws EmptyCurrentAddressException {
         if (ActivityCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             giveMessageAboutPermission();
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return null;
         }
         Location recentLocation = null;
@@ -78,7 +71,7 @@ public class CurrentLocationManager {
             }
         }
         if (recentLocation == null) {
-            throw new EmptyCurrentAddressException ();
+            throw new EmptyCurrentAddressException();
         }
         return recentLocation;
     }
@@ -108,47 +101,24 @@ public class CurrentLocationManager {
     public boolean checkProviders() {
         gps_enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         network_enabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        if (!isGpsAccessGranted){
+        if (!isGpsAccessGranted) {
             return network_enabled;
         }
         return (gps_enabled || network_enabled);
     }
 
-    public void updateCurrentLocationCoordinates(final Activity witherAсtivity) {
+    public void updateCurrentLocationCoordinates() {
         if (ActivityCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             giveMessageAboutPermission();
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return;
         }
         if (!checkProviders()) {
             if (!isGpsAccessGranted) {
-                Toast.makeText(MyApplication.getAppContext(), R.string.error_gps_disabled,Toast.LENGTH_LONG).show();
+                Toast.makeText(MyApplication.getAppContext(), R.string.error_gps_disabled, Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(MyApplication.getAppContext(), R.string.error_location_services_are_not_active, Toast.LENGTH_LONG).show();
             }
-            AlertDialog.Builder builder = new AlertDialog.Builder(witherAсtivity);
-            builder.setTitle(R.string.location_manager);
-            builder.setMessage(R.string.activate_geographical_service);
-            builder.setPositiveButton(R.string.btn_yes, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    //Launch settings, allowing user to make a change
-                    Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    witherAсtivity.startActivity(i);
-                }
-            });
-            builder.setNegativeButton(R.string.btn_no, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    //No location service, no Activity
-                    dialog.cancel();
-                }
-            });
-            builder.create().show();
+            return;
         }
         locationManager.removeUpdates(locationListener);
         locationManager.requestSingleUpdate(getTheBestProvider(), locationListener, null);
@@ -157,20 +127,13 @@ public class CurrentLocationManager {
     private void coordinatesUpdated(Location location) {
         if (ActivityCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             giveMessageAboutPermission();
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return;
         }
         locationManager.removeUpdates(locationListener);
         PositionManager.getInstance().setCurrentLocationCoordinates(location);
     }
 
-    private void giveMessageAboutPermission () {
+    private void giveMessageAboutPermission() {
         Toast.makeText(MyApplication.getAppContext(), MyApplication.getAppContext().getString(R.string.error_gps_permission), Toast.LENGTH_SHORT).show();
     }
 

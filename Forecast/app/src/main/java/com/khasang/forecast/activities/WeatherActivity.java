@@ -1,16 +1,20 @@
 package com.khasang.forecast.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
@@ -29,11 +33,12 @@ import android.widget.Toast;
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.Logger;
 import com.khasang.forecast.MyApplication;
+import com.khasang.forecast.PermissionChecker;
 import com.khasang.forecast.R;
-import com.khasang.forecast.activities.etc.NavigationDrawer;
 import com.khasang.forecast.fragments.DailyForecastFragment;
 import com.khasang.forecast.fragments.HourlyForecastFragment;
-import com.khasang.forecast.position.Position;
+import com.khasang.forecast.interfaces.IPermissionCallback;
+import com.khasang.forecast.interfaces.IWeatherReceiver;
 import com.khasang.forecast.position.PositionManager;
 import com.khasang.forecast.position.Weather;
 import com.khasang.forecast.stations.WeatherStation;
@@ -62,7 +67,8 @@ import java.util.Map;
  */
 
 public class WeatherActivity extends AppCompatActivity implements View.OnClickListener,
-        SwipeRefreshLayout.OnRefreshListener {
+        SwipeRefreshLayout.OnRefreshListener,
+        IWeatherReceiver, IPermissionCallback {
     private static final int CHOOSE_CITY = 1;
     private static final String TAG = WeatherActivity.class.getSimpleName();
 
@@ -109,8 +115,9 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         initFields();
         setAnimationForWidgets();
         startAnimations();
-        initNavigationDrawer();
         initFirstAppearance();
+        checkPermissions();
+        initNavigationDrawer();
     }
 
     private void initNavigationDrawer() {
@@ -228,6 +235,11 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
      * Обновление Drawer badges
      */
     public void updateBadges() {
+        // TODO Дизейблить пункт "Текущее местоположение" в дровере, если нет прав на получение координат
+//        PermissionChecker permissionChecker = new PermissionChecker();
+//        boolean isLocationPermissionGranted = permissionChecker.isPermissionGranted(this, PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION);
+//         дизейблить пункт на основании переменной isLocationPermissionGranted
+
         if (PositionManager.getInstance().getFavouritesList().isEmpty()) {
             favorites.withBadge("").withEnabled(false);
             result.updateItem(favorites);
@@ -265,7 +277,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onStart() {
         super.onStart();
-        PositionManager.getInstance().configureActivityFeedback(this);
+        PositionManager.getInstance().setWeatherReceiver(this);
     }
 
     @Override
@@ -294,7 +306,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onStop() {
         super.onStop();
-        PositionManager.getInstance().configureActivityFeedback(null);
+        PositionManager.getInstance().setWeatherReceiver(null);
         PositionManager.getInstance().saveSettings();
     }
 
@@ -302,6 +314,60 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     protected void onDestroy() {
         super.onDestroy();
         PositionManager.getInstance().removeInstance();
+    }
+
+    private void checkCoordinatesServices() {
+        if (!PositionManager.getInstance().isSomeLocationProviderAvailable()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.location_manager);
+            builder.setMessage(R.string.activate_geographical_service);
+            builder.setPositiveButton(R.string.btn_yes, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(i);
+                }
+            });
+            builder.setNegativeButton(R.string.btn_no, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            builder.create().show();
+        }
+    }
+
+    private void checkPermissions() {
+        PermissionChecker permissionChecker = new PermissionChecker();
+        permissionChecker.checkForPermissions(this, PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION, this);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION.VALUE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                PositionManager.getInstance().setWeatherReceiver(null);
+                PositionManager.getInstance().removeInstance();
+                PositionManager.getInstance().setWeatherReceiver(this);
+                PositionManager.getInstance().updateWeatherFromDB();
+                PositionManager.getInstance().updateWeather();
+                permissionGranted(PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION);
+            } else {
+                permissionDenied(PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION);
+            }
+        }
+    }
+
+    @Override
+    public void permissionGranted(PermissionChecker.RuntimePermissions permission) {
+        checkCoordinatesServices();
+    }
+
+    @Override
+    public void permissionDenied(PermissionChecker.RuntimePermissions permission) {
+
     }
 
     private void switchDisplayMode() {
@@ -317,10 +383,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                     .commit();
             fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_by_day));
         }
-    }
-
-    public boolean isHourlyForecastActive() {
-        return dailyForecastFragment.isHidden();
     }
 
     @Override
@@ -409,6 +471,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
      * Обновление интерфейса Activity при получении новых данных
      */
 
+    @Override
     public void updateInterface(WeatherStation.ResponseType responseType, Map<Calendar, Weather> forecast) {
         stopRefresh();
         toolbar.setTitle(PositionManager.getInstance().getCurrentPositionName().split(",")[0]);
@@ -559,5 +622,9 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     }
 
 
+    @Override
+    public boolean receiveHourlyWeatherFirst() {
+        return dailyForecastFragment.isHidden();
+    }
 }
 

@@ -71,7 +71,6 @@
     <string name="error_geo_service_not_available">Координаты местоположения не обнаружены.\nПроблема сети или другие проблемы ввода/вывода.</string>
     <string name="invalid_lang_long_used">Ошибка распознавания координат для местоположения</string>
     <string name="no_address_found">Адрес текущего местоположения не обнаружен</string>
-    <string name="activate_geographical_service">Хотите активировать сервис для получения географических координат?</string>
 
     <string name="title_activity_settings">Настройки</string>
 

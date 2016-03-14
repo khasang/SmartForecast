@@ -1,96 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.SplashScreenActivity">
 
-    <!--<ImageView-->
-        <!--android:id="@+id/splash_bg"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_centerInParent="true"-->
-        <!--android:background="@drawable/splash_bg"-->
-        <!--/>-->
-
-    <ImageView
-        android:id="@+id/splash_cloud"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:background="@drawable/splash_cloud"/>
-
-    <ImageView
-        android:id="@+id/splash_left_cloud"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:background="@drawable/splash_left_cloud"/>
-
-    <ImageView
-        android:id="@+id/splash_right_cloud"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:background="@drawable/splash_right_cloud"/>
-
-    <ImageView
-        android:id="@+id/splash_rainbow"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:background="@drawable/splash_rainbow"/>
-
-    <ImageView
-        android:id="@+id/splash_wink"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:background="@drawable/splash_wink"/>
-
-    <ImageView
-        android:id="@+id/splash_smile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:background="@drawable/splash_smile"/>
-
- <!--   <ImageView
-           android:id="@+id/imageview_animation_list_face"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:layout_centerInParent="true"
-           android:background="@drawable/animation_list_face"
-           />-->
-
-    <!--   <ImageView
-           android:id="@+id/imageview_animated_selector"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:background="@drawable/selector"
-           />
-   -->
-
-    <!--<ViewAnimator
-        android:id="@+id/viewAnimator1"
+    <com.romainpiel.shimmer.ShimmerTextView
+        android:id="@+id/welcomeText"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerInParent="true">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="60dp"
+        android:layout_marginTop="60dp"
+        android:gravity="center"
+        android:text="ALOHA"
+        android:textColor="@color/primary"
+        android:textSize="40sp"
+        android:visibility="gone"
+        android:fontFamily="sans-serif-thin"
+        app:reflectionColor="@color/background_splash" />
 
-        <ImageView
-            android:id="@+id/snow"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_snow"/>
-
-        <ImageView
-            android:id="@+id/sun"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_sun"/>
-    </ViewAnimator>-->
-
-
-
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/gifImageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
 </RelativeLayout>
