@@ -119,13 +119,13 @@ public class SQLiteFields {
                     " ORDER BY ABS( CAST(strftime('%s', " + DATE + ") AS int) - CAST(strftime('%s', ?) AS int) ) ASC " +
                     " LIMIT 1";
 
-    public static final String QUERY_INSERT_TOWN_1 = "INSERT INTO " + TABLE_TOWNS + " (" +
+    public static final String QUERY_INSERT_TOWN_v4 = "INSERT INTO " + TABLE_TOWNS + " (" +
             TOWN + "," +
             LATITUDE + "," +
             LONGITUDE + ") " +
             " VALUES ( ? , ? , ? )";
 
-    public static final String QUERY_INSERT_TOWN_2 = "INSERT INTO " + TABLE_TOWNS + " (" +
+    public static final String QUERY_INSERT_TOWN_v5 = "INSERT INTO " + TABLE_TOWNS + " (" +
             TOWN + "," +
             LATITUDE + "," +
             LONGITUDE + "," +
@@ -167,7 +167,7 @@ public class SQLiteFields {
             CURRENT_LONGITUDE + ") " +
             " VALUES ( ? , ? , ? , ? , ? , ? , ? )";
 
-    public static final String QUERY_UPDATE_SETTINGS_1 = "UPDATE " + TABLE_SETTINGS + " SET " +
+    public static final String QUERY_UPDATE_SETTINGS_v4 = "UPDATE " + TABLE_SETTINGS + " SET " +
             CURRENT_STATION + " = ? ," +
             CURRENT_TOWN + " = ? ," +
             CURRENT_TEMPIRATURE_METRICS + " = ? ," +
@@ -175,7 +175,7 @@ public class SQLiteFields {
             CURRENT_PRESSURE_METRICS + " = ? " +
             " WHERE " + ID + " = (SELECT MAX(" + ID + ") FROM " + TABLE_SETTINGS + ")";
 
-    public static final String QUERY_UPDATE_SETTINGS_2 = "UPDATE " + TABLE_SETTINGS + " SET " +
+    public static final String QUERY_UPDATE_SETTINGS_v5 = "UPDATE " + TABLE_SETTINGS + " SET " +
             CURRENT_STATION + " = ? ," +
             CURRENT_TOWN + " = ? ," +
             CURRENT_TEMPIRATURE_METRICS + " = ? ," +

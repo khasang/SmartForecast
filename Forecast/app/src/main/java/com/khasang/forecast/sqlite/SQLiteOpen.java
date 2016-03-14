@@ -42,7 +42,7 @@ public class SQLiteOpen extends SQLiteOpenHelper {
                     map = townList.get(i);
                     switch(dbOldVersion) {
                         case 3:
-                            db.execSQL(SQLiteFields.QUERY_INSERT_TOWN_1, new String[]{
+                            db.execSQL(SQLiteFields.QUERY_INSERT_TOWN_v4, new String[]{
                                     map.get(SQLiteFields.TOWN),
                                     map.get(SQLiteFields.LATITUDE),
                                     map.get(SQLiteFields.LONGITUDE)
@@ -50,7 +50,7 @@ public class SQLiteOpen extends SQLiteOpenHelper {
                             break;
 
                         case 4:
-                            db.execSQL(SQLiteFields.QUERY_INSERT_TOWN_2, new String[]{
+                            db.execSQL(SQLiteFields.QUERY_INSERT_TOWN_v5, new String[]{
                                     map.get(SQLiteFields.TOWN),
                                     map.get(SQLiteFields.LATITUDE),
                                     map.get(SQLiteFields.LONGITUDE),
@@ -106,7 +106,7 @@ public class SQLiteOpen extends SQLiteOpenHelper {
             if (settingsMap != null) {
                 switch(dbOldVersion) {
                     case 3:
-                        db.execSQL(SQLiteFields.QUERY_UPDATE_SETTINGS_1, new String[]{
+                        db.execSQL(SQLiteFields.QUERY_UPDATE_SETTINGS_v4, new String[]{
                                 settingsMap.get(SQLiteFields.CURRENT_STATION),
                                 settingsMap.get(SQLiteFields.CURRENT_TOWN),
                                 settingsMap.get(SQLiteFields.CURRENT_TEMPIRATURE_METRICS),
@@ -116,7 +116,7 @@ public class SQLiteOpen extends SQLiteOpenHelper {
                         break;
 
                     case 4:
-                        db.execSQL(SQLiteFields.QUERY_UPDATE_SETTINGS_2, new String[]{
+                        db.execSQL(SQLiteFields.QUERY_UPDATE_SETTINGS_v5, new String[]{
                                 settingsMap.get(SQLiteFields.CURRENT_STATION),
                                 settingsMap.get(SQLiteFields.CURRENT_TOWN),
                                 settingsMap.get(SQLiteFields.CURRENT_TEMPIRATURE_METRICS),
@@ -171,7 +171,7 @@ public class SQLiteOpen extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         try {
-            dbOldVersion = db.getVersion();
+            dbOldVersion = oldVersion;
 
             // Выгрузка в память списка городов
             getTownList(db);
