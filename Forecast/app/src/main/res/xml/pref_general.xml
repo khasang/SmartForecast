@@ -1,8 +1,8 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="Общие">
+    <PreferenceCategory android:title="@string/pref_category_general">
         <ListPreference
-            android:defaultValue="@string/pref_units_metric"
+            android:defaultValue="@string/pref_units_celsii"
             android:entries="@array/pref_units_options"
             android:entryValues="@array/pref_units_values"
             android:key="@string/pref_units_key"
@@ -10,15 +10,18 @@
             android:positiveButtonText="@null"
             android:title="@string/pref_title_units" />
 
-        <PreferenceScreen
-            android:title="Screen"
-            android:summary="Description"
-            android:fragment="com.khasang.forecast.activities.SettingsActivity$MetricsPreferenceFragment"
-            />
+        <ListPreference
+            android:defaultValue="@string/pref_speed_meter_sec"
+            android:entries="@array/pref_speed_options"
+            android:entryValues="@array/pref_speed_values"
+            android:key="@string/pref_speed_key"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="@string/pref_title_speed" />
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Запуск программы">
+    <PreferenceCategory android:title="@string/pref_category_start">
         <!--
             <ListPreference
                 android:defaultValue="@string/pref_welcome_default"
@@ -45,7 +48,7 @@
             android:title="@string/pref_title_location" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Поиск местоположения">
+    <PreferenceCategory android:title="@string/pref_category_location">
         <SwitchPreference
             android:defaultValue="@string/pref_gps_default"
             android:key="@string/pref_gps_key"

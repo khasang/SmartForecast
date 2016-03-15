@@ -80,8 +80,6 @@
     <string name="pref_description_enable_gps">GPS verwenden um Ihren Standort zu bestimmen</string>
 
     <string name="pref_title_units">Temperatureinheiten</string>
-    <string name="pref_units_label_metric">Metrisch</string>
-    <string name="pref_units_label_imperial">Imperisch</string>
     <string name="error_gps_permission">Die Positionierung ist nicht möglich.\nEs gibt keine Rechte um GPS und Betreiberressourcen zu benutzen.</string>
     <string name="clear_new_location_name">Eingabefeld sauber machen</string>
     <string name="coordinates_error">Nicht korrekte Ortskoordinaten</string>

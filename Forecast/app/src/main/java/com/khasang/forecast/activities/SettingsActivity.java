@@ -46,26 +46,14 @@ public class SettingsActivity extends AppCompatActivity {
     public static class GeneralPreferenceFragment extends PreferenceFragmentCompat
             implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-        private SharedPreferences sharedPreferences;
-
         @Override
         public void onCreatePreferences(Bundle bundle, String s) {
             addPreferencesFromResource(R.xml.pref_general);
-            sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            loadInitialListPreferenceValue(sharedPreferences, getString(R.string.pref_units_key));
-            loadInitialListPreferenceValue(sharedPreferences, getString(R.string.pref_location_key));
-            loadInitialListPreferenceValue(sharedPreferences, getString(R.string.pref_welcome_key));
-        }
-
-        private void loadInitialListPreferenceValue(SharedPreferences sharedPreferences, String key) {
-            Preference preference = findPreference(key);
-            if (preference instanceof ListPreference) {
-                ListPreference listPreference = (ListPreference) preference;
-                int prefIndex = listPreference.findIndexOfValue(sharedPreferences.getString(key, ""));
-                if (prefIndex >= 0) {
-                    preference.setSummary(listPreference.getEntries()[prefIndex]);
-                }
-            }
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            onSharedPreferenceChanged(sharedPreferences, getString(R.string.pref_units_key));
+            onSharedPreferenceChanged(sharedPreferences, getString(R.string.pref_location_key));
+            onSharedPreferenceChanged(sharedPreferences, getString(R.string.pref_welcome_key));
+            onSharedPreferenceChanged(sharedPreferences, getString(R.string.pref_speed_key));
         }
 
         @Override
@@ -92,14 +80,6 @@ public class SettingsActivity extends AppCompatActivity {
             super.onPause();
             getPreferenceScreen().getSharedPreferences()
                     .unregisterOnSharedPreferenceChangeListener(this);
-        }
-    }
-
-    public static class MetricsPreferenceFragment extends PreferenceFragmentCompat {
-
-        @Override
-        public void onCreatePreferences(Bundle bundle, String s) {
-            addPreferencesFromResource(R.xml.pref_metrics);
         }
     }
 }
