@@ -114,7 +114,7 @@
                         android:id="@+id/temperature"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="-1°C"
+                        android:text="--/--"
                         android:textColor="#fff"
                         android:textSize="56sp"/>
 
