@@ -130,6 +130,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         favorites = new PrimaryDrawerItem().withName(R.string.drawer_item_favorites).withIcon(MaterialDesignIconic.Icon.gmi_star)/*.withBadge(String.valueOf(PositionManager.getInstance().getFavouritesList().size()))*/.withIdentifier(2);
         final SecondaryDrawerItem settings = new SecondaryDrawerItem().withName(R.string.drawer_item_settings).withIcon(FontAwesome.Icon.faw_cog).withIdentifier(3);
         final SecondaryDrawerItem feedBack = new SecondaryDrawerItem().withName(R.string.drawer_item_feedback).withIcon(GoogleMaterial.Icon.gmd_feedback).withIdentifier(4);
+        final PrimaryDrawerItem footer = new PrimaryDrawerItem().withName(R.string.app_name).withEnabled(false).withIdentifier(5);
 
         /** Создание Navigation Drawer */
         result = new DrawerBuilder()
@@ -146,6 +147,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                         settings,
                         feedBack
                 )
+                .addStickyDrawerItems(footer)
                 .withOnDrawerListener(new Drawer.OnDrawerListener() {
                     @Override
                     public void onDrawerOpened(View drawerView) {
@@ -217,6 +219,9 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                                 }
                                 startActivity(feedbackIntent);
                                 result.closeDrawer();
+                                break;
+                            case 5:
+                                //result.setSelection(-1);
                                 break;
                             default:
                                 String newCity = PositionManager.getInstance().getFavouritesList().get(drawerItem.getIdentifier() - subItemIndex);
