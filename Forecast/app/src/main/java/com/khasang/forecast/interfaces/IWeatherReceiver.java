@@ -13,4 +13,8 @@ public interface IWeatherReceiver {
     boolean receiveHourlyWeatherFirst();
 
     void updateInterface(WeatherStation.ResponseType responseType, Map<Calendar, Weather> forecast);
+
+    void showMessageToUser (CharSequence string, int length);
+
+    void showMessageToUser (int stringId, int length);
 }

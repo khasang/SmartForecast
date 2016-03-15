@@ -25,14 +25,14 @@
     <string name="clear_favorite">Alle Städte löschen</string>
     <string name="refresh">Aktualisieren</string>
     <string name="change_location">Standort verändern</string>
-    <string name="city_exist">Die Stadt ist in der Liste schon anwesend</string>
-    <string name="update_error_location_not_found">Der Fehler der Erneuerung des Wetters.\nDie Stadt fehlt in die Ortliste.</string>
-    <string name="update_error_net_not_availble">Der Fehler der Erneuerung des Wetters.\nDas Netz ist unzugänglich.</string>
+    <string name="city_exist">Die Stadt ist in der Liste schon anwesend.</string>
+    <string name="update_error_location_not_found">Die Stadt fehlt in die Ortliste.</string>
+    <string name="update_error_net_not_availble">Der Fehler der Erneuerung. Das Netz ist unzugänglich.</string>
     <string name="update_error_from">"Der Fehler der Erneuerung des Wetters von der Station "</string>
     <string name="coordinates_not_found">Die Koordinaten der Lage %1$s sind nicht aufgedeckt.\nDie Ortung ist nicht beigefügt</string>
     <string name="msg_add_city">Um fortzufahren, müssen Sie eine Stadt hinzufügen.</string>
     <string name="msg_choose_city">Um fortzufahren, müssen Sie eine Stadt auswählen.</string>
-    <string name="msg_no_city">Update-Fehler.\nDie Stadt ist nicht aufgelistet in Standorten.</string>
+    <string name="msg_no_city">Die Stadt ist nicht aufgelistet in Standorten.</string>
     <string name="msg_clear_city_list">Wollen Sie wirklich die Liste der Städte sauber machen?</string>
     <string name="btn_yes">Ja</string>
     <string name="btn_no">Nein</string>
@@ -67,8 +67,8 @@
     <string name="drawer_item_settings">Einstellungen</string>
     <string name="drawer_item_feedback">Entgegengesetztes Band</string>
 
-    <string name="error_service_not_available">Die Koordinaten der aktuellen Position sind nicht gefunden.\nNetzwerk  oder andere I/O Problem .</string>
-    <string name="error_geo_service_not_available">Die Koordinaten der Position sind nicht gefunden.\nNetzwerk  oder andere I/O Problem .</string>
+    <string name="error_service_not_available">Die Koordinaten der aktuellen Position sind nicht gefunden.</string>
+    <string name="error_geo_service_not_available">Die Koordinaten der Position sind nicht gefunden.</string>
     <string name="invalid_lang_long_used">Das Fehler der Erkennung Koordinaten für einen Standort</string>
     <string name="no_address_found">Die Adresse von aktuellen Standort ist nicht gefunden</string>
 

@@ -7,8 +7,8 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v7.preference.PreferenceManager;
-import android.widget.Toast;
 
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.MyApplication;
@@ -46,13 +46,13 @@ public class PositionManager {
     private volatile Position currentLocation; // Здесь лежит текущая по местоположению локация (там где находится пользователь)
     private volatile HashMap<String, Position> positions;
     List<String> favouritesPositions;
-    private IWeatherReceiver weatherReceiver;
+    private IWeatherReceiver receiver;
     private SQLiteProcessData dbManager;
     private boolean lastResponseIsFailure;
     private CurrentLocationManager locationManager;
 
-    public void setWeatherReceiver(IWeatherReceiver weatherReceiver) {
-        this.weatherReceiver = weatherReceiver;
+    public void setReceiver(IWeatherReceiver receiver) {
+        this.receiver = receiver;
     }
 
     private static volatile PositionManager instance;
@@ -78,7 +78,7 @@ public class PositionManager {
     }
 
     public void initManager() {
-        weatherReceiver = null;
+        receiver = null;
         dbManager = new SQLiteProcessData();
         temperatureMetric = dbManager.loadTemperatureMetrics();
         speedMetric = dbManager.loadSpeedMetrics();
@@ -220,7 +220,7 @@ public class PositionManager {
      */
     public void addPosition(String name, Coordinate coordinates) {
         if (positionInListPresent(name)) {
-            Toast.makeText(MyApplication.getAppContext(), R.string.city_exist, Toast.LENGTH_SHORT).show();
+            sendMessage(R.string.city_exist, Snackbar.LENGTH_LONG);
             return;
         }
         PositionFactory positionFactory = new PositionFactory(positions);
@@ -284,7 +284,7 @@ public class PositionManager {
         } else if (positions.containsKey(name)) {
             activePosition = positions.get(name);
         } else {
-            Toast.makeText(MyApplication.getAppContext(), "Не могу определить координаты запрашиваемого местоположения", Toast.LENGTH_SHORT).show();
+            sendMessage(R.string.error_get_coordinates, Snackbar.LENGTH_LONG);
         }
     }
 
@@ -389,7 +389,7 @@ public class PositionManager {
      */
     public void updateWeather() {
         if (activePosition == null || !positionIsPresent(activePosition.getLocationName())) {
-            Toast.makeText(MyApplication.getAppContext(), R.string.update_error_location_not_found, Toast.LENGTH_SHORT).show();
+            sendMessage(R.string.update_error_location_not_found, Snackbar.LENGTH_LONG);
             return;
         }
         if (activePosition == currentLocation) {
@@ -410,17 +410,17 @@ public class PositionManager {
             if (!activePosition.getLocationName().isEmpty()) {
                 updateWeatherFromDB();
             }
-            Toast.makeText(MyApplication.getAppContext(), R.string.coordinates_error, Toast.LENGTH_SHORT).show();
+            sendMessage(R.string.coordinates_error, Snackbar.LENGTH_LONG);
         } else if (!isNetworkAvailable(MyApplication.getAppContext())) {
             if (!activePosition.getLocationName().isEmpty()) {
                 updateWeatherFromDB();
             }
-            Toast.makeText(MyApplication.getAppContext(), R.string.update_error_net_not_availble, Toast.LENGTH_SHORT).show();
+            sendMessage(R.string.update_error_net_not_availble, Snackbar.LENGTH_LONG);
         } else {
             LinkedList<WeatherStation.ResponseType> requestQueue = new LinkedList<>();
             requestQueue.add(WeatherStation.ResponseType.CURRENT);
             try {
-                if (weatherReceiver.receiveHourlyWeatherFirst()) {
+                if (receiver.receiveHourlyWeatherFirst()) {
                     requestQueue.addLast(WeatherStation.ResponseType.HOURLY);
                     requestQueue.addLast(WeatherStation.ResponseType.DAILY);
                 } else {
@@ -439,13 +439,13 @@ public class PositionManager {
         try {
             switch (responseType) {
                 case CURRENT:
-                    weatherReceiver.updateInterface(responseType, getCurrentWeatherFromDB(currStation.getServiceType(), positionName));
+                    receiver.updateInterface(responseType, getCurrentWeatherFromDB(currStation.getServiceType(), positionName));
                     break;
                 case HOURLY:
-                    weatherReceiver.updateInterface(responseType, getHourlyWeatherFromDB(currStation.getServiceType(), positionName));
+                    receiver.updateInterface(responseType, getHourlyWeatherFromDB(currStation.getServiceType(), positionName));
                     break;
                 case DAILY:
-                    weatherReceiver.updateInterface(responseType, getDailyWeatherFromDB(currStation.getServiceType(), positionName));
+                    receiver.updateInterface(responseType, getDailyWeatherFromDB(currStation.getServiceType(), positionName));
                     break;
             }
         } catch (NullPointerException e) {
@@ -507,7 +507,7 @@ public class PositionManager {
                 entry.setValue(AppUtils.formatWeather(entry.getValue(), temperatureMetric, speedMetric, pressureMetric));
             }
             try {
-                weatherReceiver.updateInterface(rType, weather);
+                receiver.updateInterface(rType, weather);
             } catch (NullPointerException e) {
                 // Ответ пришел, когда активити уже уничтожено
                 e.printStackTrace();
@@ -524,7 +524,7 @@ public class PositionManager {
 
     public void onFailureResponse(LinkedList<WeatherStation.ResponseType> requestList, int cityID, WeatherStationFactory.ServiceType sType) {
         if (!lastResponseIsFailure) {
-            Toast.makeText(MyApplication.getAppContext(), R.string.update_error_from + sType.toString(), Toast.LENGTH_SHORT).show();
+            sendMessage(MyApplication.getAppContext().getString(R.string.update_error_from) + sType.toString(), Snackbar.LENGTH_LONG);
             lastResponseIsFailure = true;
         }
         WeatherStation.ResponseType rType = requestList.pollFirst();
@@ -594,7 +594,7 @@ public class PositionManager {
         }
     }
 
-    public boolean isSomeLocationProviderAvailable () {
+    public boolean isSomeLocationProviderAvailable() {
         return locationManager.checkProviders();
     }
 
@@ -632,6 +632,7 @@ public class PositionManager {
 
     private boolean updateCurrentLocation(Location location) {
         if (location == null) {
+            sendMessage(R.string.error_service_not_available, Snackbar.LENGTH_LONG);
             return false;
         }
         Geocoder geocoder = new Geocoder(MyApplication.getAppContext());
@@ -641,16 +642,27 @@ public class PositionManager {
             currentLocation.setCoordinate(new Coordinate(location.getLatitude(), location.getLongitude()));
             return true;
         } catch (IOException e) {
-            Toast.makeText(MyApplication.getAppContext(), R.string.error_service_not_available, Toast.LENGTH_SHORT).show();
+            sendMessage(R.string.error_service_not_available, Snackbar.LENGTH_LONG);
             e.printStackTrace();
         } catch (IllegalArgumentException e) {
-            Toast.makeText(MyApplication.getAppContext(), R.string.invalid_lang_long_used, Toast.LENGTH_SHORT).show();
+            sendMessage(R.string.invalid_lang_long_used, Snackbar.LENGTH_LONG);
             e.printStackTrace();
         } catch (EmptyCurrentAddressException | NoAvailableAddressesException | NullPointerException e) {
-            Toast.makeText(MyApplication.getAppContext(), R.string.no_address_found, Toast.LENGTH_SHORT).show();
+            sendMessage(R.string.no_address_found, Snackbar.LENGTH_LONG);
             e.printStackTrace();
         }
-//        currentLocation.setCoordinate(null);
         return false;
+    }
+
+    private void sendMessage(CharSequence string, int length) {
+        if (receiver != null) {
+            receiver.showMessageToUser(string, length);
+        }
+    }
+
+    private void sendMessage(int stringId, int length) {
+        if (receiver != null) {
+            receiver.showMessageToUser(stringId, length);
+        }
     }
 }

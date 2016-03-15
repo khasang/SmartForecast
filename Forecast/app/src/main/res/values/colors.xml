@@ -11,6 +11,7 @@
     <color name="divider">#B6B6B6</color>
     <color name="grey_100">#FFF5F5F5</color>
 
+    <color name="snackbar_text">#FFFFFF</color>
     <color name="background_splash">#E3EFF7</color>
     <color name="background_toast">#CFCFCF</color>
 </resources>

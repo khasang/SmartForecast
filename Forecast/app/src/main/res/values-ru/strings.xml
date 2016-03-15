@@ -25,14 +25,14 @@
     <string name="clear_favorite">Удалить все города</string>
     <string name="refresh">Обновить</string>
     <string name="change_location">Сменить локацию</string>
-    <string name="city_exist">Город уже присутствует в списке</string>
-    <string name="update_error_location_not_found">Ошибка обновления погоды.\nГород отсутствует в списке локаций.</string>
-    <string name="update_error_net_not_availble">Ошибка обновления погоды.\nСеть недоступна.</string>
+    <string name="city_exist">Город уже присутствует в списке.</string>
+    <string name="update_error_location_not_found">Город отсутствует в списке локаций.</string>
+    <string name="update_error_net_not_availble">Ошибка обновления! Сеть недоступна.</string>
     <string name="update_error_from">"Ошибка обновления погоды со станции "</string>
     <string name="coordinates_not_found">Координаты местоположения %1$s не обнаружены.\nЛокация не добавлена</string>
     <string name="msg_add_city">Для продолжения работы необходимо добавить город.</string>
     <string name="msg_choose_city">Для продолжения работы необходимо выбрать город.</string>
-    <string name="msg_no_city">Ошибка обновления.\nГород отсутствует в списке локаций.</string>
+    <string name="msg_no_city">Город отсутствует в списке локаций.</string>
     <string name="msg_clear_city_list">Вы действительно хотите очистить список городов?</string>
     <string name="btn_yes">Да</string>
     <string name="btn_no">Нет</string>
@@ -67,8 +67,8 @@
     <string name="drawer_item_settings">Настройки</string>
     <string name="drawer_item_feedback">Обратная связь</string>
 
-    <string name="error_service_not_available">Координаты текущего местоположения не обнаружены.\nПроблема сети или другие проблемы ввода/вывода.</string>
-    <string name="error_geo_service_not_available">Координаты местоположения не обнаружены.\nПроблема сети или другие проблемы ввода/вывода.</string>
+    <string name="error_service_not_available">Координаты текущего местоположения не обнаружены.</string>
+    <string name="error_geo_service_not_available">Координаты местоположения не обнаружены.</string>
     <string name="invalid_lang_long_used">Ошибка распознавания координат для местоположения</string>
     <string name="no_address_found">Адрес текущего местоположения не обнаружен</string>
 

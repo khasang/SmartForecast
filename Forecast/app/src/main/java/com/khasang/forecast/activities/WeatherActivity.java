@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.FragmentTransaction;
@@ -28,7 +29,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.Logger;
@@ -280,7 +280,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onStart() {
         super.onStart();
-        PositionManager.getInstance().setWeatherReceiver(this);
+        PositionManager.getInstance().setReceiver(this);
     }
 
     @Override
@@ -326,7 +326,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         boolean saveCurrentLocation = sp.getString(getString(R.string.pref_location_key), getString(R.string.pref_location_current)).equals(getString(R.string.pref_location_current));
         PositionManager.getInstance().saveSettings(saveCurrentLocation);
-        PositionManager.getInstance().setWeatherReceiver(null);
+        PositionManager.getInstance().setReceiver(null);
     }
 
     @Override
@@ -367,9 +367,9 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION.VALUE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                PositionManager.getInstance().setWeatherReceiver(null);
+                PositionManager.getInstance().setReceiver(null);
                 PositionManager.getInstance().removeInstance();
-                PositionManager.getInstance().setWeatherReceiver(this);
+                PositionManager.getInstance().setReceiver(this);
                 PositionManager.getInstance().updateWeatherFromDB();
                 PositionManager.getInstance().updateWeather();
                 permissionGranted(PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION);
@@ -512,7 +512,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         }, 1250);
     }
 
-
     /**
      * Обработчик нажатия объектов
      */
@@ -596,7 +595,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         showProgress(true);
         if (!PositionManager.getInstance().positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {
             Logger.println(TAG, "There is nothing to refresh");
-            Toast.makeText(WeatherActivity.this, R.string.msg_no_city, Toast.LENGTH_SHORT).show();
+            showMessageToUser(getString(R.string.msg_no_city), Snackbar.LENGTH_LONG);
             showProgress(false);
             return;
         }
@@ -629,6 +628,16 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public boolean receiveHourlyWeatherFirst() {
         return dailyForecastFragment.isHidden();
+    }
+
+    @Override
+    public void showMessageToUser(CharSequence string, int length) {
+        AppUtils.showSnackBar(findViewById(R.id.coordinatorLayout), string, length);
+    }
+
+    @Override
+    public void showMessageToUser(int stringId, int length) {
+        showMessageToUser(getString(stringId), length);
     }
 }
 

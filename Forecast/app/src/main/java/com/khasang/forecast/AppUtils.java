@@ -119,9 +119,10 @@ public class AppUtils {
     public static void showSnackBar (View view, CharSequence string, int length){
         Snackbar snackbar = Snackbar.make(view, string, length);
         View snackbarView = snackbar.getView();
-        snackbarView.setBackgroundColor(ContextCompat.getColor(MyApplication.getAppContext(), R.color.primary));
+//        Default background fill: #323232 100%
+//        snackbarView.setBackgroundColor(ContextCompat.getColor(MyApplication.getAppContext(), R.color.primary_dark));
         TextView textView = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
-        textView.setTextColor(Color.WHITE);
+        textView.setTextColor(ContextCompat.getColor(MyApplication.getAppContext(), R.color.snackbar_text));
         snackbar.show();
     }
 
