@@ -65,7 +65,6 @@ public class SettingsActivity extends AppCompatActivity {
 
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            Preference preference = findPreference(key);
             if (key.equals(getString(R.string.pref_gps_key)) && sharedPreferences.getBoolean(getString(R.string.pref_gps_key), true)) {
                 LayoutInflater inflater = getActivity().getLayoutInflater();
                 View layout = inflater.inflate(R.layout.warning_toast, ((ViewGroup) getActivity().findViewById(R.id.toast_layout_root)));
@@ -76,6 +75,7 @@ public class SettingsActivity extends AppCompatActivity {
                 toast.show();
                 return;
             }
+            Preference preference = findPreference(key);
             if (preference instanceof ListPreference) {
                 ListPreference listPreference = (ListPreference) preference;
                 int prefIndex = listPreference.findIndexOfValue(sharedPreferences.getString(key, ""));
