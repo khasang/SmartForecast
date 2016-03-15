@@ -94,4 +94,12 @@ public class SettingsActivity extends AppCompatActivity {
                     .unregisterOnSharedPreferenceChangeListener(this);
         }
     }
+
+    public static class MetricsPreferenceFragment extends PreferenceFragmentCompat {
+
+        @Override
+        public void onCreatePreferences(Bundle bundle, String s) {
+            addPreferencesFromResource(R.xml.pref_metrics);
+        }
+    }
 }
