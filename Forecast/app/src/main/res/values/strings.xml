@@ -121,4 +121,9 @@
     <string name="pref_welcome_default" translatable="false">welcome_default</string>
     <string name="pref_welcome_off_label">Приветствие отключено</string>
     <string name="pref_welcome_default_label">Приветствие включено</string>
+
+    <!-- TODO translate -->
+    <string name="pref_welcome_summary">Показывать строку приветствия при запуске программы</string>
+    <string name="pref_welcome_key_switch" translatable="false">welcome_string_switch</string>
+    <string name="pref_welcome_default_switch" translatable="false">true</string>
 </resources>
