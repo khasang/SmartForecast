@@ -104,9 +104,9 @@
     <string name="pref_welcome_off_label">Приветствие отключено</string>
     <string name="pref_welcome_default_label">Приветствие включено</string>
 
-    <string name="pref_units_label_celsii">Градус Цельсия (°C)</string>
+    <string name="pref_units_label_celsius">Градус Цельсия (°C)</string>
     <string name="pref_units_label_kelvin">Кельвин (K)</string>
-    <string name="pref_units_label_farenheit">Градус Фаренгейта (°F)</string>
+    <string name="pref_units_label_fahrenheit">Градус Фаренгейта (°F)</string>
 
     <string name="pref_title_speed">Единицы измерения скорости ветра</string>
     <string name="pref_speed_meter_sec_label">Метр в секунду (м/с)</string>

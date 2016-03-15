@@ -2,7 +2,7 @@
 
     <PreferenceCategory android:title="@string/pref_category_general">
         <ListPreference
-            android:defaultValue="@string/pref_units_celsii"
+            android:defaultValue="@string/pref_units_celsius"
             android:entries="@array/pref_units_options"
             android:entryValues="@array/pref_units_values"
             android:key="@string/pref_units_key"

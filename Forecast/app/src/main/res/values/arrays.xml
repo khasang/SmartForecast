@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="pref_units_values">
-        <item>@string/pref_units_celsii</item>
+        <item>@string/pref_units_celsius</item>
         <item>@string/pref_units_kelvin</item>
-        <item>@string/pref_units_farenheit</item>
+        <item>@string/pref_units_fahrenheit</item>
     </string-array>
 
     <string-array name="pref_units_options">
-        <item>@string/pref_units_label_celsii</item>
+        <item>@string/pref_units_label_celsius</item>
         <item>@string/pref_units_label_kelvin</item>
-        <item>@string/pref_units_label_farenheit</item>
+        <item>@string/pref_units_label_fahrenheit</item>
     </string-array>
 
     <string-array name="pref_speed_values">
