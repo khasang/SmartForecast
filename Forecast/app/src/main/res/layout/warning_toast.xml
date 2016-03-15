@@ -7,10 +7,12 @@
     android:padding="8dp"
     android:background="#DAAA">
     <com.mikepenz.iconics.view.IconicsButton
-        android:text="{gmd-clear}"
+        android:text="{gmd-warning}"
         android:layout_height="wrap_content"
         android:layout_width="50dp"
+        android:textSize="40dp"
         android:layout_gravity="center"
+        android:background="@null"
         style="@style/AppTheme.Button" />
     <TextView android:id="@+id/warningGpsText"
         android:layout_width="wrap_content"
