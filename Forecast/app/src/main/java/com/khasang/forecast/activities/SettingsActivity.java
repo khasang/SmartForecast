@@ -9,8 +9,14 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.R;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -58,6 +64,16 @@ public class SettingsActivity extends AppCompatActivity {
 
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            if (key.equals(getString(R.string.pref_gps_key)) && sharedPreferences.getBoolean(getString(R.string.pref_gps_key), true)) {
+                LayoutInflater inflater = getActivity().getLayoutInflater();
+                View layout = inflater.inflate(R.layout.warning_toast, ((ViewGroup) getActivity().findViewById(R.id.toast_layout_root)));
+                Toast toast = new Toast(MyApplication.getAppContext());
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.setDuration(Toast.LENGTH_LONG);
+                toast.setView(layout);
+                toast.show();
+                return;
+            }
             Preference preference = findPreference(key);
             if (preference instanceof ListPreference) {
                 ListPreference listPreference = (ListPreference) preference;
