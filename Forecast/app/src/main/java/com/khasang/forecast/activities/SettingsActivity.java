@@ -52,15 +52,14 @@ public class SettingsActivity extends AppCompatActivity {
     public static class GeneralPreferenceFragment extends PreferenceFragmentCompat
             implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-        private SharedPreferences sharedPreferences;
-
         @Override
         public void onCreatePreferences(Bundle bundle, String s) {
             addPreferencesFromResource(R.xml.pref_general);
-            sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
             onSharedPreferenceChanged(sharedPreferences, getString(R.string.pref_units_key));
             onSharedPreferenceChanged(sharedPreferences, getString(R.string.pref_location_key));
             onSharedPreferenceChanged(sharedPreferences, getString(R.string.pref_welcome_key));
+            onSharedPreferenceChanged(sharedPreferences, getString(R.string.pref_speed_key));
         }
 
         @Override
