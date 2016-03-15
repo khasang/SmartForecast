@@ -132,10 +132,10 @@
     <string name="pref_speed_foot_sec" translatable="false">foot_sec</string>
     <string name="pref_speed_km_hour" translatable="false">km_hour</string>
     <string name="pref_speed_mile_hour" translatable="false">mile_hour</string>
-    <string name="pref_speed_meter_sec_label">Метр в секунду</string>
-    <string name="pref_speed_foot_sec_label">Фут в секунду</string>
-    <string name="pref_speed_km_hour_label">Километры в час</string>
-    <string name="pref_speed_mile_hour_label">Мили в час</string>
+    <string name="pref_speed_meter_sec_label">Метр в секунду (м/с)</string>
+    <string name="pref_speed_foot_sec_label">Фут в секунду (ф/с)</string>
+    <string name="pref_speed_km_hour_label">Километры в час (км/ч)</string>
+    <string name="pref_speed_mile_hour_label">Мили в час (миля/ч)</string>
 
     <string name="pref_welcome_summary">Показывать строку приветствия при запуске программы</string>
     <string name="pref_welcome_key_switch" translatable="false">welcome_string_switch</string>
