@@ -103,4 +103,20 @@
     <string name="pref_title_welcome_string">Строка приветствия</string>
     <string name="pref_welcome_off_label">Приветствие отключено</string>
     <string name="pref_welcome_default_label">Приветствие включено</string>
+
+    <string name="pref_units_label_celsius">Градус Цельсия (°C)</string>
+    <string name="pref_units_label_kelvin">Кельвин (K)</string>
+    <string name="pref_units_label_fahrenheit">Градус Фаренгейта (°F)</string>
+
+    <string name="pref_title_speed">Единицы измерения скорости ветра</string>
+    <string name="pref_speed_meter_sec_label">Метр в секунду (м/с)</string>
+    <string name="pref_speed_foot_sec_label">Фут в секунду (ф/с)</string>
+    <string name="pref_speed_km_hour_label">Километры в час (км/ч)</string>
+    <string name="pref_speed_mile_hour_label">Мили в час (миля/ч)</string>
+
+    <string name="pref_welcome_summary">Показывать строку приветствия при запуске программы</string>
+    <string name="pref_category_location">Поиск местоположения</string>
+    <string name="pref_category_start">Параметры запуска</string>
+    <string name="pref_category_general">Общие</string>
+    <string name="warning_message_gps">Использование GPS может увеличить скорость рязряда батареи, однако, несомненно, увеличит точность определения местоположения</string>
 </resources>

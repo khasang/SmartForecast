@@ -103,4 +103,20 @@
     <string name="pref_title_welcome_string">Zeile der Begrüßung</string>
     <string name="pref_welcome_off_label">Begrüßung ist deaktiviert</string>
     <string name="pref_welcome_default_label">Begrüßung ist aktiviert</string>
+
+    <string name="pref_units_label_celsius">Celsius Grad (°C)</string>
+    <string name="pref_units_label_kelvin">Kelvin Grad (K)</string>
+    <string name="pref_units_label_fahrenheit">Fahrenheit Grad (°F)</string>
+
+    <string name="pref_title_speed">Maßeinheiten der Windgeschwindigkeit</string>
+    <string name="pref_speed_meter_sec_label">Meter pro Sekunde (m/s)</string>
+    <string name="pref_speed_foot_sec_label">Fuß pro Sekunde (f/s)</string>
+    <string name="pref_speed_km_hour_label">Kilometer pro Stunde (km/h)</string>
+    <string name="pref_speed_mile_hour_label">Meilen pro Stunde (Meile/h)</string>
+
+    <string name="pref_welcome_summary">Die Begrüßungzeile beim Start des Programms zeigen</string>
+    <string name="pref_category_location">Suche nach Standort</string>
+    <string name="pref_category_start">Startoptionen</string>
+    <string name="pref_category_general">Gemeinsam</string>
+    <string name="warning_message_gps">Die Benutzung von GPS kann die Geschwindigkeit der Entladung der Batterie erhöhen, jedoch wird sicherlich auch die Genauigkeit der Positionsbestimmung erhöhen</string>
 </resources>

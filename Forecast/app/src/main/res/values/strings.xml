@@ -87,9 +87,9 @@
 
     <string name="pref_title_units">Temperature Units</string>
     <string name="pref_units_key" translatable="false">units</string>
-    <string name="pref_units_celsii" translatable="false">celsii</string>
+    <string name="pref_units_celsius" translatable="false">celsius</string>
     <string name="pref_units_kelvin" translatable="false">kelvin</string>
-    <string name="pref_units_farenheit" translatable="false">farenheit</string>
+    <string name="pref_units_fahrenheit" translatable="false">fahrenheit</string>
 
     <string name="error_gps_permission">Positioning is not possible.\nOut of the rights to use the gps and resources service provider</string>
     <string name="clear_new_location_name">Clear the input field</string>
@@ -121,27 +121,26 @@
     <string name="pref_welcome_off_label">The greeting is disabled</string>
     <string name="pref_welcome_default_label">The greeting is enabled</string>
 
-    <!-- TODO translate -->
-    <string name="pref_units_label_celsii">Градус Цельсия (°C)</string>
-    <string name="pref_units_label_kelvin">Кельвин (K)</string>
-    <string name="pref_units_label_farenheit">Градус Фаренгейта (°F)</string>
+    <string name="pref_units_label_celsius">Celsius degree (°C)</string>
+    <string name="pref_units_label_kelvin">Kelvin degree (K)</string>
+    <string name="pref_units_label_fahrenheit">Fahrenheit degree (°F)</string>
 
-    <string name="pref_title_speed">Единицы измерения скорости ветра</string>
-    <string name="pref_speed_key" translatable="false">wspeed</string>
+    <string name="pref_title_speed">Units of wind speed measure</string>
+    <string name="pref_speed_key" translatable="false">wind_speed</string>
     <string name="pref_speed_meter_sec" translatable="false">meter_sec</string>
     <string name="pref_speed_foot_sec" translatable="false">foot_sec</string>
     <string name="pref_speed_km_hour" translatable="false">km_hour</string>
     <string name="pref_speed_mile_hour" translatable="false">mile_hour</string>
-    <string name="pref_speed_meter_sec_label">Метр в секунду (м/с)</string>
-    <string name="pref_speed_foot_sec_label">Фут в секунду (ф/с)</string>
-    <string name="pref_speed_km_hour_label">Километры в час (км/ч)</string>
-    <string name="pref_speed_mile_hour_label">Мили в час (миля/ч)</string>
+    <string name="pref_speed_meter_sec_label">Meter per second (m/s)</string>
+    <string name="pref_speed_foot_sec_label">Foot per second (f/s)</string>
+    <string name="pref_speed_km_hour_label">Kilometers per hour (km/h)</string>
+    <string name="pref_speed_mile_hour_label">Miles per hour (Mph)</string>
 
-    <string name="pref_welcome_summary">Показывать строку приветствия при запуске программы</string>
+    <string name="pref_welcome_summary">To show the greeting line at the start of the program</string>
     <string name="pref_welcome_key_switch" translatable="false">welcome_string_switch</string>
     <string name="pref_welcome_default_switch" translatable="false">true</string>
-    <string name="pref_category_location">Поиск местоположения</string>
-    <string name="pref_category_start">Параметры запуска</string>
-    <string name="pref_category_general">Общие</string>
-    <string name="warning_message_gps">Использование GPS может увеличить скорость рязряда батареи, однако, несомненно, увеличит точность определения местоположения</string>
+    <string name="pref_category_location">Search of location</string>
+    <string name="pref_category_start">Parameters of start</string>
+    <string name="pref_category_general">General</string>
+    <string name="warning_message_gps">The use of GPS can increase the speed of discharge of the battery, however, will certainly increase the location accuracy</string>
 </resources>
