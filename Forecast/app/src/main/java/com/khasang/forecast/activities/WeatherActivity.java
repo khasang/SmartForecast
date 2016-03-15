@@ -524,10 +524,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 PositionManager.getInstance().changeTemperatureMetric();
                 PositionManager.getInstance().updateWeatherFromDB();
                 break;
-            case R.id.pressure:
-                PositionManager.getInstance().changePressureMetric();
-                PositionManager.getInstance().updateWeatherFromDB();
-                break;
         }
     }
 
