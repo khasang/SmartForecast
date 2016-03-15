@@ -304,11 +304,11 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         if (sp.getString(getString(R.string.pref_speed_key), getString(R.string.pref_speed_meter_sec)).equals(getString(R.string.pref_speed_meter_sec))) {
             PositionManager.getInstance().setSpeedMetric(AppUtils.SpeedMetrics.METER_PER_SECOND);
         } else if (sp.getString(getString(R.string.pref_speed_key), getString(R.string.pref_speed_meter_sec)).equals(getString(R.string.pref_speed_foot_sec))) {
-            PositionManager.getInstance().setSpeedMetric(AppUtils.SpeedMetrics.METER_PER_SECOND);
+            PositionManager.getInstance().setSpeedMetric(AppUtils.SpeedMetrics.FOOT_PER_SECOND);
         } else if (sp.getString(getString(R.string.pref_speed_key), getString(R.string.pref_speed_meter_sec)).equals(getString(R.string.pref_speed_km_hour))) {
-            PositionManager.getInstance().setSpeedMetric(AppUtils.SpeedMetrics.METER_PER_SECOND);
+            PositionManager.getInstance().setSpeedMetric(AppUtils.SpeedMetrics.KM_PER_HOURS);
         } else if (sp.getString(getString(R.string.pref_speed_key), getString(R.string.pref_speed_meter_sec)).equals(getString(R.string.pref_speed_mile_hour))) {
-            PositionManager.getInstance().setSpeedMetric(AppUtils.SpeedMetrics.METER_PER_SECOND);
+            PositionManager.getInstance().setSpeedMetric(AppUtils.SpeedMetrics.MILES_PER_HOURS);
         } else {
             PositionManager.getInstance().setSpeedMetric(AppUtils.SpeedMetrics.METER_PER_SECOND);
         }

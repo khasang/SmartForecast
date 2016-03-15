@@ -12,4 +12,5 @@
     <color name="grey_100">#FFF5F5F5</color>
 
     <color name="background_splash">#E3EFF7</color>
+    <color name="background_toast">#CFCFCF</color>
 </resources>
