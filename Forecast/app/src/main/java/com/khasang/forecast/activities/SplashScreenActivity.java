@@ -17,8 +17,12 @@ import android.view.animation.AnimationUtils;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.R;
+import com.khasang.forecast.interfaces.IWeatherReceiver;
 import com.khasang.forecast.position.PositionManager;
+import com.khasang.forecast.position.Weather;
+import com.khasang.forecast.stations.WeatherStation;
 import com.romainpiel.shimmer.Shimmer;
 import com.romainpiel.shimmer.ShimmerTextView;
 
@@ -26,6 +30,7 @@ import net.frakbot.jumpingbeans.JumpingBeans;
 
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.Map;
 
 import pl.droidsonroids.gif.AnimationListener;
 import pl.droidsonroids.gif.GifDrawable;
@@ -33,7 +38,7 @@ import pl.droidsonroids.gif.GifImageView;
 
 public class SplashScreenActivity
         extends AppCompatActivity
-        implements Animation.AnimationListener, AnimationListener {
+        implements Animation.AnimationListener, AnimationListener, IWeatherReceiver {
 
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
@@ -111,6 +116,7 @@ public class SplashScreenActivity
         if (checkPlayServices()) {
             isGooglePlayServicesInstalled = true;
             PositionManager.getInstance();
+            PositionManager.getInstance().setReceiver(this);
         }
     }
 
@@ -122,6 +128,9 @@ public class SplashScreenActivity
     @Override
     protected void onStop() {
         super.onStop();
+        if (isGooglePlayServicesInstalled) {
+            PositionManager.getInstance().setReceiver(null);
+        }
     }
 
     private boolean checkPlayServices() {
@@ -174,5 +183,25 @@ public class SplashScreenActivity
         if (isGooglePlayServicesInstalled) {
             startWeatherActivity();
         }
+    }
+
+    @Override
+    public boolean receiveHourlyWeatherFirst() {
+        return false;
+    }
+
+    @Override
+    public void updateInterface(WeatherStation.ResponseType responseType, Map<Calendar, Weather> forecast) {
+
+    }
+
+    @Override
+    public void showMessageToUser(CharSequence string, int length) {
+        AppUtils.showSnackBar(findViewById(R.id.coordinatorLayout), string, length);
+    }
+
+    @Override
+    public void showMessageToUser(int stringId, int length) {
+        showMessageToUser(getString(stringId), length);
     }
 }
