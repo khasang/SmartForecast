@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -30,12 +32,12 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.Maps;
 import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.exceptions.EmptyCurrentAddressException;
@@ -142,7 +144,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
      * Задает размер для Footer
      */
     private void setupFooter() {
-        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) fabBtn.getLayoutParams();
+        CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) fabBtn.getLayoutParams();
         int fabBottomMargin = lp.bottomMargin;
         recyclerAdapter.setFooterHeight(fabBottomMargin);
     }
@@ -162,7 +164,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         toolbar.animate().translationY(-toolbar.getHeight())
                 .setInterpolator(new AccelerateInterpolator(2));
 
-        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) fabBtn.getLayoutParams();
+        CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) fabBtn.getLayoutParams();
         int fabBottomMargin = lp.bottomMargin;
         fabBtn.animate().translationY(fabBtn.getHeight() +
                 fabBottomMargin).setInterpolator(new AccelerateInterpolator(2)).start();
@@ -292,7 +294,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 Collections.sort(cityList);
                 recyclerAdapter.notifyDataSetChanged();
             } else {
-                Toast.makeText(MyApplication.getAppContext(), R.string.city_exist, Toast.LENGTH_SHORT).show();
+                AppUtils.showSnackBar(findViewById(R.id.fabBtn), getString(R.string.city_exist), Snackbar.LENGTH_LONG);
             }
         }
         swapVisibilityTextOrList();
@@ -391,14 +393,15 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         }
     }
-/*
-    public void hideSoftKeyboard(Context context) {
-        if (getCurrentFocus() != null) {
-            InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
-            inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+
+    /*
+        public void hideSoftKeyboard(Context context) {
+            if (getCurrentFocus() != null) {
+                InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
+                inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+            }
         }
-    }
-*/
+    */
     public void setChooseCityText(String text) {
         chooseCity.setText(text);
     }

@@ -1,6 +1,11 @@
 package com.khasang.forecast;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
+import android.view.View;
+import android.widget.TextView;
 
 import com.khasang.forecast.models.DailyForecastList;
 import com.khasang.forecast.models.DailyResponse;
@@ -109,6 +114,15 @@ public class AppUtils {
         };
 
         public abstract PressureMetrics change();
+    }
+
+    public static void showSnackBar (View view, CharSequence string, int length){
+        Snackbar snackbar = Snackbar.make(view, string, length);
+        View snackbarView = snackbar.getView();
+        snackbarView.setBackgroundColor(ContextCompat.getColor(MyApplication.getAppContext(), R.color.primary));
+        TextView textView = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setTextColor(Color.WHITE);
+        snackbar.show();
     }
 
     /**
