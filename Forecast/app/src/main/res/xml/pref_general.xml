@@ -1,14 +1,14 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-<!--
-    <ListPreference
-        android:defaultValue="@string/pref_welcome_default"
-        android:entries="@array/pref_welcome_options"
-        android:entryValues="@array/pref_welcome_values"
-        android:key="@string/pref_welcome_key"
-        android:negativeButtonText="@null"
-        android:positiveButtonText="@null"
-        android:title="@string/pref_title_welcome_string" />
--->
+    <!--
+        <ListPreference
+            android:defaultValue="@string/pref_welcome_default"
+            android:entries="@array/pref_welcome_options"
+            android:entryValues="@array/pref_welcome_values"
+            android:key="@string/pref_welcome_key"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="@string/pref_title_welcome_string" />
+    -->
     <SwitchPreference
         android:defaultValue="@string/pref_welcome_default_switch"
         android:key="@string/pref_welcome_key_switch"
