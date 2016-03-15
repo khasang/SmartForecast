@@ -96,31 +96,30 @@
     <string name="coordinates_error">Not correct location coordinates</string>
     <string name="error_gps_disabled">In application settings disabled the ability to get the coordinates from the GPS</string>
 
-    <!-- TODO translate -->
-    <string name="error_location_services_are_not_active">Службы получения координат не активны</string>
-    <string name="info_message_about_request_permission_fine_location">Приложению необходимы права для определения текущего местоположения</string>
-    <string name="button_permission_granted">Разрешить</string>
-    <string name="button_permission_not_granted">Отказать</string>
-    <string name="welcome_def_str">"Привет "</string>
-    <string name="welcome_string_hello">"Рад Вас видеть "</string>
-    <string name="welcome_string_morning">"Доброе утро "</string>
-    <string name="welcome_string_day">"Добрый день "</string>
-    <string name="welcome_string_evening">"Добрый вечер "</string>
-    <string name="activate_geographical_service">Проверьте настройки телефона и программы. Нет доступных сервисов для получения гографических координат.\n\nОткрыть настройки телефона для активации сервисов определния местоположения?</string>
+    <string name="error_location_services_are_not_active">Services of receipt of coordinates are not active</string>
+    <string name="info_message_about_request_permission_fine_location">Application need rights for determining the current location</string>
+    <string name="button_permission_granted">Allowed</string>
+    <string name="button_permission_not_granted">Denied</string>
+    <string name="welcome_def_str">"Hello "</string>
+    <string name="welcome_string_hello">"Glad to see you "</string>
+    <string name="welcome_string_morning">"Good morning "</string>
+    <string name="welcome_string_day">"Good afternoon "</string>
+    <string name="welcome_string_evening">"Good evening "</string>
+    <string name="activate_geographical_service">Check tuning of telephone and program. There is no available services for obtaining of coordinates.\n\nTo open phone settings to activate services of location determination?</string>
 
-    <string name="pref_title_location">При запуске показывать погоду для</string>
+    <string name="pref_title_location">At a start to show a weather for</string>
     <string name="pref_location_key" translatable="false">default_location</string>
     <string name="pref_location_current" translatable="false">current_location</string>
     <string name="pref_location_last" translatable="false">last_location</string>
-    <string name="pref_location_label_current">Текущего местоположения</string>
-    <string name="pref_location_label_last">Последнего активного местоположения</string>
+    <string name="pref_location_label_current">The Current location</string>
+    <string name="pref_location_label_last">The Last active location</string>
 
-    <string name="pref_title_welcome_string">Строка приветствия</string>
+    <string name="pref_title_welcome_string">Greeting line</string>
     <string name="pref_welcome_key" translatable="false">welcome_string</string>
     <string name="pref_welcome_off" translatable="false">welcome_off</string>
     <string name="pref_welcome_default" translatable="false">welcome_default</string>
-    <string name="pref_welcome_off_label">Приветствие отключено</string>
-    <string name="pref_welcome_default_label">Приветствие включено</string>
+    <string name="pref_welcome_off_label">The greeting is disabled</string>
+    <string name="pref_welcome_default_label">The greeting is enabled</string>
 
     <!-- TODO translate -->
     <string name="pref_welcome_summary">Показывать строку приветствия при запуске программы</string>
