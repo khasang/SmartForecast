@@ -239,7 +239,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 //        boolean isLocationPermissionGranted = permissionChecker.isPermissionGranted(this, PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION);
 //         дизейблить пункт на основании переменной isLocationPermissionGranted
 
-        if (PositionManager.getInstance().getFavouritesList().isEmpty()) {
+        if (PositionManager.getInstance().getFavouritesList() != null && PositionManager.getInstance().getFavouritesList().isEmpty()) {
             favorites.withBadge("").withEnabled(false);
             result.updateItem(favorites);
             return;
@@ -475,7 +475,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         stopRefresh();
         toolbar.setTitle(PositionManager.getInstance().getCurrentPositionName().split(",")[0]);
         if (forecast == null || forecast.size() == 0) {
-            Logger.println(TAG, "Weather is null!");
+            Logger.println(TAG, "WeatherTable is null!");
             return;
         }
         switch (responseType) {
@@ -527,7 +527,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     public void updateCurrentWeather(Calendar date, Weather wCurent) {
 
         if (wCurent == null) {
-            Log.i(TAG, "Weather is null!");
+            Log.i(TAG, "WeatherTable is null!");
             return;
         }
 

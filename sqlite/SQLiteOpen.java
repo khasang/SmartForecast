@@ -49,7 +49,8 @@ public class SQLiteOpen extends SQLiteOpenHelper {
                             });
                             break;
 
-                        default:
+                        case 4:
+                        case 5:
                             db.execSQL(SQLiteFields.QUERY_INSERT_TOWN_v5, new String[]{
                                     map.get(SQLiteFields.TOWN),
                                     map.get(SQLiteFields.LATITUDE),
@@ -81,7 +82,8 @@ public class SQLiteOpen extends SQLiteOpenHelper {
                                 map.put(SQLiteFields.LONGITUDE, dataset.getString(dataset.getColumnIndex(SQLiteFields.LONGITUDE)));
                                 break;
 
-                            default:
+                            case 4:
+                            case 5:
                                 map.put(SQLiteFields.TOWN, dataset.getString(dataset.getColumnIndex(SQLiteFields.TOWN)));
                                 map.put(SQLiteFields.LATITUDE, dataset.getString(dataset.getColumnIndex(SQLiteFields.LATITUDE)));
                                 map.put(SQLiteFields.LONGITUDE, dataset.getString(dataset.getColumnIndex(SQLiteFields.LONGITUDE)));
@@ -116,7 +118,7 @@ public class SQLiteOpen extends SQLiteOpenHelper {
                         });
                         break;
 
-                    default:
+                    case 5:
                         db.execSQL(SQLiteFields.QUERY_UPDATE_SETTINGS_v5, new String[]{
                                 settingsMap.get(SQLiteFields.CURRENT_STATION),
                                 settingsMap.get(SQLiteFields.CURRENT_TOWN),
@@ -126,6 +128,7 @@ public class SQLiteOpen extends SQLiteOpenHelper {
                                 settingsMap.get(SQLiteFields.CURRENT_LATITUDE),
                                 settingsMap.get(SQLiteFields.CURRENT_LONGITUDE)
                         });
+                        break;
                 }
             }
         } catch (Exception e) {
@@ -149,7 +152,7 @@ public class SQLiteOpen extends SQLiteOpenHelper {
                             settingsMap.put(SQLiteFields.CURRENT_PRESSURE_METRICS, dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_PRESSURE_METRICS)));
                             break;
 
-                        default:
+                        case 5:
                             settingsMap.put(SQLiteFields.CURRENT_STATION, dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_STATION)));
                             settingsMap.put(SQLiteFields.CURRENT_TOWN, dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_TOWN)));
                             settingsMap.put(SQLiteFields.CURRENT_TEMPIRATURE_METRICS, dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_TEMPIRATURE_METRICS)));

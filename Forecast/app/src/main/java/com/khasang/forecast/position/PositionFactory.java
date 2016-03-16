@@ -1,8 +1,7 @@
 package com.khasang.forecast.position;
 
-import com.khasang.forecast.position.Coordinate;
-import com.khasang.forecast.position.Position;
-import com.khasang.forecast.sqlite.SQLiteProcessData;
+import com.khasang.forecast.orm.TownsManager;
+
 import java.util.HashMap;
 
 
@@ -27,7 +26,7 @@ public class PositionFactory {
         mPositions = positions;
     }
 
-    public void addFavouritePosition(String name, Coordinate coordinates, SQLiteProcessData dbm) {
+    public void addFavouritePosition(String name, Coordinate coordinates, TownsManager dbm) {
         Position p = new Position();
         p.setLocationName(name);
         p.setCityID(cityIdentificationCounter++);

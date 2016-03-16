@@ -14,7 +14,7 @@ public class SQLiteFields {
 
     public static final String ID = "Id";
 
-    public static final String TOWN = "Town";
+    public static final String TOWN = "TownsTable";
     public static final String LATITUDE = "Latitude";
     public static final String LONGITUDE = "Longtitude";
     public static final String SUNRISE = "Sunrise";
@@ -37,7 +37,7 @@ public class SQLiteFields {
     public static final String CURRENT_SPEED_METRICS = "CurrentSpeedMetrics";
     public static final String CURRENT_PRESSURE_METRICS = "CurrentPressureMetrics";
     public static final String CURRENT_STATION = "CurrentServiceType";
-    public static final String CURRENT_TOWN = "Town";
+    public static final String CURRENT_TOWN = "TownsTable";
     public static final String CURRENT_LATITUDE = "CurentLatitude";
     public static final String CURRENT_LONGITUDE = "CurentLongtitude";
 
