@@ -49,7 +49,6 @@ public class PositionManager {
     private volatile HashMap<String, Position> positions;
     List<String> favouritesPositions;
     private IWeatherReceiver weatherReceiver;
-//    private SQLiteProcessData dbManager;
     private SettingsManager settingsManager;
     private WeatherManager weatherManager;
     private TownsManager townsManager;

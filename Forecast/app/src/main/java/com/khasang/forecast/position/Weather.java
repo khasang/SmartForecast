@@ -144,7 +144,7 @@ public class Weather {
 
     @Override
     public String toString() {
-        return "WeatherTable{" +
+        return "Weather{" +
                 "temperature=" + temperature +
                 ", temp_min=" + temp_min +
                 ", temp_max=" + temp_max +
