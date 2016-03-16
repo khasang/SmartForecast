@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.R;
 
@@ -67,14 +68,10 @@ public class SettingsActivity extends AppCompatActivity {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             if (key.equals(getString(R.string.pref_gps_key)) && sharedPreferences.getBoolean(getString(R.string.pref_gps_key), true)) {
-                LayoutInflater inflater = getActivity().getLayoutInflater();
-                View layout = inflater.inflate(R.layout.warning_toast, ((ViewGroup) getActivity().findViewById(R.id.toast_layout_root)));
-                layout.setBackgroundColor(ContextCompat.getColor(MyApplication.getAppContext(), R.color.background_toast));
-                ((TextView) layout.findViewById(R.id.warningMessage)).setText(R.string.warning_message_gps);
-                Toast toast = new Toast(MyApplication.getAppContext());
+                Toast toast = AppUtils.showInfoMessage(getActivity(), getString(R.string.warning_message_gps));
+                toast.getView().setBackgroundColor(ContextCompat.getColor(MyApplication.getAppContext(), R.color.background_toast));
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.setDuration(Toast.LENGTH_LONG);
-                toast.setView(layout);
                 toast.show();
                 return;
             }

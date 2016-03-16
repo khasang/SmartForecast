@@ -124,9 +124,9 @@ public class AppUtils {
     public static void showSnackBar(Activity activity, View view, CharSequence string, int length) {
         if (view == null) {
             if (activity != null) {
-                showInfoMessage(activity, string);
+                showInfoMessage(activity, string).show();
             } else {
-                showInfoMessage(string);
+                showInfoMessage(string).show();
             }
             return;
         }
@@ -139,18 +139,18 @@ public class AppUtils {
         snackbar.show();
     }
 
-    public static void showInfoMessage(Activity activity, CharSequence string) {
+    public static Toast showInfoMessage(Activity activity, CharSequence string) {
         LayoutInflater inflater = activity.getLayoutInflater();
         View layout = inflater.inflate(R.layout.warning_toast, ((ViewGroup) activity.findViewById(R.id.toast_layout_root)));
         ((TextView) layout.findViewById(R.id.warningMessage)).setText(string);
         Toast toast = new Toast(MyApplication.getAppContext());
         toast.setDuration(Toast.LENGTH_SHORT);
         toast.setView(layout);
-        toast.show();
+        return toast;
     }
 
-    public static void showInfoMessage(CharSequence string) {
-        Toast.makeText(MyApplication.getAppContext(), string, Toast.LENGTH_SHORT).show();
+    public static Toast showInfoMessage(CharSequence string) {
+        return Toast.makeText(MyApplication.getAppContext(), string, Toast.LENGTH_SHORT);
     }
 
 
