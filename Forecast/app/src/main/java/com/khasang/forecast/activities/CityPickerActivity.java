@@ -25,6 +25,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
@@ -87,7 +88,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         setContentView(R.layout.activity_city_picker);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        //TODO fix NullPointerException
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
@@ -378,7 +378,14 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             for (int i = 0; i < itemsCount; i++) {
                 try {
                     Coordinate coordinate = getTownCoordinates(chooseCity.getAdapter().getItem(i).toString());
+                    if (coordinate == null) {
+                        Toast.makeText(MyApplication.getAppContext(), R.string.invalid_lang_long_used, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     maps.setNewMarker(coordinate.getLatitude(), coordinate.getLongitude(), chooseCity.getAdapter().getItem(i).toString());
+                } catch (NullPointerException e) {
+                    Toast.makeText(MyApplication.getAppContext(), R.string.invalid_lang_long_used, Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -389,7 +396,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     // Метод скрытия клавиатуры
     public void hideSoftKeyboard(Context context) {
         if (chooseCity.isFocused()) {
-            InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
+            InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
             inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         }
     }
@@ -408,7 +415,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
     private void showChooseCityDialog() {
         final Pattern pattern = Pattern.compile("^[\\w\\s,`'()-]+$");
-        final View view = getLayoutInflater().inflate(R.layout.dialog_pick_location, null);
+        final View view = getLayoutInflater().inflate(R.layout.dialog_pick_location, (ViewGroup)null);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         setBtnClear(view);
         final GooglePlacesAutocompleteAdapter googlePlacesAutocompleteAdapter = new GooglePlacesAutocompleteAdapter(this, R.layout.autocomplete_city_textview_item);
