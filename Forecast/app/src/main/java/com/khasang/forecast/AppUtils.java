@@ -2,10 +2,8 @@ package com.khasang.forecast;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

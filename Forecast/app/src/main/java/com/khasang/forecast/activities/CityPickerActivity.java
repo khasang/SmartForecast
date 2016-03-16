@@ -12,6 +12,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +21,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -263,9 +265,9 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
     private Coordinate getTownCoordinates(String city) {
 
-        Coordinate coordinate = null;
+        Coordinate coordinate;
         if (city.length() <= 0) {
-            Toast.makeText(this, R.string.error_empty_location_name, Toast.LENGTH_SHORT).show();
+            showToast(R.string.error_empty_location_name);
             return null;
         }
         Geocoder geocoder = new Geocoder(getApplicationContext());
@@ -273,7 +275,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         try {
             addresses = geocoder.getFromLocationName(city, 3);
             if (addresses.size() == 0) {
-                Toast.makeText(getApplicationContext(), String.format(getString(R.string.coordinates_not_found), city), Toast.LENGTH_SHORT).show();
+                showToast(R.string.coordinates_not_found);
                 return null;
             }
             Address currentAddress = addresses.get(0);
@@ -281,11 +283,11 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             coordinate.setLatitude(currentAddress.getLatitude());
             coordinate.setLongitude(currentAddress.getLongitude());
         } catch (IOException e) {
-            Toast.makeText(MyApplication.getAppContext(), R.string.error_geo_service_not_available, Toast.LENGTH_SHORT).show();
+            showToast(R.string.error_geo_service_not_available);
             e.printStackTrace();
             return null;
         } catch (IllegalArgumentException | NullPointerException e) {
-            Toast.makeText(MyApplication.getAppContext(), R.string.invalid_lang_long_used, Toast.LENGTH_SHORT).show();
+            showToast(R.string.invalid_lang_long_used);
             e.printStackTrace();
             return null;
         }
@@ -343,13 +345,13 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             List<Address> addresses = geoCoder.getFromLocation(latitude, longitude, 3);
             address = new LocationParser(addresses).parseList().getAddressLine();
         } catch (IOException e) {
-            Toast.makeText(MyApplication.getAppContext(), R.string.error_service_not_available, Toast.LENGTH_SHORT).show();
+            showToast(R.string.error_service_not_available);
             e.printStackTrace();
         } catch (IllegalArgumentException e) {
-            Toast.makeText(MyApplication.getAppContext(), R.string.invalid_lang_long_used, Toast.LENGTH_SHORT).show();
+            showToast(R.string.invalid_lang_long_used);
             e.printStackTrace();
         } catch (EmptyCurrentAddressException | NoAvailableAddressesException e) {
-            Toast.makeText(MyApplication.getAppContext(), R.string.no_address_found, Toast.LENGTH_SHORT).show();
+            showToast(R.string.no_address_found);
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
@@ -392,12 +394,12 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 try {
                     Coordinate coordinate = getTownCoordinates(chooseCity.getAdapter().getItem(i).toString());
                     if (coordinate == null) {
-                        Toast.makeText(MyApplication.getAppContext(), R.string.invalid_lang_long_used, Toast.LENGTH_SHORT).show();
+                        showToast(R.string.invalid_lang_long_used);
                         return;
                     }
                     maps.setNewMarker(coordinate.getLatitude(), coordinate.getLongitude(), chooseCity.getAdapter().getItem(i).toString());
                 } catch (NullPointerException e) {
-                    Toast.makeText(MyApplication.getAppContext(), R.string.invalid_lang_long_used, Toast.LENGTH_SHORT).show();
+                    showToast(R.string.invalid_lang_long_used);
                     e.printStackTrace();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -429,7 +431,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         setBtnClear(view);
         final GooglePlacesAutocompleteAdapter googlePlacesAutocompleteAdapter = new GooglePlacesAutocompleteAdapter(this, R.layout.autocomplete_city_textview_item);
-        final Maps map = new Maps(this, this);
+        final Maps map = new Maps(this, this, this);
         chooseCity = (DelayedAutoCompleteTextView) view.findViewById(R.id.editTextCityName);
         chooseCity.setAdapter(googlePlacesAutocompleteAdapter);
         chooseCity.setLoadingIndicator((ProgressBar) view.findViewById(R.id.autocomplete_progressbar));
@@ -593,5 +595,13 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     @Override
     public void showMessageToUser(int stringId, int length) {
         showMessageToUser(getString(stringId), length);
+    }
+
+    @Override
+    public void showToast(int stringId) {
+        Toast toast = AppUtils.showInfoMessage(this, getString(stringId));
+        toast.getView().setBackgroundColor(ContextCompat.getColor(MyApplication.getAppContext(), R.color.background_toast));
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
     }
 }

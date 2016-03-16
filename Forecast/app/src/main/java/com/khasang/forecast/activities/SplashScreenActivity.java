@@ -20,7 +20,6 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.R;
 import com.khasang.forecast.interfaces.IMessageProvider;
-import com.khasang.forecast.position.Position;
 import com.khasang.forecast.position.PositionManager;
 import com.romainpiel.shimmer.Shimmer;
 import com.romainpiel.shimmer.ShimmerTextView;
@@ -190,5 +189,10 @@ public class SplashScreenActivity
     @Override
     public void showMessageToUser(int stringId, int length) {
         showMessageToUser(getString(stringId), length);
+    }
+
+    @Override
+    public void showToast(int stringId) {
+        AppUtils.showInfoMessage(this, getString(stringId)).show();
     }
 }

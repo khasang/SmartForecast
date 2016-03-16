@@ -690,14 +690,18 @@ public class PositionManager {
     }
 
     private synchronized void sendMessage(CharSequence string, int length) {
-        if (messageProvider != null) {
+        try {
             messageProvider.showMessageToUser(string, length);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
         }
     }
 
     private synchronized void sendMessage(int stringId, int length) {
-        if (messageProvider != null) {
+        try {
             messageProvider.showMessageToUser(stringId, length);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
         }
     }
 }

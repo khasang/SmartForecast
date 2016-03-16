@@ -638,5 +638,10 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     public void showMessageToUser(int stringId, int length) {
         showMessageToUser(getString(stringId), length);
     }
+
+    @Override
+    public void showToast(int stringId) {
+        AppUtils.showInfoMessage(this, getString(stringId)).show();
+    }
 }
 

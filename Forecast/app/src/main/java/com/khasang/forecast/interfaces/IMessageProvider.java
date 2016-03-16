@@ -7,4 +7,6 @@ public interface IMessageProvider {
     void showMessageToUser (CharSequence string, int length);
 
     void showMessageToUser (int stringId, int length);
+
+    void showToast (int stringId);
 }
