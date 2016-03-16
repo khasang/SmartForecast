@@ -35,11 +35,10 @@ public class Maps implements OnMapReadyCallback {
     private double currentLongitude;
     private float defaultZoom;
     private IMapDataReceiver receiver;
-    private boolean isMapInitialized;
     GoogleMap map;
 
     public Maps(CityPickerActivity activity, IMapDataReceiver receiver) {
-        isMapInitialized = false;
+        map = null;
         this.receiver = receiver;
         Coordinate coordinate = PositionManager.getInstance().getCurrentLocationCoordinates();
         try {
@@ -171,11 +170,8 @@ public class Maps implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         Log.d(TAG, "onMapReady");
         map = googleMap;
-        if (!isMapInitialized) {
-            setMapSettings(googleMap);
-            setMapClickListeners(googleMap);
-            isMapInitialized = true;
-            setCameraPosition(currentLatitude, currentLongitude, defaultZoom, 0, 0);
-        }
+        setMapSettings(googleMap);
+        setMapClickListeners(googleMap);
+        setCameraPosition(currentLatitude, currentLongitude, defaultZoom, 0, 0);
     }
 }

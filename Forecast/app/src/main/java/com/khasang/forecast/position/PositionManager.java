@@ -16,6 +16,7 @@ import com.khasang.forecast.R;
 import com.khasang.forecast.exceptions.AccessFineLocationNotGrantedException;
 import com.khasang.forecast.exceptions.GpsIsDisabledException;
 import com.khasang.forecast.exceptions.NoAvailableLocationServiceException;
+import com.khasang.forecast.interfaces.IMessageProvider;
 import com.khasang.forecast.interfaces.IWeatherReceiver;
 import com.khasang.forecast.location.CurrentLocationManager;
 import com.khasang.forecast.exceptions.EmptyCurrentAddressException;
@@ -50,12 +51,17 @@ public class PositionManager {
     private volatile HashMap<String, Position> positions;
     List<String> favouritesPositions;
     private volatile IWeatherReceiver receiver;
+    private volatile IMessageProvider messageProvider;
     private SQLiteProcessData dbManager;
     private boolean lastResponseIsFailure;
     private CurrentLocationManager locationManager;
 
     public synchronized void setReceiver(IWeatherReceiver receiver) {
         this.receiver = receiver;
+    }
+
+    public synchronized void setMessageProvider(IMessageProvider provider) {
+        this.messageProvider = provider;
     }
 
     private static volatile PositionManager instance;
@@ -77,12 +83,12 @@ public class PositionManager {
         return instance;
     }
 
-    public static PositionManager getInstance(IWeatherReceiver receiver) {
+    public static PositionManager getInstance(IMessageProvider provider) {
         if (instance == null) {
             synchronized (PositionManager.class) {
                 if (instance == null) {
                     instance = new PositionManager();
-                    instance.setReceiver(receiver);
+                    instance.setMessageProvider(provider);
                     instance.initManager();
                 }
             }
@@ -684,14 +690,14 @@ public class PositionManager {
     }
 
     private synchronized void sendMessage(CharSequence string, int length) {
-        if (receiver != null) {
-            receiver.showMessageToUser(string, length);
+        if (messageProvider != null) {
+            messageProvider.showMessageToUser(string, length);
         }
     }
 
     private synchronized void sendMessage(int stringId, int length) {
-        if (receiver != null) {
-            receiver.showMessageToUser(stringId, length);
+        if (messageProvider != null) {
+            messageProvider.showMessageToUser(stringId, length);
         }
     }
 }

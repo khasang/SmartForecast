@@ -44,6 +44,7 @@ import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.exceptions.EmptyCurrentAddressException;
 import com.khasang.forecast.exceptions.NoAvailableAddressesException;
 import com.khasang.forecast.interfaces.IMapDataReceiver;
+import com.khasang.forecast.interfaces.IMessageProvider;
 import com.khasang.forecast.location.LocationParser;
 import com.khasang.forecast.position.Coordinate;
 import com.khasang.forecast.Logger;
@@ -68,7 +69,7 @@ import java.util.regex.Pattern;
  * Activity для выбора местоположения
  */
 
-public class CityPickerActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener, IMapDataReceiver {
+public class CityPickerActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener, IMapDataReceiver, IMessageProvider {
     private final String TAG = this.getClass().getSimpleName();
     public final static String CITY_PICKER_TAG = "com.khasang.forecast.activities.CityPickerActivity";
 
@@ -178,7 +179,14 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onResume() {
         super.onResume();
+        PositionManager.getInstance().setMessageProvider(this);
         swapVisibilityTextOrList();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        PositionManager.getInstance().setMessageProvider(null);
     }
 
     @Override
@@ -294,7 +302,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 Collections.sort(cityList);
                 recyclerAdapter.notifyDataSetChanged();
             } else {
-                AppUtils.showSnackBar(this, findViewById(R.id.fabBtn), getString(R.string.city_exist), Snackbar.LENGTH_LONG);
+                showMessageToUser(R.string.city_exist, Snackbar.LENGTH_LONG);
             }
         }
         swapVisibilityTextOrList();
@@ -577,4 +585,13 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         return true;
     }
 
+    @Override
+    public void showMessageToUser(CharSequence string, int length) {
+        AppUtils.showSnackBar(this, findViewById(R.id.fabBtn), string, length);
+    }
+
+    @Override
+    public void showMessageToUser(int stringId, int length) {
+        showMessageToUser(getString(stringId), length);
+    }
 }

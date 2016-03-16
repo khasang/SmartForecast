@@ -37,6 +37,7 @@ import com.khasang.forecast.PermissionChecker;
 import com.khasang.forecast.R;
 import com.khasang.forecast.fragments.DailyForecastFragment;
 import com.khasang.forecast.fragments.HourlyForecastFragment;
+import com.khasang.forecast.interfaces.IMessageProvider;
 import com.khasang.forecast.interfaces.IPermissionCallback;
 import com.khasang.forecast.interfaces.IWeatherReceiver;
 import com.khasang.forecast.position.PositionManager;
@@ -68,7 +69,7 @@ import java.util.Map;
 
 public class WeatherActivity extends AppCompatActivity implements View.OnClickListener,
         SwipeRefreshLayout.OnRefreshListener,
-        IWeatherReceiver, IPermissionCallback {
+        IWeatherReceiver, IPermissionCallback, IMessageProvider {
     private static final int CHOOSE_CITY = 1;
     private static final String TAG = WeatherActivity.class.getSimpleName();
 
@@ -92,8 +93,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     private PrimaryDrawerItem favorites;
     private boolean opened = false;
     private final int subItemIndex = 2000;
-
-    //private NavigationDrawer drawer = new NavigationDrawer();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,8 +118,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void initNavigationDrawer() {
-        //drawer.init(this, toolbar);
-
         Logger.println("drawer", "init");
         /** Инициализация элементов меню */
         final DividerDrawerItem divider = new DividerDrawerItem();
@@ -286,6 +283,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     protected void onResume() {
         super.onResume();
         PositionManager.getInstance().setReceiver(this);
+        PositionManager.getInstance().setMessageProvider(this);
         PositionManager.getInstance().updateWeatherFromDB();
         Logger.println(TAG, "OnResume");
         updateBadges();
@@ -318,6 +316,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     protected void onPause() {
         super.onPause();
         closeSubItems();
+        PositionManager.getInstance().setMessageProvider(null);
         PositionManager.getInstance().setReceiver(null);
     }
 

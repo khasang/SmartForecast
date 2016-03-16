@@ -19,10 +19,9 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.R;
-import com.khasang.forecast.interfaces.IWeatherReceiver;
+import com.khasang.forecast.interfaces.IMessageProvider;
+import com.khasang.forecast.position.Position;
 import com.khasang.forecast.position.PositionManager;
-import com.khasang.forecast.position.Weather;
-import com.khasang.forecast.stations.WeatherStation;
 import com.romainpiel.shimmer.Shimmer;
 import com.romainpiel.shimmer.ShimmerTextView;
 
@@ -30,7 +29,6 @@ import net.frakbot.jumpingbeans.JumpingBeans;
 
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.Map;
 
 import pl.droidsonroids.gif.AnimationListener;
 import pl.droidsonroids.gif.GifDrawable;
@@ -38,7 +36,7 @@ import pl.droidsonroids.gif.GifImageView;
 
 public class SplashScreenActivity
         extends AppCompatActivity
-        implements Animation.AnimationListener, AnimationListener, IWeatherReceiver {
+        implements Animation.AnimationListener, AnimationListener, IMessageProvider {
 
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
@@ -123,7 +121,7 @@ public class SplashScreenActivity
     protected void onPause() {
         super.onPause();
         if (isGooglePlayServicesInstalled) {
-            PositionManager.getInstance().setReceiver(null);
+            PositionManager.getInstance().setMessageProvider(null);
         }
     }
 
@@ -182,16 +180,6 @@ public class SplashScreenActivity
         if (isGooglePlayServicesInstalled) {
             startWeatherActivity();
         }
-    }
-
-    @Override
-    public boolean receiveHourlyWeatherFirst() {
-        return false;
-    }
-
-    @Override
-    public void updateInterface(WeatherStation.ResponseType responseType, Map<Calendar, Weather> forecast) {
-
     }
 
     @Override
