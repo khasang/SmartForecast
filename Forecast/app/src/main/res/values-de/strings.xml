@@ -80,7 +80,7 @@
     <string name="pref_description_enable_gps">GPS verwenden um Ihren Standort zu bestimmen</string>
 
     <string name="pref_title_units">Temperatureinheiten</string>
-    <string name="error_gps_permission">Die Positionierung ist nicht möglich.\nEs gibt keine Rechte um GPS und Betreiberressourcen zu benutzen.</string>
+    <string name="error_gps_permission">Es gibt keine Rechte um GPS und Betreiberressourcen zu benutzen.</string>
     <string name="clear_new_location_name">Eingabefeld sauber machen</string>
     <string name="coordinates_error">Nicht korrekte Ortskoordinaten</string>
     <string name="error_gps_disabled">In Anwendungseinstellungen ist die Möglichkeit deaktiviert um die Koordinaten aus dem GPS zu erhalten</string>

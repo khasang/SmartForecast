@@ -91,7 +91,7 @@
     <string name="pref_units_kelvin" translatable="false">kelvin</string>
     <string name="pref_units_fahrenheit" translatable="false">fahrenheit</string>
 
-    <string name="error_gps_permission">Positioning is not possible.\nOut of the rights to use the gps and resources service provider</string>
+    <string name="error_gps_permission">Out of the rights to use the gps and resources service provider</string>
     <string name="clear_new_location_name">Clear the input field</string>
     <string name="coordinates_error">Not correct location coordinates</string>
     <string name="error_gps_disabled">In application settings disabled the ability to get the coordinates from the GPS</string>

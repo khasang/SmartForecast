@@ -13,6 +13,9 @@ import android.support.v7.preference.PreferenceManager;
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.R;
+import com.khasang.forecast.exceptions.AccessFineLocationNotGrantedException;
+import com.khasang.forecast.exceptions.GpsIsDisabledException;
+import com.khasang.forecast.exceptions.NoAvailableLocationServiceException;
 import com.khasang.forecast.interfaces.IWeatherReceiver;
 import com.khasang.forecast.location.CurrentLocationManager;
 import com.khasang.forecast.exceptions.EmptyCurrentAddressException;
@@ -46,12 +49,12 @@ public class PositionManager {
     private volatile Position currentLocation; // Здесь лежит текущая по местоположению локация (там где находится пользователь)
     private volatile HashMap<String, Position> positions;
     List<String> favouritesPositions;
-    private IWeatherReceiver receiver;
+    private volatile IWeatherReceiver receiver;
     private SQLiteProcessData dbManager;
     private boolean lastResponseIsFailure;
     private CurrentLocationManager locationManager;
 
-    public void setReceiver(IWeatherReceiver receiver) {
+    public synchronized void setReceiver(IWeatherReceiver receiver) {
         this.receiver = receiver;
     }
 
@@ -66,6 +69,20 @@ public class PositionManager {
             synchronized (PositionManager.class) {
                 if (instance == null) {
                     instance = new PositionManager();
+                    instance.setReceiver(null);
+                    instance.initManager();
+                }
+            }
+        }
+        return instance;
+    }
+
+    public static PositionManager getInstance(IWeatherReceiver receiver) {
+        if (instance == null) {
+            synchronized (PositionManager.class) {
+                if (instance == null) {
+                    instance = new PositionManager();
+                    instance.setReceiver(receiver);
                     instance.initManager();
                 }
             }
@@ -78,7 +95,6 @@ public class PositionManager {
     }
 
     public void initManager() {
-        receiver = null;
         dbManager = new SQLiteProcessData();
         temperatureMetric = dbManager.loadTemperatureMetrics();
         speedMetric = dbManager.loadSpeedMetrics();
@@ -134,12 +150,12 @@ public class PositionManager {
 
     public void saveCurrPosition(boolean saveCurrentLocation) {
         try {
-            if (saveCurrentLocation) {
-                dbManager.saveLastCurrentLocationName(currentLocation.getLocationName());
-                dbManager.saveLastPositionCoordinates(currentLocation.getCoordinate());
-            } else {
+            if (!saveCurrentLocation && positionInListPresent(activePosition.getLocationName())) {
                 dbManager.saveLastCurrentLocationName(activePosition.getLocationName());
                 dbManager.saveLastPositionCoordinates(activePosition.getCoordinate());
+            } else {
+                dbManager.saveLastCurrentLocationName(currentLocation.getLocationName());
+                dbManager.saveLastPositionCoordinates(currentLocation.getCoordinate());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -206,6 +222,8 @@ public class PositionManager {
             if (!townName.isEmpty() && positionInListPresent(townName)) {
                 activePosition = getPosition(townName);
             } else {
+                currentLocation.setLocationName(dbManager.loadСurrentTown());
+                currentLocation.setCoordinate(dbManager.loadLastPositionCoordinates());
                 activePosition = currentLocation;
             }
         }
@@ -589,6 +607,9 @@ public class PositionManager {
         locationManager.giveGpsAccess(true);
         try {
             updateCurrentLocation(locationManager.getLastLocation());
+        } catch (AccessFineLocationNotGrantedException e) {
+            sendMessage(R.string.error_gps_permission, Snackbar.LENGTH_LONG);
+            e.printStackTrace();
         } catch (EmptyCurrentAddressException e) {
             e.printStackTrace();
         }
@@ -604,9 +625,17 @@ public class PositionManager {
 
     public void updateCurrentLocationCoordinates() {
         try {
-            locationManager.updateCurrentLocationCoordinates();
+            locationManager.updateCurrLocCoordinates();
+        } catch (NoAvailableLocationServiceException e) {
+            sendMessage(R.string.error_location_services_are_not_active, Snackbar.LENGTH_LONG);
+            e.printStackTrace();
+        } catch (GpsIsDisabledException e) {
+            sendMessage(R.string.error_gps_disabled, Snackbar.LENGTH_LONG);
+            e.printStackTrace();
+        } catch (AccessFineLocationNotGrantedException e) {
+            sendMessage(R.string.error_gps_permission, Snackbar.LENGTH_LONG);
+            e.printStackTrace();
         } catch (NullPointerException e) {
-            // Возможно активити уже уничтожено
             e.printStackTrace();
         }
     }
@@ -654,13 +683,13 @@ public class PositionManager {
         return false;
     }
 
-    private void sendMessage(CharSequence string, int length) {
+    private synchronized void sendMessage(CharSequence string, int length) {
         if (receiver != null) {
             receiver.showMessageToUser(string, length);
         }
     }
 
-    private void sendMessage(int stringId, int length) {
+    private synchronized void sendMessage(int stringId, int length) {
         if (receiver != null) {
             receiver.showMessageToUser(stringId, length);
         }

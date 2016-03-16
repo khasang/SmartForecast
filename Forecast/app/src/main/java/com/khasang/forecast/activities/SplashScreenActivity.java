@@ -115,22 +115,22 @@ public class SplashScreenActivity
         super.onResume();
         if (checkPlayServices()) {
             isGooglePlayServicesInstalled = true;
+            PositionManager.getInstance(this);
             PositionManager.getInstance();
-            PositionManager.getInstance().setReceiver(this);
         }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        if (isGooglePlayServicesInstalled) {
+            PositionManager.getInstance().setReceiver(null);
+        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if (isGooglePlayServicesInstalled) {
-            PositionManager.getInstance().setReceiver(null);
-        }
     }
 
     private boolean checkPlayServices() {
@@ -197,7 +197,7 @@ public class SplashScreenActivity
 
     @Override
     public void showMessageToUser(CharSequence string, int length) {
-        AppUtils.showSnackBar(findViewById(R.id.coordinatorLayout), string, length);
+        AppUtils.showSnackBar(this, findViewById(R.id.coordinatorLayout), string, length);
     }
 
     @Override

@@ -294,7 +294,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 Collections.sort(cityList);
                 recyclerAdapter.notifyDataSetChanged();
             } else {
-                AppUtils.showSnackBar(findViewById(R.id.fabBtn), getString(R.string.city_exist), Snackbar.LENGTH_LONG);
+                AppUtils.showSnackBar(this, findViewById(R.id.fabBtn), getString(R.string.city_exist), Snackbar.LENGTH_LONG);
             }
         }
         swapVisibilityTextOrList();

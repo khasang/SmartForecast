@@ -280,12 +280,12 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onStart() {
         super.onStart();
-        PositionManager.getInstance().setReceiver(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        PositionManager.getInstance().setReceiver(this);
         PositionManager.getInstance().updateWeatherFromDB();
         Logger.println(TAG, "OnResume");
         updateBadges();
@@ -318,6 +318,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     protected void onPause() {
         super.onPause();
         closeSubItems();
+        PositionManager.getInstance().setReceiver(null);
     }
 
     @Override
@@ -326,7 +327,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         boolean saveCurrentLocation = sp.getString(getString(R.string.pref_location_key), getString(R.string.pref_location_current)).equals(getString(R.string.pref_location_current));
         PositionManager.getInstance().saveSettings(saveCurrentLocation);
-        PositionManager.getInstance().setReceiver(null);
     }
 
     @Override
@@ -632,7 +632,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void showMessageToUser(CharSequence string, int length) {
-        AppUtils.showSnackBar(findViewById(R.id.coordinatorLayout), string, length);
+        AppUtils.showSnackBar(this, findViewById(R.id.coordinatorLayout), string, length);
     }
 
     @Override
