@@ -1,23 +1,22 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             xmlns:app="http://schemas.android.com/apk/res-auto">
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/infoTV"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="@string/infoTV"/>
+        android:text="@string/infoTV" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipToPadding="false">
-    </android.support.v7.widget.RecyclerView>
+        android:clipToPadding="false" />
 
-    <include layout="@layout/toolbar"/>
+    <include layout="@layout/toolbar" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabBtn"
@@ -25,8 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
-        android:src="@drawable/ic_add"
         android:contentDescription="@null"
-        android:elevation="@dimen/fab_elevation"/>
-
-</FrameLayout>
+        android:elevation="@dimen/fab_elevation"
+        android:src="@drawable/ic_add" />
+</android.support.design.widget.CoordinatorLayout>

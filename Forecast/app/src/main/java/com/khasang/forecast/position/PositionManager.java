@@ -7,12 +7,16 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v7.preference.PreferenceManager;
-import android.widget.Toast;
 
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.R;
+import com.khasang.forecast.exceptions.AccessFineLocationNotGrantedException;
+import com.khasang.forecast.exceptions.GpsIsDisabledException;
+import com.khasang.forecast.exceptions.NoAvailableLocationServiceException;
+import com.khasang.forecast.interfaces.IMessageProvider;
 import com.khasang.forecast.interfaces.IWeatherReceiver;
 import com.khasang.forecast.location.CurrentLocationManager;
 import com.khasang.forecast.exceptions.EmptyCurrentAddressException;
@@ -46,13 +50,18 @@ public class PositionManager {
     private volatile Position currentLocation; // Здесь лежит текущая по местоположению локация (там где находится пользователь)
     private volatile HashMap<String, Position> positions;
     List<String> favouritesPositions;
-    private IWeatherReceiver weatherReceiver;
+    private volatile IWeatherReceiver receiver;
+    private volatile IMessageProvider messageProvider;
     private SQLiteProcessData dbManager;
     private boolean lastResponseIsFailure;
     private CurrentLocationManager locationManager;
 
-    public void setWeatherReceiver(IWeatherReceiver weatherReceiver) {
-        this.weatherReceiver = weatherReceiver;
+    public synchronized void setReceiver(IWeatherReceiver receiver) {
+        this.receiver = receiver;
+    }
+
+    public synchronized void setMessageProvider(IMessageProvider provider) {
+        this.messageProvider = provider;
     }
 
     private static volatile PositionManager instance;
@@ -66,6 +75,20 @@ public class PositionManager {
             synchronized (PositionManager.class) {
                 if (instance == null) {
                     instance = new PositionManager();
+                    instance.setReceiver(null);
+                    instance.initManager();
+                }
+            }
+        }
+        return instance;
+    }
+
+    public static PositionManager getInstance(IMessageProvider provider) {
+        if (instance == null) {
+            synchronized (PositionManager.class) {
+                if (instance == null) {
+                    instance = new PositionManager();
+                    instance.setMessageProvider(provider);
                     instance.initManager();
                 }
             }
@@ -78,7 +101,6 @@ public class PositionManager {
     }
 
     public void initManager() {
-        weatherReceiver = null;
         dbManager = new SQLiteProcessData();
         temperatureMetric = dbManager.loadTemperatureMetrics();
         speedMetric = dbManager.loadSpeedMetrics();
@@ -134,12 +156,12 @@ public class PositionManager {
 
     public void saveCurrPosition(boolean saveCurrentLocation) {
         try {
-            if (saveCurrentLocation) {
-                dbManager.saveLastCurrentLocationName(currentLocation.getLocationName());
-                dbManager.saveLastPositionCoordinates(currentLocation.getCoordinate());
-            } else {
+            if (!saveCurrentLocation && positionInListPresent(activePosition.getLocationName())) {
                 dbManager.saveLastCurrentLocationName(activePosition.getLocationName());
                 dbManager.saveLastPositionCoordinates(activePosition.getCoordinate());
+            } else {
+                dbManager.saveLastCurrentLocationName(currentLocation.getLocationName());
+                dbManager.saveLastPositionCoordinates(currentLocation.getCoordinate());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -206,6 +228,8 @@ public class PositionManager {
             if (!townName.isEmpty() && positionInListPresent(townName)) {
                 activePosition = getPosition(townName);
             } else {
+                currentLocation.setLocationName(dbManager.loadСurrentTown());
+                currentLocation.setCoordinate(dbManager.loadLastPositionCoordinates());
                 activePosition = currentLocation;
             }
         }
@@ -220,7 +244,7 @@ public class PositionManager {
      */
     public void addPosition(String name, Coordinate coordinates) {
         if (positionInListPresent(name)) {
-            Toast.makeText(MyApplication.getAppContext(), R.string.city_exist, Toast.LENGTH_SHORT).show();
+            sendMessage(R.string.city_exist, Snackbar.LENGTH_LONG);
             return;
         }
         PositionFactory positionFactory = new PositionFactory(positions);
@@ -284,7 +308,7 @@ public class PositionManager {
         } else if (positions.containsKey(name)) {
             activePosition = positions.get(name);
         } else {
-            Toast.makeText(MyApplication.getAppContext(), "Не могу определить координаты запрашиваемого местоположения", Toast.LENGTH_SHORT).show();
+            sendMessage(R.string.error_get_coordinates, Snackbar.LENGTH_LONG);
         }
     }
 
@@ -389,7 +413,7 @@ public class PositionManager {
      */
     public void updateWeather() {
         if (activePosition == null || !positionIsPresent(activePosition.getLocationName())) {
-            Toast.makeText(MyApplication.getAppContext(), R.string.update_error_location_not_found, Toast.LENGTH_SHORT).show();
+            sendMessage(R.string.update_error_location_not_found, Snackbar.LENGTH_LONG);
             return;
         }
         if (activePosition == currentLocation) {
@@ -410,17 +434,17 @@ public class PositionManager {
             if (!activePosition.getLocationName().isEmpty()) {
                 updateWeatherFromDB();
             }
-            Toast.makeText(MyApplication.getAppContext(), R.string.coordinates_error, Toast.LENGTH_SHORT).show();
+            sendMessage(R.string.coordinates_error, Snackbar.LENGTH_LONG);
         } else if (!isNetworkAvailable(MyApplication.getAppContext())) {
             if (!activePosition.getLocationName().isEmpty()) {
                 updateWeatherFromDB();
             }
-            Toast.makeText(MyApplication.getAppContext(), R.string.update_error_net_not_availble, Toast.LENGTH_SHORT).show();
+            sendMessage(R.string.update_error_net_not_availble, Snackbar.LENGTH_LONG);
         } else {
             LinkedList<WeatherStation.ResponseType> requestQueue = new LinkedList<>();
             requestQueue.add(WeatherStation.ResponseType.CURRENT);
             try {
-                if (weatherReceiver.receiveHourlyWeatherFirst()) {
+                if (receiver.receiveHourlyWeatherFirst()) {
                     requestQueue.addLast(WeatherStation.ResponseType.HOURLY);
                     requestQueue.addLast(WeatherStation.ResponseType.DAILY);
                 } else {
@@ -439,13 +463,13 @@ public class PositionManager {
         try {
             switch (responseType) {
                 case CURRENT:
-                    weatherReceiver.updateInterface(responseType, getCurrentWeatherFromDB(currStation.getServiceType(), positionName));
+                    receiver.updateInterface(responseType, getCurrentWeatherFromDB(currStation.getServiceType(), positionName));
                     break;
                 case HOURLY:
-                    weatherReceiver.updateInterface(responseType, getHourlyWeatherFromDB(currStation.getServiceType(), positionName));
+                    receiver.updateInterface(responseType, getHourlyWeatherFromDB(currStation.getServiceType(), positionName));
                     break;
                 case DAILY:
-                    weatherReceiver.updateInterface(responseType, getDailyWeatherFromDB(currStation.getServiceType(), positionName));
+                    receiver.updateInterface(responseType, getDailyWeatherFromDB(currStation.getServiceType(), positionName));
                     break;
             }
         } catch (NullPointerException e) {
@@ -507,7 +531,7 @@ public class PositionManager {
                 entry.setValue(AppUtils.formatWeather(entry.getValue(), temperatureMetric, speedMetric, pressureMetric));
             }
             try {
-                weatherReceiver.updateInterface(rType, weather);
+                receiver.updateInterface(rType, weather);
             } catch (NullPointerException e) {
                 // Ответ пришел, когда активити уже уничтожено
                 e.printStackTrace();
@@ -524,7 +548,7 @@ public class PositionManager {
 
     public void onFailureResponse(LinkedList<WeatherStation.ResponseType> requestList, int cityID, WeatherStationFactory.ServiceType sType) {
         if (!lastResponseIsFailure) {
-            Toast.makeText(MyApplication.getAppContext(), R.string.update_error_from + sType.toString(), Toast.LENGTH_SHORT).show();
+            sendMessage(MyApplication.getAppContext().getString(R.string.update_error_from) + sType.toString(), Snackbar.LENGTH_LONG);
             lastResponseIsFailure = true;
         }
         WeatherStation.ResponseType rType = requestList.pollFirst();
@@ -589,12 +613,15 @@ public class PositionManager {
         locationManager.giveGpsAccess(true);
         try {
             updateCurrentLocation(locationManager.getLastLocation());
+        } catch (AccessFineLocationNotGrantedException e) {
+            sendMessage(R.string.error_gps_permission, Snackbar.LENGTH_LONG);
+            e.printStackTrace();
         } catch (EmptyCurrentAddressException e) {
             e.printStackTrace();
         }
     }
 
-    public boolean isSomeLocationProviderAvailable () {
+    public boolean isSomeLocationProviderAvailable() {
         return locationManager.checkProviders();
     }
 
@@ -604,9 +631,17 @@ public class PositionManager {
 
     public void updateCurrentLocationCoordinates() {
         try {
-            locationManager.updateCurrentLocationCoordinates();
+            locationManager.updateCurrLocCoordinates();
+        } catch (NoAvailableLocationServiceException e) {
+            sendMessage(R.string.error_location_services_are_not_active, Snackbar.LENGTH_LONG);
+            e.printStackTrace();
+        } catch (GpsIsDisabledException e) {
+            sendMessage(R.string.error_gps_disabled, Snackbar.LENGTH_LONG);
+            e.printStackTrace();
+        } catch (AccessFineLocationNotGrantedException e) {
+            sendMessage(R.string.error_gps_permission, Snackbar.LENGTH_LONG);
+            e.printStackTrace();
         } catch (NullPointerException e) {
-            // Возможно активити уже уничтожено
             e.printStackTrace();
         }
     }
@@ -632,6 +667,7 @@ public class PositionManager {
 
     private boolean updateCurrentLocation(Location location) {
         if (location == null) {
+            sendMessage(R.string.error_service_not_available, Snackbar.LENGTH_LONG);
             return false;
         }
         Geocoder geocoder = new Geocoder(MyApplication.getAppContext());
@@ -641,16 +677,31 @@ public class PositionManager {
             currentLocation.setCoordinate(new Coordinate(location.getLatitude(), location.getLongitude()));
             return true;
         } catch (IOException e) {
-            Toast.makeText(MyApplication.getAppContext(), R.string.error_service_not_available, Toast.LENGTH_SHORT).show();
+            sendMessage(R.string.error_service_not_available, Snackbar.LENGTH_LONG);
             e.printStackTrace();
         } catch (IllegalArgumentException e) {
-            Toast.makeText(MyApplication.getAppContext(), R.string.invalid_lang_long_used, Toast.LENGTH_SHORT).show();
+            sendMessage(R.string.invalid_lang_long_used, Snackbar.LENGTH_LONG);
             e.printStackTrace();
         } catch (EmptyCurrentAddressException | NoAvailableAddressesException | NullPointerException e) {
-            Toast.makeText(MyApplication.getAppContext(), R.string.no_address_found, Toast.LENGTH_SHORT).show();
+            sendMessage(R.string.no_address_found, Snackbar.LENGTH_LONG);
             e.printStackTrace();
         }
-//        currentLocation.setCoordinate(null);
         return false;
+    }
+
+    private synchronized void sendMessage(CharSequence string, int length) {
+        try {
+            messageProvider.showMessageToUser(string, length);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private synchronized void sendMessage(int stringId, int length) {
+        try {
+            messageProvider.showMessageToUser(stringId, length);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
     }
 }

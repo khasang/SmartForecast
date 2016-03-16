@@ -28,14 +28,14 @@
     <string name="clear_favorite">To remove all cities</string>
     <string name="refresh">Refresh</string>
     <string name="change_location">Change Location</string>
-    <string name="city_exist">The city is already present at the list</string>
-    <string name="update_error_location_not_found">Error of updating of weather.\nThe city is absent in the list of locations.</string>
-    <string name="update_error_net_not_availble">Error of updating of weather.\nThe network is inaccessible.</string>
+    <string name="city_exist">The city is already present at the list.</string>
+    <string name="update_error_location_not_found">The city is absent in the list of locations.</string>
+    <string name="update_error_net_not_availble">Error of updating! The network is inaccessible.</string>
     <string name="update_error_from">"Error of updating of weather from station "</string>
     <string name="coordinates_not_found">Coordinates of location %1$s aren\'t found.\nThe location isn\'t added</string>
     <string name="msg_add_city">To continue, you must add the city.</string>
     <string name="msg_choose_city">To continue, select a city.</string>
-    <string name="msg_no_city">Update failed.\nThe city is not in the list of locations.</string>
+    <string name="msg_no_city">The city is not in the list of locations.</string>
     <string name="msg_clear_city_list">Do you want to clear the list of cities?</string>
     <string name="btn_yes">Yes</string>
     <string name="btn_no">No</string>
@@ -70,8 +70,8 @@
     <string name="drawer_item_settings">Settings</string>
     <string name="drawer_item_feedback">Feedback</string>
 
-    <string name="error_service_not_available">The coordinates of current location are not detected.\nNetwork or other I/O problem.</string>
-    <string name="error_geo_service_not_available">The coordinates of the location are not detected.\nNetwork or other I/O problem.</string>
+    <string name="error_service_not_available">The coordinates of current location are not detected.</string>
+    <string name="error_geo_service_not_available">The coordinates of the location are not detected.</string>
     <string name="invalid_lang_long_used">Error of detection coordinates for a location</string>
     <string name="no_address_found">Address of current location is not found</string>
     <string name="location_manager" translatable="false">Location Manager</string>
@@ -91,7 +91,7 @@
     <string name="pref_units_kelvin" translatable="false">kelvin</string>
     <string name="pref_units_fahrenheit" translatable="false">fahrenheit</string>
 
-    <string name="error_gps_permission">Positioning is not possible.\nOut of the rights to use the gps and resources service provider</string>
+    <string name="error_gps_permission">Out of the rights to use the gps and resources service provider</string>
     <string name="clear_new_location_name">Clear the input field</string>
     <string name="coordinates_error">Not correct location coordinates</string>
     <string name="error_gps_disabled">In application settings disabled the ability to get the coordinates from the GPS</string>
@@ -143,4 +143,6 @@
     <string name="pref_category_start">Parameters of start</string>
     <string name="pref_category_general">General</string>
     <string name="warning_message_gps">The use of GPS can increase the speed of discharge of the battery, however, will certainly increase the location accuracy</string>
+
+    <string name="error_get_coordinates">Can't determine the coordinates of the requested location</string>
 </resources>

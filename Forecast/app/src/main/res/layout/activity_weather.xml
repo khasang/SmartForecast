@@ -1,34 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
-    android:id="@+id/frame_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frame_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.WeatherActivity">
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:id="@+id/coordinatorLayout">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:elevation="@dimen/appbar_elevation"
-            >
+            app:elevation="@dimen/appbar_elevation">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar_material"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:elevation="0dp"
-                app:layout_scrollFlags="scroll|enterAlways"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-
-            </android.support.v7.widget.Toolbar>
+                app:layout_scrollFlags="scroll|enterAlways"/>
 
             <android.support.v7.widget.GridLayout
                 android:layout_width="match_parent"
@@ -51,8 +49,7 @@
                         android:id="@+id/iv_curr_weather"
                         android:layout_width="96dp"
                         android:layout_height="96dp"
-                        android:src="@drawable/ic_cloud"
-                        />
+                        android:src="@drawable/ic_cloud" />
 
                     <LinearLayout
                         android:id="@+id/wind_speed"
@@ -66,16 +63,16 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:src="@drawable/ic_wind"/>
+                            android:src="@drawable/ic_wind" />
 
                         <TextView
+                            android:id="@+id/wind"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="16dp"
                             android:text="--/--"
-                            android:textColor="@color/icons"
-                            android:id="@+id/wind"/>
+                            android:textColor="@color/icons" />
                     </LinearLayout>
 
 
@@ -90,46 +87,44 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:src="@drawable/ic_humidity"/>
+                            android:src="@drawable/ic_humidity" />
 
                         <TextView
+                            android:id="@+id/humidity"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="16dp"
                             android:text="--/--"
-                            android:textColor="@color/icons"
-                            android:id="@+id/humidity"/>
+                            android:textColor="@color/icons" />
                     </LinearLayout>
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
+                    android:gravity="center"
                     android:orientation="vertical"
-                    app:layout_columnWeight="1"
-                    android:gravity="center">
+                    app:layout_columnWeight="1">
 
                     <TextView
                         android:id="@+id/temperature"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="-1°C"
+                        android:text="--/--"
                         android:textColor="#fff"
-                        android:textSize="56sp"/>
+                        android:textSize="56sp" />
 
                     <TextView
                         android:id="@+id/precipitation"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/temperature"
                         android:layout_below="@+id/temperature"
                         android:maxLines="2"
                         android:text="--/--"
                         android:textColor="#fff"
-                        android:textSize="24sp"
-                        android:layout_alignLeft="@+id/temperature"
-                        />
-
+                        android:textSize="24sp" />
 
                 </RelativeLayout>
 
@@ -144,11 +139,11 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <ProgressBar
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:id="@+id/progressbar"
                 style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                android:layout_gravity="center_horizontal|top"/>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|top" />
         </FrameLayout>
 
         <android.support.design.widget.FloatingActionButton
@@ -157,12 +152,12 @@
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:clickable="true"
-            app:elevation="@dimen/fab_elevation"
-            app:borderWidth="0dp"
             android:src="@drawable/ic_by_day"
+            app:borderWidth="0dp"
+            app:elevation="@dimen/fab_elevation"
             app:layout_anchor="@id/appbar"
             app:layout_anchorGravity="bottom|right|end"
-            app:layout_behavior="com.khasang.forecast.ScrollAwareFabBehavior"/>
+            app:layout_behavior="com.khasang.forecast.ScrollAwareFabBehavior" />
 
     </android.support.design.widget.CoordinatorLayout>
 

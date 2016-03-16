@@ -1,6 +1,14 @@
 package com.khasang.forecast;
 
+import android.app.Activity;
 import android.content.Context;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.khasang.forecast.models.DailyForecastList;
 import com.khasang.forecast.models.DailyResponse;
@@ -110,6 +118,39 @@ public class AppUtils {
 
         public abstract PressureMetrics change();
     }
+
+    public static void showSnackBar(Activity activity, View view, CharSequence string, int length) {
+        if (view == null) {
+            if (activity != null) {
+                showInfoMessage(activity, string).show();
+            } else {
+                showInfoMessage(string).show();
+            }
+            return;
+        }
+        Snackbar snackbar = Snackbar.make(view, string, length);
+        View snackbarView = snackbar.getView();
+        //        Default background fill: #323232 100%
+        //        snackbarView.setBackgroundColor(ContextCompat.getColor(MyApplication.getAppContext(), R.color.primary_dark));
+        TextView textView = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setTextColor(ContextCompat.getColor(MyApplication.getAppContext(), R.color.snackbar_text));
+        snackbar.show();
+    }
+
+    public static Toast showInfoMessage(Activity activity, CharSequence string) {
+        LayoutInflater inflater = activity.getLayoutInflater();
+        View layout = inflater.inflate(R.layout.warning_toast, ((ViewGroup) activity.findViewById(R.id.toast_layout_root)));
+        ((TextView) layout.findViewById(R.id.warningMessage)).setText(string);
+        Toast toast = new Toast(MyApplication.getAppContext());
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.setView(layout);
+        return toast;
+    }
+
+    public static Toast showInfoMessage(CharSequence string) {
+        return Toast.makeText(MyApplication.getAppContext(), string, Toast.LENGTH_SHORT);
+    }
+
 
     /**
      * Метод для конвертирования ответа от API в коллекцию типа {@link Map}<{@link Calendar}, {@link Weather}>
