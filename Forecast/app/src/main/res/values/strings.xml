@@ -144,6 +144,5 @@
     <string name="pref_category_general">General</string>
     <string name="warning_message_gps">The use of GPS can increase the speed of discharge of the battery, however, will certainly increase the location accuracy</string>
 
-    <!-- TODO translate -->
-    <string name="error_get_coordinates">Не могу определить координаты запрашиваемого местоположения</string>
+    <string name="error_get_coordinates">Can't determine the coordinates of the requested location</string>
 </resources>

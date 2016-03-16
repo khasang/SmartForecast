@@ -119,4 +119,6 @@
     <string name="pref_category_start">Startoptionen</string>
     <string name="pref_category_general">Gemeinsam</string>
     <string name="warning_message_gps">Die Benutzung von GPS kann die Geschwindigkeit der Entladung der Batterie erhöhen, jedoch wird sicherlich auch die Genauigkeit der Positionsbestimmung erhöhen</string>
+
+    <string name="error_get_coordinates">Kann nicht die Koordinaten der angeforderten Standort bestimmen</string>
 </resources>

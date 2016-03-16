@@ -119,4 +119,6 @@
     <string name="pref_category_start">Параметры запуска</string>
     <string name="pref_category_general">Общие</string>
     <string name="warning_message_gps">Использование GPS может увеличить скорость рязряда батареи, однако, несомненно, увеличит точность определения местоположения</string>
+
+    <string name="error_get_coordinates">Не могу определить координаты запрашиваемого местоположения</string>
 </resources>
