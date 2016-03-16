@@ -43,6 +43,7 @@ import com.khasang.forecast.Maps;
 import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.exceptions.EmptyCurrentAddressException;
 import com.khasang.forecast.exceptions.NoAvailableAddressesException;
+import com.khasang.forecast.interfaces.IMapDataReceiver;
 import com.khasang.forecast.location.LocationParser;
 import com.khasang.forecast.position.Coordinate;
 import com.khasang.forecast.Logger;
@@ -67,7 +68,7 @@ import java.util.regex.Pattern;
  * Activity для выбора местоположения
  */
 
-public class CityPickerActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
+public class CityPickerActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener, IMapDataReceiver {
     private final String TAG = this.getClass().getSimpleName();
     public final static String CITY_PICKER_TAG = "com.khasang.forecast.activities.CityPickerActivity";
 
@@ -79,7 +80,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     private Toolbar toolbar;
     private volatile FloatingActionButton fabBtn;
 
-    private Maps maps;
     private DelayedAutoCompleteTextView chooseCity;
 
     @Override
@@ -306,14 +306,15 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         swapVisibilityTextOrList();
     }
 
-    private void closeMap() {
+    private void closeMap(Maps map) {
         Fragment frag = getSupportFragmentManager().findFragmentById(R.id.map);
+        map.closeDataReceiver();
         if (frag != null) {
             getSupportFragmentManager().beginTransaction().remove(getSupportFragmentManager().findFragmentById(R.id.map)).commit();
         }
     }
 
-    private void setLocationOnMap(String city) {
+    private void setLocationOnMap(Maps maps, String city) {
         try {
             Coordinate coordinate = getTownCoordinates(city);
             double latitude = coordinate != null ? coordinate.getLatitude() : 0;
@@ -346,7 +347,13 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         return address;
     }
 
-    public void setLocationAddress(double latitude, double longitude) {
+    @Override
+    public void setLocationNameFromMap(String name) {
+        chooseCity.setText(name);
+    }
+
+    @Override
+    public void setLocationCoordinatesFromMap(Maps maps, double latitude, double longitude) {
         try {
             String location = ConvertPointToLocation(latitude, longitude);
             if (location.isEmpty()) {
@@ -361,6 +368,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
+
     private void setBtnClear(View view) {
         view.findViewById(R.id.btnClear).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -370,7 +378,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         });
     }
 
-    private void setMarkersOnMap() {
+    private void setMarkersOnMap(Maps maps) {
         int itemsCount = chooseCity.getAdapter().getCount();
         if ((itemsCount > 0) && (itemsCount < 7)) {
             maps.deleteAllMarkers();
@@ -409,16 +417,14 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             }
         }
     */
-    public void setChooseCityText(String text) {
-        chooseCity.setText(text);
-    }
 
     private void showChooseCityDialog() {
         final Pattern pattern = Pattern.compile("^[\\w\\s,`'()-]+$");
-        final View view = getLayoutInflater().inflate(R.layout.dialog_pick_location, (ViewGroup)null);
+        final View view = getLayoutInflater().inflate(R.layout.dialog_pick_location, (ViewGroup) null);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         setBtnClear(view);
         final GooglePlacesAutocompleteAdapter googlePlacesAutocompleteAdapter = new GooglePlacesAutocompleteAdapter(this, R.layout.autocomplete_city_textview_item);
+        final Maps map = new Maps(this, this);
         chooseCity = (DelayedAutoCompleteTextView) view.findViewById(R.id.editTextCityName);
         chooseCity.setAdapter(googlePlacesAutocompleteAdapter);
         chooseCity.setLoadingIndicator((ProgressBar) view.findViewById(R.id.autocomplete_progressbar));
@@ -428,7 +434,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 String description = (String) parent.getItemAtPosition(position);
                 chooseCity.setError(null);
                 chooseCity.setText(description);
-                setLocationOnMap(description);
+                setLocationOnMap(map, description);
                 hideSoftKeyboard(getApplicationContext());
                 googlePlacesAutocompleteAdapter.clear();
             }
@@ -445,7 +451,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                             e.printStackTrace();
                         } finally {
                             fabBtn.setEnabled(true);
-                            closeMap();
+                            closeMap(map);
                         }
                     }
                 })
@@ -454,7 +460,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                     public void onClick(DialogInterface dialog, int which) {
                         fabBtn.setEnabled(true);
                         dialog.cancel();
-                        closeMap();
+                        closeMap(map);
                     }
                 });
         final AlertDialog dialog = builder.create();
@@ -469,7 +475,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             public void onDismiss(DialogInterface dialog) {
                 fabBtn.setEnabled(true);
                 dialog.cancel();
-                closeMap();
+                closeMap(map);
             }
         });
         chooseCity.addTextChangedListener(new TextWatcher() {
@@ -499,7 +505,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 }
                 char lastSym = s.toString().toCharArray()[s.length() - 1];
                 if ((chooseCity.getText().toString().trim().length() % 4 == 0) || (lastSym == ' ') || (lastSym == '-')) {
-                    setMarkersOnMap();
+                    setMarkersOnMap(map);
                 }
             }
         });
@@ -514,7 +520,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                             break;
                         case KeyEvent.KEYCODE_BACK:     // 4
                             dialog.cancel();
-                            closeMap();
+                            closeMap(map);
                             break;
                         default:
                             Log.i("DIALOG_ENTER", "Key code - " + Integer.toString(keyCode));
@@ -546,7 +552,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         //dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         dialog.show();
-        maps = new Maps(this);
     }
 
     @Override
