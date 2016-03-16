@@ -116,7 +116,6 @@ public class SplashScreenActivity
         if (checkPlayServices()) {
             isGooglePlayServicesInstalled = true;
             PositionManager.getInstance(this);
-            PositionManager.getInstance();
         }
     }
 
