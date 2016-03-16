@@ -343,6 +343,8 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         } catch (EmptyCurrentAddressException | NoAvailableAddressesException e) {
             Toast.makeText(MyApplication.getAppContext(), R.string.no_address_found, Toast.LENGTH_SHORT).show();
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return address;
     }
@@ -353,19 +355,14 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     }
 
     @Override
-    public void setLocationCoordinatesFromMap(Maps maps, double latitude, double longitude) {
-        try {
-            String location = ConvertPointToLocation(latitude, longitude);
-            if (location.isEmpty()) {
-                chooseCity.setText("");
-            } else {
-                chooseCity.setText(location);
-                maps.deleteAllMarkers();
-                maps.setNewMarker(latitude, longitude, location);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+    public String setLocationCoordinatesFromMap(double latitude, double longitude) throws EmptyCurrentAddressException {
+        String location = ConvertPointToLocation(latitude, longitude);
+        if (location.isEmpty()) {
+            chooseCity.setText("");
+            throw new EmptyCurrentAddressException();
         }
+        chooseCity.setText(location);
+        return location;
     }
 
 

@@ -17,6 +17,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.khasang.forecast.activities.CityPickerActivity;
+import com.khasang.forecast.exceptions.EmptyCurrentAddressException;
 import com.khasang.forecast.interfaces.IMapDataReceiver;
 import com.khasang.forecast.position.Coordinate;
 import com.khasang.forecast.position.PositionManager;
@@ -53,7 +54,7 @@ public class Maps implements OnMapReadyCallback {
         ((SupportMapFragment) activity.getSupportFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
     }
 
-    public void closeDataReceiver () {
+    public void closeDataReceiver() {
         receiver = null;
     }
 
@@ -153,8 +154,12 @@ public class Maps implements OnMapReadyCallback {
                 try {
                     currentLatitude = latLng.latitude;
                     currentLongitude = latLng.longitude;
-                    receiver.setLocationCoordinatesFromMap(Maps.this, currentLatitude, currentLongitude);
+                    String location = receiver.setLocationCoordinatesFromMap(currentLatitude, currentLongitude);
+                    deleteAllMarkers();
+                    setNewMarker(currentLatitude, currentLongitude, location);
                     Log.d(TAG, "onMapClick: " + latLng.latitude + "," + latLng.longitude);
+                } catch (EmptyCurrentAddressException e) {
+                    e.printStackTrace();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -164,7 +169,7 @@ public class Maps implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Log.d (TAG, "onMapReady");
+        Log.d(TAG, "onMapReady");
         map = googleMap;
         if (!isMapInitialized) {
             setMapSettings(googleMap);
