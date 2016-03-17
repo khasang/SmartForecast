@@ -9,11 +9,12 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.widget.Toast;
 
 import com.khasang.forecast.MyApplication;
-import com.khasang.forecast.R;
+import com.khasang.forecast.exceptions.AccessFineLocationNotGrantedException;
 import com.khasang.forecast.exceptions.EmptyCurrentAddressException;
+import com.khasang.forecast.exceptions.GpsIsDisabledException;
+import com.khasang.forecast.exceptions.NoAvailableLocationServiceException;
 import com.khasang.forecast.position.PositionManager;
 
 import java.util.List;
@@ -47,10 +48,9 @@ public class CurrentLocationManager {
      *
      * @return объект типа {@link Location}, указывающий на последнее обнаруженное каким либо провайдером местоположение
      */
-    public Location getLastLocation() throws EmptyCurrentAddressException {
+    public Location getLastLocation() throws EmptyCurrentAddressException, AccessFineLocationNotGrantedException {
         if (ActivityCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            giveMessageAboutPermission();
-            return null;
+            throw new AccessFineLocationNotGrantedException();
         }
         Location recentLocation = null;
         List<String> matchingProviders = locationManager.getAllProviders();
@@ -102,18 +102,16 @@ public class CurrentLocationManager {
         return (gps_enabled || network_enabled);
     }
 
-    public void updateCurrentLocationCoordinates() {
+    public void updateCurrLocCoordinates() throws GpsIsDisabledException, NoAvailableLocationServiceException, AccessFineLocationNotGrantedException {
         if (ActivityCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            giveMessageAboutPermission();
-            return;
+            throw new AccessFineLocationNotGrantedException();
         }
         if (!checkProviders()) {
             if (!isGpsAccessGranted) {
-                Toast.makeText(MyApplication.getAppContext(), R.string.error_gps_disabled, Toast.LENGTH_LONG).show();
+                throw new GpsIsDisabledException();
             } else {
-                Toast.makeText(MyApplication.getAppContext(), R.string.error_location_services_are_not_active, Toast.LENGTH_LONG).show();
+                throw new NoAvailableLocationServiceException();
             }
-            return;
         }
         locationManager.removeUpdates(locationListener);
         locationManager.requestSingleUpdate(getTheBestProvider(), locationListener, null);
@@ -121,15 +119,10 @@ public class CurrentLocationManager {
 
     private void coordinatesUpdated(Location location) {
         if (ActivityCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            giveMessageAboutPermission();
             return;
         }
         locationManager.removeUpdates(locationListener);
         PositionManager.getInstance().setCurrentLocationCoordinates(location);
-    }
-
-    private void giveMessageAboutPermission() {
-        Toast.makeText(MyApplication.getAppContext(), MyApplication.getAppContext().getString(R.string.error_gps_permission), Toast.LENGTH_SHORT).show();
     }
 
     private LocationListener locationListener = new LocationListener() {

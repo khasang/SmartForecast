@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.FragmentTransaction;
@@ -20,6 +21,7 @@ import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,6 +39,7 @@ import com.khasang.forecast.PermissionChecker;
 import com.khasang.forecast.R;
 import com.khasang.forecast.fragments.DailyForecastFragment;
 import com.khasang.forecast.fragments.HourlyForecastFragment;
+import com.khasang.forecast.interfaces.IMessageProvider;
 import com.khasang.forecast.interfaces.IPermissionCallback;
 import com.khasang.forecast.interfaces.IWeatherReceiver;
 import com.khasang.forecast.position.PositionManager;
@@ -68,7 +71,7 @@ import java.util.Map;
 
 public class WeatherActivity extends AppCompatActivity implements View.OnClickListener,
         SwipeRefreshLayout.OnRefreshListener,
-        IWeatherReceiver, IPermissionCallback {
+        IWeatherReceiver, IPermissionCallback, IMessageProvider {
     private static final int CHOOSE_CITY = 1;
     private static final String TAG = WeatherActivity.class.getSimpleName();
 
@@ -93,12 +96,10 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     private boolean opened = false;
     private final int subItemIndex = 2000;
 
-    //private NavigationDrawer drawer = new NavigationDrawer();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_weather_material);
+        setContentView(R.layout.activity_weather);
         if (findViewById(R.id.fragment_container) != null) {
             if (savedInstanceState != null) {
                 return;
@@ -114,14 +115,11 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         initFields();
         setAnimationForWidgets();
         startAnimations();
-        initFirstAppearance();
         checkPermissions();
         initNavigationDrawer();
     }
 
     private void initNavigationDrawer() {
-        //drawer.init(this, toolbar);
-
         Logger.println("drawer", "init");
         /** Инициализация элементов меню */
         final DividerDrawerItem divider = new DividerDrawerItem();
@@ -281,24 +279,38 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onStart() {
         super.onStart();
-        PositionManager.getInstance().setWeatherReceiver(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        PositionManager.getInstance().updateWeatherFromDB();
+        PositionManager.getInstance().setReceiver(this);
+        PositionManager.getInstance().setMessageProvider(this);
         Logger.println(TAG, "OnResume");
         updateBadges();
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         PositionManager.getInstance().setUseGpsModule(sp.getBoolean(getString(R.string.pref_gps_key), true));
-        if (sp.getString(getString(R.string.pref_units_key), getString(R.string.pref_units_metric)).equals(getString(R.string.pref_units_metric))) {
+        if (sp.getString(getString(R.string.pref_units_key), getString(R.string.pref_units_celsius)).equals(getString(R.string.pref_units_celsius))) {
             PositionManager.getInstance().setTemperatureMetric(AppUtils.TemperatureMetrics.CELSIUS);
-            PositionManager.getInstance().setSpeedMetric(AppUtils.SpeedMetrics.METER_PER_SECOND);
-        } else if (sp.getString(getString(R.string.pref_units_key), getString(R.string.pref_units_metric)).equals(getString(R.string.pref_units_imperial))) {
+        } else if (sp.getString(getString(R.string.pref_units_key), getString(R.string.pref_units_celsius)).equals(getString(R.string.pref_units_kelvin))) {
+            PositionManager.getInstance().setTemperatureMetric(AppUtils.TemperatureMetrics.KELVIN);
+        } else if (sp.getString(getString(R.string.pref_units_key), getString(R.string.pref_units_celsius)).equals(getString(R.string.pref_units_fahrenheit))) {
             PositionManager.getInstance().setTemperatureMetric(AppUtils.TemperatureMetrics.FAHRENHEIT);
-            PositionManager.getInstance().setSpeedMetric(AppUtils.SpeedMetrics.MILES_PER_HOURS);
+        } else {
+            PositionManager.getInstance().setTemperatureMetric(AppUtils.TemperatureMetrics.CELSIUS);
         }
+        if (sp.getString(getString(R.string.pref_speed_key), getString(R.string.pref_speed_meter_sec)).equals(getString(R.string.pref_speed_meter_sec))) {
+            PositionManager.getInstance().setSpeedMetric(AppUtils.SpeedMetrics.METER_PER_SECOND);
+        } else if (sp.getString(getString(R.string.pref_speed_key), getString(R.string.pref_speed_meter_sec)).equals(getString(R.string.pref_speed_foot_sec))) {
+            PositionManager.getInstance().setSpeedMetric(AppUtils.SpeedMetrics.FOOT_PER_SECOND);
+        } else if (sp.getString(getString(R.string.pref_speed_key), getString(R.string.pref_speed_meter_sec)).equals(getString(R.string.pref_speed_km_hour))) {
+            PositionManager.getInstance().setSpeedMetric(AppUtils.SpeedMetrics.KM_PER_HOURS);
+        } else if (sp.getString(getString(R.string.pref_speed_key), getString(R.string.pref_speed_meter_sec)).equals(getString(R.string.pref_speed_mile_hour))) {
+            PositionManager.getInstance().setSpeedMetric(AppUtils.SpeedMetrics.MILES_PER_HOURS);
+        } else {
+            PositionManager.getInstance().setSpeedMetric(AppUtils.SpeedMetrics.METER_PER_SECOND);
+        }
+        PositionManager.getInstance().updateWeatherFromDB();
         onRefresh();
     }
 
@@ -306,15 +318,19 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     protected void onPause() {
         super.onPause();
         closeSubItems();
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(getString(R.string.shared_last_active_position_name), PositionManager.getInstance().getCurrentPositionName());
+        editor.apply();
+        PositionManager.getInstance().setMessageProvider(null);
+        PositionManager.getInstance().setReceiver(null);
+
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean saveCurrentLocation = sp.getString(getString(R.string.pref_location_key), getString(R.string.pref_location_current)).equals(getString(R.string.pref_location_current));
-        PositionManager.getInstance().saveSettings(saveCurrentLocation);
-        PositionManager.getInstance().setWeatherReceiver(null);
+        PositionManager.getInstance().saveSettings();
     }
 
     @Override
@@ -355,9 +371,9 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION.VALUE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                PositionManager.getInstance().setWeatherReceiver(null);
+                PositionManager.getInstance().setReceiver(null);
                 PositionManager.getInstance().removeInstance();
-                PositionManager.getInstance().setWeatherReceiver(this);
+                PositionManager.getInstance().setReceiver(this);
                 PositionManager.getInstance().updateWeatherFromDB();
                 PositionManager.getInstance().updateWeather();
                 permissionGranted(PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION);
@@ -463,16 +479,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         animationGrow = AnimationUtils.loadAnimation(this, R.anim.simple_grow);
     }
 
-    private void initFirstAppearance() {
-        temperature.setText("--/--");
-/*      if (PositionManager.getInstance().getPositions().size() == 0) {
-            startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
-        } else if (!PositionManager.getInstance().positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {
-            Toast.makeText(this, R.string.msg_choose_city, Toast.LENGTH_SHORT).show();
-            startActivityForResult(new Intent(this, CityPickerActivity.class), CHOOSE_CITY);
-        } else { }        */
-    }
-
     /**
      * Обновление интерфейса Activity при получении новых данных
      */
@@ -510,7 +516,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         }, 1250);
     }
 
-
     /**
      * Обработчик нажатия объектов
      */
@@ -522,10 +527,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.temperature:
                 PositionManager.getInstance().changeTemperatureMetric();
-                PositionManager.getInstance().updateWeatherFromDB();
-                break;
-            case R.id.pressure:
-                PositionManager.getInstance().changePressureMetric();
                 PositionManager.getInstance().updateWeatherFromDB();
                 break;
         }
@@ -565,6 +566,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
      */
     public void changeDisplayedCity(String newCity) {
         PositionManager.getInstance().setCurrentPosition(newCity);
+        PositionManager.getInstance().updateWeatherFromDB();
         onRefresh();
     }
 
@@ -598,11 +600,10 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         showProgress(true);
         if (!PositionManager.getInstance().positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {
             Logger.println(TAG, "There is nothing to refresh");
-            Toast.makeText(WeatherActivity.this, R.string.msg_no_city, Toast.LENGTH_SHORT).show();
+            showMessageToUser(getString(R.string.msg_no_city), Snackbar.LENGTH_LONG);
             showProgress(false);
             return;
         }
-
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -631,6 +632,29 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public boolean receiveHourlyWeatherFirst() {
         return dailyForecastFragment.isHidden();
+    }
+
+    @Override
+    public void showMessageToUser(CharSequence string, int length) {
+        AppUtils.showSnackBar(this, findViewById(R.id.coordinatorLayout), string, length);
+    }
+
+    @Override
+    public void showMessageToUser(int stringId, int length) {
+        showMessageToUser(getString(stringId), length);
+    }
+
+    @Override
+    public void showToast(int stringId) {
+        AppUtils.showInfoMessage(this, getString(stringId)).show();
+    }
+
+    @Override
+    public void showToast(CharSequence string) {
+        Toast toast = AppUtils.showInfoMessage(this, string);
+        toast.getView().setBackgroundColor(ContextCompat.getColor(MyApplication.getAppContext(), R.color.background_toast));
+        toast.setDuration(Toast.LENGTH_LONG);
+        toast.show();
     }
 }
 

@@ -1,13 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="pref_units_values">
-        <item>@string/pref_units_metric</item>
-        <item>@string/pref_units_imperial</item>
+        <item>@string/pref_units_celsius</item>
+        <item>@string/pref_units_kelvin</item>
+        <item>@string/pref_units_fahrenheit</item>
     </string-array>
 
     <string-array name="pref_units_options">
-        <item>@string/pref_units_label_metric</item>
-        <item>@string/pref_units_label_imperial</item>
+        <item>@string/pref_units_label_celsius</item>
+        <item>@string/pref_units_label_kelvin</item>
+        <item>@string/pref_units_label_fahrenheit</item>
+    </string-array>
+
+    <string-array name="pref_speed_values">
+        <item>@string/pref_speed_meter_sec</item>
+        <item>@string/pref_speed_foot_sec</item>
+        <item>@string/pref_speed_km_hour</item>
+        <item>@string/pref_speed_mile_hour</item>
+    </string-array>
+
+    <string-array name="pref_speed_options">
+        <item>@string/pref_speed_meter_sec_label</item>
+        <item>@string/pref_speed_foot_sec_label</item>
+        <item>@string/pref_speed_km_hour_label</item>
+        <item>@string/pref_speed_mile_hour_label</item>
     </string-array>
 
     <string-array name="pref_location_options">
