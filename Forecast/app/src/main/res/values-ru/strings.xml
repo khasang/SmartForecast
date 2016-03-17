@@ -83,7 +83,7 @@
     <string name="error_gps_permission">Отсутсвуют права на использование gps и ресурсы оператора связи</string>
     <string name="clear_new_location_name">Очистить поле ввода</string>
     <string name="coordinates_error">Не корректные координаты местоположения</string>
-    <string name="error_gps_disabled">В настройках приложения отключена возможность получения координат от GPS</string>
+    <string name="error_gps_disabled">В настройках приложения отключено получение координат от GPS</string>
 
     <string name="error_location_services_are_not_active">Службы получения координат не активны</string>
     <string name="info_message_about_request_permission_fine_location">Приложению необходимы права для определения текущего местоположения</string>
