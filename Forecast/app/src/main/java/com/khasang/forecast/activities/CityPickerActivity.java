@@ -7,9 +7,12 @@ import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,11 +21,13 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
@@ -30,16 +35,18 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.Maps;
 import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.exceptions.EmptyCurrentAddressException;
 import com.khasang.forecast.exceptions.NoAvailableAddressesException;
+import com.khasang.forecast.interfaces.IMapDataReceiver;
+import com.khasang.forecast.interfaces.IMessageProvider;
 import com.khasang.forecast.location.LocationParser;
 import com.khasang.forecast.position.Coordinate;
 import com.khasang.forecast.Logger;
@@ -64,7 +71,7 @@ import java.util.regex.Pattern;
  * Activity для выбора местоположения
  */
 
-public class CityPickerActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
+public class CityPickerActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener, IMapDataReceiver, IMessageProvider {
     private final String TAG = this.getClass().getSimpleName();
     public final static String CITY_PICKER_TAG = "com.khasang.forecast.activities.CityPickerActivity";
 
@@ -76,7 +83,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     private Toolbar toolbar;
     private volatile FloatingActionButton fabBtn;
 
-    private Maps maps;
     private DelayedAutoCompleteTextView chooseCity;
 
     @Override
@@ -85,7 +91,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         setContentView(R.layout.activity_city_picker);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        //TODO fix NullPointerException
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
@@ -142,7 +147,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
      * Задает размер для Footer
      */
     private void setupFooter() {
-        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) fabBtn.getLayoutParams();
+        CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) fabBtn.getLayoutParams();
         int fabBottomMargin = lp.bottomMargin;
         recyclerAdapter.setFooterHeight(fabBottomMargin);
     }
@@ -162,7 +167,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         toolbar.animate().translationY(-toolbar.getHeight())
                 .setInterpolator(new AccelerateInterpolator(2));
 
-        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) fabBtn.getLayoutParams();
+        CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) fabBtn.getLayoutParams();
         int fabBottomMargin = lp.bottomMargin;
         fabBtn.animate().translationY(fabBtn.getHeight() +
                 fabBottomMargin).setInterpolator(new AccelerateInterpolator(2)).start();
@@ -176,7 +181,14 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onResume() {
         super.onResume();
+        PositionManager.getInstance().setMessageProvider(this);
         swapVisibilityTextOrList();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        PositionManager.getInstance().setMessageProvider(null);
     }
 
     @Override
@@ -253,9 +265,9 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
     private Coordinate getTownCoordinates(String city) {
 
-        Coordinate coordinate = null;
+        Coordinate coordinate;
         if (city.length() <= 0) {
-            Toast.makeText(this, R.string.error_empty_location_name, Toast.LENGTH_SHORT).show();
+            showToast(R.string.error_empty_location_name);
             return null;
         }
         Geocoder geocoder = new Geocoder(getApplicationContext());
@@ -263,7 +275,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         try {
             addresses = geocoder.getFromLocationName(city, 3);
             if (addresses.size() == 0) {
-                Toast.makeText(getApplicationContext(), String.format(getString(R.string.coordinates_not_found), city), Toast.LENGTH_SHORT).show();
+                showToast(R.string.coordinates_not_found);
                 return null;
             }
             Address currentAddress = addresses.get(0);
@@ -271,11 +283,11 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             coordinate.setLatitude(currentAddress.getLatitude());
             coordinate.setLongitude(currentAddress.getLongitude());
         } catch (IOException e) {
-            Toast.makeText(MyApplication.getAppContext(), R.string.error_geo_service_not_available, Toast.LENGTH_SHORT).show();
+            showToast(R.string.error_geo_service_not_available);
             e.printStackTrace();
             return null;
         } catch (IllegalArgumentException | NullPointerException e) {
-            Toast.makeText(MyApplication.getAppContext(), R.string.invalid_lang_long_used, Toast.LENGTH_SHORT).show();
+            showToast(R.string.invalid_lang_long_used);
             e.printStackTrace();
             return null;
         }
@@ -292,7 +304,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 Collections.sort(cityList);
                 recyclerAdapter.notifyDataSetChanged();
             } else {
-                Toast.makeText(MyApplication.getAppContext(), R.string.city_exist, Toast.LENGTH_SHORT).show();
+                showMessageToUser(R.string.city_exist, Snackbar.LENGTH_LONG);
             }
         }
         swapVisibilityTextOrList();
@@ -304,14 +316,15 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         swapVisibilityTextOrList();
     }
 
-    private void closeMap() {
+    private void closeMap(Maps map) {
         Fragment frag = getSupportFragmentManager().findFragmentById(R.id.map);
+        map.closeDataReceiver();
         if (frag != null) {
             getSupportFragmentManager().beginTransaction().remove(getSupportFragmentManager().findFragmentById(R.id.map)).commit();
         }
     }
 
-    private void setLocationOnMap(String city) {
+    private void setLocationOnMap(Maps maps, String city) {
         try {
             Coordinate coordinate = getTownCoordinates(city);
             double latitude = coordinate != null ? coordinate.getLatitude() : 0;
@@ -332,32 +345,36 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             List<Address> addresses = geoCoder.getFromLocation(latitude, longitude, 3);
             address = new LocationParser(addresses).parseList().getAddressLine();
         } catch (IOException e) {
-            Toast.makeText(MyApplication.getAppContext(), R.string.error_service_not_available, Toast.LENGTH_SHORT).show();
+            showToast(R.string.error_service_not_available);
             e.printStackTrace();
         } catch (IllegalArgumentException e) {
-            Toast.makeText(MyApplication.getAppContext(), R.string.invalid_lang_long_used, Toast.LENGTH_SHORT).show();
+            showToast(R.string.invalid_lang_long_used);
             e.printStackTrace();
         } catch (EmptyCurrentAddressException | NoAvailableAddressesException e) {
-            Toast.makeText(MyApplication.getAppContext(), R.string.no_address_found, Toast.LENGTH_SHORT).show();
+            showToast(R.string.no_address_found);
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return address;
     }
 
-    public void setLocationAddress(double latitude, double longitude) {
-        try {
-            String location = ConvertPointToLocation(latitude, longitude);
-            if (location.isEmpty()) {
-                chooseCity.setText("");
-            } else {
-                chooseCity.setText(location);
-                maps.deleteAllMarkers();
-                maps.setNewMarker(latitude, longitude, location);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    @Override
+    public void setLocationNameFromMap(String name) {
+        chooseCity.setText(name);
     }
+
+    @Override
+    public String setLocationCoordinatesFromMap(double latitude, double longitude) throws EmptyCurrentAddressException {
+        String location = ConvertPointToLocation(latitude, longitude);
+        if (location.isEmpty()) {
+            chooseCity.setText("");
+            throw new EmptyCurrentAddressException();
+        }
+        chooseCity.setText(location);
+        return location;
+    }
+
 
     private void setBtnClear(View view) {
         view.findViewById(R.id.btnClear).setOnClickListener(new View.OnClickListener() {
@@ -368,7 +385,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         });
     }
 
-    private void setMarkersOnMap() {
+    private void setMarkersOnMap(Maps maps) {
         int itemsCount = chooseCity.getAdapter().getCount();
         if ((itemsCount > 0) && (itemsCount < 7)) {
             maps.deleteAllMarkers();
@@ -376,7 +393,14 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             for (int i = 0; i < itemsCount; i++) {
                 try {
                     Coordinate coordinate = getTownCoordinates(chooseCity.getAdapter().getItem(i).toString());
+                    if (coordinate == null) {
+                        showToast(R.string.invalid_lang_long_used);
+                        return;
+                    }
                     maps.setNewMarker(coordinate.getLatitude(), coordinate.getLongitude(), chooseCity.getAdapter().getItem(i).toString());
+                } catch (NullPointerException e) {
+                    showToast(R.string.invalid_lang_long_used);
+                    e.printStackTrace();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -387,28 +411,27 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     // Метод скрытия клавиатуры
     public void hideSoftKeyboard(Context context) {
         if (chooseCity.isFocused()) {
-            InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
+            InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
             inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         }
     }
-/*
-    public void hideSoftKeyboard(Context context) {
-        if (getCurrentFocus() != null) {
-            InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
-            inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+
+    /*
+        public void hideSoftKeyboard(Context context) {
+            if (getCurrentFocus() != null) {
+                InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
+                inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+            }
         }
-    }
-*/
-    public void setChooseCityText(String text) {
-        chooseCity.setText(text);
-    }
+    */
 
     private void showChooseCityDialog() {
         final Pattern pattern = Pattern.compile("^[\\w\\s,`'()-]+$");
-        final View view = getLayoutInflater().inflate(R.layout.dialog_pick_location, null);
+        final View view = getLayoutInflater().inflate(R.layout.dialog_pick_location, (ViewGroup) null);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         setBtnClear(view);
         final GooglePlacesAutocompleteAdapter googlePlacesAutocompleteAdapter = new GooglePlacesAutocompleteAdapter(this, R.layout.autocomplete_city_textview_item);
+        final Maps map = new Maps(this, this, this);
         chooseCity = (DelayedAutoCompleteTextView) view.findViewById(R.id.editTextCityName);
         chooseCity.setAdapter(googlePlacesAutocompleteAdapter);
         chooseCity.setLoadingIndicator((ProgressBar) view.findViewById(R.id.autocomplete_progressbar));
@@ -418,7 +441,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 String description = (String) parent.getItemAtPosition(position);
                 chooseCity.setError(null);
                 chooseCity.setText(description);
-                setLocationOnMap(description);
+                setLocationOnMap(map, description);
                 hideSoftKeyboard(getApplicationContext());
                 googlePlacesAutocompleteAdapter.clear();
             }
@@ -435,7 +458,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                             e.printStackTrace();
                         } finally {
                             fabBtn.setEnabled(true);
-                            closeMap();
+                            closeMap(map);
                         }
                     }
                 })
@@ -444,7 +467,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                     public void onClick(DialogInterface dialog, int which) {
                         fabBtn.setEnabled(true);
                         dialog.cancel();
-                        closeMap();
+                        closeMap(map);
                     }
                 });
         final AlertDialog dialog = builder.create();
@@ -459,7 +482,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             public void onDismiss(DialogInterface dialog) {
                 fabBtn.setEnabled(true);
                 dialog.cancel();
-                closeMap();
+                closeMap(map);
             }
         });
         chooseCity.addTextChangedListener(new TextWatcher() {
@@ -489,7 +512,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 }
                 char lastSym = s.toString().toCharArray()[s.length() - 1];
                 if ((chooseCity.getText().toString().trim().length() % 4 == 0) || (lastSym == ' ') || (lastSym == '-')) {
-                    setMarkersOnMap();
+                    setMarkersOnMap(map);
                 }
             }
         });
@@ -504,7 +527,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                             break;
                         case KeyEvent.KEYCODE_BACK:     // 4
                             dialog.cancel();
-                            closeMap();
+                            closeMap(map);
                             break;
                         default:
                             Log.i("DIALOG_ENTER", "Key code - " + Integer.toString(keyCode));
@@ -536,7 +559,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         //dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         dialog.show();
-        maps = new Maps(this);
     }
 
     @Override
@@ -565,4 +587,26 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         return true;
     }
 
+    @Override
+    public void showMessageToUser(CharSequence string, int length) {
+        AppUtils.showSnackBar(this, findViewById(R.id.fabBtn), string, length);
+    }
+
+    @Override
+    public void showMessageToUser(int stringId, int length) {
+        showMessageToUser(getString(stringId), length);
+    }
+
+    @Override
+    public void showToast(int stringId) {
+        showToast(getString(stringId));
+    }
+
+    @Override
+    public void showToast(CharSequence string) {
+        Toast toast = AppUtils.showInfoMessage(this, string);
+        toast.getView().setBackgroundColor(ContextCompat.getColor(MyApplication.getAppContext(), R.color.background_toast));
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
+    }
 }

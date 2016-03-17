@@ -6,6 +6,9 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.view.Gravity;
+import android.widget.Toast;
 
 import com.khasang.forecast.interfaces.IPermissionCallback;
 
@@ -44,23 +47,11 @@ public class PermissionChecker {
     public void checkForPermissions(Activity activity, final RuntimePermissions permission, final IPermissionCallback callback) {
         if (!isPermissionGranted(activity, permission)) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permission.toStringValue())) {
-                AlertDialog.Builder d = new AlertDialog.Builder(activity);
-                d.setMessage(permission.showInformationMessage());
-                d.setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                    d.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                        @Override
-                        public void onDismiss(DialogInterface dialog) {
-                            dialog.dismiss();
-                        }
-                    });
-                }
-                d.show();
+                Toast toast = AppUtils.showInfoMessage(activity, permission.showInformationMessage());
+                toast.getView().setBackgroundColor(ContextCompat.getColor(MyApplication.getAppContext(), R.color.background_toast));
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.setDuration(Toast.LENGTH_LONG);
+                toast.show();
                 callback.permissionDenied(permission);
             } else {
                 ActivityCompat.requestPermissions(activity, new String[]{permission.toStringValue()}, permission.ordinal());
