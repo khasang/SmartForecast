@@ -6,25 +6,24 @@
     android:layout_height="match_parent"
     tools:context=".activities.SplashScreenActivity">
 
-    <com.romainpiel.shimmer.ShimmerTextView
-        android:id="@+id/welcomeText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="60dp"
-        android:layout_marginTop="60dp"
-        android:layout_above="@+id/gifImageView"
-        android:fontFamily="sans-serif-thin"
-        android:gravity="center"
-        android:text="@string/welcome_def_str"
-        android:textColor="@color/primary_dark"
-        android:textSize="35sp"
-        android:visibility="gone"
-        app:reflectionColor="@color/background_splash"/>
-
     <pl.droidsonroids.gif.GifImageView
         android:id="@+id/gifImageView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:visibility="invisible" />
+
+    <com.romainpiel.shimmer.ShimmerTextView
+        android:id="@+id/welcomeText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fontFamily="sans-serif-thin"
+        android:gravity="bottom|center_horizontal"
+        android:layout_above="@+id/gifImageView"
+        android:text="@string/welcome_def_str"
+        android:textColor="@color/primary_dark"
+        android:textSize="35sp"
+        android:visibility="gone"
+        app:reflectionColor="@color/background_splash" />
+
 </RelativeLayout>
