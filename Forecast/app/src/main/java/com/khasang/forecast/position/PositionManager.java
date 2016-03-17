@@ -144,25 +144,20 @@ public class PositionManager {
     }
 
     // Пока заглушка, потом настрки сохранять при их смене в настройках
-    public void saveSettings(boolean saveCurrentLocation) {
+    public void saveSettings() {
         saveCurrStation();
         saveMetrics();
-        saveCurrPosition(saveCurrentLocation);
+        saveCurrPosition();
     }
 
     public void saveMetrics() {
         dbManager.saveSettings(temperatureMetric, speedMetric, pressureMetric);
     }
 
-    public void saveCurrPosition(boolean saveCurrentLocation) {
+    public void saveCurrPosition() {
         try {
-            if (!saveCurrentLocation && positionInListPresent(activePosition.getLocationName())) {
-                dbManager.saveLastCurrentLocationName(activePosition.getLocationName());
-                dbManager.saveLastPositionCoordinates(activePosition.getCoordinate());
-            } else {
-                dbManager.saveLastCurrentLocationName(currentLocation.getLocationName());
-                dbManager.saveLastPositionCoordinates(currentLocation.getCoordinate());
-            }
+            dbManager.saveLastCurrentLocationName(currentLocation.getLocationName());
+            dbManager.saveLastPositionCoordinates(currentLocation.getCoordinate());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -184,14 +179,10 @@ public class PositionManager {
     }
 
     private void initCurrentLocation() {
-        String locName = dbManager.loadСurrentTown();
         currentLocation = new Position();
         currentLocation.setLocationName("Smart Forecast");
         currentLocation.setCityID(0);
         currentLocation.setCoordinate(null);
-        if (!locName.isEmpty()) {
-            currentLocation.setLocationName(locName);
-        }
     }
 
     /**
@@ -216,20 +207,17 @@ public class PositionManager {
             }
         }
         positions = positionFactory.getPositions();
-
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MyApplication.getAppContext());
         boolean saveCurrentLocation = sp.getString(MyApplication.getAppContext().getString(R.string.pref_location_key), MyApplication.getAppContext().getString(R.string.pref_location_current)).equals(MyApplication.getAppContext().getString(R.string.pref_location_current));
+        currentLocation.setLocationName(dbManager.loadСurrentTown());
+        currentLocation.setCoordinate(dbManager.loadLastPositionCoordinates());
         if (saveCurrentLocation) {
-            currentLocation.setLocationName(dbManager.loadСurrentTown());
-            currentLocation.setCoordinate(dbManager.loadLastPositionCoordinates());
             activePosition = currentLocation;
         } else {
-            String townName = dbManager.loadСurrentTown();
+            String townName = sp.getString(MyApplication.getAppContext().getString(R.string.shared_last_active_position_name), "");
             if (!townName.isEmpty() && positionInListPresent(townName)) {
                 activePosition = getPosition(townName);
             } else {
-                currentLocation.setLocationName(dbManager.loadСurrentTown());
-                currentLocation.setCoordinate(dbManager.loadLastPositionCoordinates());
                 activePosition = currentLocation;
             }
         }
