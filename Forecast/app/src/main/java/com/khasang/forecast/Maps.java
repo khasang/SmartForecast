@@ -3,19 +3,21 @@ package com.khasang.forecast;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.khasang.forecast.activities.CityPickerActivity;
+import com.khasang.forecast.exceptions.EmptyCurrentAddressException;
+import com.khasang.forecast.interfaces.IMapDataReceiver;
+import com.khasang.forecast.interfaces.IMessageProvider;
 import com.khasang.forecast.position.Coordinate;
 import com.khasang.forecast.position.PositionManager;
 
@@ -25,55 +27,49 @@ import com.khasang.forecast.position.PositionManager;
  * @author maxim.kulikov
  */
 
-public class Maps {
+public class Maps implements OnMapReadyCallback {
 
-    private com.google.android.gms.maps.GoogleMap map;
     private final String TAG = "mapLogs";
-    private double currentLatitude = 0;
-    private double currentLongitude = 0;
-    private float defaultZoom = 0;
-    private CityPickerActivity activity;
-    private FragmentManager myFM;
+    private double currentLatitude;
+    private double currentLongitude;
+    private float defaultZoom;
+    private IMapDataReceiver receiver;
+    private IMessageProvider messageProvider;
+    GoogleMap map;
 
-    public Maps(CityPickerActivity activity) {
-        this.activity = activity;
-        if (setMap()) {
-            setMapSettings();
-            setMapClickListeners();
-            Coordinate coordinate = PositionManager.getInstance().getCurrentLocationCoordinates();
-            try {
-                currentLatitude = coordinate.getLatitude();
-                currentLongitude = coordinate.getLongitude();
-                defaultZoom = 8;
-            } catch (NullPointerException e) {
-                currentLongitude = 37.59;
-                currentLatitude = 55.74;
-                defaultZoom = 3;
-            }
-            setCameraPosition(currentLatitude, currentLongitude, defaultZoom, 0, 0);
+    public Maps(CityPickerActivity activity, IMapDataReceiver receiver, IMessageProvider messageProvider) {
+        map = null;
+        this.receiver = receiver;
+        this.messageProvider = messageProvider;
+        Coordinate coordinate = PositionManager.getInstance().getCurrentLocationCoordinates();
+        try {
+            currentLatitude = coordinate.getLatitude();
+            currentLongitude = coordinate.getLongitude();
+            defaultZoom = 8;
+        } catch (NullPointerException e) {
+            currentLongitude = 37.59;
+            currentLatitude = 55.74;
+            defaultZoom = 3;
         }
+        ((SupportMapFragment) activity.getSupportFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
     }
 
-    public boolean setMap() {
-        myFM = activity.getSupportFragmentManager();
-        map = ((SupportMapFragment) myFM.findFragmentById(R.id.map)).getMap();
-        return map != null;
+    public void closeDataReceiver() {
+        receiver = null;
+        messageProvider = null;
     }
 
-    public void setMapSettings() {
+    public void setMapSettings(GoogleMap map) {
         map.getUiSettings().setCompassEnabled(true);
         map.getUiSettings().setMyLocationButtonEnabled(true);
         map.getUiSettings().setZoomControlsEnabled(true);
         map.getUiSettings().setAllGesturesEnabled(true);
         if (ActivityCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            Toast.makeText(MyApplication.getAppContext(), MyApplication.getAppContext().getString(R.string.error_gps_permission), Toast.LENGTH_SHORT).show();
+            try {
+                messageProvider.showToast(R.string.error_gps_permission);
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
             return;
         }
         map.setMyLocationEnabled(true);
@@ -133,7 +129,7 @@ public class Maps {
         map.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(text).draggable(false));
     }
 
-    private void setMapClickListeners() {
+    private void setMapClickListeners(final GoogleMap map) {
         // Клик на маркер
         map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
@@ -141,7 +137,11 @@ public class Maps {
                 try {
                     setCameraPosition(marker.getPosition().latitude, marker.getPosition().longitude, getCurrentZoom(), 0, 0);
                     marker.showInfoWindow();
-                    activity.setChooseCityText(marker.getTitle());
+                    try {
+                        receiver.setLocationNameFromMap(marker.getTitle());
+                    } catch (NullPointerException e) {
+                        e.printStackTrace();
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -156,28 +156,25 @@ public class Maps {
                 try {
                     currentLatitude = latLng.latitude;
                     currentLongitude = latLng.longitude;
-                    activity.setLocationAddress(currentLatitude, currentLongitude);
+                    String location = receiver.setLocationCoordinatesFromMap(currentLatitude, currentLongitude);
+                    deleteAllMarkers();
+                    setNewMarker(currentLatitude, currentLongitude, location);
                     Log.d(TAG, "onMapClick: " + latLng.latitude + "," + latLng.longitude);
+                } catch (EmptyCurrentAddressException | NullPointerException e) {
+                    e.printStackTrace();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         });
+    }
 
-        // Долгое нажатие на карту
-        map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-            @Override
-            public void onMapLongClick(LatLng latLng) {
-                Log.d(TAG, "onMapLongClick: " + latLng.latitude + "," + latLng.longitude);
-            }
-        });
-
-        // Смера камеры
-        map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
-            @Override
-            public void onCameraChange(CameraPosition camera) {
-                Log.d(TAG, "onCameraChange: lat " + camera.target.latitude + ", lng " + camera.target.longitude + ", zoom " + camera.zoom);
-            }
-        });
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        Log.d(TAG, "onMapReady");
+        map = googleMap;
+        setMapSettings(googleMap);
+        setMapClickListeners(googleMap);
+        setCameraPosition(currentLatitude, currentLongitude, defaultZoom, 0, 0);
     }
 }

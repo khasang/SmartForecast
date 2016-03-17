@@ -17,7 +17,9 @@ import android.view.animation.AnimationUtils;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.R;
+import com.khasang.forecast.interfaces.IMessageProvider;
 import com.khasang.forecast.position.PositionManager;
 import com.romainpiel.shimmer.Shimmer;
 import com.romainpiel.shimmer.ShimmerTextView;
@@ -33,7 +35,7 @@ import pl.droidsonroids.gif.GifImageView;
 
 public class SplashScreenActivity
         extends AppCompatActivity
-        implements Animation.AnimationListener, AnimationListener {
+        implements Animation.AnimationListener, AnimationListener, IMessageProvider {
 
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
@@ -110,13 +112,16 @@ public class SplashScreenActivity
         super.onResume();
         if (checkPlayServices()) {
             isGooglePlayServicesInstalled = true;
-            PositionManager.getInstance();
+            PositionManager.getInstance(this);
         }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        if (isGooglePlayServicesInstalled) {
+            PositionManager.getInstance().setMessageProvider(null);
+        }
     }
 
     @Override
@@ -174,5 +179,25 @@ public class SplashScreenActivity
         if (isGooglePlayServicesInstalled) {
             startWeatherActivity();
         }
+    }
+
+    @Override
+    public void showMessageToUser(CharSequence string, int length) {
+        AppUtils.showSnackBar(this, findViewById(R.id.coordinatorLayout), string, length);
+    }
+
+    @Override
+    public void showMessageToUser(int stringId, int length) {
+        showMessageToUser(getString(stringId), length);
+    }
+
+    @Override
+    public void showToast(int stringId) {
+        showToast(getString(stringId));
+    }
+
+    @Override
+    public void showToast(CharSequence string) {
+        AppUtils.showInfoMessage(this, string).show();
     }
 }

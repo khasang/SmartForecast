@@ -1,42 +1,59 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <!--
+
+    <PreferenceCategory android:title="@string/pref_category_general">
         <ListPreference
-            android:defaultValue="@string/pref_welcome_default"
-            android:entries="@array/pref_welcome_options"
-            android:entryValues="@array/pref_welcome_values"
-            android:key="@string/pref_welcome_key"
+            android:defaultValue="@string/pref_units_celsius"
+            android:entries="@array/pref_units_options"
+            android:entryValues="@array/pref_units_values"
+            android:key="@string/pref_units_key"
             android:negativeButtonText="@null"
             android:positiveButtonText="@null"
+            android:title="@string/pref_title_units" />
+
+        <ListPreference
+            android:defaultValue="@string/pref_speed_meter_sec"
+            android:entries="@array/pref_speed_options"
+            android:entryValues="@array/pref_speed_values"
+            android:key="@string/pref_speed_key"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="@string/pref_title_speed" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/pref_category_start">
+        <!--
+            <ListPreference
+                android:defaultValue="@string/pref_welcome_default"
+                android:entries="@array/pref_welcome_options"
+                android:entryValues="@array/pref_welcome_values"
+                android:key="@string/pref_welcome_key"
+                android:negativeButtonText="@null"
+                android:positiveButtonText="@null"
+                android:title="@string/pref_title_welcome_string" />
+        -->
+        <SwitchPreference
+            android:defaultValue="@string/pref_welcome_default_switch"
+            android:key="@string/pref_welcome_key_switch"
+            android:summary="@string/pref_welcome_summary"
             android:title="@string/pref_title_welcome_string" />
-    -->
-    <SwitchPreference
-        android:defaultValue="@string/pref_welcome_default_switch"
-        android:key="@string/pref_welcome_key_switch"
-        android:summary="@string/pref_welcome_summary"
-        android:title="@string/pref_title_welcome_string" />
 
-    <ListPreference
-        android:defaultValue="@string/pref_location_current"
-        android:entries="@array/pref_location_options"
-        android:entryValues="@array/pref_location_values"
-        android:key="@string/pref_location_key"
-        android:negativeButtonText="@null"
-        android:positiveButtonText="@null"
-        android:title="@string/pref_title_location" />
+        <ListPreference
+            android:defaultValue="@string/pref_location_current"
+            android:entries="@array/pref_location_options"
+            android:entryValues="@array/pref_location_values"
+            android:key="@string/pref_location_key"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="@string/pref_title_location" />
+    </PreferenceCategory>
 
-    <ListPreference
-        android:defaultValue="@string/pref_units_metric"
-        android:entries="@array/pref_units_options"
-        android:entryValues="@array/pref_units_values"
-        android:key="@string/pref_units_key"
-        android:negativeButtonText="@null"
-        android:positiveButtonText="@null"
-        android:title="@string/pref_title_units" />
-
-    <SwitchPreference
-        android:defaultValue="@string/pref_gps_default"
-        android:key="@string/pref_gps_key"
-        android:summary="@string/pref_description_enable_gps"
-        android:title="@string/pref_title_enable_gps" />
+    <PreferenceCategory android:title="@string/pref_category_location">
+        <SwitchPreference
+            android:defaultValue="@string/pref_gps_default"
+            android:key="@string/pref_gps_key"
+            android:summary="@string/pref_description_enable_gps"
+            android:title="@string/pref_title_enable_gps" />
+    </PreferenceCategory>
 
 </PreferenceScreen>
