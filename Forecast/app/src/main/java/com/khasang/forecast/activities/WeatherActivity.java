@@ -21,6 +21,7 @@ import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,6 +30,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.Logger;
@@ -284,7 +286,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         super.onResume();
         PositionManager.getInstance().setReceiver(this);
         PositionManager.getInstance().setMessageProvider(this);
-        PositionManager.getInstance().updateWeatherFromDB();
         Logger.println(TAG, "OnResume");
         updateBadges();
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
@@ -309,6 +310,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         } else {
             PositionManager.getInstance().setSpeedMetric(AppUtils.SpeedMetrics.METER_PER_SECOND);
         }
+        PositionManager.getInstance().updateWeatherFromDB();
         onRefresh();
     }
 
@@ -561,6 +563,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
      */
     public void changeDisplayedCity(String newCity) {
         PositionManager.getInstance().setCurrentPosition(newCity);
+        PositionManager.getInstance().updateWeatherFromDB();
         onRefresh();
     }
 
@@ -598,7 +601,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             showProgress(false);
             return;
         }
-
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -642,6 +644,14 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void showToast(int stringId) {
         AppUtils.showInfoMessage(this, getString(stringId)).show();
+    }
+
+    @Override
+    public void showToast(CharSequence string) {
+        Toast toast = AppUtils.showInfoMessage(this, string);
+        toast.getView().setBackgroundColor(ContextCompat.getColor(MyApplication.getAppContext(), R.color.background_toast));
+        toast.setDuration(Toast.LENGTH_LONG);
+        toast.show();
     }
 }
 

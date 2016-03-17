@@ -193,6 +193,11 @@ public class SplashScreenActivity
 
     @Override
     public void showToast(int stringId) {
-        AppUtils.showInfoMessage(this, getString(stringId)).show();
+        showToast(getString(stringId));
+    }
+
+    @Override
+    public void showToast(CharSequence string) {
+        AppUtils.showInfoMessage(this, string).show();
     }
 }

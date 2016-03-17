@@ -57,7 +57,7 @@
     <string name="NW">СЗ</string>
 
     <string name="action_settings">Настройки</string>
-
+    <string name="location_manager">Служба определения местоположения</string>
     <string name="today">Сегодня</string>
     <string name="tomorrow">Завтра</string>
 

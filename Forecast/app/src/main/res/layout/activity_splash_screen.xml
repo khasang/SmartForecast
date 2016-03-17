@@ -12,13 +12,14 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="60dp"
         android:layout_marginTop="60dp"
+        android:layout_above="@+id/gifImageView"
         android:fontFamily="sans-serif-thin"
         android:gravity="center"
         android:text="@string/welcome_def_str"
-        android:textColor="@color/primary"
+        android:textColor="@color/primary_dark"
         android:textSize="35sp"
         android:visibility="gone"
-        app:reflectionColor="@color/background_splash" />
+        app:reflectionColor="@color/background_splash"/>
 
     <pl.droidsonroids.gif.GifImageView
         android:id="@+id/gifImageView"

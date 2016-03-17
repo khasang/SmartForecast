@@ -74,7 +74,7 @@
     <string name="error_geo_service_not_available">The coordinates of the location are not detected.</string>
     <string name="invalid_lang_long_used">Error of detection coordinates for a location</string>
     <string name="no_address_found">Address of current location is not found</string>
-    <string name="location_manager" translatable="false">Location Manager</string>
+    <string name="location_manager">Location Manager</string>
 
     <string name="title_activity_settings">Settings</string>
 
@@ -144,5 +144,5 @@
     <string name="pref_category_general">General</string>
     <string name="warning_message_gps">The use of GPS can increase the speed of discharge of the battery, however, will certainly increase the location accuracy</string>
 
-    <string name="error_get_coordinates">Can't determine the coordinates of the requested location</string>
+    <string name="error_get_coordinates">Can\'t determine the coordinates of the requested location</string>
 </resources>

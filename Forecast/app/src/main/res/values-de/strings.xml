@@ -71,7 +71,7 @@
     <string name="error_geo_service_not_available">Die Koordinaten der Position sind nicht gefunden.</string>
     <string name="invalid_lang_long_used">Das Fehler der Erkennung Koordinaten für einen Standort</string>
     <string name="no_address_found">Die Adresse von aktuellen Standort ist nicht gefunden</string>
-
+    <string name="location_manager">Standort Manager</string>
     <string name="title_activity_settings">Einstellungen</string>
 
     <string name="pref_header_general">Haupt</string>

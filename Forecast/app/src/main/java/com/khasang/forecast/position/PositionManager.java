@@ -412,6 +412,7 @@ public class PositionManager {
      * Метод, вызывемый активити, для обновления текущей погоды от текущей погодной станции
      */
     public void updateWeather() {
+        lastResponseIsFailure = false;
         if (activePosition == null || !positionIsPresent(activePosition.getLocationName())) {
             sendMessage(R.string.update_error_location_not_found, Snackbar.LENGTH_LONG);
             return;
@@ -548,7 +549,11 @@ public class PositionManager {
 
     public void onFailureResponse(LinkedList<WeatherStation.ResponseType> requestList, int cityID, WeatherStationFactory.ServiceType sType) {
         if (!lastResponseIsFailure) {
-            sendMessage(MyApplication.getAppContext().getString(R.string.update_error_from) + sType.toString(), Snackbar.LENGTH_LONG);
+            try {
+                messageProvider.showToast(MyApplication.getAppContext().getString(R.string.update_error_from) + sType.toString());
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
             lastResponseIsFailure = true;
         }
         WeatherStation.ResponseType rType = requestList.pollFirst();
@@ -613,10 +618,7 @@ public class PositionManager {
         locationManager.giveGpsAccess(true);
         try {
             updateCurrentLocation(locationManager.getLastLocation());
-        } catch (AccessFineLocationNotGrantedException e) {
-            sendMessage(R.string.error_gps_permission, Snackbar.LENGTH_LONG);
-            e.printStackTrace();
-        } catch (EmptyCurrentAddressException e) {
+        } catch (AccessFineLocationNotGrantedException | EmptyCurrentAddressException e) {
             e.printStackTrace();
         }
     }

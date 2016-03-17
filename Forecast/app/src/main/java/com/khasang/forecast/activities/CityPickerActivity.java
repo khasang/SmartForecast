@@ -599,7 +599,12 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public void showToast(int stringId) {
-        Toast toast = AppUtils.showInfoMessage(this, getString(stringId));
+        showToast(getString(stringId));
+    }
+
+    @Override
+    public void showToast(CharSequence string) {
+        Toast toast = AppUtils.showInfoMessage(this, string);
         toast.getView().setBackgroundColor(ContextCompat.getColor(MyApplication.getAppContext(), R.color.background_toast));
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
