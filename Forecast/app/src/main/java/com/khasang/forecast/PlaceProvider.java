@@ -29,7 +29,7 @@ public class PlaceProvider {
 
     ArrayList resultList = null;
 
-    public ArrayList autocomplete(String input){
+    public ArrayList autocomplete(String input) {
         try {
             String URL = PLACE_API_BASE_URL + "?key="
                     + API_KEY + "&input="
@@ -68,5 +68,4 @@ public class PlaceProvider {
         }
         return resultList;
     }
-
 }

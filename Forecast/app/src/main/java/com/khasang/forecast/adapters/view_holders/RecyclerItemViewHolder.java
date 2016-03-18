@@ -22,7 +22,7 @@ public class RecyclerItemViewHolder extends RecyclerView.ViewHolder {
 
     public RecyclerItemViewHolder(View itemView, View.OnClickListener listener, View.OnLongClickListener longListener) {
         super(itemView);
-        cardView = (CardView)itemView;
+        cardView = (CardView) itemView;
         mItemTextView = (TextView) cardView.findViewById(R.id.cityTW);
         mItemImageButton = ((ImageButton) cardView.findViewById(R.id.starBtn));
         mItemImageButton.setOnClickListener(listener);
@@ -45,7 +45,7 @@ public class RecyclerItemViewHolder extends RecyclerView.ViewHolder {
 
     public void markCityAsNew(boolean mark) {
         if (mark) {
-            cardView.setCardBackgroundColor(ContextCompat.getColor(MyApplication.getAppContext(),R.color.new_city_card));
+            cardView.setCardBackgroundColor(ContextCompat.getColor(MyApplication.getAppContext(), R.color.new_city_card));
         } else {
             cardView.setCardBackgroundColor(Color.WHITE);
         }

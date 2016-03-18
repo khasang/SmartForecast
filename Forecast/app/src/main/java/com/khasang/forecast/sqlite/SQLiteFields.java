@@ -41,7 +41,7 @@ public class SQLiteFields {
     public static final String CURRENT_LATITUDE = "CurentLatitude";
     public static final String CURRENT_LONGITUDE = "CurentLongtitude";
 
-    public static final String QUERY_CREATE_TABLE_TOWNS  = "CREATE TABLE " + TABLE_TOWNS + " (" +
+    public static final String QUERY_CREATE_TABLE_TOWNS = "CREATE TABLE " + TABLE_TOWNS + " (" +
             ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
             TOWN + " VARCHAR(255)," +
             LATITUDE + " VARCHAR(30)," +

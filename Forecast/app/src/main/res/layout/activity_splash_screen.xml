@@ -11,15 +11,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:adjustViewBounds="true"
+        android:paddingBottom="30dp"
         android:visibility="invisible" />
 
     <com.romainpiel.shimmer.ShimmerTextView
         android:id="@+id/welcomeText"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/gifImageView"
         android:fontFamily="sans-serif-thin"
         android:gravity="bottom|center_horizontal"
-        android:layout_above="@+id/gifImageView"
         android:text="@string/welcome_def_str"
         android:textColor="@color/primary_dark"
         android:textSize="35sp"

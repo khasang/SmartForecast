@@ -19,7 +19,7 @@ public class DrawUtils {
         return ourInstance;
     }
 
-    public void init(Context context){
+    public void init(Context context) {
         appContext = context.getApplicationContext();
         Display display = ((WindowManager) appContext.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         DisplayMetrics metrics = new DisplayMetrics();

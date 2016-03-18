@@ -4,7 +4,7 @@ package com.khasang.forecast.position;
  * Created by Veda on 24.11.15.
  */
 
-public class Coordinate implements Comparable<Coordinate>{
+public class Coordinate implements Comparable<Coordinate> {
     private double latitude;
     private double longitude;
 
@@ -35,6 +35,9 @@ public class Coordinate implements Comparable<Coordinate>{
 
     @Override
     public int compareTo(Coordinate another) {
+        if (another == null) {
+            return 1;
+        }
         if (latitude == another.getLatitude() && longitude == another.getLongitude()) {
             return 0;
         }

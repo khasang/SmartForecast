@@ -26,7 +26,7 @@ public class Weather {
     private long sunrise;
     private long sunset;
 
-    public Weather () {
+    public Weather() {
 
     }
 
@@ -50,6 +50,7 @@ public class Weather {
 
     /**
      * Получение температуры из обьекта
+     *
      * @return Метод возвращает температуру
      */
     public double getTemperature() {
@@ -62,6 +63,7 @@ public class Weather {
 
     /**
      * Получение давления из обьекта
+     *
      * @return Метод возвращает давление
      */
     public double getPressure() {
@@ -74,6 +76,7 @@ public class Weather {
 
     /**
      * Получение влажность из обьекта
+     *
      * @return Метод возвращает влажность
      */
     public int getHumidity() {
@@ -95,6 +98,7 @@ public class Weather {
 
     /**
      * Получение из обьекта направления ветра
+     *
      * @return Метод возвращает значение {@link Wind.Direction}
      */
     public Wind.Direction getWindDirection() {
@@ -103,6 +107,7 @@ public class Weather {
 
     /**
      * Получение из обьекта скорости ветра
+     *
      * @return Метод возвращает скорость ветра
      */
     public double getWindPower() {
@@ -120,6 +125,7 @@ public class Weather {
 
     /**
      * Получение из обьекта типа погоды
+     *
      * @return Метод возвращает значение {@link Precipitation.Type}
      */
     public Precipitation.Type getPrecipitation() {
@@ -128,12 +134,12 @@ public class Weather {
 
     /**
      * Получение из вероятности установления погоды
+     *
      * @return Метод возвращает вероятности установления погоды
      */
     /*public int getPrecipitationProbability() {
         return precipitation.getProbability();
     }*/
-
     public String getDescription() {
         return description;
     }

@@ -274,7 +274,7 @@ public class SQLiteProcessData {
     // Добавление города в избранное.
     public void saveTownFavourite(boolean isFavourite, String townName) {
         String favourite = "0";
-        if(isFavourite) {
+        if (isFavourite) {
             favourite = "1";
         }
         SQLiteWork.getInstance().qExExec(SQLiteFields.QUERY_UPDATE_TOWN_FAVORITE, new String[]{favourite, townName});
@@ -287,7 +287,7 @@ public class SQLiteProcessData {
             if (dataset != null && dataset.getCount() != 0) {
                 if (dataset.moveToFirst()) {
                     do {
-                        if(dataset.getString(dataset.getColumnIndex(SQLiteFields.FAVORITE)).equals("1")) {
+                        if (dataset.getString(dataset.getColumnIndex(SQLiteFields.FAVORITE)).equals("1")) {
                             return true;
                         }
                     } while (dataset.moveToNext());

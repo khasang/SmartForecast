@@ -36,7 +36,7 @@ public class Precipitation {
             }
         },
         CLEAR {
-            public int getIconResId (boolean isDay) {
+            public int getIconResId(boolean isDay) {
                 if (isDay) {
                     return R.drawable.ic_sun;
                 } else {
@@ -44,18 +44,18 @@ public class Precipitation {
                 }
             }
         },
-        CLOUDS{
-            public int getIconResId (boolean isDay) {
+        CLOUDS {
+            public int getIconResId(boolean isDay) {
                 return R.drawable.ic_cloud;
             }
         },
-        EXTREME{
-            public int getIconResId (boolean isDay) {
+        EXTREME {
+            public int getIconResId(boolean isDay) {
                 return R.drawable.ic_extreme;
             }
         },
-        ADDITIONAL{
-            public int getIconResId (boolean isDay) {
+        ADDITIONAL {
+            public int getIconResId(boolean isDay) {
                 return 0;
             }
         };

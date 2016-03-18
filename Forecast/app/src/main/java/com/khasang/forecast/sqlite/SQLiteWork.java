@@ -2,6 +2,7 @@ package com.khasang.forecast.sqlite;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
 import com.khasang.forecast.MyApplication;
 
 /**
@@ -22,8 +23,8 @@ public class SQLiteWork {
     }
 
     public static SQLiteWork getInstance() {
-        if (instance == null){
-            synchronized (SQLiteWork.class){
+        if (instance == null) {
+            synchronized (SQLiteWork.class) {
                 if (instance == null) {
                     instance = new SQLiteWork();
                     instance.init();

@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Класс наследник SQLiteOpenHelper для создания/изменения БД.
@@ -40,7 +39,7 @@ public class SQLiteOpen extends SQLiteOpenHelper {
             if (townList != null) {
                 for (int i = 0; i < townList.size(); i++) {
                     map = townList.get(i);
-                    switch(dbOldVersion) {
+                    switch (dbOldVersion) {
                         case 3:
                             db.execSQL(SQLiteFields.QUERY_INSERT_TOWN_v4, new String[]{
                                     map.get(SQLiteFields.TOWN),
@@ -74,7 +73,7 @@ public class SQLiteOpen extends SQLiteOpenHelper {
                     townList = new ArrayList<>();
                     do {
                         map = new HashMap<>();
-                        switch(dbOldVersion) {
+                        switch (dbOldVersion) {
                             case 3:
                                 map.put(SQLiteFields.TOWN, dataset.getString(dataset.getColumnIndex(SQLiteFields.TOWN)));
                                 map.put(SQLiteFields.LATITUDE, dataset.getString(dataset.getColumnIndex(SQLiteFields.LATITUDE)));
@@ -104,7 +103,7 @@ public class SQLiteOpen extends SQLiteOpenHelper {
     public void setSettings(SQLiteDatabase db) throws Exception {
         try {
             if (settingsMap != null) {
-                switch(dbOldVersion) {
+                switch (dbOldVersion) {
                     case 3:
                     case 4:
                         db.execSQL(SQLiteFields.QUERY_UPDATE_SETTINGS_v4, new String[]{
@@ -139,7 +138,7 @@ public class SQLiteOpen extends SQLiteOpenHelper {
             if (dataset != null && dataset.getCount() != 0) {
                 if (dataset.moveToFirst()) {
                     settingsMap = new HashMap<>();
-                    switch(dbOldVersion) {
+                    switch (dbOldVersion) {
                         case 3:
                         case 4:
                             settingsMap.put(SQLiteFields.CURRENT_STATION, dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_STATION)));

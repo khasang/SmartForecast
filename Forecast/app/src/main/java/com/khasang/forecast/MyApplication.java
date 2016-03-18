@@ -2,6 +2,7 @@ package com.khasang.forecast;
 
 import android.app.Application;
 import android.content.Context;
+
 import com.facebook.stetho.Stetho;
 import com.crashlytics.android.Crashlytics;
 

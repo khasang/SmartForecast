@@ -17,13 +17,13 @@
         <TextView
             android:id="@+id/cityTW"
             style="@style/Base.TextAppearance.AppCompat.Body2"
-            android:width="0dp"
             android:layout_width="0dp"
             android:layout_height="?attr/listPreferredItemHeight"
+            android:layout_weight="1"
+            android:width="0dp"
             android:gravity="center_vertical|left"
             android:padding="8dp"
-            android:layout_weight="1"
-            tools:text="Berlin"/>
+            tools:text="Berlin" />
 
         <ImageButton
             android:id="@+id/starBtn"

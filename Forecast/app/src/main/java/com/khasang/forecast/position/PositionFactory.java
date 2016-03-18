@@ -1,8 +1,7 @@
 package com.khasang.forecast.position;
 
-import com.khasang.forecast.position.Coordinate;
-import com.khasang.forecast.position.Position;
 import com.khasang.forecast.sqlite.SQLiteProcessData;
+
 import java.util.HashMap;
 
 
@@ -33,9 +32,9 @@ public class PositionFactory {
         p.setCityID(cityIdentificationCounter++);
         p.setCoordinate(coordinates);
         mPositions.put(name, p);
-        try{
+        try {
             dbm.saveTown(name, coordinates.getLatitude(), coordinates.getLongitude());
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
     }

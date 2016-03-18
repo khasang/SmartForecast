@@ -97,7 +97,7 @@ public abstract class CommonForecastFragment extends Fragment {
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         Log.i(TAG, "OnResume");
 //        AlphaAnimatorAdapter animatorAdapter = new AlphaAnimatorAdapter(adapter, recyclerView);
