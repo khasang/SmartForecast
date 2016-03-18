@@ -121,4 +121,5 @@
     <string name="warning_message_gps">Использование GPS может увеличить скорость рязряда батареи, однако, несомненно, увеличит точность определения местоположения</string>
 
     <string name="error_get_coordinates">Не могу определить координаты запрашиваемого местоположения</string>
+    <string name="forecast_unavailable">Прогноз погоды недоступен</string>
 </resources>
