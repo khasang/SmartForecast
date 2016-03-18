@@ -14,7 +14,7 @@ import io.fabric.sdk.android.Fabric;
 public class MyApplication extends Application {
 
     private static Context context;
-    boolean debugMode = false;
+    boolean debugMode = true;
 
     @Override
     public void onCreate() {
