@@ -16,14 +16,21 @@ repositories {
 
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'MyKhasangKey'
+            keyPassword 'Khasang2015Key'
+            storeFile file('/Users/roman/Dropbox/Проекты/SmartForecast/khasang_android.jks')
+            storePassword 'Khasang2015Key'
+        }
+    }
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
-
     defaultConfig {
         applicationId "com.khasang.forecast"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 4
+        versionCode 5
         versionName "2.3"
         generatedDensities = []
     }
@@ -35,6 +42,8 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+        }
     }
     repositories {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
@@ -42,19 +51,16 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-
     /* Crashlytics */
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
         transitive = true;
     }
-
     /* Navigation Drawer */
     compile('com.mikepenz:materialdrawer:4.6.4@aar') {
         transitive = true
     }
-
     compile 'com.android.support:appcompat-v7:23.2.0'
     compile 'com.android.support:support-v4:23.2.0'
     compile 'com.android.support:cardview-v7:23.2.0'
@@ -62,12 +68,10 @@ dependencies {
     compile 'com.android.support:design:23.2.0'
     compile 'com.android.support:gridlayout-v7:23.2.0'
     compile 'com.android.support:preference-v14:23.2.0'
-
     /* Google Play */
     compile 'com.google.android.gms:play-services-identity:8.4.0'
     compile 'com.google.android.gms:play-services-location:8.4.0'
     compile 'com.google.android.gms:play-services-maps:8.4.0'
-
     /* Vector icons */
     compile 'com.mikepenz:google-material-typeface:2.1.0.1.original@aar'
     compile 'com.mikepenz:material-design-iconic-typeface:2.2.0.1@aar'
@@ -81,14 +85,12 @@ dependencies {
     compile 'com.mikepenz:devicon-typeface:2.0.0.1@aar'
     compile 'com.mikepenz:foundation-icons-typeface:3.0.0.1@aar'
     compile 'com.mikepenz:ionicons-typeface:2.0.1.1@aar'
-
     // Воспроизведение gif
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.7'
     // Переливающийся TextView
     compile 'com.romainpiel.shimmer:library:1.4.0@aar'
     // Прыгающие буквы
     compile 'net.frakbot:jumpingbeans:1.3.0'
-
     /* Others */
     compile 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
     compile 'com.squareup.okhttp:logging-interceptor:2.6.0'
