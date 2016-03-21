@@ -5,6 +5,9 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.khasang.forecast.MyApplication;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 /**
  * Класс для работы с запросами БД.
  *
@@ -13,8 +16,6 @@ import com.khasang.forecast.MyApplication;
 
 public class SQLiteWork {
 
-    private SQLiteDatabase sqlDatabaseRead;
-    private SQLiteDatabase sqlDatabaseWrite;
     private SQLiteOpen dbWork;
     private final int CURRENT_DB_VERSION = 5;
     private static volatile SQLiteWork instance;
@@ -42,32 +43,30 @@ public class SQLiteWork {
         instance = null;
     }
 
-    public void checkOpenDatabaseRead() {
-        if (sqlDatabaseRead != null && sqlDatabaseRead.isOpen()) {
-            sqlDatabaseRead.close();
-        }
-    }
-
     public void qExec(String query) {
         try {
-            new SQLiteExecAsyncTask(query);
+            new SQLiteExecAsyncTask(query, null);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void qExExec(String query, Object[] bindArgs) {
+    public void qExec(String query, Object[] bindArgs) {
         try {
-            new SQLiteExExecAsyncTask(query, bindArgs);
+            new SQLiteExecAsyncTask(query, bindArgs);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public synchronized void queryExec(String query) {
-        sqlDatabaseWrite = dbWork.getWritableDatabase();
+    public synchronized void queryExec(String query, Object[] bindArgs) {
+        SQLiteDatabase sqlDatabaseWrite = dbWork.getWritableDatabase();
         try {
-            sqlDatabaseWrite.execSQL(query);
+            if (bindArgs != null) {
+                sqlDatabaseWrite.execSQL(query, bindArgs);
+            } else {
+                sqlDatabaseWrite.execSQL(query);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -75,25 +74,33 @@ public class SQLiteWork {
         }
     }
 
-    public synchronized void queryExExec(String query, Object[] bindArgs) {
-        sqlDatabaseWrite = dbWork.getWritableDatabase();
+    public synchronized ArrayList<HashMap<String, String>> queryOpen(String query, String[] bindArgs) {
+        ArrayList<HashMap<String, String>> recList = new ArrayList<>();
+        SQLiteDatabase sqlDatabaseRead = dbWork.getReadableDatabase();
         try {
-            sqlDatabaseWrite.execSQL(query, bindArgs);
+            Cursor cursor = sqlDatabaseRead.rawQuery(query, bindArgs);
+            try {
+                if (cursor != null && cursor.getCount() != 0) {
+                    if (cursor.moveToFirst()) {
+                        do {
+                            HashMap<String, String> newRec = new HashMap<>();
+                            for (int i = 0; i < cursor.getColumnCount(); i++) {
+                                newRec.put(cursor.getColumnName(i), cursor.getString(i));
+                            }
+                            recList.add(newRec);
+                        } while (cursor.moveToNext());
+                    }
+                }
+            } finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            sqlDatabaseWrite.close();
+            sqlDatabaseRead.close();
         }
-    }
-
-    public synchronized Cursor queryOpen(String query, String[] bindArgs) {
-        checkOpenDatabaseRead();
-        sqlDatabaseRead = dbWork.getReadableDatabase();
-        try {
-            return sqlDatabaseRead.rawQuery(query, bindArgs);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+        return recList;
     }
 }
