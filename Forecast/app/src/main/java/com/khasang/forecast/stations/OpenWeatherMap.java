@@ -2,6 +2,7 @@ package com.khasang.forecast.stations;
 
 import android.support.annotation.Nullable;
 
+import com.crashlytics.android.Crashlytics;
 import com.facebook.stetho.okhttp.StethoInterceptor;
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.position.Coordinate;
@@ -169,6 +170,7 @@ public class OpenWeatherMap extends WeatherStation {
                             serviceType,
                             AppUtils.convertToWeather(response.body()));
                 } catch (NullPointerException e) {
+                    Crashlytics.logException(e);
                     PositionManager.getInstance().onFailureResponse(requestQueue, cityID, getServiceType());
                 }
             }
@@ -206,6 +208,7 @@ public class OpenWeatherMap extends WeatherStation {
                             serviceType,
                             AppUtils.convertToHourlyWeather(response.body()));
                 } catch (NullPointerException e) {
+                    Crashlytics.logException(e);
                     PositionManager.getInstance().onFailureResponse(requestList, cityID, getServiceType());
                 }
             }
@@ -242,6 +245,7 @@ public class OpenWeatherMap extends WeatherStation {
                             serviceType,
                             AppUtils.convertToDailyWeather(response.body()));
                 } catch (NullPointerException e) {
+                    Crashlytics.logException(e);
                     PositionManager.getInstance().onFailureResponse(requestList, cityID, getServiceType());
                 }
             }
