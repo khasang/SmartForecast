@@ -162,11 +162,15 @@ public class OpenWeatherMap extends WeatherStation {
         call.enqueue(new Callback<OpenWeatherMapResponse>() {
             @Override
             public void onResponse(Response<OpenWeatherMapResponse> response, Retrofit retrofit) {
-                PositionManager.getInstance().onResponseReceived(
-                        requestQueue,
-                        cityID,
-                        serviceType,
-                        AppUtils.convertToWeather(response.body()));
+                try {
+                    PositionManager.getInstance().onResponseReceived(
+                            requestQueue,
+                            cityID,
+                            serviceType,
+                            AppUtils.convertToWeather(response.body()));
+                } catch (NullPointerException e) {
+                    PositionManager.getInstance().onFailureResponse(requestQueue, cityID, getServiceType());
+                }
             }
 
             @Override
@@ -195,11 +199,15 @@ public class OpenWeatherMap extends WeatherStation {
         call.enqueue(new Callback<OpenWeatherMapResponse>() {
             @Override
             public void onResponse(Response<OpenWeatherMapResponse> response, Retrofit retrofit) {
-                PositionManager.getInstance().onResponseReceived(
-                        requestList,
-                        cityID,
-                        serviceType,
-                        AppUtils.convertToHourlyWeather(response.body()));
+                try {
+                    PositionManager.getInstance().onResponseReceived(
+                            requestList,
+                            cityID,
+                            serviceType,
+                            AppUtils.convertToHourlyWeather(response.body()));
+                } catch (NullPointerException e) {
+                    PositionManager.getInstance().onFailureResponse(requestList, cityID, getServiceType());
+                }
             }
 
             @Override
@@ -227,11 +235,15 @@ public class OpenWeatherMap extends WeatherStation {
         call.enqueue(new Callback<DailyResponse>() {
             @Override
             public void onResponse(Response<DailyResponse> response, Retrofit retrofit) {
-                PositionManager.getInstance().onResponseReceived(
-                        requestList,
-                        cityID,
-                        serviceType,
-                        AppUtils.convertToDailyWeather(response.body()));
+                try {
+                    PositionManager.getInstance().onResponseReceived(
+                            requestList,
+                            cityID,
+                            serviceType,
+                            AppUtils.convertToDailyWeather(response.body()));
+                } catch (NullPointerException e) {
+                    PositionManager.getInstance().onFailureResponse(requestList, cityID, getServiceType());
+                }
             }
 
             @Override
