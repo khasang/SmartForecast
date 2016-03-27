@@ -12,6 +12,7 @@ import android.support.v7.preference.PreferenceManager;
 
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.MyApplication;
+import com.khasang.forecast.PermissionChecker;
 import com.khasang.forecast.R;
 import com.khasang.forecast.exceptions.AccessFineLocationNotGrantedException;
 import com.khasang.forecast.exceptions.GpsIsDisabledException;
@@ -209,14 +210,21 @@ public class PositionManager {
         positions = positionFactory.getPositions();
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MyApplication.getAppContext());
         boolean saveCurrentLocation = sp.getString(MyApplication.getAppContext().getString(R.string.pref_location_key), MyApplication.getAppContext().getString(R.string.pref_location_current)).equals(MyApplication.getAppContext().getString(R.string.pref_location_current));
+        String lastActivePositionName = sp.getString(MyApplication.getAppContext().getString(R.string.shared_last_active_position_name), "");
         currentLocation.setLocationName(dbManager.loadСurrentTown());
         currentLocation.setCoordinate(dbManager.loadLastPositionCoordinates());
         if (saveCurrentLocation) {
             activePosition = currentLocation;
+            PermissionChecker permissionChecker = new PermissionChecker();
+            boolean isLocationPermissionGranted = permissionChecker.isPermissionGranted(MyApplication.getAppContext(), PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION);
+            if (!isLocationPermissionGranted) {
+                if (!lastActivePositionName.isEmpty() && positionInListPresent(lastActivePositionName)) {
+                    activePosition = getPosition(lastActivePositionName);
+                }
+            }
         } else {
-            String townName = sp.getString(MyApplication.getAppContext().getString(R.string.shared_last_active_position_name), "");
-            if (!townName.isEmpty() && positionInListPresent(townName)) {
-                activePosition = getPosition(townName);
+            if (!lastActivePositionName.isEmpty() && positionInListPresent(lastActivePositionName)) {
+                activePosition = getPosition(lastActivePositionName);
             } else {
                 activePosition = currentLocation;
             }

@@ -1,6 +1,7 @@
 package com.khasang.forecast;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
@@ -38,12 +39,12 @@ public class PermissionChecker {
         public abstract String showInformationMessage();
     }
 
-    public boolean isPermissionGranted(Activity activity, final RuntimePermissions permission) {
-        return Build.VERSION.SDK_INT < Build.VERSION_CODES.M || ActivityCompat.checkSelfPermission(activity, permission.toStringValue()) == PackageManager.PERMISSION_GRANTED;
+    public boolean isPermissionGranted(Context context, final RuntimePermissions permission) {
+        return Build.VERSION.SDK_INT < Build.VERSION_CODES.M || ActivityCompat.checkSelfPermission(context, permission.toStringValue()) == PackageManager.PERMISSION_GRANTED;
     }
 
     public void checkForPermissions(Activity activity, final RuntimePermissions permission, final IPermissionCallback callback) {
-        if (!isPermissionGranted(activity, permission)) {
+        if (!isPermissionGranted(MyApplication.getAppContext(), permission)) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permission.toStringValue())) {
                 Toast toast = AppUtils.showInfoMessage(activity, permission.showInformationMessage());
                 toast.getView().setBackgroundColor(ContextCompat.getColor(MyApplication.getAppContext(), R.color.background_toast));
