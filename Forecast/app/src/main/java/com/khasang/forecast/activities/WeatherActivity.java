@@ -94,6 +94,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     private ProgressBar progressbar;
 
     private Drawer result = null;
+    private PrimaryDrawerItem currentPlace;
     private PrimaryDrawerItem favorites;
     private boolean opened = false;
     private final int subItemIndex = 2000;
@@ -125,7 +126,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         Logger.println("drawer", "init");
         /** Инициализация элементов меню */
         final DividerDrawerItem divider = new DividerDrawerItem();
-        final PrimaryDrawerItem currentPlace = new PrimaryDrawerItem().withName(R.string.drawer_item_current_place).withIcon(Ionicons.Icon.ion_navigate).withIdentifier(0);
+        currentPlace = new PrimaryDrawerItem().withName(R.string.drawer_item_current_place).withIcon(Ionicons.Icon.ion_navigate).withIdentifier(0);
         final PrimaryDrawerItem cityList = new PrimaryDrawerItem().withName(R.string.drawer_item_city_list).withIcon(CommunityMaterial.Icon.cmd_city).withIdentifier(1);
         favorites = new PrimaryDrawerItem().withName(R.string.drawer_item_favorites).withIcon(MaterialDesignIconic.Icon.gmi_star)/*.withBadge(String.valueOf(PositionManager.getInstance().getFavouritesList().size()))*/.withIdentifier(2);
         final SecondaryDrawerItem settings = new SecondaryDrawerItem().withName(R.string.drawer_item_settings).withIcon(FontAwesome.Icon.faw_cog).withIdentifier(3);
@@ -239,10 +240,10 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
      * Обновление Drawer badges
      */
     public void updateBadges() {
-        // TODO Дизейблить пункт "Текущее местоположение" в дровере, если нет прав на получение координат
-//        PermissionChecker permissionChecker = new PermissionChecker();
-//        boolean isLocationPermissionGranted = permissionChecker.isPermissionGranted(this, PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION);
-//         дизейблить пункт на основании переменной isLocationPermissionGranted
+        PermissionChecker permissionChecker = new PermissionChecker();
+        boolean isLocationPermissionGranted = permissionChecker.isPermissionGranted(this, PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION);
+        currentPlace.withEnabled(isLocationPermissionGranted);
+        result.updateItem(currentPlace);
 
         if (PositionManager.getInstance().getFavouritesList().isEmpty()) {
             favorites.withBadge("").withEnabled(false);
