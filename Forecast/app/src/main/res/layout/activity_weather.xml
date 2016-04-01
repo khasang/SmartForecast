@@ -134,6 +134,7 @@
             android:id="@+id/fragment_container"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
+            android:background="@color/background_card"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <ProgressBar
