@@ -17,6 +17,7 @@
 
     <color name="background_window">#FF7F7F7F</color>
     <color name="background_card">#FF696969</color>
+    <color name="new_city_card">#FF3F3F3F</color>
 
     <color name="primary_text">#FAFAFA</color>
     <color name="secondary_text">#EFEFEF</color>
