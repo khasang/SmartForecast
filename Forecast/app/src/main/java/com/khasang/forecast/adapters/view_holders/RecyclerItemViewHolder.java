@@ -47,7 +47,7 @@ public class RecyclerItemViewHolder extends RecyclerView.ViewHolder {
         if (mark) {
             cardView.setCardBackgroundColor(ContextCompat.getColor(MyApplication.getAppContext(), R.color.new_city_card));
         } else {
-            cardView.setCardBackgroundColor(Color.WHITE);
+            cardView.setCardBackgroundColor(ContextCompat.getColor(MyApplication.getAppContext(), R.color.background_card));
         }
     }
 
