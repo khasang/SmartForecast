@@ -8,7 +8,7 @@
         <item name="android:textColor">@color/primary_text</item>
         <item name="android:textColorSecondary">@color/secondary_text</item>
         <item name="toolbarStyle">@style/Toolbar</item>
-        <item name="android:windowBackground">@color/grey_100</item>
+        <item name="android:windowBackground">@color/backgroundWindow</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
         <item name="colorControlNormal">@color/icons</item>
     </style>
