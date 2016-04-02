@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="background_card">#C1C1C1</color>
+    <color name="background_color">#A1A1A1</color>
     <color name="primary_text">#000000</color>
     <color name="secondary_text">#555555</color>
+
+    <color name="material_drawer_selected">@color/material_drawer_divider</color>
+    <color name="material_drawer_primary_text">#FFFFFF</color>
+    <color name="material_drawer_secondary_text">#EEEEEE</color>
 </resources>

@@ -4,7 +4,7 @@
     <color name="primary">#4CAF50</color>
     <color name="primary_dark">#388E3C</color>
     <color name="primary_light">#C8E6C9</color>
-    <color name="background_card">#FFFFFF</color>
+    <color name="background_color">#FFFFFF</color>
     <color name="accent">#FFC107</color>
     <color name="primary_text">#212121</color>
     <color name="secondary_text">#727272</color>
@@ -15,4 +15,6 @@
     <color name="snackbar_text">#FFFFFF</color>
     <color name="background_splash">#E3EFF7</color>
     <color name="background_toast">#CFCFCF</color>
+
+    <color name="material_drawer_background">@color/background_color</color>
 </resources>
