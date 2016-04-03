@@ -13,6 +13,13 @@
         <item name="colorControlNormal">@color/icons</item>
     </style>
 
+    <style name="MyDialogStyle" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">@color/accent</item>
+        <item name="android:textColor">@color/primary_text</item>
+        <item name="android:textColorAlertDialogListItem">@color/primary_text</item>
+        <item name="android:windowBackground">@color/background_window</item>
+    </style>
+
     <style name="AppTheme.Main" parent="AppTheme" />
 
     <style name="AppTheme.CityPicker" parent="AppTheme" />
