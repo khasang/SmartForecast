@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#4CAF50</color>
+    <color name="primary_dark">#388E3C</color>
+    <color name="primary_light">#C8E6C9</color>
+
+    <color name="background_window">#FFF5F5F5</color>
+    <color name="background_card">@color/background_window</color>
+    <color name="new_city_card">#FFF8E1</color>
+
+    <color name="primary_text">#212121</color>
+    <color name="secondary_text">#727272</color>
+
+</resources>
