@@ -26,9 +26,12 @@ public class SettingsActivity extends AppCompatActivity {
     public static final String SETTINGS_TAG = "com.khasang.forecast.activities.SettingsActivity";
     private static boolean recreateMainActivity;
 
+    static {
+        recreateMainActivity = false;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        recreateMainActivity = false;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         setupToolbar();
@@ -69,8 +72,8 @@ public class SettingsActivity extends AppCompatActivity {
         ActivityCompat.finishAfterTransition(this);
     }
 
-    public static void setRecreateMainActivity() {
-        recreateMainActivity = true;
+    public static void setRecreateMainActivity(boolean recreate) {
+        recreateMainActivity = recreate;
     }
 
     public static class GeneralPreferenceFragment extends PreferenceFragmentCompat
@@ -123,8 +126,8 @@ public class SettingsActivity extends AppCompatActivity {
                     } else {
                         // неподдерживаемая функциональность
                     }
+                    SettingsActivity.setRecreateMainActivity(true);
                     getActivity().recreate();
-                    SettingsActivity.setRecreateMainActivity();
                 }
             }
         }

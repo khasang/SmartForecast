@@ -612,6 +612,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 }
             }
         } else if (requestCode == CHOOSE_SETTINGS) {
+            SettingsActivity.setRecreateMainActivity(false);
             if (resultCode == RESULT_OK) {
                 boolean recreateActivity = data.getBooleanExtra(SettingsActivity.SETTINGS_TAG, false);
                 if (recreateActivity) {
