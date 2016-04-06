@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#388E3C</color>
+    <color name="primary_dark">#2E7D32</color>
+    <color name="primary_light">#4CAF50</color>
+
+    <color name="background_window">#FF7F7F7F</color>
+    <color name="background_card">#FF696969</color>
+    <color name="new_city_card">#FF3F3F3F</color>
+
+    <color name="primary_text">#FAFAFA</color>
+    <color name="secondary_text">#EFEFEF</color>
+
+    <color name="material_drawer_background">@color/background_window</color>
+    <color name="material_drawer_selected">@color/background_card</color>
+    <color name="material_drawer_primary_text">@color/primary_text</color>
+    <color name="material_drawer_secondary_text">@color/primary_text</color>
+    <color name="material_drawer_primary_icon">@color/material_drawer_primary_text</color>
+    <color name="material_drawer_selected_text">@color/primary_light</color>
+</resources>

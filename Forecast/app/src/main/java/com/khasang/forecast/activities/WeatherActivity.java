@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,6 +21,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -74,6 +76,11 @@ import java.util.Map;
 public class WeatherActivity extends AppCompatActivity implements View.OnClickListener,
         SwipeRefreshLayout.OnRefreshListener,
         IWeatherReceiver, IPermissionCallback, IMessageProvider {
+
+    static {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+    }
+
     private static final int CHOOSE_CITY = 1;
     private static final String TAG = WeatherActivity.class.getSimpleName();
 

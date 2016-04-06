@@ -59,6 +59,7 @@ public class SettingsActivity extends AppCompatActivity {
             onSharedPreferenceChanged(sharedPreferences, getString(R.string.pref_location_key));
             onSharedPreferenceChanged(sharedPreferences, getString(R.string.pref_welcome_key));
             onSharedPreferenceChanged(sharedPreferences, getString(R.string.pref_speed_key));
+            onSharedPreferenceChanged(sharedPreferences, getString(R.string.pref_night_mode_key));
         }
 
         @Override

@@ -7,6 +7,7 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:layout_margin="8dp"
+    android:background="@color/background_card"
     card_view:cardCornerRadius="4dp">
 
     <LinearLayout
@@ -23,6 +24,7 @@
             android:width="0dp"
             android:gravity="center_vertical|left"
             android:padding="8dp"
+            android:textColor="@color/primary_text"
             tools:text="Berlin" />
 
         <ImageButton
