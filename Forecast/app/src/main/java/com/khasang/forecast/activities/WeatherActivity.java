@@ -77,11 +77,12 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         SwipeRefreshLayout.OnRefreshListener,
         IWeatherReceiver, IPermissionCallback, IMessageProvider {
 
-    static {
+/*    static {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-    }
+    }*/
 
     private static final int CHOOSE_CITY = 1;
+    private static final int CHOOSE_SETTINGS = 2;
     private static final String TAG = WeatherActivity.class.getSimpleName();
 
     private TextView temperature;
@@ -466,7 +467,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         Intent intent = new Intent(this, SettingsActivity.class);
         Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(this)
                 .toBundle();
-        ActivityCompat.startActivity(this, intent, bundle);
+        ActivityCompat.startActivityForResult(this, intent, CHOOSE_SETTINGS, bundle);
     }
 
     private void initFields() {
@@ -608,6 +609,13 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 if (!PositionManager.getInstance().positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {
                     stopRefresh();
                     showProgress(false);
+                }
+            }
+        } else if (requestCode == CHOOSE_SETTINGS) {
+            if (resultCode == RESULT_OK) {
+                boolean recreateActivity = data.getBooleanExtra(SettingsActivity.SETTINGS_TAG, false);
+                if (recreateActivity) {
+                    recreate();
                 }
             }
         }
