@@ -237,6 +237,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         CityPickerActivity.this.clearList();
+                        PositionManager.getInstance().clearFavorites();
                         recyclerAdapter.notifyDataSetChanged();
                     }
                 });

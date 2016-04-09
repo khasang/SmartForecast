@@ -144,6 +144,12 @@ public class PositionManager {
         }
     }
 
+    public void clearFavorites() {
+        if (favouritesPositions != null) {
+            favouritesPositions.clear();
+        }
+    }
+
     // Пока заглушка, потом настрки сохранять при их смене в настройках
     public void saveSettings() {
         saveCurrStation();
