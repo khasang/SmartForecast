@@ -108,9 +108,6 @@ public class WeatherActivity extends AppCompatActivity
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_weather);
     if (findViewById(R.id.fragment_container) != null) {
-      if (savedInstanceState != null) {
-        return;
-      }
       hourlyForecastFragment = new HourlyForecastFragment();
       dailyForecastFragment = new DailyForecastFragment();
       getSupportFragmentManager().beginTransaction()
@@ -417,18 +414,19 @@ public class WeatherActivity extends AppCompatActivity
     PermissionChecker permissionChecker = new PermissionChecker();
     boolean isLocationPermissionGranted =
         permissionChecker.isPermissionGranted(this, PERMISSION_REQUEST_FINE_LOCATION);
+
     currentPlace.withEnabled(isLocationPermissionGranted);
     result.updateItem(currentPlace);
 
-    if (PositionManager.getInstance().getFavouritesList().isEmpty()) {
+    List<String> favCities = PositionManager.getInstance().getFavouritesList();
+    if (favCities.isEmpty()) {
       favorites.withBadge("").withEnabled(false);
       result.updateItem(favorites);
       return;
     }
     favorites.withEnabled(true);
     result.updateItem(favorites);
-    result.updateBadge(2,
-        new StringHolder(String.valueOf(PositionManager.getInstance().getFavouritesList().size())));
+    result.updateBadge(2, new StringHolder(String.valueOf(favCities.size())));
   }
 
   @Override protected void onPause() {
