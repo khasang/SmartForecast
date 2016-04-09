@@ -135,6 +135,12 @@ public class PositionManager {
         return state;
     }
 
+    public void removeFavoriteCity(String city) {
+        if (favouritesPositions != null) {
+            favouritesPositions.remove(city);
+        }
+    }
+
     public boolean isFavouriteCity(String cityName) {
         try {
             return favouritesPositions.contains(cityName);
@@ -292,10 +298,14 @@ public class PositionManager {
             positions.remove(name);
             dbManager.deleteTown(name);
         }
+        if (isFavouriteCity(name)) {
+            removeFavoriteCity(name);
+        }
     }
 
     public void removePositions() {
         positions.clear();
+        clearFavorites();
         dbManager.deleteTowns();
     }
 
