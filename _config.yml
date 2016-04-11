@@ -11,7 +11,6 @@ description: > # "Write an awesome description for your new site here.
   head meta (for Google search results) and in your feed.xml site 
   description.
 copyright: 'Copyright &copy; 2016 Smart Forecast. All Rights Reserved.'
-credits: 'Credits: Landing Page is a free to use, open source Bootstrap theme created by <a href="http://startbootstrap.com/">Start Bootstrap</a>.'
 
 # ----------------------- #
 #    Jekyll & Plugins     #
