@@ -22,9 +22,12 @@ import java.util.HashMap;
 public class SQLiteProcessData {
 
     public SimpleDateFormat dtFormat;
+    AppUtils.TemperatureMetrics temperatureMetric;
 
     public SQLiteProcessData() {
         dtFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        temperatureMetric = loadTemperatureMetrics();
+        sqliteClose();
     }
 
     public void sqliteClose() {

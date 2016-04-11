@@ -5,6 +5,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.khasang.forecast.orm.mirgate.SettingsMigrate;
+import com.khasang.forecast.orm.mirgate.TownsMigrate;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -19,9 +22,13 @@ public class SQLiteOpen extends SQLiteOpenHelper {
     private ArrayList<HashMap<String, String>> townList = null;
     private HashMap<String, String> settingsMap;
     private int dbOldVersion = 0;
+    private SettingsMigrate settingsMigrate;
+    private TownsMigrate townsMigrate;
 
     public SQLiteOpen(Context context, String name, int version) {
         super(context, name, null, version);
+        settingsMigrate = new SettingsMigrate();
+        townsMigrate = new TownsMigrate();
     }
 
     @Override
@@ -89,6 +96,7 @@ public class SQLiteOpen extends SQLiteOpenHelper {
                         }
                         townList.add(map);
                     } while (dataset.moveToNext());
+                    townsMigrate.setTownsListInSharedPreferences(townList);
                 }
             }
         } catch (Exception e) {
@@ -169,15 +177,53 @@ public class SQLiteOpen extends SQLiteOpenHelper {
         }
     }
 
+    public void getSettingsEx(SQLiteDatabase db) throws Exception {
+        Cursor dataset = db.rawQuery(SQLiteFields.QUERY_SELECT_SETTINGS, null);
+        try {
+            if (dataset != null && dataset.getCount() != 0) {
+                if (dataset.moveToFirst()) {
+                    switch (dbOldVersion) {
+                        case 3:
+                        case 4:
+                            settingsMigrate.setCurrentServiceType(dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_STATION)));
+                            settingsMigrate.setCurrentTown(dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_TOWN)));
+                            settingsMigrate.setCurrentTemperatureMetrics(dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_TEMPIRATURE_METRICS)));
+                            settingsMigrate.setCurrentSpeedMetrics(dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_SPEED_METRICS)));
+                            settingsMigrate.setCurrentPressureMetrics(dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_PRESSURE_METRICS)));
+                            break;
+
+                        default:
+                            settingsMigrate.setCurrentServiceType(dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_STATION)));
+                            settingsMigrate.setCurrentTown(dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_TOWN)));
+                            settingsMigrate.setCurrentTemperatureMetrics(dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_TEMPIRATURE_METRICS)));
+                            settingsMigrate.setCurrentSpeedMetrics(dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_SPEED_METRICS)));
+                            settingsMigrate.setCurrentPressureMetrics(dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_PRESSURE_METRICS)));
+                            settingsMigrate.setCurrentCoordinate(
+                                    dataset.getDouble(dataset.getColumnIndex(SQLiteFields.CURRENT_LATITUDE)),
+                                    dataset.getDouble(dataset.getColumnIndex(SQLiteFields.CURRENT_LONGITUDE))
+                            );
+                            break;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new Exception("getSettings error: " + e.getMessage());
+        } finally {
+            if (dataset != null) {
+                dataset.close();
+            }
+        }
+    }
+
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         try {
             dbOldVersion = oldVersion;
-
             // Выгрузка в память списка городов
             getTownList(db);
             // Выгрузка в память настроек
             getSettings(db);
+            getSettingsEx(db);
             // Пересоздание таблиц
             recreate(db);
             // Запись списка городов в новые таблицы
@@ -189,6 +235,8 @@ public class SQLiteOpen extends SQLiteOpenHelper {
             // При ошибке пересоздаем таблицы без сохранения данных
             recreate(db);
         }
+        townsMigrate.setTownsListInOrm();
+        settingsMigrate.setSettingsInOrm();
     }
 
     @Override

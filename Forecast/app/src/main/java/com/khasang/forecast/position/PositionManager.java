@@ -2,10 +2,13 @@ package com.khasang.forecast.position;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.net.ConnectivityManager;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v7.preference.PreferenceManager;
@@ -23,9 +26,15 @@ import com.khasang.forecast.location.CurrentLocationManager;
 import com.khasang.forecast.exceptions.EmptyCurrentAddressException;
 import com.khasang.forecast.location.LocationParser;
 import com.khasang.forecast.exceptions.NoAvailableAddressesException;
+import com.khasang.forecast.orm.SettingsManager;
+import com.khasang.forecast.orm.TownsManager;
+import com.khasang.forecast.orm.WeatherManager;
+import com.khasang.forecast.orm.tables.TownsTable;
+import com.khasang.forecast.sqlite.SQLiteOpen;
 import com.khasang.forecast.sqlite.SQLiteProcessData;
 import com.khasang.forecast.stations.WeatherStation;
 import com.khasang.forecast.stations.WeatherStationFactory;
+import com.orm.SugarContext;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -53,9 +62,16 @@ public class PositionManager {
     List<String> favouritesPositions;
     private volatile IWeatherReceiver receiver;
     private volatile IMessageProvider messageProvider;
-    private SQLiteProcessData dbManager;
     private boolean lastResponseIsFailure;
     private CurrentLocationManager locationManager;
+
+    private SQLiteProcessData dbManager;
+    private SQLiteOpen dbWork;
+    private final int CURRENT_DB_VERSION = 6;
+    private SettingsManager settingsManager;
+    private TownsManager townsManager;
+    private WeatherManager weatherManager;
+
 
     public synchronized void setReceiver(IWeatherReceiver receiver) {
         this.receiver = receiver;
@@ -100,12 +116,36 @@ public class PositionManager {
     public synchronized void removeInstance() {
         instance = null;
     }
-
+/*
+    private int getDbVersion() {
+        try {
+            ApplicationInfo ai = MyApplication.getAppContext().getPackageManager().getApplicationInfo(
+                    MyApplication.getAppContext().getPackageName(),
+                    PackageManager.GET_META_DATA
+            );
+            Bundle bundle = ai.metaData;
+            return bundle.getInt("VERSION");
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+*/
     public void initManager() {
+        SugarContext.init(MyApplication.getAppContext());
+
         dbManager = new SQLiteProcessData();
-        temperatureMetric = dbManager.loadTemperatureMetrics();
-        speedMetric = dbManager.loadSpeedMetrics();
-        pressureMetric = dbManager.loadPressureMetrics();
+
+        townsManager = new TownsManager();
+        settingsManager = new SettingsManager();
+        weatherManager = new WeatherManager();
+
+        temperatureMetric = settingsManager.loadСurrTemperatureMetrics();
+        speedMetric = settingsManager.loadСurrSpeedMetrics();
+        pressureMetric = settingsManager.loadСurrPressureMetrics();
+
         initCurrentLocation();
         initPositions();
         initLocationManager();
@@ -114,8 +154,10 @@ public class PositionManager {
     }
 
     public void updateFavoritesList() {
-        favouritesPositions = dbManager.loadFavoriteTownList();
-        Collections.sort(favouritesPositions);
+        favouritesPositions = townsManager.loadFavoriteTownList();
+        if (favouritesPositions != null) {
+            Collections.sort(favouritesPositions);
+        }
     }
 
     public List<String> getFavouritesList() {
@@ -131,7 +173,7 @@ public class PositionManager {
             state = true;
             favouritesPositions.add(cityName);
         }
-        dbManager.saveTownFavourite(state, cityName);
+        townsManager.saveTownFavourite(state, cityName);
         return state;
     }
 
@@ -152,20 +194,19 @@ public class PositionManager {
     }
 
     public void saveMetrics() {
-        dbManager.saveSettings(temperatureMetric, speedMetric, pressureMetric);
+        settingsManager.saveCurrMetrics(temperatureMetric, speedMetric, pressureMetric);
     }
 
     public void saveCurrPosition() {
         try {
-            dbManager.saveLastCurrentLocationName(currentLocation.getLocationName());
-            dbManager.saveLastPositionCoordinates(currentLocation.getCoordinate());
+            settingsManager.saveCurrTown(currentLocation.getLocationName());
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public void saveCurrStation() {
-        dbManager.saveSettings(currStation);
+        settingsManager.saveCurrStation(currStation);
     }
 
     /**
@@ -176,21 +217,26 @@ public class PositionManager {
         stations = wsf
                 .addOpenWeatherMap()
                 .create();
-        currStation = stations.get(dbManager.loadStation());
+        currStation = stations.get(settingsManager.loadСurrStation());
     }
 
     private void initCurrentLocation() {
+        String locName = settingsManager.loadСurrTown();
         currentLocation = new Position();
         currentLocation.setLocationName("Smart Forecast");
         currentLocation.setCityID(0);
         currentLocation.setCoordinate(null);
+        if (locName != null && !locName.isEmpty()) {
+            currentLocation.setLocationName(locName);
+        }
+
     }
 
     /**
      * Метод инициализации списка местоположений, вызывается из активити
      */
     private void initPositions() {
-        HashMap<String, Coordinate> pos = dbManager.loadTownList();
+        List<TownsTable> pos = townsManager.loadTownList();
         initPositions(pos);
     }
 
@@ -199,20 +245,26 @@ public class PositionManager {
      *
      * @param favorites коллекция {@link List} типа {@link String}, содержащая названия городов
      */
-    private void initPositions(HashMap<String, Coordinate> favorites) {
+    private void initPositions(List<TownsTable> favorites) {
         PositionFactory positionFactory = new PositionFactory();
 
-        if (favorites.size() != 0) {
-            for (HashMap.Entry<String, Coordinate> entry : favorites.entrySet()) {
-                positionFactory.addFavouritePosition(entry.getKey(), entry.getValue());
+        if (favorites != null && favorites.size() != 0) {
+            for(int i = 0; i < favorites.size(); i++) {
+                positionFactory.addFavouritePosition(
+                        favorites.get(i).name,
+                        new Coordinate(favorites.get(i).latitude, favorites.get(i).longitude)
+                );
             }
+
         }
         positions = positionFactory.getPositions();
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MyApplication.getAppContext());
         boolean saveCurrentLocation = sp.getString(MyApplication.getAppContext().getString(R.string.pref_location_key), MyApplication.getAppContext().getString(R.string.pref_location_current)).equals(MyApplication.getAppContext().getString(R.string.pref_location_current));
         String lastActivePositionName = sp.getString(MyApplication.getAppContext().getString(R.string.shared_last_active_position_name), "");
-        currentLocation.setLocationName(dbManager.loadСurrentTown());
-        currentLocation.setCoordinate(dbManager.loadLastPositionCoordinates());
+
+        currentLocation.setLocationName(settingsManager.loadСurrTown());
+        currentLocation.setCoordinate(settingsManager.loadСurrLatLng());
+
         if (saveCurrentLocation) {
             activePosition = currentLocation;
             PermissionChecker permissionChecker = new PermissionChecker();
@@ -244,7 +296,7 @@ public class PositionManager {
             return;
         }
         PositionFactory positionFactory = new PositionFactory(positions);
-        positionFactory.addFavouritePosition(name, coordinates, dbManager);
+        positionFactory.addFavouritePosition(name, coordinates, townsManager);
         positions = positionFactory.getPositions();
     }
 
@@ -284,13 +336,13 @@ public class PositionManager {
     public void removePosition(String name) {
         if (positions.containsKey(name)) {
             positions.remove(name);
-            dbManager.deleteTown(name);
+            townsManager.deleteTown(name);
         }
     }
 
     public void removePositions() {
         positions.clear();
-        dbManager.deleteTowns();
+        townsManager.deleteTowns();
     }
 
     /**
@@ -515,13 +567,13 @@ public class PositionManager {
         if (activePosition.getCityID() == cityId && currStation.getServiceType() == serviceType && position != null) {
             for (Map.Entry<Calendar, Weather> entry : weather.entrySet()) {
                 if (rType == WeatherStation.ResponseType.CURRENT) {
-                    dbManager.deleteOldWeatherAllTowns(serviceType, entry.getKey());
+                    weatherManager.deleteOldWeatherAllTowns(serviceType, entry.getKey());
                     // Для CURRENT погоды сохраняем дополнительно погоду с текущим локальным временем,
                     // иначе возможно расхождение с погодой из БД, например при смене метрик
                     // (ближайшая в БД может отличаться от "текущей" погоды со станции)
-                    dbManager.saveWeather(serviceType, position.getLocationName(), Calendar.getInstance(), entry.getValue());
+                    weatherManager.saveWeather(serviceType, position.getLocationName(), Calendar.getInstance(), entry.getValue());
                 }
-                dbManager.saveWeather(serviceType, position.getLocationName(), entry.getKey(), entry.getValue());
+                weatherManager.saveWeather(serviceType, position.getLocationName(), entry.getKey(), entry.getValue());
             }
 
             for (Map.Entry<Calendar, Weather> entry : weather.entrySet()) {
@@ -569,7 +621,7 @@ public class PositionManager {
     }
 
     private HashMap<Calendar, Weather> getCurrentWeatherFromDB(WeatherStationFactory.ServiceType sType, String locationName) {
-        return dbManager.loadWeather(sType, locationName, Calendar.getInstance(), temperatureMetric, speedMetric, pressureMetric);
+        return weatherManager.loadWeather(sType, locationName, Calendar.getInstance(), temperatureMetric, speedMetric, pressureMetric);
     }
 
     private HashMap<Calendar, Weather> getHourlyWeatherFromDB(WeatherStationFactory.ServiceType sType, String locationName) {
@@ -580,7 +632,7 @@ public class PositionManager {
         calendar.set(Calendar.MINUTE, 0);
         HashMap<Calendar, Weather> forecast = new HashMap<>();
         for (int i = 0; i < FORECASTS_COUNT; i++) {
-            HashMap<Calendar, Weather> temp = dbManager.loadWeather(sType, locationName, calendar, temperatureMetric, speedMetric, pressureMetric);
+            HashMap<Calendar, Weather> temp = weatherManager.loadWeather(sType, locationName, calendar, temperatureMetric, speedMetric, pressureMetric);
             if (temp == null || temp.size() == 0) {
                 return null;
             }
@@ -599,7 +651,7 @@ public class PositionManager {
         calendar.set(Calendar.MINUTE, 0);
         HashMap<Calendar, Weather> forecast = new HashMap<>();
         for (int i = 0; i < FORECASTS_COUNT; i++) {
-            HashMap<Calendar, Weather> temp = dbManager.loadWeather(sType, locationName, calendar, temperatureMetric, speedMetric, pressureMetric);
+            HashMap<Calendar, Weather> temp = weatherManager.loadWeather(sType, locationName, calendar, temperatureMetric, speedMetric, pressureMetric);
             if (temp == null || temp.size() == 0) {
                 return null;
             }
