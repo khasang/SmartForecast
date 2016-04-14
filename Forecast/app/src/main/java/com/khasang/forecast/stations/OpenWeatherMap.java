@@ -157,9 +157,14 @@ public class OpenWeatherMap extends WeatherStation {
     public void updateWeather(final LinkedList<ResponseType> requestQueue, final int cityID, final Coordinate coordinate) {
         if (coordinate == null) {
             PositionManager.getInstance().onFailureResponse(requestQueue, cityID, getServiceType());
+            return;
         }
         Call<OpenWeatherMapResponse> call = service.getCurrent(coordinate.getLatitude(),
                 coordinate.getLongitude());
+        if (coordinate.getLongitude() == 0 && coordinate.getLatitude() == 0) {
+            String positionName = PositionManager.getInstance().getPosition(cityID).getLocationName();
+            call = service.getCurrent(positionName);
+        }
         call.enqueue(new Callback<OpenWeatherMapResponse>() {
             @Override
             public void onResponse(Response<OpenWeatherMapResponse> response, Retrofit retrofit) {
