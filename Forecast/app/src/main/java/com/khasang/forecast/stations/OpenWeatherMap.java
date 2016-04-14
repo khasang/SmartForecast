@@ -155,15 +155,16 @@ public class OpenWeatherMap extends WeatherStation {
      */
     @Override
     public void updateWeather(final LinkedList<ResponseType> requestQueue, final int cityID, final Coordinate coordinate) {
-        if (coordinate == null) {
+        Call<OpenWeatherMapResponse> call;
+        if (coordinate == null || (coordinate.getLongitude() == 0 && coordinate.getLatitude() == 0)) {
             PositionManager.getInstance().onFailureResponse(requestQueue, cityID, getServiceType());
-            return;
-        }
-        Call<OpenWeatherMapResponse> call = service.getCurrent(coordinate.getLatitude(),
-                coordinate.getLongitude());
-        if (coordinate.getLongitude() == 0 && coordinate.getLatitude() == 0) {
             String positionName = PositionManager.getInstance().getPosition(cityID).getLocationName();
+            if (positionName.isEmpty()) {
+                return;
+            }
             call = service.getCurrent(positionName);
+        } else {
+            call = service.getCurrent(coordinate.getLatitude(), coordinate.getLongitude());
         }
         call.enqueue(new Callback<OpenWeatherMapResponse>() {
             @Override
@@ -196,13 +197,19 @@ public class OpenWeatherMap extends WeatherStation {
      * @param coordinate  объект типа {@link Coordinate}, содержащий географические координаты
      */
     @Override
-    public void updateHourlyWeather(final LinkedList<ResponseType> requestList, final int cityID, final Coordinate coordinate) {
-        if (coordinate == null) {
+    public void updateHourlyWeather(final LinkedList<ResponseType> requestList,
+                                    final int cityID, final Coordinate coordinate) {
+        Call<OpenWeatherMapResponse> call;
+        if (coordinate == null || (coordinate.getLongitude() == 0 && coordinate.getLatitude() == 0)) {
             PositionManager.getInstance().onFailureResponse(requestList, cityID, getServiceType());
+            String positionName = PositionManager.getInstance().getPosition(cityID).getLocationName();
+            if (positionName.isEmpty()) {
+                return;
+            }
+            call = service.getHourly(positionName, TIME_PERIOD);
+        } else {
+            call = service.getHourly(coordinate.getLatitude(), coordinate.getLongitude(), TIME_PERIOD);
         }
-        Call<OpenWeatherMapResponse> call = service.getHourly(coordinate.getLatitude(),
-                coordinate.getLongitude(),
-                TIME_PERIOD);
         call.enqueue(new Callback<OpenWeatherMapResponse>() {
             @Override
             public void onResponse(Response<OpenWeatherMapResponse> response, Retrofit retrofit) {
@@ -233,13 +240,19 @@ public class OpenWeatherMap extends WeatherStation {
      * @param coordinate  объект типа {@link Coordinate}, содержащий географические координаты
      */
     @Override
-    public void updateWeeklyWeather(final LinkedList<ResponseType> requestList, final int cityID, final Coordinate coordinate) {
-        if (coordinate == null) {
+    public void updateWeeklyWeather(final LinkedList<ResponseType> requestList,
+                                    final int cityID, final Coordinate coordinate) {
+        Call<DailyResponse> call;
+        if (coordinate == null || (coordinate.getLongitude() == 0 && coordinate.getLatitude() == 0)) {
             PositionManager.getInstance().onFailureResponse(requestList, cityID, getServiceType());
+            String positionName = PositionManager.getInstance().getPosition(cityID).getLocationName();
+            if (positionName.isEmpty()) {
+                return;
+            }
+            call = service.getDaily(positionName, DAYS_PERIOD);
+        } else {
+            call = service.getDaily(coordinate.getLatitude(), coordinate.getLongitude(), DAYS_PERIOD);
         }
-        Call<DailyResponse> call = service.getDaily(coordinate.getLatitude(),
-                coordinate.getLongitude(),
-                DAYS_PERIOD);
         call.enqueue(new Callback<DailyResponse>() {
             @Override
             public void onResponse(Response<DailyResponse> response, Retrofit retrofit) {
