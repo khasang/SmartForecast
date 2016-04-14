@@ -14,8 +14,11 @@ import retrofit.http.Query;
  * <p><b>Методы:</b>
  * <ul>
  * <li>{@link #getCurrent(double, double)}</li>
+ * <li>{@link #getCurrent(String)}</li>
  * <li>{@link #getHourly(double, double, int)}</li>
+ * <li>{@link #getHourly(String, int)}</li>
  * <li>{@link #getDaily(double, double, int)}</li>
+ * <li>{@link #getDaily(String, int)}</li>
  * </ul>
  */
 
