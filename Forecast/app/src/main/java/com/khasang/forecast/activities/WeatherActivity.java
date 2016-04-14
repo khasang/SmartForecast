@@ -616,7 +616,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
             if (resultCode == RESULT_OK) {
                 boolean recreateActivity = data.getBooleanExtra(SettingsActivity.SETTINGS_TAG, false);
                 if (recreateActivity) {
-                    recreate();
+                    ((View) findViewById(R.id.frame_layout)).setBackgroundColor(R.color.background_window);
                 }
             }
         }
