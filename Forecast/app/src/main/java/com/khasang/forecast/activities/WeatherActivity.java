@@ -132,7 +132,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         final SecondaryDrawerItem settings = new SecondaryDrawerItem().withName(R.string.drawer_item_settings).withIcon(FontAwesome.Icon.faw_cog).withIdentifier(3);
         final SecondaryDrawerItem feedBack = new SecondaryDrawerItem().withName(R.string.drawer_item_feedback).withIcon(GoogleMaterial.Icon.gmd_feedback).withIdentifier(4);
         final PrimaryDrawerItem footer = new PrimaryDrawerItem().withName(R.string.app_name).withEnabled(false).withIdentifier(5);
-        final SecondaryDrawerItem about = new SecondaryDrawerItem().withName(R.string.drawer_item_about).withIcon(GoogleMaterial.Icon.gmd_feedback).withIdentifier(6);
+        final SecondaryDrawerItem about = new SecondaryDrawerItem().withName(R.string.drawer_item_about).withIcon(GoogleMaterial.Icon.gmd_comment).withIdentifier(6);
 
         /** Создание Navigation Drawer */
         result = new DrawerBuilder()

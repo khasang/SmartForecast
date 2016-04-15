@@ -147,7 +147,8 @@
     <string name="error_get_coordinates">Can\'t determine the coordinates of the requested location</string>
     <string name="shared_last_active_position_name" translatable="false">last_active_position_name</string>
     <string name="forecast_unavailable">Forecast unavailable</string>
+    //add
     <string name="tab_name_team">Команда</string>
     <string name="tab_name_history">История</string>
-    <string name="drawer_item_about">About</string>
+    <string name="drawer_item_about">О приложении</string>
 </resources>
