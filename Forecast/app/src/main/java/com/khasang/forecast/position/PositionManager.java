@@ -378,7 +378,7 @@ public class PositionManager {
      * @param cityID идентификатор местоположения
      * @return обьект типа {@link Position}
      */
-    private Position getPosition(int cityID) {
+    public Position getPosition(int cityID) {
         if (cityID == 0) {
             return currentLocation;
         }
