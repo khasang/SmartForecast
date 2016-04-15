@@ -147,4 +147,5 @@
     <string name="error_get_coordinates">Can\'t determine the coordinates of the requested location</string>
     <string name="shared_last_active_position_name" translatable="false">last_active_position_name</string>
     <string name="forecast_unavailable">Forecast unavailable</string>
+    <string name="tab_name_team">Команда</string>
 </resources>
