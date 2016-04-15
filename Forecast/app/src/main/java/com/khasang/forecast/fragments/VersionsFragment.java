@@ -6,21 +6,26 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.khasang.forecast.R;
 
 /*
- * HistoryFragment.java     15.04.2016
+ * VersionsFragment.java     15.04.2016
  *
  * Copyright (c) 2016 Vladislav Laptev,
  * All rights reserved. Used by permission.
  */
 
-public class HistoryFragment extends Fragment {
+public class VersionsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_team, container, false);
+        View view = inflater.inflate(R.layout.fragment_versions, container, false);
+
+        TextView textHistory = (TextView) view.findViewById(R.id.textHistory);
+        textHistory.setText(getActivity().getResources().getText(R.string.history));
+
         return view;
     }
 

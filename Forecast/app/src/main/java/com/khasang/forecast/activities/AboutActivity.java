@@ -8,15 +8,13 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 
 import com.khasang.forecast.R;
-import com.khasang.forecast.fragments.HistoryFragment;
+import com.khasang.forecast.fragments.VersionsFragment;
 import com.khasang.forecast.fragments.TeamFragment;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 /*
  * AboutActivity.java     15.04.2016
@@ -36,12 +34,11 @@ public class AboutActivity extends AppCompatActivity {
         ViewPager viewPager  = (ViewPager) findViewById(R.id.about_viewpager);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.about_toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
@@ -49,7 +46,7 @@ public class AboutActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         TabsAdapter adapter = new TabsAdapter(getSupportFragmentManager());
-        adapter.addFragment(new HistoryFragment(),
+        adapter.addFragment(new VersionsFragment(),
                 getResources().getString(R.string.tab_name_history));
         adapter.addFragment(new TeamFragment(),
                 getResources().getString(R.string.tab_name_team));
