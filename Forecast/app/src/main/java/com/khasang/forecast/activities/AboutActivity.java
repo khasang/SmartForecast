@@ -1,12 +1,5 @@
 package com.khasang.forecast.activities;
 
-/*
- * EditClientProfileSecondFragment.java     15.04.2016
- *
- * Copyright (c) 2016 Vladislav Laptev,
- * All rights reserved. Used by permission.
- */
-
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -22,6 +15,14 @@ import com.khasang.forecast.fragments.TeamFragment;
 
 import java.util.ArrayList;
 import java.util.List;
+
+
+/*
+ * AboutActivity.java     15.04.2016
+ *
+ * Copyright (c) 2016 Vladislav Laptev,
+ * All rights reserved. Used by permission.
+ */
 
 public class AboutActivity extends AppCompatActivity {
 
