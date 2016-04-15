@@ -135,12 +135,24 @@ public class PositionManager {
         return state;
     }
 
+    public void removeFavoriteCity(String city) {
+        if (favouritesPositions != null) {
+            favouritesPositions.remove(city);
+        }
+    }
+
     public boolean isFavouriteCity(String cityName) {
         try {
             return favouritesPositions.contains(cityName);
         } catch (NullPointerException | ClassCastException e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    public void clearFavorites() {
+        if (favouritesPositions != null) {
+            favouritesPositions.clear();
         }
     }
 
@@ -286,10 +298,14 @@ public class PositionManager {
             positions.remove(name);
             dbManager.deleteTown(name);
         }
+        if (isFavouriteCity(name)) {
+            removeFavoriteCity(name);
+        }
     }
 
     public void removePositions() {
         positions.clear();
+        clearFavorites();
         dbManager.deleteTowns();
     }
 
