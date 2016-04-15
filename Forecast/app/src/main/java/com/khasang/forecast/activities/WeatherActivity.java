@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,7 +20,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -77,10 +75,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         SwipeRefreshLayout.OnRefreshListener,
         IWeatherReceiver, IPermissionCallback, IMessageProvider {
 
-/*    static {
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-    }*/
-
     private static final int CHOOSE_CITY = 1;
     private static final int CHOOSE_SETTINGS = 2;
     private static final String TAG = WeatherActivity.class.getSimpleName();
@@ -128,6 +122,90 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         startAnimations();
         checkPermissions();
         initNavigationDrawer();
+    }
+
+    private void initFields() {
+        toolbar = (Toolbar) findViewById(R.id.toolbar_material);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        currWeather = (ImageView) findViewById(R.id.iv_curr_weather);
+        temperature = (TextView) findViewById(R.id.temperature);
+        description = (TextView) findViewById(R.id.precipitation);
+        wind = (TextView) findViewById(R.id.wind);
+        humidity = (TextView) findViewById(R.id.humidity);
+        progressbar = (ProgressBar) findViewById(R.id.progressbar);
+        progressbar.setIndeterminate(true);
+
+        /** Слушатели нажатий объектов */
+        fab.setOnClickListener(this);
+        temperature.setOnClickListener(this);
+        setSupportActionBar(toolbar);
+    }
+
+    private void setAnimationForWidgets() {
+        /** Анимация объектов */
+        animationRotateCenter = AnimationUtils.loadAnimation(this, R.anim.rotate_center);
+        animationGrow = AnimationUtils.loadAnimation(this, R.anim.simple_grow);
+    }
+
+    /**
+     * Проигрываение анимации всех объектов activity
+     */
+    private void startAnimations() {
+        fab.startAnimation(animationGrow);
+    }
+
+    private void checkPermissions() {
+        PermissionChecker permissionChecker = new PermissionChecker();
+        permissionChecker.checkForPermissions(this, PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION, this);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION.VALUE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                PositionManager.getInstance().setReceiver(null);
+                PositionManager.getInstance().removeInstance();
+                PositionManager.getInstance().setReceiver(this);
+                PositionManager.getInstance().updateWeatherFromDB();
+                PositionManager.getInstance().updateWeather();
+                permissionGranted(PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION);
+            } else {
+                permissionDenied(PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION);
+            }
+        }
+    }
+
+    @Override
+    public void permissionGranted(PermissionChecker.RuntimePermissions permission) {
+        checkCoordinatesServices();
+    }
+
+    private void checkCoordinatesServices() {
+        if (!PositionManager.getInstance().isSomeLocationProviderAvailable()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.location_manager);
+            builder.setMessage(R.string.activate_geographical_service);
+            builder.setPositiveButton(R.string.btn_yes, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(i);
+                }
+            });
+            builder.setNegativeButton(R.string.btn_no, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            builder.create().show();
+        }
+    }
+
+    @Override
+    public void permissionDenied(PermissionChecker.RuntimePermissions permission) {
+
     }
 
     private void initNavigationDrawer() {
@@ -244,38 +322,61 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                 .build();
     }
 
-    /**
-     * Обновление Drawer badges
-     */
-    public void updateBadges() {
-        PermissionChecker permissionChecker = new PermissionChecker();
-        boolean isLocationPermissionGranted = permissionChecker.isPermissionGranted(this, PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION);
-        currentPlace.withEnabled(isLocationPermissionGranted);
-        result.updateItem(currentPlace);
-
-        if (PositionManager.getInstance().getFavouritesList().isEmpty()) {
-            favorites.withBadge("").withEnabled(false);
-            result.updateItem(favorites);
-            return;
-        }
-        favorites.withEnabled(true);
-        result.updateItem(favorites);
-        result.updateBadge(2, new StringHolder(String.valueOf(PositionManager.getInstance().getFavouritesList().size())));
+    public void startCityPickerActivity() {
+        Intent intent = new Intent(this, CityPickerActivity.class);
+        Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(this)
+                .toBundle();
+        ActivityCompat.startActivityForResult(this, intent, CHOOSE_CITY, bundle);
     }
 
     /**
-     * Закрывает открытые Drawer SubItems
+     * Получаем город из CityPickActivity
      */
-    public void closeSubItems() {
-        for (int i = PositionManager.getInstance().getFavouritesList().size() - 1; i >= 0; i--) {
-            result.removeItems(subItemIndex + i);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CHOOSE_CITY) {
+            if (resultCode == RESULT_OK) {
+                String newCity = data.getStringExtra(CityPickerActivity.CITY_PICKER_TAG);
+                toolbar.setTitle(newCity.split(",")[0]);
+                Logger.println(TAG, newCity);
+                PositionManager.getInstance().setCurrentPosition(newCity);
+            } else {
+                if (!PositionManager.getInstance().positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {
+                    stopRefresh();
+                    showProgress(false);
+                }
+            }
+        } else if (requestCode == CHOOSE_SETTINGS) {
+            SettingsActivity.setRecreateMainActivity(false);
+            if (resultCode == RESULT_OK) {
+                boolean recreateActivity = data.getBooleanExtra(SettingsActivity.SETTINGS_TAG, false);
+                if (recreateActivity) {
+                    //((View) findViewById(R.id.frame_layout)).setBackgroundColor();
+                }
+            }
         }
-        if (opened) {
-            opened = false;
-        }
-        //FIXME add unselect item
-        favorites.withSelectable(false);
-        result.updateItem(favorites);
+    }
+
+    public void startSettingsActivity() {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(this)
+                .toBundle();
+        ActivityCompat.startActivityForResult(this, intent, CHOOSE_SETTINGS, bundle);
+    }
+
+    /**
+     * Изменяет отображаемый город WeatherActivity
+     */
+    public void changeDisplayedCity(String newCity) {
+        PositionManager.getInstance().setCurrentPosition(newCity);
+        PositionManager.getInstance().updateWeatherFromDB();
+        onRefresh();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     @Override
@@ -285,11 +386,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         } else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
     }
 
     @Override
@@ -336,6 +432,25 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         onRefresh();
     }
 
+    /**
+     * Обновление Drawer badges
+     */
+    public void updateBadges() {
+        PermissionChecker permissionChecker = new PermissionChecker();
+        boolean isLocationPermissionGranted = permissionChecker.isPermissionGranted(this, PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION);
+        currentPlace.withEnabled(isLocationPermissionGranted);
+        result.updateItem(currentPlace);
+
+        if (PositionManager.getInstance().getFavouritesList().isEmpty()) {
+            favorites.withBadge("").withEnabled(false);
+            result.updateItem(favorites);
+            return;
+        }
+        favorites.withEnabled(true);
+        result.updateItem(favorites);
+        result.updateBadge(2, new StringHolder(String.valueOf(PositionManager.getInstance().getFavouritesList().size())));
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -346,7 +461,21 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         editor.apply();
         PositionManager.getInstance().setMessageProvider(null);
         PositionManager.getInstance().setReceiver(null);
+    }
 
+    /**
+     * Закрывает открытые Drawer SubItems
+     */
+    public void closeSubItems() {
+        for (int i = PositionManager.getInstance().getFavouritesList().size() - 1; i >= 0; i--) {
+            result.removeItems(subItemIndex + i);
+        }
+        if (opened) {
+            opened = false;
+        }
+        //FIXME add unselect item
+        favorites.withSelectable(false);
+        result.updateItem(favorites);
     }
 
     @Override
@@ -359,75 +488,6 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     protected void onDestroy() {
         super.onDestroy();
         PositionManager.getInstance().removeInstance();
-    }
-
-    private void checkCoordinatesServices() {
-        if (!PositionManager.getInstance().isSomeLocationProviderAvailable()) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle(R.string.location_manager);
-            builder.setMessage(R.string.activate_geographical_service);
-            builder.setPositiveButton(R.string.btn_yes, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    startActivity(i);
-                }
-            });
-            builder.setNegativeButton(R.string.btn_no, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            });
-            builder.create().show();
-        }
-    }
-
-    private void checkPermissions() {
-        PermissionChecker permissionChecker = new PermissionChecker();
-        permissionChecker.checkForPermissions(this, PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION, this);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION.VALUE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                PositionManager.getInstance().setReceiver(null);
-                PositionManager.getInstance().removeInstance();
-                PositionManager.getInstance().setReceiver(this);
-                PositionManager.getInstance().updateWeatherFromDB();
-                PositionManager.getInstance().updateWeather();
-                permissionGranted(PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION);
-            } else {
-                permissionDenied(PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION);
-            }
-        }
-    }
-
-    @Override
-    public void permissionGranted(PermissionChecker.RuntimePermissions permission) {
-        checkCoordinatesServices();
-    }
-
-    @Override
-    public void permissionDenied(PermissionChecker.RuntimePermissions permission) {
-
-    }
-
-    private void switchDisplayMode() {
-        final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        if (dailyForecastFragment.isHidden()) {
-            ft.show(dailyForecastFragment)
-                    .hide(hourlyForecastFragment)
-                    .commit();
-            fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_by_hour));
-        } else {
-            ft.show(hourlyForecastFragment)
-                    .hide(dailyForecastFragment)
-                    .commit();
-            fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_by_day));
-        }
     }
 
     @Override
@@ -456,49 +516,8 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         return false;
     }
 
-    public void startCityPickerActivity() {
-        Intent intent = new Intent(this, CityPickerActivity.class);
-        Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(this)
-                .toBundle();
-        ActivityCompat.startActivityForResult(this, intent, CHOOSE_CITY, bundle);
-    }
-
-    public void startSettingsActivity() {
-        Intent intent = new Intent(this, SettingsActivity.class);
-        Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(this)
-                .toBundle();
-        ActivityCompat.startActivityForResult(this, intent, CHOOSE_SETTINGS, bundle);
-    }
-
-    private void initFields() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar_material);
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-        currWeather = (ImageView) findViewById(R.id.iv_curr_weather);
-        temperature = (TextView) findViewById(R.id.temperature);
-        description = (TextView) findViewById(R.id.precipitation);
-        wind = (TextView) findViewById(R.id.wind);
-        humidity = (TextView) findViewById(R.id.humidity);
-        progressbar = (ProgressBar) findViewById(R.id.progressbar);
-        progressbar.setIndeterminate(true);
-
-        /** Слушатели нажатий объектов */
-        fab.setOnClickListener(this);
-        temperature.setOnClickListener(this);
-        setSupportActionBar(toolbar);
-    }
-
-    public void showProgress(boolean loading) {
-        progressbar.setVisibility(loading ? View.VISIBLE : View.GONE);
-    }
-
     private void startAnimation() {
         syncBtn.startAnimation(animationRotateCenter);
-    }
-
-    private void setAnimationForWidgets() {
-        /** Анимация объектов */
-        animationRotateCenter = AnimationUtils.loadAnimation(this, R.anim.rotate_center);
-        animationGrow = AnimationUtils.loadAnimation(this, R.anim.simple_grow);
     }
 
     /**
@@ -538,29 +557,11 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         }, 1250);
     }
 
-    /**
-     * Обработчик нажатия объектов
-     */
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.fab:
-                switchDisplayMode();
-                break;
-            case R.id.temperature:
-                PositionManager.getInstance().changeTemperatureMetric();
-                PositionManager.getInstance().updateWeatherFromDB();
-                break;
-        }
-    }
-
     public void updateCurrentWeather(Calendar date, Weather wCurent) {
-
         if (wCurent == null) {
             Log.i(TAG, "Weather is null!");
             return;
         }
-
         toolbar.setTitle(PositionManager.getInstance().getCurrentPositionName().split(",")[0]);
         temperature.setText(String.format("%.0f%s", wCurent.getTemperature(),
                 PositionManager.getInstance().getTemperatureMetric().toStringValue()));
@@ -584,42 +585,40 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     /**
-     * Изменяет отображаемый город WeatherActivity
-     */
-    public void changeDisplayedCity(String newCity) {
-        PositionManager.getInstance().setCurrentPosition(newCity);
-        PositionManager.getInstance().updateWeatherFromDB();
-        onRefresh();
-    }
-
-
-    /**
-     * Получаем город из CityPickActivity
+     * Обработчик нажатия объектов
      */
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CHOOSE_CITY) {
-            if (resultCode == RESULT_OK) {
-                String newCity = data.getStringExtra(CityPickerActivity.CITY_PICKER_TAG);
-                toolbar.setTitle(newCity.split(",")[0]);
-                Logger.println(TAG, newCity);
-                PositionManager.getInstance().setCurrentPosition(newCity);
-            } else {
-                if (!PositionManager.getInstance().positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {
-                    stopRefresh();
-                    showProgress(false);
-                }
-            }
-        } else if (requestCode == CHOOSE_SETTINGS) {
-            SettingsActivity.setRecreateMainActivity(false);
-            if (resultCode == RESULT_OK) {
-                boolean recreateActivity = data.getBooleanExtra(SettingsActivity.SETTINGS_TAG, false);
-                if (recreateActivity) {
-                    ((View) findViewById(R.id.frame_layout)).setBackgroundColor(R.color.background_window);
-                }
-            }
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.fab:
+                switchDisplayMode();
+                break;
+            case R.id.temperature:
+                PositionManager.getInstance().changeTemperatureMetric();
+                PositionManager.getInstance().updateWeatherFromDB();
+                break;
         }
+    }
+
+    private void switchDisplayMode() {
+        final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        if (dailyForecastFragment.isHidden()) {
+            ft.show(dailyForecastFragment)
+                    .hide(hourlyForecastFragment)
+                    .commit();
+            fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_by_hour));
+        } else {
+            ft.show(hourlyForecastFragment)
+                    .hide(dailyForecastFragment)
+                    .commit();
+            fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_by_day));
+        }
+    }
+
+    /**
+     * Останавливаем анимацию
+     */
+    public void stopRefresh() {
     }
 
     /**
@@ -643,21 +642,9 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         }, 500);
     }
 
-    /**
-     * Проигрываение анимации всех объектов activity
-     */
-    private void startAnimations() {
-        fab.startAnimation(animationGrow);
+    public void showProgress(boolean loading) {
+        progressbar.setVisibility(loading ? View.VISIBLE : View.GONE);
     }
-
-    //TODO DELETE
-
-    /**
-     * Останавливаем анимацию
-     */
-    public void stopRefresh() {
-    }
-
 
     @Override
     public boolean receiveHourlyWeatherFirst() {
@@ -687,4 +674,3 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         toast.show();
     }
 }
-
