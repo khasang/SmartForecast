@@ -154,13 +154,12 @@ public class OpenWeatherMap extends WeatherStation {
      * @param coordinate   объект типа {@link Coordinate}, содержащий географические координаты
      */
     @Override
-    public void updateWeather(final LinkedList<ResponseType> requestQueue, final int cityID, Coordinate coordinate) {
+    public void updateWeather(final LinkedList<ResponseType> requestQueue, final int cityID, final Coordinate coordinate) {
         Call<OpenWeatherMapResponse> call;
-        coordinate = null;
         if (coordinate == null || (coordinate.getLongitude() == 0 && coordinate.getLatitude() == 0)) {
-            PositionManager.getInstance().onFailureResponse(requestQueue, cityID, getServiceType());
             String positionName = PositionManager.getInstance().getPosition(cityID).getLocationName();
             if (positionName.isEmpty()) {
+                PositionManager.getInstance().onFailureResponse(requestQueue, cityID, getServiceType());
                 return;
             }
             call = service.getCurrent(positionName);
@@ -202,9 +201,9 @@ public class OpenWeatherMap extends WeatherStation {
                                     final int cityID, final Coordinate coordinate) {
         Call<OpenWeatherMapResponse> call;
         if (coordinate == null || (coordinate.getLongitude() == 0 && coordinate.getLatitude() == 0)) {
-            PositionManager.getInstance().onFailureResponse(requestList, cityID, getServiceType());
             String positionName = PositionManager.getInstance().getPosition(cityID).getLocationName();
             if (positionName.isEmpty()) {
+                PositionManager.getInstance().onFailureResponse(requestList, cityID, getServiceType());
                 return;
             }
             call = service.getHourly(positionName, TIME_PERIOD);
@@ -245,9 +244,9 @@ public class OpenWeatherMap extends WeatherStation {
                                     final int cityID, final Coordinate coordinate) {
         Call<DailyResponse> call;
         if (coordinate == null || (coordinate.getLongitude() == 0 && coordinate.getLatitude() == 0)) {
-            PositionManager.getInstance().onFailureResponse(requestList, cityID, getServiceType());
             String positionName = PositionManager.getInstance().getPosition(cityID).getLocationName();
             if (positionName.isEmpty()) {
+                PositionManager.getInstance().onFailureResponse(requestList, cityID, getServiceType());
                 return;
             }
             call = service.getDaily(positionName, DAYS_PERIOD);

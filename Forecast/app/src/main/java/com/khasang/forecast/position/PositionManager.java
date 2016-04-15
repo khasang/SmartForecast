@@ -536,9 +536,9 @@ public class PositionManager {
 
             rType = requestList.peekFirst();
             if (rType == WeatherStation.ResponseType.HOURLY) {
-//                currStation.updateHourlyWeather(requestList, cityId, position.getCoordinate());
+                currStation.updateHourlyWeather(requestList, cityId, position.getCoordinate());
             } else if (rType == WeatherStation.ResponseType.DAILY) {
-//                currStation.updateWeeklyWeather(requestList, cityId, position.getCoordinate());
+                currStation.updateWeeklyWeather(requestList, cityId, position.getCoordinate());
             }
         }
     }
@@ -561,9 +561,9 @@ public class PositionManager {
             updateWeatherFromDB(rType, position);
             rType = requestList.peekFirst();
             if (rType == WeatherStation.ResponseType.HOURLY) {
-//                currStation.updateHourlyWeather(requestList, cityID, position.getCoordinate());
+                currStation.updateHourlyWeather(requestList, cityID, position.getCoordinate());
             } else if (rType == WeatherStation.ResponseType.DAILY) {
-//                currStation.updateWeeklyWeather(requestList, cityID, position.getCoordinate());
+                currStation.updateWeeklyWeather(requestList, cityID, position.getCoordinate());
             }
         }
     }
