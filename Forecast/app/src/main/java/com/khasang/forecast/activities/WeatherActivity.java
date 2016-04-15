@@ -132,6 +132,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
         final SecondaryDrawerItem settings = new SecondaryDrawerItem().withName(R.string.drawer_item_settings).withIcon(FontAwesome.Icon.faw_cog).withIdentifier(3);
         final SecondaryDrawerItem feedBack = new SecondaryDrawerItem().withName(R.string.drawer_item_feedback).withIcon(GoogleMaterial.Icon.gmd_feedback).withIdentifier(4);
         final PrimaryDrawerItem footer = new PrimaryDrawerItem().withName(R.string.app_name).withEnabled(false).withIdentifier(5);
+        final SecondaryDrawerItem about = new SecondaryDrawerItem().withName(R.string.drawer_item_about).withIcon(GoogleMaterial.Icon.gmd_feedback).withIdentifier(6);
 
         /** Создание Navigation Drawer */
         result = new DrawerBuilder()
@@ -146,7 +147,8 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                         favorites,
                         divider,
                         settings,
-                        feedBack
+                        feedBack,
+                        about
                 )
                 .addStickyDrawerItems(footer)
                 .withOnDrawerListener(new Drawer.OnDrawerListener() {
@@ -223,6 +225,10 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                                 break;
                             case 5:
                                 //result.setSelection(-1);
+                                break;
+                            case 6:
+                                startAboutActivity();
+                                result.closeDrawer();
                                 break;
                             default:
                                 String newCity = PositionManager.getInstance().getFavouritesList().get(drawerItem.getIdentifier() - subItemIndex);
@@ -457,6 +463,13 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
 
     public void startSettingsActivity() {
         Intent intent = new Intent(this, SettingsActivity.class);
+        Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(this)
+                .toBundle();
+        ActivityCompat.startActivity(this, intent, bundle);
+    }
+
+    public void startAboutActivity() {
+        Intent intent = new Intent(this, AboutActivity.class);
         Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(this)
                 .toBundle();
         ActivityCompat.startActivity(this, intent, bundle);

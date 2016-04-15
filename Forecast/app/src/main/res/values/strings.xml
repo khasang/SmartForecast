@@ -148,4 +148,6 @@
     <string name="shared_last_active_position_name" translatable="false">last_active_position_name</string>
     <string name="forecast_unavailable">Forecast unavailable</string>
     <string name="tab_name_team">Команда</string>
+    <string name="tab_name_history">История</string>
+    <string name="drawer_item_about">About</string>
 </resources>
