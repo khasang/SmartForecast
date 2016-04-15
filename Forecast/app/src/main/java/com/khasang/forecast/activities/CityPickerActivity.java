@@ -296,16 +296,17 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
     // Вспомогательный метод для добавления города в список
     private void addItem(String city, Coordinate coordinate) {
-        if (coordinate != null) {
-            if (!PositionManager.getInstance().positionInListPresent(city)) {
-                PositionManager.getInstance().addPosition(city, coordinate);
-                recyclerAdapter.addCityToNewLocationsList(city);
-                cityList.add(city);
-                Collections.sort(cityList);
-                recyclerAdapter.notifyDataSetChanged();
-            } else {
-                showMessageToUser(R.string.city_exist, Snackbar.LENGTH_LONG);
-            }
+        if (coordinate == null) {
+            coordinate = new Coordinate(0, 0);
+        }
+        if (!PositionManager.getInstance().positionInListPresent(city)) {
+            PositionManager.getInstance().addPosition(city, coordinate);
+            recyclerAdapter.addCityToNewLocationsList(city);
+            cityList.add(city);
+            Collections.sort(cityList);
+            recyclerAdapter.notifyDataSetChanged();
+        } else {
+            showMessageToUser(R.string.city_exist, Snackbar.LENGTH_LONG);
         }
         swapVisibilityTextOrList();
     }
