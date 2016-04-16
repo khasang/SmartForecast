@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -34,12 +36,21 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.github.mikephil.charting.animation.Easing;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.utils.Utils;
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.Logger;
 import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.PermissionChecker;
 import com.khasang.forecast.R;
+import com.khasang.forecast.chart.HourlyLineDataSet;
 import com.khasang.forecast.fragments.DailyForecastFragment;
 import com.khasang.forecast.fragments.HourlyForecastFragment;
 import com.khasang.forecast.interfaces.IMessageProvider;
@@ -60,7 +71,7 @@ import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
-
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -120,6 +131,7 @@ public class WeatherActivity extends AppCompatActivity
                     .commit();
         }
         initFields();
+        initChart();
         setAnimationForWidgets();
         startAnimations();
         checkPermissions();
@@ -141,6 +153,53 @@ public class WeatherActivity extends AppCompatActivity
         fab.setOnClickListener(this);
         temperature.setOnClickListener(this);
         setSupportActionBar(toolbar);
+    }
+
+    private void initChart() {
+        LineChart chart = (LineChart) findViewById(R.id.chart);
+
+        int count = 24;
+        float range = 100;
+
+        ArrayList<String> xValues = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            xValues.add((i) + "");
+        }
+
+        ArrayList<Entry> yValues = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            float mult = (range + 1);
+            float val = (float) (Math.random() * mult);
+            yValues.add(new Entry(val, i));
+        }
+
+        LineDataSet set = new HourlyLineDataSet(yValues, this);
+        if (Utils.getSDKInt() >= 18) {
+            // fill drawable only supported on api level 18 and above
+            Drawable drawable = ContextCompat.getDrawable(this, R.drawable.chart_fill);
+            set.setFillDrawable(drawable);
+        } else {
+            set.setFillColor(Color.GRAY);
+        }
+
+        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+        dataSets.add(set);
+
+        LineData data = new LineData(xValues, dataSets);
+
+        chart.setData(data);
+        chart.setTouchEnabled(false);
+        chart.setDescription("");
+
+        Legend legend = chart.getLegend();
+        legend.setEnabled(false);
+
+        chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+
+        chart.getAxisLeft().setEnabled(false);
+        chart.getAxisRight().setEnabled(false);
+
+        chart.animateY(2000, Easing.EasingOption.EaseInOutBack);
     }
 
     private void setAnimationForWidgets() {

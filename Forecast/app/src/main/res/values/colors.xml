@@ -14,4 +14,8 @@
     <color name="snackbar_text">#FFFFFF</color>
     <color name="background_splash">#E3EFF7</color>
     <color name="background_toast">#CFCFCF</color>
+
+    <color name="chart_max_temperature">#F44336</color>
+    <color name="chart_min_temperature">#2196F3</color>
+    <color name="chart_current_time">#FFFFFF</color>
 </resources>

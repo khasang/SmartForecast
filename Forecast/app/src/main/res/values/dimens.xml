@@ -4,4 +4,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="appbar_elevation">4dp</dimen>
     <dimen name="fab_elevation">6dp</dimen>
+
+    <dimen name="chart_line_width">0.5dp</dimen>
+    <dimen name="chart_circle_radius">4dp</dimen>
 </resources>
