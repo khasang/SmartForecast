@@ -84,6 +84,7 @@ public class WeatherActivity extends AppCompatActivity
     private static final int NAVIGATION_SETTINGS = 3;
     private static final int NAVIGATION_FEEDBACK = 4;
     private static final int NAVIGATION_APP_NAME = 5;
+    public static final String CURRENT_CITY_TAG = "CURRENT_CITY";
 
     private final int subItemIndex = 2000;
     private TextView temperature;
@@ -108,6 +109,12 @@ public class WeatherActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
+        if (savedInstanceState != null) {
+            String savedCurrentCity = savedInstanceState.getString(CURRENT_CITY_TAG, "");
+            if (!savedCurrentCity.isEmpty()) {
+                PositionManager.getInstance().setCurrentPosition(savedCurrentCity);
+            }
+        }
         if (findViewById(R.id.fragment_container) != null) {
             hourlyForecastFragment = new HourlyForecastFragment();
             dailyForecastFragment = new DailyForecastFragment();
@@ -438,6 +445,12 @@ public class WeatherActivity extends AppCompatActivity
         favorites.withEnabled(true);
         result.updateItem(favorites);
         result.updateBadge(2, new StringHolder(String.valueOf(favCities.size())));
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(CURRENT_CITY_TAG, PositionManager.getInstance().getCurrentPositionName());
     }
 
     @Override
