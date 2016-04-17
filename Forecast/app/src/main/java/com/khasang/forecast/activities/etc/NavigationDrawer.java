@@ -95,6 +95,9 @@ public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
      */
     @Override
     public boolean onItemClick(View v, int position, IDrawerItem drawerItem) {
+        if (drawerItem == null) {
+            return false;
+        }
         int identifier = drawerItem.getIdentifier();
         if (navigationItemClickListener != null) {
             navigationItemClickListener.OnNavigationItemClicked(identifier);
