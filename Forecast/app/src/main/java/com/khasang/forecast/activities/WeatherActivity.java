@@ -1,5 +1,7 @@
 package com.khasang.forecast.activities;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -7,8 +9,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,6 +24,8 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
+import android.support.v7.widget.GridLayout;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
@@ -36,21 +38,13 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.github.mikephil.charting.animation.Easing;
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.github.mikephil.charting.utils.Utils;
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.Logger;
 import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.PermissionChecker;
 import com.khasang.forecast.R;
-import com.khasang.forecast.chart.HourlyLineDataSet;
+import com.khasang.forecast.adapters.CustomAdapter;
+import com.khasang.forecast.chart.WeatherChart;
 import com.khasang.forecast.fragments.DailyForecastFragment;
 import com.khasang.forecast.fragments.HourlyForecastFragment;
 import com.khasang.forecast.interfaces.IMessageProvider;
@@ -71,7 +65,6 @@ import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -116,22 +109,29 @@ public class WeatherActivity extends AppCompatActivity
     private PrimaryDrawerItem currentPlace;
     private PrimaryDrawerItem favorites;
     private boolean opened = false;
+    private WeatherChart chart;
+    private GridLayout currentWeatherLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
         if (findViewById(R.id.fragment_container) != null) {
+            ScrollListener scrollListener = new ScrollListener();
+
             hourlyForecastFragment = new HourlyForecastFragment();
+            hourlyForecastFragment.addScrollListener(scrollListener);
+
             dailyForecastFragment = new DailyForecastFragment();
+            dailyForecastFragment.addScrollListener(scrollListener);
+
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, hourlyForecastFragment)
-                    .add(R.id.fragment_container, dailyForecastFragment)
-                    .hide(dailyForecastFragment)
-                    .commit();
+                .add(R.id.fragment_container, hourlyForecastFragment)
+                .add(R.id.fragment_container, dailyForecastFragment)
+                .hide(dailyForecastFragment)
+                .commit();
         }
         initFields();
-        initChart();
         setAnimationForWidgets();
         startAnimations();
         checkPermissions();
@@ -148,6 +148,8 @@ public class WeatherActivity extends AppCompatActivity
         humidity = (TextView) findViewById(R.id.humidity);
         progressbar = (ProgressBar) findViewById(R.id.progressbar);
         progressbar.setIndeterminate(true);
+        chart = (WeatherChart) findViewById(R.id.chart);
+        currentWeatherLayout = (GridLayout) findViewById(R.id.currentWeather);
 
         /** Слушатели нажатий объектов */
         fab.setOnClickListener(this);
@@ -155,51 +157,14 @@ public class WeatherActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
     }
 
-    private void initChart() {
-        LineChart chart = (LineChart) findViewById(R.id.chart);
-
-        int count = 24;
-        float range = 100;
-
-        ArrayList<String> xValues = new ArrayList<>();
-        for (int i = 0; i < count; i++) {
-            xValues.add((i) + "");
-        }
-
-        ArrayList<Entry> yValues = new ArrayList<>();
-        for (int i = 0; i < count; i++) {
-            float mult = (range + 1);
-            float val = (float) (Math.random() * mult);
-            yValues.add(new Entry(val, i));
-        }
-
-        LineDataSet set = new HourlyLineDataSet(yValues, this);
-        if (Utils.getSDKInt() >= 18) {
-            // fill drawable only supported on api level 18 and above
-            Drawable drawable = ContextCompat.getDrawable(this, R.drawable.chart_fill);
-            set.setFillDrawable(drawable);
+    private void updateWeatherChart(boolean isHourFragmentVisible) {
+        Map<Calendar, Weather> forecast;
+        if (isHourFragmentVisible) {
+            forecast = hourlyForecastFragment.getForecasts();
         } else {
-            set.setFillColor(Color.GRAY);
+            forecast = dailyForecastFragment.getForecasts();
         }
-
-        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-        dataSets.add(set);
-
-        LineData data = new LineData(xValues, dataSets);
-
-        chart.setData(data);
-        chart.setTouchEnabled(false);
-        chart.setDescription("");
-
-        Legend legend = chart.getLegend();
-        legend.setEnabled(false);
-
-        chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-
-        chart.getAxisLeft().setEnabled(false);
-        chart.getAxisRight().setEnabled(false);
-
-        chart.animateY(2000, Easing.EasingOption.EaseInOutBack);
+        chart.updateForecast(forecast, isHourFragmentVisible);
     }
 
     private void setAnimationForWidgets() {
@@ -591,6 +556,10 @@ public class WeatherActivity extends AppCompatActivity
             case HOURLY:
                 Logger.println(TAG, "Принят HOURLY прогноз");
                 hourlyForecastFragment.setDatasAndAnimate(forecast);
+                // Первая отрисовка графика при получении данных
+                if (hourlyForecastFragment.isVisible()) {
+                    updateWeatherChart(true);
+                }
                 break;
             case DAILY:
                 Logger.println(TAG, "Принят DAILY прогноз");
@@ -651,9 +620,11 @@ public class WeatherActivity extends AppCompatActivity
         if (dailyForecastFragment.isHidden()) {
             ft.show(dailyForecastFragment).hide(hourlyForecastFragment).commit();
             fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_by_hour));
+            updateWeatherChart(false);
         } else {
             ft.show(hourlyForecastFragment).hide(dailyForecastFragment).commit();
             fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_by_day));
+            updateWeatherChart(true);
         }
     }
 
@@ -719,5 +690,39 @@ public class WeatherActivity extends AppCompatActivity
                         ContextCompat.getColor(MyApplication.getAppContext(), R.color.background_toast));
         toast.setDuration(Toast.LENGTH_LONG);
         toast.show();
+    }
+
+    private class ScrollListener extends RecyclerView.OnScrollListener {
+
+        @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+            if (dy > 50) {
+                currentWeatherLayout.animate()
+                    .translationY(-currentWeatherLayout.getHeight())
+                    .alpha(0.0f)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            currentWeatherLayout.setVisibility(View.GONE);
+                        }
+                    });
+                chart.animate()
+                    .alpha(1.0f);
+            } else if (dy < -50) {
+                currentWeatherLayout.animate()
+                    .translationY(0)
+                    .alpha(1.0f)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            currentWeatherLayout.setVisibility(View.VISIBLE);
+                        }
+                    });
+                chart.animate()
+                    .alpha(0.0f);
+            }
+        }
     }
 }
