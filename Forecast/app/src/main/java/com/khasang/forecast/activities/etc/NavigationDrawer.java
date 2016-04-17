@@ -3,7 +3,6 @@ package com.khasang.forecast.activities.etc;
 import android.app.Activity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import com.khasang.forecast.Logger;
 import com.khasang.forecast.PermissionChecker;
 import com.khasang.forecast.R;
 import com.khasang.forecast.position.PositionManager;
@@ -45,7 +44,14 @@ public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
     private Drawer result;
     private boolean opened;
     private OnNavigationItemClickListener navigationItemClickListener;
+
+    // Активный пункт, открытый в основном окне - это может быть текущая позиция или один из
+    // избранных городов
     private int activeIdentifier = NAVIGATION_CURRENT_PLACE;
+
+    // Массив идентификаторов избранных городов. Нужен для того, чтобы корректно удалить все старые города
+    // после того, как пользователь изменил их
+    private int[] favoriteCitiesIdentifiers;
 
     public NavigationDrawer(Activity activity, Toolbar toolbar) {
         this.activity = activity;
@@ -103,68 +109,30 @@ public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
             navigationItemClickListener.OnNavigationItemClicked(identifier);
         }
         switch (identifier) {
-            case NAVIGATION_CURRENT_PLACE:
-                activeIdentifier = NAVIGATION_CURRENT_PLACE;
+            case NAVIGATION_CITY_LIST:
+                // TODO: нужен идентификатор города
+                // Можно было бы не скрывать список городов, если один из них активен. Без идентификатора
+                // это сделать сложно
+                opened = false;
                 result.closeDrawer();
                 break;
-            case NAVIGATION_CITY_LIST:
-                setSelection(activeIdentifier);
+            case NAVIGATION_SETTINGS:
+            case NAVIGATION_FEEDBACK:
                 result.closeDrawer();
                 break;
             case NAVIGATION_FAVORITES:
-                List<String> favCities = PositionManager.getInstance().getFavouritesList();
-                if (opened) {
-                    for (int i = favCities.size() - 1; i >= 0; i--) {
-                        result.removeItems(SUB_ITEMS_BASE_INDEX + i);
-                    }
-                } else {
-                    if (favCities.isEmpty()) {
-                        Logger.println(TAG, "favCityList is empty");
-                    } else {
-                        for (int i = favCities.size() - 1; i >= 0; i--) {
-                            String city = favCities.get(i).split(",")[0];
-                            result.addItemsAtPosition(position, new SecondaryDrawerItem().withLevel(2)
-                                .withName(city)
-                                .withIdentifier(SUB_ITEMS_BASE_INDEX + i));
-                        }
-                    }
-                }
                 opened = !opened;
-                break;
-            case NAVIGATION_SETTINGS:
-                setSelection(activeIdentifier);
-                result.closeDrawer();
-                break;
-            case NAVIGATION_FEEDBACK:
-                setSelection(activeIdentifier);
-                result.closeDrawer();
+                updateFavorites();
                 break;
             case NAVIGATION_APP_NAME:
                 break;
+            case NAVIGATION_CURRENT_PLACE:
             default:
                 activeIdentifier = identifier;
                 result.closeDrawer();
                 break;
         }
         return true;
-    }
-
-    private void setSelection(int identifier) {
-        result.setSelection(activeIdentifier);
-        if (identifier == NAVIGATION_CURRENT_PLACE) {
-            closeSubItems();
-        }
-    }
-
-    private void closeSubItems() {
-        for (int i = PositionManager.getInstance().getFavouritesList().size() - 1; i >= 0; i--) {
-            result.removeItems(SUB_ITEMS_BASE_INDEX + i);
-        }
-        if (opened) {
-            opened = false;
-        }
-        favorites.withSelectable(false);
-        result.updateItem(favorites);
     }
 
     public void setNavigationItemClickListener(OnNavigationItemClickListener navigationItemClickListener) {
@@ -182,14 +150,39 @@ public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
         currentPlace.withEnabled(isLocationPermissionGranted);
         result.updateItem(currentPlace);
 
+        updateFavorites();
+        result.setSelection(activeIdentifier);
+    }
+
+    private void updateFavorites() {
         List<String> favCities = PositionManager.getInstance().getFavouritesList();
+        removeFavorites();
         if (favCities.isEmpty()) {
             favorites.withBadge("").withEnabled(false);
-            result.updateItem(favorites);
         } else {
             favorites.withEnabled(true);
-            result.updateItem(favorites);
             result.updateBadge(2, new StringHolder(String.valueOf(favCities.size())));
+            if (opened) {
+                favoriteCitiesIdentifiers = new int[favCities.size()];
+                for (int i = favCities.size() - 1; i >= 0; i--) {
+                    int identifier = SUB_ITEMS_BASE_INDEX + i;
+                    favoriteCitiesIdentifiers[i] = identifier;
+                    String city = favCities.get(i).split(",")[0];
+                    int position = result.getPosition(favorites);
+                    result.addItemsAtPosition(position, new SecondaryDrawerItem().withLevel(2)
+                        .withName(city)
+                        .withIdentifier(identifier));
+                }
+            }
+        }
+        result.updateItem(favorites);
+    }
+
+    private void removeFavorites() {
+        if (favoriteCitiesIdentifiers != null) {
+            for (int favoriteCitiesIdentifier : favoriteCitiesIdentifiers) {
+                result.removeItem(favoriteCitiesIdentifier);
+            }
         }
     }
 
