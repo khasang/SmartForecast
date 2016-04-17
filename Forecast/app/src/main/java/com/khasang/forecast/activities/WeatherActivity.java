@@ -297,12 +297,7 @@ public class WeatherActivity extends AppCompatActivity
         PermissionChecker permissionChecker = new PermissionChecker();
         boolean isLocationPermissionGranted =
             permissionChecker.isPermissionGranted(this, PERMISSION_REQUEST_FINE_LOCATION);
-        if (isLocationPermissionGranted) {
-            navigationDrawer.enableCurrentLocation();
-        } else {
-            navigationDrawer.disableCurrentLocation();
-        }
-        navigationDrawer.upe,hfkEeваdateBadges();
+        navigationDrawer.updateBadges(isLocationPermissionGranted);
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         PositionManager.getInstance()

@@ -133,20 +133,13 @@ public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
         this.navigationItemClickListener = navigationItemClickListener;
     }
 
-    public void enableCurrentLocation() {
-        currentPlace.withEnabled(true);
-        result.updateItem(currentPlace);
-    }
-
-    public void disableCurrentLocation() {
-        currentPlace.withEnabled(false);
-        result.updateItem(currentPlace);
-    }
-
     /**
      * Обновление Drawer badges
      */
-    public void updateBadges() {
+    public void updateBadges(boolean locationPermissionEnabled) {
+        currentPlace.withEnabled(locationPermissionEnabled);
+        result.updateItem(currentPlace);
+
         updateFavorites();
         result.setSelection(activeIdentifier);
     }
