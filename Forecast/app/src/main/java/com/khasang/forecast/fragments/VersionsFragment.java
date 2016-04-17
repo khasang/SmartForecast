@@ -23,9 +23,6 @@ public class VersionsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_versions, container, false);
 
-        TextView textHistory = (TextView) view.findViewById(R.id.textHistory);
-        textHistory.setText(getActivity().getResources().getText(R.string.history));
-
         return view;
     }
 

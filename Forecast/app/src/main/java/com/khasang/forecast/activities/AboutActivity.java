@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.khasang.forecast.R;
+import com.khasang.forecast.fragments.FeaturesFragment;
 import com.khasang.forecast.fragments.VersionsFragment;
 import com.khasang.forecast.fragments.TeamFragment;
 
@@ -51,7 +52,9 @@ public class AboutActivity extends AppCompatActivity {
     private void setupViewPager(ViewPager viewPager) {
         TabsAdapter adapter = new TabsAdapter(getSupportFragmentManager());
         adapter.addFragment(new VersionsFragment(),
-                getResources().getString(R.string.tab_name_history));
+                getResources().getString(R.string.tab_name_versions));
+        adapter.addFragment(new FeaturesFragment(),
+                getResources().getString(R.string.tab_name_features));
         adapter.addFragment(new TeamFragment(),
                 getResources().getString(R.string.tab_name_team));
         viewPager.setAdapter(adapter);

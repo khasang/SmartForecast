@@ -149,7 +149,8 @@
     <string name="forecast_unavailable">Forecast unavailable</string>
     //add
     <string name="tab_name_team">Команда</string>
-    <string name="tab_name_history">Описание</string>
+    <string name="tab_name_versions">Версии</string>
+    <string name="tab_name_features">Возможности</string>
     <string name="drawer_item_about">О приложении</string>
     <string name="history"><b>SmartForecast</b> - одно из самых простых погодных приложений на GooglePlay\n\n
         <b>Основные возможности приложения:\n</b>
