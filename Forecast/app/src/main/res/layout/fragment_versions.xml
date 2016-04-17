@@ -12,7 +12,8 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
+        android:layout_gravity="center_horizontal"
+        android:paddingBottom="10dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -35,6 +36,37 @@
             android:layout_height="300dp"
             android:id="@+id/imageView2"
             android:src="@drawable/v_2_3_combo"
+            android:layout_gravity="center_horizontal|top" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Release 2.1"
+            android:id="@+id/textView3"
+            android:layout_gravity="center_horizontal"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Реализована возможность добавления местоположения через поиск по карте."
+            android:id="@+id/textView4" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:id="@+id/imageView2"
+            android:src="@drawable/v_2_1_1_1024"
             android:layout_gravity="center_horizontal|top" />
 
     </LinearLayout>

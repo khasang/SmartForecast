@@ -12,12 +12,12 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="5dp">
+            android:layout_margin="10dp">
             <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:paddingRight="10dp"
-                android:src="@drawable/man_avatar" />
+                android:src="@drawable/man_avatar_manager" />
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
@@ -26,17 +26,18 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="Architect, Developer: "
-                    android:id="@+id/textView" />
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="Роман Новоселов"
+                    android:id="@+id/textView2"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="Roman Novoselov"
-                    android:id="@+id/textView2"
-                    android:textStyle="bold" />
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="architect"
+                    android:id="@+id/textView" />
+
             </LinearLayout>
         </LinearLayout>
 
@@ -44,12 +45,46 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="5dp">
+            android:layout_margin="10dp" >
+
             <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:paddingRight="10dp"
-                android:src="@drawable/man_avatar" />
+                android:src="@drawable/man_avatar_disigner" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="Эрдэни Эрдынеев"
+                    android:id="@+id/textView5"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="дизайнер"
+                    android:id="@+id/textView6" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp">
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:paddingRight="10dp"
+                android:src="@drawable/man_avatar_developer" />
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
@@ -58,17 +93,52 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="Тимофей Коротков"
+                    android:id="@+id/textView2"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="Developer: "
+                    android:text="developer "
                     android:id="@+id/textView" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp" >
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:paddingRight="10dp"
+                android:src="@drawable/man_avatar_developer" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:text="Айрат Хайруллин"
-                    android:id="@+id/textView2"
+                    android:id="@+id/textView5"
                     android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="developer "
+                    android:id="@+id/textView6" />
             </LinearLayout>
         </LinearLayout>
 
