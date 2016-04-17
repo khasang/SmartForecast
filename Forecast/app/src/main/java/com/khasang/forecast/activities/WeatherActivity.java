@@ -294,7 +294,15 @@ public class WeatherActivity extends AppCompatActivity
         PositionManager.getInstance().setReceiver(this);
         PositionManager.getInstance().setMessageProvider(this);
 
-        navigationDrawer.updateBadges();
+        PermissionChecker permissionChecker = new PermissionChecker();
+        boolean isLocationPermissionGranted =
+            permissionChecker.isPermissionGranted(this, PERMISSION_REQUEST_FINE_LOCATION);
+        if (isLocationPermissionGranted) {
+            navigationDrawer.enableCurrentLocation();
+        } else {
+            navigationDrawer.disableCurrentLocation();
+        }
+        navigationDrawer.upe,hfkEeваdateBadges();
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         PositionManager.getInstance()

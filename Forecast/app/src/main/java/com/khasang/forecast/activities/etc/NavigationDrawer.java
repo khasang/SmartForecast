@@ -3,7 +3,6 @@ package com.khasang.forecast.activities.etc;
 import android.app.Activity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import com.khasang.forecast.PermissionChecker;
 import com.khasang.forecast.R;
 import com.khasang.forecast.position.PositionManager;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
@@ -19,8 +18,6 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import java.util.List;
-
-import static com.khasang.forecast.PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION;
 
 /**
  * Класс отвечает за логику NavigationDrawer
@@ -38,7 +35,6 @@ public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
 
     public static final int SUB_ITEMS_BASE_INDEX = 2000;
 
-    private Activity activity;
     private PrimaryDrawerItem currentPlace;
     private PrimaryDrawerItem favorites;
     private Drawer result;
@@ -54,8 +50,6 @@ public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
     private int[] favoriteCitiesIdentifiers;
 
     public NavigationDrawer(Activity activity, Toolbar toolbar) {
-        this.activity = activity;
-
         /** Инициализация элементов меню */
         DividerDrawerItem divider = new DividerDrawerItem();
         currentPlace = new PrimaryDrawerItem().withName(R.string.drawer_item_current_place)
@@ -139,17 +133,20 @@ public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
         this.navigationItemClickListener = navigationItemClickListener;
     }
 
+    public void enableCurrentLocation() {
+        currentPlace.withEnabled(true);
+        result.updateItem(currentPlace);
+    }
+
+    public void disableCurrentLocation() {
+        currentPlace.withEnabled(false);
+        result.updateItem(currentPlace);
+    }
+
     /**
      * Обновление Drawer badges
      */
     public void updateBadges() {
-        PermissionChecker permissionChecker = new PermissionChecker();
-        boolean isLocationPermissionGranted =
-            permissionChecker.isPermissionGranted(activity, PERMISSION_REQUEST_FINE_LOCATION);
-
-        currentPlace.withEnabled(isLocationPermissionGranted);
-        result.updateItem(currentPlace);
-
         updateFavorites();
         result.setSelection(activeIdentifier);
     }
