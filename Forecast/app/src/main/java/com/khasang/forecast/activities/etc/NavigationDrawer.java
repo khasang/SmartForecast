@@ -1,14 +1,11 @@
 package com.khasang.forecast.activities.etc;
 
-import android.content.Intent;
-import android.net.Uri;
+import android.app.Activity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-
 import com.khasang.forecast.Logger;
-import com.khasang.forecast.MyApplication;
+import com.khasang.forecast.PermissionChecker;
 import com.khasang.forecast.R;
-import com.khasang.forecast.activities.WeatherActivity;
 import com.khasang.forecast.position.PositionManager;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
@@ -22,174 +19,187 @@ import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
+import java.util.List;
 
-import java.util.Locale;
+import static com.khasang.forecast.PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION;
 
 /**
  * Класс отвечает за логику NavigationDrawer
- *
- * @version alpha
  */
-public class NavigationDrawer {
-    private static final String TAG = WeatherActivity.class.getSimpleName();
+public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
 
-    private Drawer result = null;
+    private final String TAG = this.getClass().getSimpleName();
+
+    public static final int NAVIGATION_CURRENT_PLACE = 0;
+    public static final int NAVIGATION_CITY_LIST = 1;
+    public static final int NAVIGATION_FAVORITES = 2;
+    public static final int NAVIGATION_SETTINGS = 3;
+    public static final int NAVIGATION_FEEDBACK = 4;
+    public static final int NAVIGATION_APP_NAME = 5;
+
+    public static final int SUB_ITEMS_BASE_INDEX = 2000;
+
+    private Activity activity;
+    private PrimaryDrawerItem currentPlace;
     private PrimaryDrawerItem favorites;
-    private boolean opened = false;
-    private final int subItemIndex = 2000;
+    private Drawer result;
+    private boolean opened;
+    private OnNavigationItemClickListener navigationItemClickListener;
+    private int activeIdentifier = NAVIGATION_CURRENT_PLACE;
 
-    /**
-     * Инициализация Navigation Drawer
-     */
-    public void init(final WeatherActivity activity, Toolbar toolbar) {
-        Logger.println("drawer", "init");
+    public NavigationDrawer(Activity activity, Toolbar toolbar) {
+        this.activity = activity;
+
         /** Инициализация элементов меню */
-        final DividerDrawerItem divider = new DividerDrawerItem();
-        final PrimaryDrawerItem currentPlace = new PrimaryDrawerItem().withName(R.string.drawer_item_current_place).withIcon(Ionicons.Icon.ion_navigate).withIdentifier(0);
-        final PrimaryDrawerItem cityList = new PrimaryDrawerItem().withName(R.string.drawer_item_city_list).withIcon(CommunityMaterial.Icon.cmd_city).withIdentifier(1);
-        favorites = new PrimaryDrawerItem().withName(R.string.drawer_item_favorites).withIcon(MaterialDesignIconic.Icon.gmi_star)/*.withBadge(String.valueOf(PositionManager.getInstance().getFavouritesList().size()))*/.withIdentifier(2);
-        final SecondaryDrawerItem settings = new SecondaryDrawerItem().withName(R.string.drawer_item_settings).withIcon(FontAwesome.Icon.faw_cog).withIdentifier(3);
-        final SecondaryDrawerItem feedBack = new SecondaryDrawerItem().withName(R.string.drawer_item_feedback).withIcon(GoogleMaterial.Icon.gmd_feedback).withIdentifier(4);
+        DividerDrawerItem divider = new DividerDrawerItem();
+        currentPlace = new PrimaryDrawerItem().withName(R.string.drawer_item_current_place)
+            .withIcon(Ionicons.Icon.ion_navigate)
+            .withIdentifier(NAVIGATION_CURRENT_PLACE);
+
+        PrimaryDrawerItem cityList = new PrimaryDrawerItem().withName(R.string.drawer_item_city_list)
+            .withIcon(CommunityMaterial.Icon.cmd_city)
+            .withIdentifier(NAVIGATION_CITY_LIST);
+
+        favorites = new PrimaryDrawerItem().withName(R.string.drawer_item_favorites)
+            .withIcon(MaterialDesignIconic.Icon.gmi_star)
+            .withIdentifier(NAVIGATION_FAVORITES);
+
+        SecondaryDrawerItem settings = new SecondaryDrawerItem().withName(R.string.drawer_item_settings)
+            .withIcon(FontAwesome.Icon.faw_cog)
+            .withIdentifier(NAVIGATION_SETTINGS);
+
+        SecondaryDrawerItem feedBack = new SecondaryDrawerItem().withName(R.string.drawer_item_feedback)
+            .withIcon(GoogleMaterial.Icon.gmd_feedback)
+            .withIdentifier(NAVIGATION_FEEDBACK);
+
+        PrimaryDrawerItem footer = new PrimaryDrawerItem().withName(R.string.app_name)
+            .withEnabled(false)
+            .withIdentifier(NAVIGATION_APP_NAME);
 
         /** Создание Navigation Drawer */
-        result = new DrawerBuilder()
-                .withActivity(activity)
-                .withToolbar(toolbar)
-                .withSelectedItem(-1)
-                .withActionBarDrawerToggle(true)
-                .withHeader(R.layout.drawer_header)
-                .addDrawerItems(
-                        currentPlace,
-                        cityList,
-                        favorites,
-                        divider,
-                        settings,
-                        feedBack
-                )
-                .withOnDrawerListener(new Drawer.OnDrawerListener() {
-                    @Override
-                    public void onDrawerOpened(View drawerView) {
+        result = new DrawerBuilder().withActivity(activity)
+            .withToolbar(toolbar)
+            .withSelectedItem(-1)
+            .withActionBarDrawerToggle(true)
+            .withHeader(R.layout.drawer_header)
+            .addDrawerItems(currentPlace, cityList, favorites, divider, settings, feedBack)
+            .addStickyDrawerItems(footer)
+            .withOnDrawerItemClickListener(this)
+            .build();
 
-                    }
-
-                    @Override
-                    public void onDrawerClosed(View drawerView) {
-
-                    }
-
-                    @Override
-                    public void onDrawerSlide(View drawerView, float slideOffset) {
-
-                    }
-                })
-                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-                    @Override
-                    public boolean onItemClick(View v, int position, IDrawerItem drawerItem) {
-                        switch (drawerItem.getIdentifier()) {
-                            case 0:
-                                activity.changeDisplayedCity("");
-                                result.closeDrawer();
-                                //TODO add unselect item
-                                break;
-                            case 1:
-                                activity.startCityPickerActivity();
-                                result.closeDrawer();
-                                //TODO add unselect item
-                                break;
-                            case 2:
-                                if (opened) {
-                                    for (int i = PositionManager.getInstance().getFavouritesList().size() - 1; i >= 0; i--) {
-                                        result.removeItems(subItemIndex + i);
-
-                                    }
-                                } else {
-                                    int curPos = result.getPosition(drawerItem);
-                                    if (!PositionManager.getInstance().getFavouritesList().isEmpty()) {
-                                        for (int i = PositionManager.getInstance().getFavouritesList().size() - 1; i >= 0; i--) {
-                                            String city = PositionManager.getInstance().getFavouritesList().get(i).split(",")[0];
-                                            result.addItemsAtPosition(
-                                                    curPos,
-                                                    new SecondaryDrawerItem().withLevel(2).withName(city).withIdentifier(subItemIndex + i)
-                                            );
-                                        }
-                                    } else {
-                                        Logger.println(TAG, "favCityList is empty");
-                                    }
-                                }
-
-                                opened = !opened;
-                                break;
-                            case 3:
-                                activity.startSettingsActivity();
-                                result.closeDrawer();
-                                break;
-                            case 4:
-                                //TODO add unselect item
-                                // FIXME: 31.01.16
-                                Intent feedbackIntent = null;
-                                switch (Locale.getDefault().getLanguage()) {
-                                    case "ru":
-                                        feedbackIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(MyApplication.getAppContext().getString(R.string.google_form_ru)));
-                                        break;
-                                    default:
-                                        feedbackIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(MyApplication.getAppContext().getString(R.string.google_form_en)));
-                                        break;
-                                }
-                                activity.startActivity(feedbackIntent);
-                                result.closeDrawer();
-                                break;
-                            default:
-                                String newCity = PositionManager.getInstance().getFavouritesList().get(drawerItem.getIdentifier() - subItemIndex);
-                                activity.changeDisplayedCity(newCity);
-                                result.closeDrawer();
-                                break;
-                        }
-                        return true;
-                    }
-                })
-                .build();
-
+        result.setSelection(activeIdentifier);
     }
 
     /**
-     * Закрывает открытый Drawer
+     * Обработчик кликов по Navigation Drawer
      */
-    public boolean isDrawerOpened() {
-        if (result != null && result.isDrawerOpen()) {
-            result.closeDrawer();
-            return true;
-        } else {
-            return false;
+    @Override
+    public boolean onItemClick(View v, int position, IDrawerItem drawerItem) {
+        int identifier = drawerItem.getIdentifier();
+        if (navigationItemClickListener != null) {
+            navigationItemClickListener.OnNavigationItemClicked(identifier);
         }
+        switch (identifier) {
+            case NAVIGATION_CURRENT_PLACE:
+                activeIdentifier = NAVIGATION_CURRENT_PLACE;
+                result.closeDrawer();
+                break;
+            case NAVIGATION_CITY_LIST:
+                setSelection(activeIdentifier);
+                result.closeDrawer();
+                break;
+            case NAVIGATION_FAVORITES:
+                List<String> favCities = PositionManager.getInstance().getFavouritesList();
+                if (opened) {
+                    for (int i = favCities.size() - 1; i >= 0; i--) {
+                        result.removeItems(SUB_ITEMS_BASE_INDEX + i);
+                    }
+                } else {
+                    if (favCities.isEmpty()) {
+                        Logger.println(TAG, "favCityList is empty");
+                    } else {
+                        for (int i = favCities.size() - 1; i >= 0; i--) {
+                            String city = favCities.get(i).split(",")[0];
+                            result.addItemsAtPosition(position, new SecondaryDrawerItem().withLevel(2)
+                                .withName(city)
+                                .withIdentifier(SUB_ITEMS_BASE_INDEX + i));
+                        }
+                    }
+                }
+                opened = !opened;
+                break;
+            case NAVIGATION_SETTINGS:
+                setSelection(activeIdentifier);
+                result.closeDrawer();
+                break;
+            case NAVIGATION_FEEDBACK:
+                setSelection(activeIdentifier);
+                result.closeDrawer();
+                break;
+            case NAVIGATION_APP_NAME:
+                break;
+            default:
+                activeIdentifier = identifier;
+                result.closeDrawer();
+                break;
+        }
+        return true;
+    }
+
+    private void setSelection(int identifier) {
+        result.setSelection(activeIdentifier);
+        if (identifier == NAVIGATION_CURRENT_PLACE) {
+            closeSubItems();
+        }
+    }
+
+    private void closeSubItems() {
+        for (int i = PositionManager.getInstance().getFavouritesList().size() - 1; i >= 0; i--) {
+            result.removeItems(SUB_ITEMS_BASE_INDEX + i);
+        }
+        if (opened) {
+            opened = false;
+        }
+        favorites.withSelectable(false);
+        result.updateItem(favorites);
+    }
+
+    public void setNavigationItemClickListener(OnNavigationItemClickListener navigationItemClickListener) {
+        this.navigationItemClickListener = navigationItemClickListener;
     }
 
     /**
      * Обновление Drawer badges
      */
     public void updateBadges() {
-        if (PositionManager.getInstance().getFavouritesList().isEmpty()) {
+        PermissionChecker permissionChecker = new PermissionChecker();
+        boolean isLocationPermissionGranted =
+            permissionChecker.isPermissionGranted(activity, PERMISSION_REQUEST_FINE_LOCATION);
+
+        currentPlace.withEnabled(isLocationPermissionGranted);
+        result.updateItem(currentPlace);
+
+        List<String> favCities = PositionManager.getInstance().getFavouritesList();
+        if (favCities.isEmpty()) {
             favorites.withBadge("").withEnabled(false);
             result.updateItem(favorites);
-            return;
+        } else {
+            favorites.withEnabled(true);
+            result.updateItem(favorites);
+            result.updateBadge(2, new StringHolder(String.valueOf(favCities.size())));
         }
-        favorites.withEnabled(true);
-        result.updateItem(favorites);
-        result.updateBadge(2, new StringHolder(String.valueOf(PositionManager.getInstance().getFavouritesList().size())));
     }
 
-    /**
-     * Закрывает открытые Drawer SubItems
-     */
-    public void closeSubItems() {
-        for (int i = PositionManager.getInstance().getFavouritesList().size() - 1; i >= 0; i--) {
-            result.removeItems(subItemIndex + i);
+    public boolean closeDrawer() {
+        if (result != null && result.isDrawerOpen()) {
+            result.closeDrawer();
+            return true;
         }
-        if (opened) {
-            opened = false;
-        }
-        //FIXME add unselect item
-        favorites.withSelectable(false);
-        result.updateItem(favorites);
+        return false;
     }
 
+    public interface OnNavigationItemClickListener {
+
+        void OnNavigationItemClicked(int identifier);
+    }
 }
