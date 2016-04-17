@@ -131,10 +131,14 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 int position = recyclerView.getChildAdapterPosition(viewHolder.itemView) - 1;
-                PositionManager.getInstance().removePosition(cityList.get(position));
-                cityList.remove(position);
-                recyclerAdapter.notifyDataSetChanged();
-                swapVisibilityTextOrList();
+                try {
+                    PositionManager.getInstance().removePosition(cityList.get(position));
+                    cityList.remove(position);
+                    recyclerAdapter.notifyDataSetChanged();
+                    swapVisibilityTextOrList();
+                } catch (IndexOutOfBoundsException e) {
+                    // Игнорируем свайпы не по элементам списка
+                }
             }
         };
 
