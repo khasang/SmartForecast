@@ -25,12 +25,12 @@ permalink: pretty
 # ----------------------- #
 
 social:
-  - title: Google Play
+  - title: android
     img: android
     url: https://play.google.com/store/apps/details?id=com.khasang.forecast
-  - title: GitHub
+  - title: github
     img: github
     url: https://github.com/khasang/SmartForecast
-  - title: VK
+  - title: vk
     img: vk
     url: http://vk.com/smartforecast
