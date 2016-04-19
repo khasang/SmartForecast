@@ -27,7 +27,6 @@ ul.list-inline.intro-social-buttons li a {
 
 ul.list-inline.banner-social-buttons li a {
 	width: 180px;
-	float: left;
 }
 
 .lead {
@@ -143,7 +142,7 @@ ul.list-inline.banner-social-buttons li a {
 }
 
 .banner-social-buttons {
-    float: right;
+    float: left;
     margin-top: 0;
 }
 
