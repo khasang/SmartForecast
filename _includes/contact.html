@@ -6,8 +6,8 @@
 				<div class="col-lg-5">
 					<h2>Ищите нас здесь:</h2>
 				</div>
-				<div class="col-lg-7" align="center">
-					<ul class="list-inline banner-social-buttons">
+				<div class="col-lg-7">
+					<ul class="list-inline banner-social-buttons" align="center">
 						{% for social in site.social %}
 						<li>
 							<a href="{{ social.url }}" class="btn btn-default btn-lg"><i class="fa fa-{{ social.title }} fa-fw"></i> <span class="network-name">{{ social.txt }}</span></a>
