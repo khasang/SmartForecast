@@ -1,6 +1,6 @@
 # SmartForecast
 
-<image src="Auxiliary_files/3q3A63B1TdQ.jpg" height=400 alt="Screenshots"/>
+<image src="/Auxiliary_files/Google Play - publication/banner_final.png" height=400 alt="Screenshots"/>
 
 [Видео](http://www.youtube.com/watch?v=WA4Y93X6yL8)
 
