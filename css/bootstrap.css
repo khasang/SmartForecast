@@ -2721,7 +2721,7 @@ select[multiple].input-lg {
   }
 }
 .btn {
-  width: 300;
+  width: 300px;
   display: inline-block;
   padding: 6px 12px;
   margin-bottom: 0;
