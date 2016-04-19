@@ -25,7 +25,7 @@ ul.list-inline.intro-social-buttons li a {
 	width:200px;
 }
 
-ul.list-inline intro-social-buttons soc-buttons li a {
+ul.list-inline.banner-social-buttons li a {
 	width:200px;
 }
 
@@ -92,7 +92,7 @@ ul.list-inline intro-social-buttons soc-buttons li a {
 		width:100%;
 	}
 	
-    ul.list-inline intro-social-buttons soc-buttons li a {
+    ul.list-inline.banner-social-buttons li a {
 	width:100%;
     }
 }
