@@ -26,7 +26,7 @@ permalink: pretty
 
 social:
   - title: android
-    txt: Google Play
+    txt: "Google Play"
     url: https://play.google.com/store/apps/details?id=com.khasang.forecast
   - title: github
     txt: GitHub
