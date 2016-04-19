@@ -25,6 +25,10 @@ ul.list-inline.intro-social-buttons li a {
 	width:200px;
 }
 
+ul.list-inline intro-social-buttons soc-buttons li a {
+	width:200px;
+}
+
 .lead {
     font-size: 18px;
     font-weight: 400;
@@ -87,6 +91,10 @@ ul.list-inline.intro-social-buttons li a {
     ul.list-inline.intro-social-buttons li a {
 		width:100%;
 	}
+	
+    ul.list-inline intro-social-buttons soc-buttons li a {
+	width:100%;
+    }
 }
 
 .network-name {
