@@ -1,6 +1,6 @@
 # SmartForecast
 
-<image src="https://raw.githubusercontent.com/khasang/SmartForecast/main-develop/Auxiliary_files/Google%20Play%20-%20%20publication/banner_final.png" height=400 alt="Screenshots"/>
+<image src="https://github.com/khasang/SmartForecast/blob/main-develop/Auxiliary_files/Google%20Play%20-%20%20publication/banner_r.png?raw=true" height=400 alt="Screenshots"/>
 
 [Видео](http://www.youtube.com/watch?v=WA4Y93X6yL8)
 
