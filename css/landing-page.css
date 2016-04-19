@@ -21,6 +21,10 @@ h6 {
     font-weight: 700;
 }
 
+ul.list-inline.intro-social-buttons li a {
+	width:200px;
+}
+
 .lead {
     font-size: 18px;
     font-weight: 400;
@@ -79,6 +83,10 @@ h6 {
     .intro-divider {
         width: 100%;
     }
+    
+    ul.list-inline.intro-social-buttons li a {
+		width:100%;
+	}
 }
 
 .network-name {
