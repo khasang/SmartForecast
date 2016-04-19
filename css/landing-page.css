@@ -22,11 +22,12 @@ h6 {
 }
 
 ul.list-inline.intro-social-buttons li a {
-	width:200px;
+	width: 200px;
 }
 
 ul.list-inline.banner-social-buttons li a {
-	width:180px;
+	width: 180px;
+	float: left;
 }
 
 .lead {
