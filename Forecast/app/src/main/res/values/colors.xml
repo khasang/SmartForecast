@@ -11,11 +11,11 @@
     <color name="city_card_background">@color/cardview_light_background</color>
     <color name="new_city_card">#FFF8E1</color>
 
-    <color name="icons">#FFFFFF</color>
-    <color name="divider">#B6B6B6</color>
-
-    <color name="snackbar_text">#FFFFFF</color>
-    <color name="background_splash">#E3EFF7</color>
     <color name="background_toast">#CFCFCF</color>
+    <color name="background_splash">#E3EFF7</color>
+
+    <color name="snackbar_text">@color/text_primary</color>
+
+    <color name="current_weather_color">#F3F3F3</color>
 
 </resources>

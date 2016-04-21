@@ -6,6 +6,8 @@
     <color name="city_card_background">@color/cardview_dark_background</color>
     <color name="new_city_card">#FF696969</color>
 
+    <color name="background_toast">@color/city_card_background</color>
+
     <color name="material_drawer_background">@color/material_drawer_dark_background</color>
     <color name="material_drawer_selected">@color/cardview_dark_background</color>
     <color name="material_drawer_primary_text">@color/text_primary</color>
