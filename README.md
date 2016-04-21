@@ -44,7 +44,7 @@
 - Ведение списка городов, интеллектуальное добавление города по нескольким буквам.
 - Выбор единицы измерения температуры.
 
-* Выше перечислены только релиз-версии, опубликованные в магазине приложений Google Play
+*Выше перечислены только релиз-версии, опубликованные в магазине приложений Google Play
 
 
 [![Stories in Ready](https://badge.waffle.io/khasang/SmartForecast.png?label=ready&title=Ready)](http://waffle.io/khasang/SmartForecast)
