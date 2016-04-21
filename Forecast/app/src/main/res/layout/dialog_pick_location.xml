@@ -26,8 +26,8 @@
             android:imeOptions="flagNoExtractUi|actionDone"
             android:inputType="textCapSentences|textMultiLine"
             android:singleLine="false"
-            android:textColor="@color/primary_text"
-            android:textColorHint="@color/primary_text" />
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_secondary" />
 
         <ProgressBar
             android:id="@+id/autocomplete_progressbar"

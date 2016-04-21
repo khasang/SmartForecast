@@ -557,7 +557,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             }
         });
         */
-        dialog.getWindow().setBackgroundDrawableResource(R.color.background_window);
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         //dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         dialog.show();

@@ -1,5 +1,4 @@
 <resources>
-
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
         <item name="windowActionBar">false</item>
@@ -11,8 +10,10 @@
         <item name="toolbarStyle">@style/Toolbar</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
 
-<!--        <item name="android:textColor">@color/primary_text</item>
-        <item name="android:textColorSecondary">@color/secondary_text</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+        <item name="android:textColorHighlight">@color/accent</item>
+<!--
         <item name="android:windowBackground">@color/background_window</item>
         <item name="colorControlNormal">@color/icons</item>
         -->
