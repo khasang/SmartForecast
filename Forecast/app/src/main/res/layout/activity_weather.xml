@@ -70,7 +70,7 @@
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="16dp"
                             android:text="--/--"
-                            android:textColor="@color/icons" />
+                            android:textColor="@color/current_weather_color" />
                     </LinearLayout>
 
 
@@ -94,7 +94,7 @@
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="16dp"
                             android:text="--/--"
-                            android:textColor="@color/icons" />
+                            android:textColor="@color/current_weather_color" />
                     </LinearLayout>
                 </RelativeLayout>
 
@@ -110,7 +110,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="--/--"
-                        android:textColor="#fff"
+                        android:textColor="@color/current_weather_color"
                         android:textSize="56sp" />
 
                     <TextView
@@ -121,7 +121,7 @@
                         android:layout_below="@+id/temperature"
                         android:maxLines="2"
                         android:text="--/--"
-                        android:textColor="#fff"
+                        android:textColor="@color/current_weather_color"
                         android:textSize="24sp" />
 
                 </RelativeLayout>

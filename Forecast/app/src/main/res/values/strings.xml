@@ -147,4 +147,15 @@
     <string name="error_get_coordinates">Can\'t determine the coordinates of the requested location</string>
     <string name="shared_last_active_position_name" translatable="false">last_active_position_name</string>
     <string name="forecast_unavailable">Forecast unavailable</string>
+
+    <!-- TODO TRANSLATE -->
+    <string name="pref_header_personalization">Персонализация</string>
+    <string name="pref_night_mode_key" translatable="false">night_mode</string>
+    <string name="pref_night_mode_title">Тема</string>
+    <string name="pref_night_mode_off_label">Дневная тема</string>
+    <string name="pref_night_mode_on_label">Ночная тема</string>
+    <string name="pref_night_mode_auto_label">Основана на времени суток</string>
+    <string name="pref_night_mode_off" translatable="false">night_mode_off</string>
+    <string name="pref_night_mode_on" translatable="false">night_mode_on</string>
+    <string name="pref_night_mode_auto" translatable="false">night_mode_auto</string>
 </resources>

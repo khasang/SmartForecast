@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
@@ -71,6 +72,17 @@ public class SplashScreenActivity
                     .appendJumpingDots()
                     .build();
         }
+
+        if (sp.getString(getString(R.string.pref_night_mode_key), "").equals(getString(R.string.pref_night_mode_off))) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        } else if (sp.getString(getString(R.string.pref_night_mode_key), "").equals(getString(R.string.pref_night_mode_on))) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else if (sp.getString(getString(R.string.pref_night_mode_key), "").equals(getString(R.string.pref_night_mode_auto))) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        }
+
         GifImageView gifImageView = ((GifImageView) findViewById(R.id.gifImageView));
         try {
             gifDrawable = new GifDrawable(getResources(), R.raw.splash_screen);

@@ -64,4 +64,16 @@
         <item>@drawable/header_night_5</item>
     </string-array>
 
+    <string-array name="pref_night_mode_options">
+        <item>@string/pref_night_mode_off_label</item>
+        <item>@string/pref_night_mode_on_label</item>
+        <item>@string/pref_night_mode_auto_label</item>
+    </string-array>
+
+    <string-array name="pref_night_mode_values">
+        <item>@string/pref_night_mode_off</item>
+        <item>@string/pref_night_mode_on</item>
+        <item>@string/pref_night_mode_auto</item>
+    </string-array>
+
 </resources>
