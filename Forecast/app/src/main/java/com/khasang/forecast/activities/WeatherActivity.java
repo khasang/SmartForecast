@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -52,6 +53,8 @@ import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.ionicons_typeface_library.Ionicons;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
+import com.mikepenz.materialdrawer.AccountHeader;
+import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.holder.StringHolder;
@@ -65,6 +68,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Random;
 
 import static com.khasang.forecast.PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION;
 
@@ -218,6 +222,33 @@ public class WeatherActivity extends AppCompatActivity
     }
 
     private void initNavigationDrawer() {
+        /** Определение текущей темы и выбор соответсвующего набора headers */
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        String currentTheme = sp.getString(getString(R.string.pref_night_mode_key), "");
+
+        TypedArray array;
+
+        switch (currentTheme) {
+            case "night_mode_off":
+                array = getResources().obtainTypedArray(R.array.day_headers);
+                break;
+            case "night_mode_on":
+                array = getResources().obtainTypedArray(R.array.night_headers);
+                break;
+            default:
+                array = getResources().obtainTypedArray(R.array.day_headers);
+                break;
+        }
+
+        /** Рандомный header drawable */
+        int header = array.getResourceId(new Random().nextInt(array.length()), 0);
+
+        /** Создание Header */
+        AccountHeader headerResult = new AccountHeaderBuilder()
+                .withActivity(this)
+                .withHeaderBackground(header)
+                .build();
+
         /** Инициализация элементов меню */
         DividerDrawerItem divider = new DividerDrawerItem();
         currentPlace = new PrimaryDrawerItem().withName(R.string.drawer_item_current_place)
@@ -244,7 +275,7 @@ public class WeatherActivity extends AppCompatActivity
                 .withToolbar(toolbar)
                 .withSelectedItem(-1)
                 .withActionBarDrawerToggle(true)
-                .withHeader(R.layout.drawer_header)
+                .withAccountHeader(headerResult)
                 .addDrawerItems(currentPlace, cityList, favorites, divider, settings, feedBack)
                 .addStickyDrawerItems(footer)
                 .withOnDrawerItemClickListener(this)
