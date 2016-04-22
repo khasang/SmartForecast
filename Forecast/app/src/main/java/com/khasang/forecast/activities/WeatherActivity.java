@@ -266,9 +266,9 @@ public class WeatherActivity extends AppCompatActivity
         SecondaryDrawerItem feedBack = new SecondaryDrawerItem().withName(R.string.drawer_item_feedback)
                 .withIcon(GoogleMaterial.Icon.gmd_feedback)
                 .withIdentifier(NAVIGATION_FEEDBACK);
-        PrimaryDrawerItem footer = new PrimaryDrawerItem().withName(R.string.app_name)
-                .withEnabled(false)
-                .withIdentifier(NAVIGATION_APP_NAME);
+//        PrimaryDrawerItem footer = new PrimaryDrawerItem().withName(R.string.app_name)
+//                .withEnabled(false)
+//                .withIdentifier(NAVIGATION_APP_NAME);
 
         /** Создание Navigation Drawer */
         result = new DrawerBuilder().withActivity(this)
@@ -277,7 +277,7 @@ public class WeatherActivity extends AppCompatActivity
                 .withActionBarDrawerToggle(true)
                 .withAccountHeader(headerResult)
                 .addDrawerItems(currentPlace, cityList, favorites, divider, settings, feedBack)
-                .addStickyDrawerItems(footer)
+//                .addStickyDrawerItems(footer)
                 .withOnDrawerItemClickListener(this)
                 .build();
     }
