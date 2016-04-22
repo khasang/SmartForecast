@@ -395,48 +395,38 @@ public class WeatherActivity extends AppCompatActivity
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
 
-        if (sp.getString(getString(R.string.pref_night_mode_key), "").equals(getString(R.string.pref_night_mode_off))) {
-            if (currentNightMode != Configuration.UI_MODE_NIGHT_NO) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                recreate();
-            }
-        } else if (sp.getString(getString(R.string.pref_night_mode_key), "").equals(getString(R.string.pref_night_mode_on))) {
-            if (currentNightMode != Configuration.UI_MODE_NIGHT_YES) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                recreate();
-            }
+        if (sp.getString(getString(R.string.pref_night_mode_key), "").equals(getString(R.string.pref_night_mode_off)) && (currentNightMode != Configuration.UI_MODE_NIGHT_NO)) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            recreate();
+        } else if (sp.getString(getString(R.string.pref_night_mode_key), "").equals(getString(R.string.pref_night_mode_on))
+                && (currentNightMode != Configuration.UI_MODE_NIGHT_YES)) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            recreate();
         }
 
-        PositionManager.getInstance()
-                .setUseGpsModule(sp.getBoolean(getString(R.string.pref_gps_key), true));
-        if (sp.getString(getString(R.string.pref_units_key), getString(R.string.pref_units_celsius))
-                .equals(getString(R.string.pref_units_celsius))) {
+        PositionManager.getInstance().setUseGpsModule(sp.getBoolean(getString(R.string.pref_gps_key), true));
+        if (sp.getString(getString(R.string.pref_units_key), getString(R.string.pref_units_celsius)).equals(getString(R.string.pref_units_celsius))) {
             PositionManager.getInstance().setTemperatureMetric(AppUtils.TemperatureMetrics.CELSIUS);
-        } else if (sp.getString(getString(R.string.pref_units_key),
-                getString(R.string.pref_units_celsius)).equals(getString(R.string.pref_units_kelvin))) {
+        } else if (sp.getString(getString(R.string.pref_units_key), getString(R.string.pref_units_celsius)).equals(getString(R.string.pref_units_kelvin))) {
             PositionManager.getInstance().setTemperatureMetric(AppUtils.TemperatureMetrics.KELVIN);
-        } else if (sp.getString(getString(R.string.pref_units_key),
-                getString(R.string.pref_units_celsius)).equals(getString(R.string.pref_units_fahrenheit))) {
+        } else if (sp.getString(getString(R.string.pref_units_key), getString(R.string.pref_units_celsius)).equals(getString(R.string.pref_units_fahrenheit))) {
             PositionManager.getInstance().setTemperatureMetric(AppUtils.TemperatureMetrics.FAHRENHEIT);
         } else {
             PositionManager.getInstance().setTemperatureMetric(AppUtils.TemperatureMetrics.CELSIUS);
         }
-        if (sp.getString(getString(R.string.pref_speed_key), getString(R.string.pref_speed_meter_sec))
-                .equals(getString(R.string.pref_speed_meter_sec))) {
+
+        if (sp.getString(getString(R.string.pref_speed_key), getString(R.string.pref_speed_meter_sec)).equals(getString(R.string.pref_speed_meter_sec))) {
             PositionManager.getInstance().setSpeedMetric(AppUtils.SpeedMetrics.METER_PER_SECOND);
-        } else if (sp.getString(getString(R.string.pref_speed_key),
-                getString(R.string.pref_speed_meter_sec)).equals(getString(R.string.pref_speed_foot_sec))) {
+        } else if (sp.getString(getString(R.string.pref_speed_key), getString(R.string.pref_speed_meter_sec)).equals(getString(R.string.pref_speed_foot_sec))) {
             PositionManager.getInstance().setSpeedMetric(AppUtils.SpeedMetrics.FOOT_PER_SECOND);
-        } else if (sp.getString(getString(R.string.pref_speed_key),
-                getString(R.string.pref_speed_meter_sec)).equals(getString(R.string.pref_speed_km_hour))) {
+        } else if (sp.getString(getString(R.string.pref_speed_key), getString(R.string.pref_speed_meter_sec)).equals(getString(R.string.pref_speed_km_hour))) {
             PositionManager.getInstance().setSpeedMetric(AppUtils.SpeedMetrics.KM_PER_HOURS);
-        } else if (sp.getString(getString(R.string.pref_speed_key),
-                getString(R.string.pref_speed_meter_sec))
-                .equals(getString(R.string.pref_speed_mile_hour))) {
+        } else if (sp.getString(getString(R.string.pref_speed_key), getString(R.string.pref_speed_meter_sec)).equals(getString(R.string.pref_speed_mile_hour))) {
             PositionManager.getInstance().setSpeedMetric(AppUtils.SpeedMetrics.MILES_PER_HOURS);
         } else {
             PositionManager.getInstance().setSpeedMetric(AppUtils.SpeedMetrics.METER_PER_SECOND);
         }
+
         PositionManager.getInstance().updateWeatherFromDB();
         onRefresh();
     }
