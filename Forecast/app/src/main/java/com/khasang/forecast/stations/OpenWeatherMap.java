@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.stetho.okhttp.StethoInterceptor;
 import com.khasang.forecast.AppUtils;
+import com.khasang.forecast.R;
 import com.khasang.forecast.position.Coordinate;
 import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.position.PositionManager;
@@ -49,7 +50,7 @@ public class OpenWeatherMap extends WeatherStation {
     /**
      * API ключ.
      */
-    private static final String APP_ID = "850f0bd2560d6ea117167544e52ea59d";
+    private static final String APP_ID = MyApplication.getAppContext().getString(R.string.open_weather_map_key);
 
     /**
      * Количество 3-х часовых интервалов для запроса к API.
