@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary_green">#388E3C</color>
+    <color name="primary_green">#2E7D32</color>
     <color name="primary_green_dark">#1B5E20</color>
     <color name="primary_green_light">#4CAF50</color>
 
-    <color name="primary_brown">#5D4037</color>
+    <color name="primary_brown">#4E342E</color>
     <color name="primary_brown_dark">#3E2723</color>
     <color name="primary_brown_light">#795548</color>
 
-    <color name="primary_indigo">#303F9F</color>
+    <color name="primary_indigo">#283593</color>
     <color name="primary_indigo_dark">#1A237E</color>
     <color name="primary_indigo_light">#3F51B5</color>
 
-    <color name="primary_teal">#00796B</color>
+    <color name="primary_teal">#00695C</color>
     <color name="primary_teal_dark">#004D40</color>
     <color name="primary_teal_light">#009688</color>
 
-    <color name="primary_purple">#7B1FA2</color>
+    <color name="primary_purple">#6A1B9A</color>
     <color name="primary_purple_dark">#4A148C</color>
     <color name="primary_purple_light">#9C27B0</color>
 
