@@ -58,6 +58,8 @@ import com.khasang.forecast.adapters.RecyclerAdapter;
 import com.khasang.forecast.adapters.etc.HidingScrollListener;
 import com.khasang.forecast.adapters.GooglePlacesAutocompleteAdapter;
 import com.khasang.forecast.view.DelayedAutoCompleteTextView;
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.iconics.IconicsDrawable;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -581,7 +583,14 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.menu_activity_city_picker, menu);
-        menu.findItem(R.id.clear_favorite).setVisible(true);
+
+        IconicsDrawable icon = new IconicsDrawable(this)
+                .icon(GoogleMaterial.Icon.gmd_delete)
+                .color(ContextCompat.getColor(this, R.color.current_weather_color))
+                .sizeDp(18);
+
+        menu.findItem(R.id.clear_favorite).setVisible(true).setIcon(icon);
+
         return super.onCreateOptionsMenu(menu);
     }
 
