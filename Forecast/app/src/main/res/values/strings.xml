@@ -161,11 +161,11 @@
 
     <string name="pref_color_scheme_key" translatable="false">color_scheme</string>
     <string name="pref_color_scheme_title">Цветовая схема</string>
-    <string name="pref_color_scheme_green_label">Зеленый</string>
-    <string name="pref_color_scheme_brown_label">Коричневый</string>
-    <string name="pref_color_scheme_teal_label">Бирюзовый</string>
-    <string name="pref_color_scheme_indigo_label">Темно-синий</string>
-    <string name="pref_color_scheme_purple_label">Фиолетовый</string>
+    <string name="pref_color_scheme_green_label">Зеленая</string>
+    <string name="pref_color_scheme_brown_label">Коричневая</string>
+    <string name="pref_color_scheme_teal_label">Бирюзовая</string>
+    <string name="pref_color_scheme_indigo_label">Темно-синяя</string>
+    <string name="pref_color_scheme_purple_label">Фиолетовая</string>
     <string name="pref_color_scheme_green" translatable="false">color_scheme_green</string>
     <string name="pref_color_scheme_brown" translatable="false">color_scheme_brown</string>
     <string name="pref_color_scheme_teal" translatable="false">color_scheme_teal</string>
