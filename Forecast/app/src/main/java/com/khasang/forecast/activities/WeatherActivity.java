@@ -223,25 +223,18 @@ public class WeatherActivity extends AppCompatActivity
 
     private void initNavigationDrawer() {
         /** Определение текущей темы и выбор соответсвующего набора headers */
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        String currentTheme = sp.getString(getString(R.string.pref_night_mode_key), "");
-
         TypedArray array;
+        int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
 
-        switch (currentTheme) {
-            case "night_mode_off":
-                array = getResources().obtainTypedArray(R.array.day_headers);
-                break;
-            case "night_mode_on":
-                array = getResources().obtainTypedArray(R.array.night_headers);
-                break;
-            default:
-                array = getResources().obtainTypedArray(R.array.day_headers);
-                break;
+        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
+            array = getResources().obtainTypedArray(R.array.night_headers);
+        } else {
+            array = getResources().obtainTypedArray(R.array.day_headers);
         }
 
         /** Рандомный header drawable */
         int header = array.getResourceId(new Random().nextInt(array.length()), 0);
+        array.recycle();
 
         /** Создание Header */
         AccountHeader headerResult = new AccountHeaderBuilder()
