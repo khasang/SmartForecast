@@ -80,7 +80,7 @@ public class SplashScreenActivity
                 text = getString(R.string.welcome_string_evening);
             }
             welcomeText = ((ShimmerTextView) findViewById(R.id.welcomeText));
-            welcomeText.setTextColor(ContextCompat.getColor(this, R.color.primary_brown_dark));
+            welcomeText.setTextColor(ContextCompat.getColor(this, R.color.material_drawer_selected_text));
             welcomeText.setText(text);
             jumpingBeans = JumpingBeans
                     .with(welcomeText)

@@ -38,8 +38,6 @@
         <item name="colorPrimaryDark">@color/primary_purple_dark</item>
     </style>
 
-
-
     <style name="AppTheme.Main" parent="AppTheme" />
 
     <style name="AppTheme.CityPicker" parent="AppTheme" />
