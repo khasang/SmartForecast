@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -51,6 +52,7 @@ import com.khasang.forecast.stations.WeatherStation;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.ionicons_typeface_library.Ionicons;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
 import com.mikepenz.materialdrawer.AccountHeader;
@@ -548,7 +550,14 @@ public class WeatherActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.menu_activity_weather, menu);
         final MenuItem item = menu.findItem(R.id.menu_item_refresh);
         item.setActionView(R.layout.iv_action_refresh);
+
+        IconicsDrawable icon = new IconicsDrawable(this)
+                .icon(GoogleMaterial.Icon.gmd_refresh)
+                .color(ContextCompat.getColor(this, R.color.current_weather_color))
+                .sizeDp(18);
+
         syncBtn = (ImageView) item.getActionView().findViewById(R.id.refreshButton);
+        syncBtn.setImageDrawable(icon);
         syncBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
