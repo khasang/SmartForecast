@@ -1,9 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary">#4CAF50</color>
-    <color name="primary_dark">#388E3C</color>
-    <color name="primary_light">#C8E6C9</color>
     <color name="accent">#FFC107</color>
+
+    <color name="primary_green">#4CAF50</color>
+    <color name="primary_green_dark">#388E3C</color>
+    <color name="primary_green_light">#C8E6C9</color>
+
+    <color name="primary_brown">#795548</color>
+    <color name="primary_brown_dark">#5D4037</color>
+    <color name="primary_brown_light">#D7CCC8</color>
+
+    <color name="primary_indigo">#3F51B5</color>
+    <color name="primary_indigo_dark">#303F9F</color>
+    <color name="primary_indigo_light">#C5CAE9</color>
+
+    <color name="primary_teal">#009688</color>
+    <color name="primary_teal_dark">#00796B</color>
+    <color name="primary_teal_light">#B2DFDB</color>
+
+    <color name="primary_purple">#9C27B0</color>
+    <color name="primary_purple_dark">#7B1FA2</color>
+    <color name="primary_purple_light">#FFCCBC</color>
 
     <color name="text_primary">@android:color/primary_text_light</color>
     <color name="text_secondary">@android:color/secondary_text_light</color>

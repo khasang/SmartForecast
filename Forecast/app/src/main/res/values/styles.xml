@@ -4,17 +4,41 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
 
-        <item name="colorPrimary">@color/primary</item>
-        <item name="colorPrimaryDark">@color/primary_dark</item>
-        <item name="colorAccent">@color/accent</item>
         <item name="toolbarStyle">@style/Toolbar</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
 
+        <item name="colorAccent">@color/accent</item>
         <item name="android:textColor">@color/text_primary</item>
         <item name="android:textColorSecondary">@color/text_secondary</item>
         <item name="android:textColorHighlight">@color/accent</item>
-
     </style>
+
+    <style name="AppTheme.Green">
+        <item name="colorPrimary">@color/primary_green</item>
+        <item name="colorPrimaryDark">@color/primary_green_dark</item>
+    </style>
+
+    <style name="AppTheme.Brown">
+        <item name="colorPrimary">@color/primary_brown</item>
+        <item name="colorPrimaryDark">@color/primary_brown_dark</item>
+    </style>
+
+    <style name="AppTheme.Teal">
+        <item name="colorPrimary">@color/primary_teal</item>
+        <item name="colorPrimaryDark">@color/primary_teal_dark</item>
+    </style>
+
+    <style name="AppTheme.Indigo">
+        <item name="colorPrimary">@color/primary_indigo</item>
+        <item name="colorPrimaryDark">@color/primary_indigo_dark</item>
+    </style>
+
+    <style name="AppTheme.Purple">
+        <item name="colorPrimary">@color/primary_purple</item>
+        <item name="colorPrimaryDark">@color/primary_purple_dark</item>
+    </style>
+
+
 
     <style name="AppTheme.Main" parent="AppTheme" />
 

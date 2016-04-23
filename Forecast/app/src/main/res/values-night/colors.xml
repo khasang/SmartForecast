@@ -1,8 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary">#388E3C</color>
-    <color name="primary_dark">#2E7D32</color>
-    <color name="primary_light">#4CAF50</color>
+    <color name="primary_green">#388E3C</color>
+    <color name="primary_green_dark">#2E7D32</color>
+    <color name="primary_green_light">#4CAF50</color>
+
+    <color name="primary_brown">#795548</color>
+    <color name="primary_brown_dark">#5D4037</color>
+    <color name="primary_brown_light">#D7CCC8</color>
+
+    <color name="primary_indigo">#3F51B5</color>
+    <color name="primary_indigo_dark">#303F9F</color>
+    <color name="primary_indigo_light">#C5CAE9</color>
+
+    <color name="primary_teal">#009688</color>
+    <color name="primary_teal_dark">#00796B</color>
+    <color name="primary_teal_light">#B2DFDB</color>
+
+    <color name="primary_purple">#9C27B0</color>
+    <color name="primary_purple_dark">#7B1FA2</color>
+    <color name="primary_purple_light">#FFCCBC</color>
 
     <color name="text_primary">@android:color/primary_text_dark</color>
     <color name="text_secondary">@android:color/secondary_text_dark</color>
@@ -18,7 +34,7 @@
     <color name="material_drawer_hint_icon">@color/material_drawer_dark_hint_icon</color>
     <color name="material_drawer_divider">@color/material_drawer_dark_divider</color>
 
-    <color name="material_drawer_selected_text">@color/primary</color>
+    <color name="material_drawer_selected_text">@color/primary_green</color>
     <color name="material_drawer_primary_text">@color/text_primary</color>
     <color name="material_drawer_secondary_text">@color/text_primary</color>
     <color name="material_drawer_primary_icon">@color/material_drawer_primary_text</color>
