@@ -84,12 +84,13 @@ public class PositionManager {
         return instance;
     }
 
-    public static PositionManager getInstance(IMessageProvider provider) {
+    public static PositionManager getInstance(IMessageProvider provider, IWeatherReceiver receiver) {
         if (instance == null) {
             synchronized (PositionManager.class) {
                 if (instance == null) {
                     instance = new PositionManager();
                     instance.setMessageProvider(provider);
+                    instance.setReceiver(receiver);
                     instance.initManager();
                 }
             }
@@ -468,6 +469,7 @@ public class PositionManager {
             } catch (NullPointerException e) {
                 // Отсроченный запрос активити уже уничтожено
                 e.printStackTrace();
+                updateWeatherFromDB();
             }
         }
     }

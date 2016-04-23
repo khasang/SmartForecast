@@ -19,11 +19,9 @@ import android.view.animation.AnimationUtils;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.server.converter.StringToIntConverter;
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.R;
 import com.khasang.forecast.interfaces.IMessageProvider;
-import com.khasang.forecast.position.PositionManager;
 import com.romainpiel.shimmer.Shimmer;
 import com.romainpiel.shimmer.ShimmerTextView;
 
@@ -139,16 +137,12 @@ public class SplashScreenActivity
         super.onResume();
         if (checkPlayServices()) {
             isGooglePlayServicesInstalled = true;
-            PositionManager.getInstance(this);
         }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (isGooglePlayServicesInstalled) {
-            PositionManager.getInstance().setMessageProvider(null);
-        }
     }
 
     @Override

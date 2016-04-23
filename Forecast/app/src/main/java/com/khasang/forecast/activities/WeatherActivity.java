@@ -68,7 +68,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Random;
+
+import javax.sql.RowSetInternal;
 
 import static com.khasang.forecast.PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION;
 
@@ -114,6 +115,7 @@ public class WeatherActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        PositionManager.getInstance(this, this);
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         String colorScheme = sp.getString(getString(R.string.pref_color_scheme_key), "");
         int drowerHeaderArrayIndex = 0;
@@ -405,6 +407,8 @@ public class WeatherActivity extends AppCompatActivity
      * Изменяет отображаемый город WeatherActivity
      */
     public void changeDisplayedCity(String newCity) {
+        PositionManager.getInstance().setMessageProvider(this);
+        PositionManager.getInstance().setReceiver(this);
         PositionManager.getInstance().setCurrentPosition(newCity);
         PositionManager.getInstance().updateWeatherFromDB();
         onRefresh();
@@ -675,13 +679,14 @@ public class WeatherActivity extends AppCompatActivity
             showProgress(false);
             return;
         }
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Logger.println(TAG, "Start animation");
-                PositionManager.getInstance().updateWeather();
-            }
-        }, 500);
+        PositionManager.getInstance().updateWeather();
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                Logger.println(TAG, "Start animation");
+//                PositionManager.getInstance().updateWeather();
+//            }
+//        }, 500);
     }
 
     public void showProgress(boolean loading) {
