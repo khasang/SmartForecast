@@ -5,4 +5,4 @@
     android:adjustViewBounds="true"
     android:orientation="vertical"
     android:scaleType="fitCenter"
-    android:src="@drawable/header_day_1" />
+    android:src="@drawable/header_day_teal" />

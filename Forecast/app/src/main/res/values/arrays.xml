@@ -48,20 +48,20 @@
 
     <!-- Headers array - Day -->
     <string-array name="day_headers">
-        <item>@drawable/header_day_1</item>
-        <item>@drawable/header_day_2</item>
-        <item>@drawable/header_day_3</item>
-        <item>@drawable/header_day_4</item>
-        <item>@drawable/header_day_5</item>
+        <item>@drawable/header_day_green</item>
+        <item>@drawable/header_day_brown</item>
+        <item>@drawable/header_day_teal</item>
+        <item>@drawable/header_day_indigo</item>
+        <item>@drawable/header_day_purple</item>
     </string-array>
 
     <!-- Headers array - Night -->
     <string-array name="night_headers">
-        <item>@drawable/header_night_1</item>
-        <item>@drawable/header_night_2</item>
-        <item>@drawable/header_night_3</item>
-        <item>@drawable/header_night_4</item>
-        <item>@drawable/header_night_5</item>
+        <item>@drawable/header_night_green</item>
+        <item>@drawable/header_night_brown</item>
+        <item>@drawable/header_night_teal</item>
+        <item>@drawable/header_night_indigo</item>
+        <item>@drawable/header_night_purple</item>
     </string-array>
 
     <string-array name="pref_night_mode_options">
@@ -74,6 +74,22 @@
         <item>@string/pref_night_mode_off</item>
         <item>@string/pref_night_mode_on</item>
         <item>@string/pref_night_mode_auto</item>
+    </string-array>
+
+    <string-array name="pref_color_scheme_options">
+        <item>@string/pref_color_scheme_green_label</item>
+        <item>@string/pref_color_scheme_brown_label</item>
+        <item>@string/pref_color_scheme_teal_label</item>
+        <item>@string/pref_color_scheme_indigo_label</item>
+        <item>@string/pref_color_scheme_purple_label</item>
+    </string-array>
+
+    <string-array name="pref_color_scheme_values">
+        <item>@string/pref_color_scheme_green</item>
+        <item>@string/pref_color_scheme_brown</item>
+        <item>@string/pref_color_scheme_teal</item>
+        <item>@string/pref_color_scheme_indigo</item>
+        <item>@string/pref_color_scheme_purple</item>
     </string-array>
 
 </resources>

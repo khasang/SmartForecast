@@ -65,6 +65,15 @@
             android:negativeButtonText="@null"
             android:positiveButtonText="@null"
             android:title="@string/pref_night_mode_title" />
+        <ListPreference
+            android:defaultValue="@string/pref_color_scheme_green"
+            android:entries="@array/pref_color_scheme_options"
+            android:entryValues="@array/pref_color_scheme_values"
+            android:key="@string/pref_color_scheme_key"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="@string/pref_color_scheme_title" />
+            />
     </PreferenceCategory>
 
 </PreferenceScreen>

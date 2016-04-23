@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.preference.PreferenceManager;
@@ -18,6 +19,7 @@ import android.view.animation.AnimationUtils;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.server.converter.StringToIntConverter;
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.R;
 import com.khasang.forecast.interfaces.IMessageProvider;
@@ -50,8 +52,20 @@ public class SplashScreenActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash_screen);
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        String colorScheme = sp.getString(getString(R.string.pref_color_scheme_key), "");
+        if (colorScheme.equals(getString(R.string.pref_color_scheme_brown))) {
+            setTheme(R.style.AppTheme_Brown);
+        } else if (colorScheme.equals(getString(R.string.pref_color_scheme_teal))) {
+            setTheme(R.style.AppTheme_Teal);
+        } else if (colorScheme.equals(getString(R.string.pref_color_scheme_indigo))) {
+            setTheme(R.style.AppTheme_Indigo);
+        } else if (colorScheme.equals(getString(R.string.pref_color_scheme_purple))) {
+            setTheme(R.style.AppTheme_Purple);
+        } else {
+            setTheme(R.style.AppTheme_Green);
+        }
+        setContentView(R.layout.activity_splash_screen);
 //        welcomeStringIsOff = sp.getString(getString(R.string.pref_welcome_key), getString(R.string.pref_welcome_default)).equals(getString(R.string.pref_welcome_off));
         welcomeStringIsOff = !sp.getBoolean(getString(R.string.pref_welcome_key_switch), true);
         if (!welcomeStringIsOff) {
@@ -66,6 +80,7 @@ public class SplashScreenActivity
                 text = getString(R.string.welcome_string_evening);
             }
             welcomeText = ((ShimmerTextView) findViewById(R.id.welcomeText));
+            welcomeText.setTextColor(ContextCompat.getColor(this, R.color.primary_brown_dark));
             welcomeText.setText(text);
             jumpingBeans = JumpingBeans
                     .with(welcomeText)

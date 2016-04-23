@@ -158,4 +158,18 @@
     <string name="pref_night_mode_off" translatable="false">night_mode_off</string>
     <string name="pref_night_mode_on" translatable="false">night_mode_on</string>
     <string name="pref_night_mode_auto" translatable="false">night_mode_auto</string>
+
+    <string name="pref_color_scheme_key" translatable="false">color_scheme</string>
+    <string name="pref_color_scheme_title">Цветовая схема</string>
+    <string name="pref_color_scheme_green_label">Зеленый</string>
+    <string name="pref_color_scheme_brown_label">Коричневый</string>
+    <string name="pref_color_scheme_teal_label">Бирюзовый</string>
+    <string name="pref_color_scheme_indigo_label">Темно синий</string>
+    <string name="pref_color_scheme_purple_label">Фиолетовый</string>
+    <string name="pref_color_scheme_green" translatable="false">color_scheme_green</string>
+    <string name="pref_color_scheme_brown" translatable="false">color_scheme_brown</string>
+    <string name="pref_color_scheme_teal" translatable="false">color_scheme_teal</string>
+    <string name="pref_color_scheme_indigo" translatable="false">color_scheme_indigo</string>
+    <string name="pref_color_scheme_purple" translatable="false">color_scheme_purple</string>
+
 </resources>

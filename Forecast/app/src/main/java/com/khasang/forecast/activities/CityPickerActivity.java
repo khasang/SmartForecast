@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -88,6 +90,19 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        String colorScheme = sp.getString(getString(R.string.pref_color_scheme_key), "");
+        if (colorScheme.equals(getString(R.string.pref_color_scheme_brown))) {
+            setTheme(R.style.AppTheme_Brown);
+        } else if (colorScheme.equals(getString(R.string.pref_color_scheme_teal))) {
+            setTheme(R.style.AppTheme_Teal);
+        } else if (colorScheme.equals(getString(R.string.pref_color_scheme_indigo))) {
+            setTheme(R.style.AppTheme_Indigo);
+        } else if (colorScheme.equals(getString(R.string.pref_color_scheme_purple))) {
+            setTheme(R.style.AppTheme_Purple);
+        } else {
+            setTheme(R.style.AppTheme_Green);
+        }
         setContentView(R.layout.activity_city_picker);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

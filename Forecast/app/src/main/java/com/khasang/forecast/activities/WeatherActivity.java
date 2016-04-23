@@ -114,6 +114,24 @@ public class WeatherActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        String colorScheme = sp.getString(getString(R.string.pref_color_scheme_key), "");
+        int drowerHeaderArrayIndex = 0;
+        if (colorScheme.equals(getString(R.string.pref_color_scheme_brown))) {
+            setTheme(R.style.AppTheme_Brown);
+            drowerHeaderArrayIndex = 1;
+        } else if (colorScheme.equals(getString(R.string.pref_color_scheme_teal))) {
+            setTheme(R.style.AppTheme_Teal);
+            drowerHeaderArrayIndex = 2;
+        } else if (colorScheme.equals(getString(R.string.pref_color_scheme_indigo))) {
+            setTheme(R.style.AppTheme_Indigo);
+            drowerHeaderArrayIndex = 3;
+        } else if (colorScheme.equals(getString(R.string.pref_color_scheme_purple))) {
+            setTheme(R.style.AppTheme_Purple);
+            drowerHeaderArrayIndex = 4;
+        } else {
+            setTheme(R.style.AppTheme_Green);
+        }
         setContentView(R.layout.activity_weather);
         if (savedInstanceState != null) {
             String savedCurrentCity = savedInstanceState.getString(CURRENT_CITY_TAG, "");
@@ -134,7 +152,7 @@ public class WeatherActivity extends AppCompatActivity
         setAnimationForWidgets();
         startAnimations();
         checkPermissions();
-        initNavigationDrawer();
+        initNavigationDrawer(drowerHeaderArrayIndex);
     }
 
     private void initFields() {
@@ -221,7 +239,7 @@ public class WeatherActivity extends AppCompatActivity
     public void permissionDenied(PermissionChecker.RuntimePermissions permission) {
     }
 
-    private void initNavigationDrawer() {
+    private void initNavigationDrawer(int drowerHeaderArrayIndex) {
         /** Определение текущей темы и выбор соответсвующего набора headers */
         TypedArray array;
         int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
@@ -233,7 +251,8 @@ public class WeatherActivity extends AppCompatActivity
         }
 
         /** Рандомный header drawable */
-        int header = array.getResourceId(new Random().nextInt(array.length()), 0);
+        //int header = array.getResourceId(new Random().nextInt(array.length()), 0);
+        int header = array.getResourceId(drowerHeaderArrayIndex, 0);
         array.recycle();
 
         /** Создание Header */
@@ -259,9 +278,6 @@ public class WeatherActivity extends AppCompatActivity
         SecondaryDrawerItem feedBack = new SecondaryDrawerItem().withName(R.string.drawer_item_feedback)
                 .withIcon(GoogleMaterial.Icon.gmd_feedback)
                 .withIdentifier(NAVIGATION_FEEDBACK);
-//        PrimaryDrawerItem footer = new PrimaryDrawerItem().withName(R.string.app_name)
-//                .withEnabled(false)
-//                .withIdentifier(NAVIGATION_APP_NAME);
 
         /** Создание Navigation Drawer */
         result = new DrawerBuilder().withActivity(this)
@@ -270,7 +286,6 @@ public class WeatherActivity extends AppCompatActivity
                 .withActionBarDrawerToggle(true)
                 .withAccountHeader(headerResult)
                 .addDrawerItems(currentPlace, cityList, favorites, divider, settings, feedBack)
-//                .addStickyDrawerItems(footer)
                 .withOnDrawerItemClickListener(this)
                 .build();
     }
