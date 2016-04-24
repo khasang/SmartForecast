@@ -64,6 +64,7 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.meteocons_typeface_library.Meteoconcs;
+import com.mikepenz.octicons_typeface_library.Octicons;
 import com.mikepenz.weather_icons_typeface_library.WeatherIcons;
 
 import java.util.Calendar;
@@ -174,18 +175,17 @@ public class WeatherActivity extends AppCompatActivity
                 .color(ContextCompat.getColor(this, R.color.current_weather_color))
                 .paddingDp(2)
                 .sizeDp(24);
-        ((ImageView) findViewById(R.id.icon_wind)).setImageDrawable(icon_wind);
-
         IconicsDrawable icon_hum = new IconicsDrawable(this)
                 .icon(WeatherIcons.Icon.wic_humidity)
-                .color(ContextCompat.getColor(this,R.color.current_weather_color))
+                .color(ContextCompat.getColor(this, R.color.current_weather_color))
                 .paddingDp(2)
                 .sizeDp(24);
+        ((ImageView) findViewById(R.id.icon_wind)).setImageDrawable(icon_wind);
         ((ImageView) findViewById(R.id.icon_hum)).setImageDrawable(icon_hum);
         /** Слушатели нажатий объектов */
         IconicsDrawable icon_calendar = new IconicsDrawable(this)
                 .color(ContextCompat.getColor(this, R.color.current_weather_color))
-                .icon(Ionicons.Icon.ion_android_calendar);
+                .icon(Octicons.Icon.oct_calendar);
         fab.setImageDrawable(icon_calendar);
         fab.setOnClickListener(this);
         temperature.setOnClickListener(this);
@@ -680,10 +680,10 @@ public class WeatherActivity extends AppCompatActivity
                 .color(ContextCompat.getColor(this, R.color.current_weather_color));
         if (dailyForecastFragment.isHidden()) {
             ft.show(dailyForecastFragment).hide(hourlyForecastFragment).commit();
-            icon.icon(Ionicons.Icon.ion_clock);
+            icon.icon(Octicons.Icon.oct_clock);
         } else {
             ft.show(hourlyForecastFragment).hide(dailyForecastFragment).commit();
-            icon.icon(Ionicons.Icon.ion_android_calendar);
+            icon.icon(Octicons.Icon.oct_calendar);
         }
         fab.setImageDrawable(icon);
     }
