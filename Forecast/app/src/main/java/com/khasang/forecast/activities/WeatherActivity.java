@@ -119,7 +119,7 @@ public class WeatherActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         PositionManager.getInstance(this, this);
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        String colorScheme = sp.getString(getString(R.string.pref_color_scheme_key), "");
+        String colorScheme = sp.getString(getString(R.string.pref_color_scheme_key), getString(R.string.pref_color_scheme_teal));
         int drowerHeaderArrayIndex = 0;
         if (colorScheme.equals(getString(R.string.pref_color_scheme_brown))) {
             setTheme(R.style.AppTheme_Brown);

@@ -34,7 +34,7 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        String colorScheme = sp.getString(getString(R.string.pref_color_scheme_key), "");
+        String colorScheme = sp.getString(getString(R.string.pref_color_scheme_key), getString(R.string.pref_color_scheme_teal));
         if (colorScheme.equals(getString(R.string.pref_color_scheme_brown))) {
             setTheme(R.style.AppTheme_Brown);
         } else if (colorScheme.equals(getString(R.string.pref_color_scheme_teal))) {

@@ -77,17 +77,17 @@
     </string-array>
 
     <string-array name="pref_color_scheme_options">
+        <item>@string/pref_color_scheme_teal_label</item>
         <item>@string/pref_color_scheme_green_label</item>
         <item>@string/pref_color_scheme_brown_label</item>
-        <item>@string/pref_color_scheme_teal_label</item>
         <item>@string/pref_color_scheme_indigo_label</item>
         <item>@string/pref_color_scheme_purple_label</item>
     </string-array>
 
     <string-array name="pref_color_scheme_values">
+        <item>@string/pref_color_scheme_teal</item>
         <item>@string/pref_color_scheme_green</item>
         <item>@string/pref_color_scheme_brown</item>
-        <item>@string/pref_color_scheme_teal</item>
         <item>@string/pref_color_scheme_indigo</item>
         <item>@string/pref_color_scheme_purple</item>
     </string-array>

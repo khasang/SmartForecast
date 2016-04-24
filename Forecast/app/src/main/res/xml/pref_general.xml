@@ -58,7 +58,7 @@
 
     <PreferenceCategory android:title="@string/pref_header_personalization">
         <ListPreference
-            android:defaultValue="@string/pref_color_scheme_green"
+            android:defaultValue="@string/pref_color_scheme_teal"
             android:entries="@array/pref_color_scheme_options"
             android:entryValues="@array/pref_color_scheme_values"
             android:key="@string/pref_color_scheme_key"
