@@ -26,7 +26,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +37,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,8 +58,10 @@ import com.khasang.forecast.adapters.RecyclerAdapter;
 import com.khasang.forecast.adapters.etc.HidingScrollListener;
 import com.khasang.forecast.adapters.GooglePlacesAutocompleteAdapter;
 import com.khasang.forecast.view.DelayedAutoCompleteTextView;
+import com.mikepenz.community_material_typeface_library.CommunityMaterial;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
+import com.mikepenz.ionicons_typeface_library.Ionicons;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -134,6 +136,10 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             }
         });
         fabBtn = (FloatingActionButton) findViewById(R.id.fabBtn);
+        IconicsDrawable icon = new IconicsDrawable(this)
+                .color(ContextCompat.getColor(this, R.color.current_weather_color))
+                .icon(CommunityMaterial.Icon.cmd_plus);
+        fabBtn.setImageDrawable(icon);
         fabBtn.setOnClickListener(this);
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.simple_grow);
         setupFooter();
@@ -581,17 +587,24 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.menu_activity_city_picker, menu);
+        getMenuInflater().inflate(R.menu.menu_activity_city_picker, menu);
+        final MenuItem item = menu.findItem(R.id.clear_favorite);
+        item.setActionView(R.layout.iv_action_delete_all);
 
         IconicsDrawable icon = new IconicsDrawable(this)
                 .icon(GoogleMaterial.Icon.gmd_delete)
                 .color(ContextCompat.getColor(this, R.color.current_weather_color))
-                .sizeDp(18);
+                .paddingDp(4);
 
-        menu.findItem(R.id.clear_favorite).setVisible(true).setIcon(icon);
-
-        return super.onCreateOptionsMenu(menu);
+        ImageView deleteAllBtn = (ImageView) item.getActionView().findViewById(R.id.delete_all_city_button);
+        deleteAllBtn.setImageDrawable(icon);
+        deleteAllBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onOptionsItemSelected(item);
+            }
+        });
+        return true;
     }
 
     @Override

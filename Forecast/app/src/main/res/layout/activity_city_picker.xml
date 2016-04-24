@@ -25,7 +25,6 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:contentDescription="@null"
-        android:elevation="@dimen/fab_elevation"
-        android:src="@drawable/ic_add" />
+        android:elevation="@dimen/fab_elevation" />
 
 </android.support.design.widget.CoordinatorLayout>

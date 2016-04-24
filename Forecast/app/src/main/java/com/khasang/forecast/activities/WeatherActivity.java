@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -70,8 +69,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-import javax.sql.RowSetInternal;
 
 import static com.khasang.forecast.PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION;
 
@@ -171,6 +168,10 @@ public class WeatherActivity extends AppCompatActivity
         progressbar.setIndeterminate(true);
 
         /** Слушатели нажатий объектов */
+        IconicsDrawable icon = new IconicsDrawable(this)
+                .color(ContextCompat.getColor(this, R.color.current_weather_color))
+                .icon(Ionicons.Icon.ion_android_calendar);
+        fab.setImageDrawable(icon);
         fab.setOnClickListener(this);
         temperature.setOnClickListener(this);
         setSupportActionBar(toolbar);
@@ -554,7 +555,7 @@ public class WeatherActivity extends AppCompatActivity
         IconicsDrawable icon = new IconicsDrawable(this)
                 .icon(GoogleMaterial.Icon.gmd_refresh)
                 .color(ContextCompat.getColor(this, R.color.current_weather_color))
-                .sizeDp(18);
+                .paddingDp(4);
 
         syncBtn = (ImageView) item.getActionView().findViewById(R.id.refreshButton);
         syncBtn.setImageDrawable(icon);
@@ -660,13 +661,16 @@ public class WeatherActivity extends AppCompatActivity
 
     private void switchDisplayMode() {
         final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        IconicsDrawable icon = new IconicsDrawable(this)
+                .color(ContextCompat.getColor(this, R.color.current_weather_color));
         if (dailyForecastFragment.isHidden()) {
             ft.show(dailyForecastFragment).hide(hourlyForecastFragment).commit();
-            fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_by_hour));
+            icon.icon(Ionicons.Icon.ion_clock);
         } else {
             ft.show(hourlyForecastFragment).hide(dailyForecastFragment).commit();
-            fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_by_day));
+            icon.icon(Ionicons.Icon.ion_android_calendar);
         }
+        fab.setImageDrawable(icon);
     }
 
     /**
