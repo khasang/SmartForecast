@@ -63,6 +63,8 @@ import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
+import com.mikepenz.meteocons_typeface_library.Meteoconcs;
+import com.mikepenz.weather_icons_typeface_library.WeatherIcons;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -167,11 +169,22 @@ public class WeatherActivity extends AppCompatActivity
         progressbar = (ProgressBar) findViewById(R.id.progressbar);
         progressbar.setIndeterminate(true);
 
+        IconicsDrawable icon_wind = new IconicsDrawable(this)
+                .icon(Meteoconcs.Icon.met_wind)
+                .color(ContextCompat.getColor(this, R.color.current_weather_color))
+                .sizeDp(24);
+        ((ImageView) findViewById(R.id.icon_wind)).setImageDrawable(icon_wind);
+
+        IconicsDrawable icon_hum = new IconicsDrawable(this)
+                .icon(WeatherIcons.Icon.wic_humidity)
+                .color(ContextCompat.getColor(this,R.color.current_weather_color))
+                .sizeDp(24);
+        ((ImageView) findViewById(R.id.icon_hum)).setImageDrawable(icon_hum);
         /** Слушатели нажатий объектов */
-        IconicsDrawable icon = new IconicsDrawable(this)
+        IconicsDrawable icon_calendar = new IconicsDrawable(this)
                 .color(ContextCompat.getColor(this, R.color.current_weather_color))
                 .icon(Ionicons.Icon.ion_android_calendar);
-        fab.setImageDrawable(icon);
+        fab.setImageDrawable(icon_calendar);
         fab.setOnClickListener(this);
         temperature.setOnClickListener(this);
         setSupportActionBar(toolbar);

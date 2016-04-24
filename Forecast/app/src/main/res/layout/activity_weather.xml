@@ -58,10 +58,10 @@
                         android:orientation="horizontal">
 
                         <ImageView
+                            android:id="@+id/icon_wind"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:src="@drawable/ic_wind" />
+                            android:layout_gravity="center_vertical" />
 
                         <TextView
                             android:id="@+id/wind"
@@ -82,10 +82,10 @@
                         android:orientation="horizontal">
 
                         <ImageView
+                            android:id="@+id/icon_hum"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:src="@drawable/ic_humidity" />
+                            android:layout_gravity="center_vertical" />
 
                         <TextView
                             android:id="@+id/humidity"
