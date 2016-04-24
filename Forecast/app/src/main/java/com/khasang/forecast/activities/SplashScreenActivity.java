@@ -122,12 +122,12 @@ public class SplashScreenActivity
                     jumpingBeans.stopJumping();
                     shimmer.cancel();
                 }
-            }, gifDrawable.getDuration() - 500);
+            }, gifDrawable.getDuration());
             Animation animation = AnimationUtils.loadAnimation(this, R.anim.welcome_string_appear);
             welcomeText.startAnimation(animation);
             welcomeText.setVisibility(View.VISIBLE);
             shimmer = new Shimmer();
-            shimmer.setStartDelay(500)
+            shimmer.setStartDelay(200)
                     .start(welcomeText);
         }
     }

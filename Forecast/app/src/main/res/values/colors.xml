@@ -31,9 +31,9 @@
     <color name="background_toast">#CFCFCF</color>
     <color name="background_splash">#E3EFF7</color>
 
-    <color name="snackbar_text">@color/text_primary</color>
 
     <color name="current_weather_color">#F3F3F3</color>
+    <color name="snackbar_text">@color/current_weather_color</color>
 
     <color name="material_drawer_selected_text">@color/primary_green</color>
     <color name="splash_screen_shimmer_text">@color/material_drawer_selected_text</color>
