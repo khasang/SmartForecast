@@ -172,12 +172,14 @@ public class WeatherActivity extends AppCompatActivity
         IconicsDrawable icon_wind = new IconicsDrawable(this)
                 .icon(Meteoconcs.Icon.met_wind)
                 .color(ContextCompat.getColor(this, R.color.current_weather_color))
+                .paddingDp(2)
                 .sizeDp(24);
         ((ImageView) findViewById(R.id.icon_wind)).setImageDrawable(icon_wind);
 
         IconicsDrawable icon_hum = new IconicsDrawable(this)
                 .icon(WeatherIcons.Icon.wic_humidity)
                 .color(ContextCompat.getColor(this,R.color.current_weather_color))
+                .paddingDp(2)
                 .sizeDp(24);
         ((ImageView) findViewById(R.id.icon_hum)).setImageDrawable(icon_hum);
         /** Слушатели нажатий объектов */

@@ -70,6 +70,7 @@
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="16dp"
                             android:text="--/--"
+                            android:textSize="16sp"
                             android:textColor="@color/current_weather_color" />
                     </LinearLayout>
 
@@ -94,6 +95,7 @@
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="16dp"
                             android:text="--/--"
+                            android:textSize="16sp"
                             android:textColor="@color/current_weather_color" />
                     </LinearLayout>
                 </RelativeLayout>
