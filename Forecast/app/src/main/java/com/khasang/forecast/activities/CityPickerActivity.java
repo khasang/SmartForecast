@@ -440,15 +440,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    /*
-        public void hideSoftKeyboard(Context context) {
-            if (getCurrentFocus() != null) {
-                InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
-                inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-            }
-        }
-    */
-
     private void showChooseCityDialog() {
         final Pattern pattern = Pattern.compile("^[\\w\\s,`'()-]+$");
         final View view = getLayoutInflater().inflate(R.layout.dialog_pick_location, (ViewGroup) null);
@@ -475,7 +466,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 .setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String positionName = chooseCity.getText().toString();
+                        String positionName = chooseCity.getText().toString().trim();
                         try {
                             addItem(positionName, getTownCoordinates(positionName));
                         } catch (NullPointerException e) {
@@ -538,6 +529,10 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 if ((chooseCity.getText().toString().trim().length() % 4 == 0) || (lastSym == ' ') || (lastSym == '-')) {
                     setMarkersOnMap(map);
                 }
+                if (s.toString().contains("\n")) {
+                    chooseCity.setText(s.toString().replace('\n',' ').trim());
+                    hideSoftKeyboard(getApplicationContext());
+                }
             }
         });
         dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
@@ -545,43 +540,19 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_DOWN) {
                     switch (keyCode) {
-                        case KeyEvent.KEYCODE_ENTER:    // 66
-                            hideSoftKeyboard(getApplicationContext());
-                            googlePlacesAutocompleteAdapter.clear();
-                            break;
                         case KeyEvent.KEYCODE_BACK:     // 4
                             dialog.cancel();
                             closeMap(map);
                             break;
                         default:
-                            Log.i("DIALOG_ENTER", "Key code - " + Integer.toString(keyCode));
-                            return false;
-                    }
-                    Log.i("DIALOG_ENTER", "Key code - " + Integer.toString(keyCode));
-                }
-                return true;
-            }
-        });
-        /*
-        dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
-            @Override
-            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                if (event.getAction() == KeyEvent.ACTION_DOWN) {
-                    switch (keyCode) {
-                        case KeyEvent.KEYCODE_ENTER:
-                            hideSoftKeyboard(getApplicationContext());
-                            googlePlacesAutocompleteAdapter.clear();
-                            break;
-                        default:
                             return false;
                     }
                 }
                 return true;
             }
         });
-        */
+
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        //dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         dialog.show();
     }
 
