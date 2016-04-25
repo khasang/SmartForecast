@@ -6,6 +6,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.FrameLayout;
 import com.khasang.forecast.Logger;
 import com.khasang.forecast.R;
@@ -19,8 +20,7 @@ import com.khasang.forecast.R;
  * После исчезновения графика, появляется текущая погода.
  *
  * Текущая погода "уезжает вверх".
- * У графика изменяется высота .
- *
+ * У графика изменяется высота.
  */
 public class WeatherScrollListener extends RecyclerView.OnScrollListener {
 
@@ -48,7 +48,7 @@ public class WeatherScrollListener extends RecyclerView.OnScrollListener {
 
         // Убираем дефотное поведение - исчезновение FAB после исчезновения родителя
         CoordinatorLayout.LayoutParams fabLayoutParams = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
-        fabLayoutParams.setBehavior(null);
+        fabLayoutParams.setBehavior(new FloatingActionButtonBehavior());
     }
 
     @Override public void onScrolled(RecyclerView recyclerView, int dx, final int dy) {
@@ -72,6 +72,8 @@ public class WeatherScrollListener extends RecyclerView.OnScrollListener {
             scrollChartUp(dy);
         }
     }
+
+    private int sum;
 
     private void scrollAppBarUp(int dy, CoordinatorLayout.LayoutParams fabLayoutParams) {
         if (appBarVisible) {
@@ -146,5 +148,21 @@ public class WeatherScrollListener extends RecyclerView.OnScrollListener {
         }
         appBarLayoutParams.topMargin = newTopMargin;
         chatLayout.requestLayout();
+    }
+
+    public class FloatingActionButtonBehavior extends CoordinatorLayout.Behavior<FloatingActionButton> {
+        public FloatingActionButtonBehavior() {
+            super();
+        }
+
+        @Override
+        public boolean layoutDependsOn(CoordinatorLayout parent, FloatingActionButton child, View dependency) {
+            return true;
+        }
+
+        @Override
+        public boolean onDependentViewChanged(CoordinatorLayout parent, FloatingActionButton child, View dependency) {
+            return true;
+        }
     }
 }
