@@ -74,6 +74,12 @@ public abstract class CommonForecastFragment extends Fragment {
 
         adapter = new CustomAdapter(sDate, weathers);
 
+        float headerHeight = getContext().getResources().getDimension(R.dimen.appbar_height);
+        float footerHeight = getContext().getResources().getDimension(R.dimen.chart_height) + 30;
+
+        adapter.setHeaderHeight(footerHeight);
+        adapter.setFooterHeight(headerHeight);
+
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
         recyclerView.setItemAnimator(itemAnimator);
         recyclerView.setLayoutManager(layoutManager);

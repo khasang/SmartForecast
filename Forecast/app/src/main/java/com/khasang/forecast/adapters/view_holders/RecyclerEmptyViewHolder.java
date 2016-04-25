@@ -10,6 +10,7 @@ import android.view.View;
  * (сокрытие Toolbar при прокрутке)
  */
 public class RecyclerEmptyViewHolder extends RecyclerView.ViewHolder {
+
     public RecyclerEmptyViewHolder(View itemView) {
         super(itemView);
     }
