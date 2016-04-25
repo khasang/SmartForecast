@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -20,17 +20,14 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.Transformation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -41,8 +38,8 @@ import com.khasang.forecast.Logger;
 import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.PermissionChecker;
 import com.khasang.forecast.R;
-import com.khasang.forecast.ScrollAwareFabBehavior;
 import com.khasang.forecast.activities.etc.NavigationDrawer;
+import com.khasang.forecast.adapters.etc.WeatherScrollListener;
 import com.khasang.forecast.chart.WeatherChart;
 import com.khasang.forecast.fragments.DailyForecastFragment;
 import com.khasang.forecast.fragments.HourlyForecastFragment;
@@ -87,23 +84,27 @@ public class WeatherActivity extends AppCompatActivity
     private WeatherChart chart;
     private NavigationDrawer navigationDrawer;
     private FrameLayout chatLayout;
-
-    private boolean chartLayoutWholeVisible;
-    private boolean chartLayoutWholeInvisible = true;
-    private boolean chartLayoutAnimating;
+    private AppBarLayout appBarLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
+
+        initFields();
+        initNavigationDrawer();
+        setAnimationForWidgets();
+        startAnimations();
+        checkPermissions();
+
         if (findViewById(R.id.fragment_container) != null) {
-            ScrollListener scrollListener = new ScrollListener();
+            WeatherScrollListener weatherScrollListener = new WeatherScrollListener(this, fab, chatLayout, appBarLayout);
 
             hourlyForecastFragment = new HourlyForecastFragment();
-            hourlyForecastFragment.addScrollListener(scrollListener);
+            hourlyForecastFragment.addScrollListener(weatherScrollListener);
 
             dailyForecastFragment = new DailyForecastFragment();
-            dailyForecastFragment.addScrollListener(scrollListener);
+            dailyForecastFragment.addScrollListener(weatherScrollListener);
 
             getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_container, hourlyForecastFragment)
@@ -111,11 +112,6 @@ public class WeatherActivity extends AppCompatActivity
                 .hide(dailyForecastFragment)
                 .commit();
         }
-        initFields();
-        initNavigationDrawer();
-        setAnimationForWidgets();
-        startAnimations();
-        checkPermissions();
     }
 
     private void initFields() {
@@ -130,6 +126,7 @@ public class WeatherActivity extends AppCompatActivity
         progressbar.setIndeterminate(true);
         chart = (WeatherChart) findViewById(R.id.chart);
         chatLayout = (FrameLayout) findViewById(R.id.chart_layout);
+        appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
 
         /** Слушатели нажатий объектов */
         fab.setOnClickListener(this);
@@ -550,118 +547,5 @@ public class WeatherActivity extends AppCompatActivity
             forecast = dailyForecastFragment.getForecasts();
         }
         chart.updateForecast(forecast, isHourFragmentVisible);
-    }
-
-    private class ScrollListener extends RecyclerView.OnScrollListener {
-
-        @Override public void onScrolled(RecyclerView recyclerView, int dx, final int dy) {
-            super.onScrolled(recyclerView, dx, dy);
-
-            final float desiredHeight = getResources().getDimension(R.dimen.chart_height);
-            if (dy > 0) {
-                if (chartLayoutWholeVisible || chartLayoutAnimating) {
-                    return;
-                }
-                CoordinatorLayout.LayoutParams coordinatorLayoutParams = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
-
-                if (fab.getVisibility() != View.VISIBLE) {
-                    coordinatorLayoutParams.setAnchorId(R.id.chart_layout);
-                    coordinatorLayoutParams.anchorGravity = Gravity.TOP | Gravity.END;
-                    coordinatorLayoutParams.setBehavior(null);
-                    fab.show();
-                }
-                if (coordinatorLayoutParams.getAnchorId() != R.id.chart_layout) {
-                    return;
-                }
-                Animation a = new Animation() {
-                    @Override
-                    protected void applyTransformation(float interpolatedTime, Transformation t) {
-                        if (chatLayout.getLayoutParams().height < desiredHeight) {
-                            chatLayout.getLayoutParams().height += (int) (dy * interpolatedTime);
-                            chatLayout.requestLayout();
-                        } else {
-                            chartLayoutWholeVisible = true;
-                        }
-                    }
-
-                    @Override public boolean willChangeBounds() {
-                        return true;
-                    }
-                };
-                float portion = dy / desiredHeight;
-                int wholeAnimationDurationInMillis = (int) (desiredHeight / chatLayout.getContext()
-                    .getResources()
-                    .getDisplayMetrics().density); // 1dp in sec
-                int duration = (int) (portion * wholeAnimationDurationInMillis);
-
-                a.setDuration(duration);
-                a.setAnimationListener(new Animation.AnimationListener() {
-                    @Override public void onAnimationStart(Animation animation) {
-                    }
-
-                    @Override public void onAnimationEnd(Animation animation) {
-                        chartLayoutAnimating = false;
-                    }
-
-                    @Override public void onAnimationRepeat(Animation animation) {
-                    }
-                });
-                chartLayoutAnimating = true;
-                chatLayout.startAnimation(a);
-                chartLayoutWholeInvisible = false;
-                chatLayout.setVisibility(View.VISIBLE);
-            } else {
-                if (chartLayoutWholeInvisible || chartLayoutAnimating) {
-                    return;
-                }
-                Animation a = new Animation() {
-                    @Override
-                    protected void applyTransformation(float interpolatedTime, Transformation t) {
-                        if (chatLayout.getLayoutParams().height > 0) {
-                            chatLayout.getLayoutParams().height += (int) (dy * interpolatedTime);
-                            chatLayout.requestLayout();
-                        } else {
-                            chatLayout.getLayoutParams().height = 0;
-                            chartLayoutWholeInvisible = true;
-                            chatLayout.setVisibility(View.GONE);
-                            fab.hide(new FloatingActionButton.OnVisibilityChangedListener() {
-                                @Override public void onHidden(FloatingActionButton fab) {
-                                    super.onHidden(fab);
-                                    CoordinatorLayout.LayoutParams coordinatorLayoutParams = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
-                                    coordinatorLayoutParams.setAnchorId(R.id.appbar);
-                                    coordinatorLayoutParams.anchorGravity = Gravity.BOTTOM | Gravity.END;
-                                    coordinatorLayoutParams.setBehavior(new ScrollAwareFabBehavior());
-                                }
-                            });
-                        }
-                    }
-
-                    @Override public boolean willChangeBounds() {
-                        return true;
-                    }
-                };
-                float portion = -dy / desiredHeight;
-                int wholeAnimationDurationInMillis = (int) (desiredHeight / chatLayout.getContext()
-                    .getResources()
-                    .getDisplayMetrics().density); // 1dp in sec
-                int duration = (int) (portion * wholeAnimationDurationInMillis);
-
-                a.setDuration(duration);
-                a.setAnimationListener(new Animation.AnimationListener() {
-                    @Override public void onAnimationStart(Animation animation) {
-                    }
-
-                    @Override public void onAnimationEnd(Animation animation) {
-                        chartLayoutAnimating = false;
-                    }
-
-                    @Override public void onAnimationRepeat(Animation animation) {
-                    }
-                });
-                chartLayoutAnimating = true;
-                chatLayout.startAnimation(a);
-                chartLayoutWholeVisible = false;
-            }
-        }
     }
 }
