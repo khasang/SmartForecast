@@ -53,15 +53,15 @@ public class SplashScreenActivity
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         String colorScheme = sp.getString(getString(R.string.pref_color_scheme_key), getString(R.string.pref_color_scheme_teal));
         if (colorScheme.equals(getString(R.string.pref_color_scheme_brown))) {
-            setTheme(R.style.AppTheme_Brown);
+            setTheme(R.style.AppTheme_Splash_Brown);
         } else if (colorScheme.equals(getString(R.string.pref_color_scheme_teal))) {
-            setTheme(R.style.AppTheme_Teal);
+            setTheme(R.style.AppTheme_Splash_Teal);
         } else if (colorScheme.equals(getString(R.string.pref_color_scheme_indigo))) {
-            setTheme(R.style.AppTheme_Indigo);
+            setTheme(R.style.AppTheme_Splash_Indigo);
         } else if (colorScheme.equals(getString(R.string.pref_color_scheme_purple))) {
-            setTheme(R.style.AppTheme_Purple);
+            setTheme(R.style.AppTheme_Splash_Purple);
         } else {
-            setTheme(R.style.AppTheme_Green);
+            setTheme(R.style.AppTheme_Splash_Green);
         }
         setContentView(R.layout.activity_splash_screen);
 //        welcomeStringIsOff = sp.getString(getString(R.string.pref_welcome_key), getString(R.string.pref_welcome_default)).equals(getString(R.string.pref_welcome_off));

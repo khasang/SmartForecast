@@ -122,19 +122,19 @@ public class WeatherActivity extends AppCompatActivity
         String colorScheme = sp.getString(getString(R.string.pref_color_scheme_key), getString(R.string.pref_color_scheme_teal));
         int drowerHeaderArrayIndex = 0;
         if (colorScheme.equals(getString(R.string.pref_color_scheme_brown))) {
-            setTheme(R.style.AppTheme_Brown);
+            setTheme(R.style.AppTheme_Main_Brown);
             drowerHeaderArrayIndex = 1;
         } else if (colorScheme.equals(getString(R.string.pref_color_scheme_teal))) {
-            setTheme(R.style.AppTheme_Teal);
+            setTheme(R.style.AppTheme_Main_Teal);
             drowerHeaderArrayIndex = 2;
         } else if (colorScheme.equals(getString(R.string.pref_color_scheme_indigo))) {
-            setTheme(R.style.AppTheme_Indigo);
+            setTheme(R.style.AppTheme_Main_Indigo);
             drowerHeaderArrayIndex = 3;
         } else if (colorScheme.equals(getString(R.string.pref_color_scheme_purple))) {
-            setTheme(R.style.AppTheme_Purple);
+            setTheme(R.style.AppTheme_Main_Purple);
             drowerHeaderArrayIndex = 4;
         } else {
-            setTheme(R.style.AppTheme_Green);
+            setTheme(R.style.AppTheme_Main_Green);
         }
         setContentView(R.layout.activity_weather);
         if (savedInstanceState != null) {

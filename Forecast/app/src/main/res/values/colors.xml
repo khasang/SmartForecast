@@ -31,7 +31,6 @@
     <color name="background_toast">#CFCFCF</color>
     <color name="background_splash">#E3EFF7</color>
 
-
     <color name="current_weather_color">#F3F3F3</color>
     <color name="snackbar_text">@color/current_weather_color</color>
 

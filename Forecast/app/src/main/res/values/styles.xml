@@ -13,42 +13,85 @@
         <item name="android:textColorHighlight">@color/accent</item>
     </style>
 
-    <style name="AppTheme.Green">
+    <style name="GreenStyle">
         <item name="colorPrimary">@color/primary_green</item>
         <item name="colorPrimaryDark">@color/primary_green_dark</item>
     </style>
 
-    <style name="AppTheme.Brown">
+    <style name="BrownStyle">
         <item name="colorPrimary">@color/primary_brown</item>
         <item name="colorPrimaryDark">@color/primary_brown_dark</item>
     </style>
 
-    <style name="AppTheme.Teal">
+    <style name="TealStyle">
         <item name="colorPrimary">@color/primary_teal</item>
         <item name="colorPrimaryDark">@color/primary_teal_dark</item>
     </style>
 
-    <style name="AppTheme.Indigo">
+    <style name="IndigoStyle">
         <item name="colorPrimary">@color/primary_indigo</item>
         <item name="colorPrimaryDark">@color/primary_indigo_dark</item>
     </style>
 
-    <style name="AppTheme.Purple">
+    <style name="PurpleStyle">
         <item name="colorPrimary">@color/primary_purple</item>
         <item name="colorPrimaryDark">@color/primary_purple_dark</item>
     </style>
 
-    <style name="AppTheme.Main" parent="AppTheme" />
+    <style name="AppTheme.Button" parent="AppTheme" />
+
+
+    <style name="AppTheme.Main" />
+
+    <style name="AppTheme.Main.Green" parent="GreenStyle" />
+
+    <style name="AppTheme.Main.Brown" parent="BrownStyle" />
+
+    <style name="AppTheme.Main.Teal" parent="TealStyle" />
+
+    <style name="AppTheme.Main.Indigo" parent="IndigoStyle" />
+
+    <style name="AppTheme.Main.Purple" parent="PurpleStyle" />
+
 
     <style name="AppTheme.CityPicker" parent="AppTheme" />
 
-    <style name="AppTheme.Button" parent="AppTheme" />
+    <style name="AppTheme.CityPicker.Green" parent="GreenStyle" />
 
-    <style name="AppTheme.Splash" parent="AppTheme">
-        <item name="android:windowBackground">@color/background_splash</item>
-    </style>
+    <style name="AppTheme.CityPicker.Brown" parent="BrownStyle" />
+
+    <style name="AppTheme.CityPicker.Teal" parent="TealStyle" />
+
+    <style name="AppTheme.CityPicker.Indigo" parent="IndigoStyle" />
+
+    <style name="AppTheme.CityPicker.Purple" parent="PurpleStyle" />
+
+
+    <style name="AppTheme.Splash" parent="AppTheme" />
+
+    <style name="AppTheme.Splash.Green" parent="GreenStyle" />
+
+    <style name="AppTheme.Splash.Brown" parent="BrownStyle" />
+
+    <style name="AppTheme.Splash.Teal" parent="TealStyle" />
+
+    <style name="AppTheme.Splash.Indigo" parent="IndigoStyle" />
+
+    <style name="AppTheme.Splash.Purple" parent="PurpleStyle" />
+
 
     <style name="AppTheme.Settings" parent="AppTheme" />
+
+    <style name="AppTheme.Settings.Green" parent="GreenStyle" />
+
+    <style name="AppTheme.Settings.Brown" parent="BrownStyle" />
+
+    <style name="AppTheme.Settings.Teal" parent="TealStyle" />
+
+    <style name="AppTheme.Settings.Indigo" parent="IndigoStyle" />
+
+    <style name="AppTheme.Settings.Purple" parent="PurpleStyle" />
+
 
     <style name="Toolbar" parent="Widget.AppCompat.Toolbar">
         <item name="android:background">?attr/colorPrimary</item>
