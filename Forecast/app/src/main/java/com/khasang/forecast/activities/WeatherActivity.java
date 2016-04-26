@@ -6,7 +6,9 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.graphics.PorterDuff;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -169,6 +171,10 @@ public class WeatherActivity extends AppCompatActivity
         humidity = (TextView) findViewById(R.id.humidity);
         progressbar = (ProgressBar) findViewById(R.id.progressbar);
         progressbar.setIndeterminate(true);
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            progressbar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this, R.color.accent), PorterDuff.Mode.SRC_ATOP);
+        }
 
         IconicsDrawable icon_wind = new IconicsDrawable(this)
                 .icon(Meteoconcs.Icon.met_wind)
@@ -568,9 +574,9 @@ public class WeatherActivity extends AppCompatActivity
         item.setActionView(R.layout.iv_action_refresh);
 
         IconicsDrawable icon = new IconicsDrawable(this)
+                .paddingDp(3)
                 .icon(GoogleMaterial.Icon.gmd_refresh)
-                .color(ContextCompat.getColor(this, R.color.current_weather_color))
-                .paddingDp(4);
+                .color(ContextCompat.getColor(this, R.color.current_weather_color));
 
         syncBtn = (ImageView) item.getActionView().findViewById(R.id.refreshButton);
         syncBtn.setImageDrawable(icon);
