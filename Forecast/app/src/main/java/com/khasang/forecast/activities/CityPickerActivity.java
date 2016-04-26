@@ -540,6 +540,10 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_DOWN) {
                     switch (keyCode) {
+                        case KeyEvent.KEYCODE_ENTER:
+                            hideSoftKeyboard(getApplicationContext());
+                            googlePlacesAutocompleteAdapter.clear();
+                            break;
                         case KeyEvent.KEYCODE_BACK:     // 4
                             dialog.cancel();
                             closeMap(map);
