@@ -46,24 +46,6 @@
         <item>@string/pref_welcome_default_label</item>
     </string-array>
 
-    <!-- Headers array - Day -->
-    <string-array name="day_headers">
-        <item>@drawable/header_day_green</item>
-        <item>@drawable/header_day_brown</item>
-        <item>@drawable/header_day_teal</item>
-        <item>@drawable/header_day_indigo</item>
-        <item>@drawable/header_day_purple</item>
-    </string-array>
-
-    <!-- Headers array - Night -->
-    <string-array name="night_headers">
-        <item>@drawable/header_night_green</item>
-        <item>@drawable/header_night_brown</item>
-        <item>@drawable/header_night_teal</item>
-        <item>@drawable/header_night_indigo</item>
-        <item>@drawable/header_night_purple</item>
-    </string-array>
-
     <string-array name="pref_night_mode_options">
         <item>@string/pref_night_mode_off_label</item>
         <item>@string/pref_night_mode_on_label</item>
