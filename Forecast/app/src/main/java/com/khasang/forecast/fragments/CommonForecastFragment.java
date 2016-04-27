@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.khasang.forecast.R;
-import com.khasang.forecast.adapters.CustomAdapter;
+import com.khasang.forecast.adapters.WeatherAdapter;
 import com.khasang.forecast.position.Weather;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,7 +27,7 @@ public abstract class CommonForecastFragment extends Fragment {
     protected Map<Calendar, Weather> forecasts;
     protected RecyclerView recyclerView;
     protected TextView tvEmptyList;
-    protected CustomAdapter adapter;
+    protected WeatherAdapter adapter;
     protected ArrayList<String> sDate;
     protected ArrayList<Weather> weathers;
     protected RecyclerView.OnScrollListener scrollListener;
@@ -72,10 +72,10 @@ public abstract class CommonForecastFragment extends Fragment {
         layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);
 
-        adapter = new CustomAdapter(sDate, weathers);
+        adapter = new WeatherAdapter(sDate, weathers);
 
-        float headerHeight = getContext().getResources().getDimension(R.dimen.appbar_height);
-        float footerHeight = getContext().getResources().getDimension(R.dimen.chart_height) + 30;
+        int headerHeight = (int) getContext().getResources().getDimension(R.dimen.appbar_height);
+        int footerHeight = (int) getContext().getResources().getDimension(R.dimen.chart_height) + 30;
 
         adapter.setHeaderHeight(footerHeight);
         adapter.setFooterHeight(headerHeight);

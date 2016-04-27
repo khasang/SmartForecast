@@ -52,7 +52,7 @@ import com.khasang.forecast.position.Coordinate;
 import com.khasang.forecast.Logger;
 import com.khasang.forecast.position.PositionManager;
 import com.khasang.forecast.R;
-import com.khasang.forecast.adapters.RecyclerAdapter;
+import com.khasang.forecast.adapters.CityPickerAdapter;
 import com.khasang.forecast.adapters.etc.HidingScrollListener;
 import com.khasang.forecast.adapters.GooglePlacesAutocompleteAdapter;
 import com.khasang.forecast.view.DelayedAutoCompleteTextView;
@@ -77,7 +77,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
     private TextView infoTV;
     private RecyclerView recyclerView;
-    private RecyclerAdapter recyclerAdapter;
+    private CityPickerAdapter cityPickerAdapter;
     List<String> cityList;
 
     private Toolbar toolbar;
@@ -99,8 +99,8 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         infoTV = (TextView) findViewById(R.id.infoTV);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         cityList = new ArrayList<>();
-        recyclerAdapter = new RecyclerAdapter(cityList, this, this);
-        recyclerView.setAdapter(recyclerAdapter);
+        cityPickerAdapter = new CityPickerAdapter(cityList, this, this);
+        recyclerView.setAdapter(cityPickerAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         swapVisibilityTextOrList();
 
@@ -134,7 +134,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 try {
                     PositionManager.getInstance().removePosition(cityList.get(position));
                     cityList.remove(position);
-                    recyclerAdapter.notifyDataSetChanged();
+                    cityPickerAdapter.notifyDataSetChanged();
                     swapVisibilityTextOrList();
                 } catch (IndexOutOfBoundsException e) {
                     // Игнорируем свайпы не по элементам списка
@@ -153,7 +153,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     private void setupFooter() {
         CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) fabBtn.getLayoutParams();
         int fabBottomMargin = lp.bottomMargin;
-        recyclerAdapter.setFooterHeight(fabBottomMargin);
+        cityPickerAdapter.setFooterHeight(fabBottomMargin);
     }
 
     private void swapVisibilityTextOrList() {
@@ -241,7 +241,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         CityPickerActivity.this.clearList();
-                        recyclerAdapter.notifyDataSetChanged();
+                        cityPickerAdapter.notifyDataSetChanged();
                     }
                 });
                 builder.setNegativeButton(R.string.btn_no, new DialogInterface.OnClickListener() {
@@ -303,10 +303,10 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         if (coordinate != null) {
             if (!PositionManager.getInstance().positionInListPresent(city)) {
                 PositionManager.getInstance().addPosition(city, coordinate);
-                recyclerAdapter.addCityToNewLocationsList(city);
+                cityPickerAdapter.addCityToNewLocationsList(city);
                 cityList.add(city);
                 Collections.sort(cityList);
-                recyclerAdapter.notifyDataSetChanged();
+                cityPickerAdapter.notifyDataSetChanged();
             } else {
                 showMessageToUser(R.string.city_exist, Snackbar.LENGTH_LONG);
             }
