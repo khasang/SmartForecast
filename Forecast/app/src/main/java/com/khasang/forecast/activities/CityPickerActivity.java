@@ -153,7 +153,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     private void setupFooter() {
         CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) fabBtn.getLayoutParams();
         int fabBottomMargin = lp.bottomMargin;
-        cityPickerAdapter.setFooterHeight(fabBottomMargin);
+        cityPickerAdapter.setFooterHeight(fabBottomMargin * 4); // размеры FAB получить не удается
     }
 
     private void swapVisibilityTextOrList() {
