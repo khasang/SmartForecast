@@ -17,16 +17,14 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/appbar_height"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:elevation="@dimen/appbar_elevation"
-            >
+            app:elevation="@dimen/appbar_elevation">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar_material"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:elevation="0dp"
-                 />
+                app:elevation="0dp" />
 
             <android.support.v7.widget.GridLayout
                 android:id="@+id/currentWeather"
@@ -144,6 +142,23 @@
                 android:layout_gravity="center_horizontal|top" />
         </FrameLayout>
 
+        <FrameLayout
+            android:id="@+id/chart_layout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="end|bottom"
+            android:background="@color/primary"
+            android:elevation="@dimen/appbar_elevation"
+            tools:targetApi="lollipop">
+
+            <com.khasang.forecast.chart.WeatherChart
+                android:id="@+id/chart"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="30dp" />
+
+        </FrameLayout>
+
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"
             android:layout_width="wrap_content"
@@ -154,25 +169,8 @@
             app:borderWidth="0dp"
             app:elevation="@dimen/fab_elevation"
             app:layout_anchor="@id/appbar"
-            app:layout_anchorGravity="bottom|end"/>
+            app:layout_anchorGravity="bottom|end" />
 
-        <FrameLayout
-            android:id="@+id/chart_layout"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:elevation="@dimen/appbar_elevation"
-            android:background="@color/primary"
-            tools:targetApi="lollipop"
-            android:layout_gravity="end|bottom"
-            >
-
-            <com.khasang.forecast.chart.WeatherChart
-                android:id="@+id/chart"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="30dp"/>
-
-        </FrameLayout>
     </android.support.design.widget.CoordinatorLayout>
 
 </RelativeLayout>
