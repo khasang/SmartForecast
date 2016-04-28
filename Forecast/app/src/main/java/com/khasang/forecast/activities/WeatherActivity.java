@@ -476,10 +476,16 @@ public class WeatherActivity extends AppCompatActivity
             ft.show(dailyForecastFragment).hide(hourlyForecastFragment).commit();
             fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_by_hour));
             updateWeatherChart(false);
+
+            boolean appbarVisible = chatLayout.getLayoutParams().height == 0;
+            dailyForecastFragment.scroll(appbarVisible);
         } else {
             ft.show(hourlyForecastFragment).hide(dailyForecastFragment).commit();
             fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_by_day));
             updateWeatherChart(true);
+
+            boolean appbarVisible = chatLayout.getLayoutParams().height == 0;
+            hourlyForecastFragment.scroll(appbarVisible);
         }
     }
 

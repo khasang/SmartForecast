@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.khasang.forecast.R;
 import com.khasang.forecast.adapters.WeatherAdapter;
+import com.khasang.forecast.adapters.etc.WeatherScrollListener;
 import com.khasang.forecast.position.Weather;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -30,7 +31,8 @@ public abstract class CommonForecastFragment extends Fragment {
     protected WeatherAdapter adapter;
     protected ArrayList<String> sDate;
     protected ArrayList<Weather> weathers;
-    protected RecyclerView.OnScrollListener scrollListener;
+    protected WeatherScrollListener scrollListener;
+    protected LinearLayoutManager layoutManager;
 
     protected abstract void updateForecasts();
 
@@ -53,6 +55,16 @@ public abstract class CommonForecastFragment extends Fragment {
         return forecasts;
     }
 
+    public void scroll(boolean appbarVisible) {
+        if (appbarVisible) {
+            // данные в адаптере перевернуты
+            layoutManager.scrollToPosition(adapter.getItemCount() - 1);
+        } else {
+            // данные в адаптере перевернуты
+            layoutManager.scrollToPosition(0);
+        }
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,17 +80,18 @@ public abstract class CommonForecastFragment extends Fragment {
 
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);
 
         adapter = new WeatherAdapter(sDate, weathers);
 
         int headerHeight = (int) getContext().getResources().getDimension(R.dimen.appbar_height);
-        int footerHeight = (int) getContext().getResources().getDimension(R.dimen.chart_height) + 30;
+        int footerHeight = (int) getContext().getResources().getDimension(R.dimen.chart_height);
 
-        adapter.setHeaderHeight(footerHeight);
-        adapter.setFooterHeight(headerHeight);
+        adapter = new WeatherAdapter(sDate, weathers);
+        adapter.setFooterHeight(headerHeight); // данные в адаптере перевернуты
+        adapter.setHeaderHeight(footerHeight); // данные в адаптере перевернуты
 
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
         recyclerView.setItemAnimator(itemAnimator);
@@ -91,7 +104,7 @@ public abstract class CommonForecastFragment extends Fragment {
         return v;
     }
 
-    public void addScrollListener(RecyclerView.OnScrollListener scrollListener) {
+    public void addScrollListener(WeatherScrollListener scrollListener) {
         this.scrollListener = scrollListener;
         if (recyclerView != null) {
             recyclerView.addOnScrollListener(scrollListener);

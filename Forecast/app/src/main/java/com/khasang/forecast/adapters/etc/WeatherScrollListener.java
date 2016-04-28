@@ -73,8 +73,6 @@ public class WeatherScrollListener extends RecyclerView.OnScrollListener {
         }
     }
 
-    private int sum;
-
     private void scrollAppBarUp(int dy, CoordinatorLayout.LayoutParams fabLayoutParams) {
         if (appBarVisible) {
             // FAB на текущей погоде - сдвигаем Layout вверх
