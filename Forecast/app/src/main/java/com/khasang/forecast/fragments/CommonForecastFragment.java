@@ -55,14 +55,9 @@ public abstract class CommonForecastFragment extends Fragment {
         return forecasts;
     }
 
-    public void scroll(boolean appbarVisible) {
-        if (appbarVisible) {
-            // данные в адаптере перевернуты
-            layoutManager.scrollToPosition(adapter.getItemCount() - 1);
-        } else {
-            // данные в адаптере перевернуты
-            layoutManager.scrollToPosition(0);
-        }
+    public void scrollToCenter() {
+        int position = adapter.getItemCount() / 2;
+        layoutManager.scrollToPosition(position);
     }
 
     @Override
