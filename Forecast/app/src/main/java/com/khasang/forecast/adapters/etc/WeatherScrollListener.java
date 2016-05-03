@@ -22,14 +22,6 @@ import com.khasang.forecast.R;
  *
  * Текущая погода "уезжает вверх".
  * У графика изменяется высота.
- *
- *
- * FIXME
- * Порой при скролинге и нажатии на FAB вылетает ошибка
- * java.lang.IllegalStateException: An anchor may not be changed after CoordinatorLayout measurement begins before layout is complete.
- *
- * FIXME
- * При движении пальцем вверх-вниз все начинает дрожать (на слабых девайсах даже при обычном скролинге)
  */
 public class WeatherScrollListener extends RecyclerView.OnScrollListener {
 
