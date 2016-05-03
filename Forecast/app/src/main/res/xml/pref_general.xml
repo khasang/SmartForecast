@@ -74,6 +74,15 @@
             android:negativeButtonText="@null"
             android:positiveButtonText="@null"
             android:title="@string/pref_night_mode_title" />
+
+        <ListPreference
+            android:defaultValue="@string/pref_icons_set_default"
+            android:entries="@array/icons_set_options"
+            android:entryValues="@array/icons_set_values"
+            android:key="@string/pref_icons_set_key"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="@string/pref_icons_set_title" />
     </PreferenceCategory>
 
 </PreferenceScreen>

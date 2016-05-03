@@ -172,4 +172,10 @@
     <string name="pref_color_scheme_indigo" translatable="false">color_scheme_indigo</string>
     <string name="pref_color_scheme_purple" translatable="false">color_scheme_purple</string>
 
+    <string name="pref_icons_set_key" translatable="false">icons_set</string>
+    <string name="pref_icons_set_title">Набор иконок</string>
+    <string name="pref_icons_set_default_label">Стандартный набор</string>
+    <string name="pref_icons_set_mike_label">Mike</string>
+    <string name="pref_icons_set_default" translatable="false">icon_set_default</string>
+    <string name="pref_icons_set_mike" translatable="false">icons_set_mike</string>
 </resources>
