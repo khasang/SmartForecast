@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -66,9 +67,7 @@ import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
-import com.mikepenz.meteocons_typeface_library.Meteoconcs;
 import com.mikepenz.octicons_typeface_library.Octicons;
-import com.mikepenz.weather_icons_typeface_library.WeatherIcons;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -643,9 +642,10 @@ public class WeatherActivity extends AppCompatActivity
         description.setText(String.format("%s",
                 wCurrent.getDescription().substring(0, 1).toUpperCase() + wCurrent.getDescription()
                         .substring(1)));
-        int iconId = PositionManager.getInstance().getWeatherIcon(wCurrent.getPrecipitation()
+        Drawable weatherIcon = PositionManager.getInstance().getWeatherIcon(wCurrent.getPrecipitation()
                 .getIconNumber(AppUtils.isDayFromString(String.format(Locale.getDefault(), "%tR", date))));
-        currWeather.setImageResource(iconId == 0 ? R.mipmap.ic_launcher : iconId);
+
+        currWeather.setImageDrawable(weatherIcon);
 
         wind.setText(Html.fromHtml(
                 String.format("%s %.0f%s", wCurrent.getWindDirection().getDirectionString(),

@@ -9,6 +9,7 @@ import android.location.Location;
 import android.net.ConnectivityManager;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.PreferenceManager;
 
 import com.khasang.forecast.AppUtils;
@@ -70,25 +71,29 @@ public class PositionManager {
     public static final int ICON_INDEX_CLOUDS = 7;
     public static final int ICON_INDEX_EXTREME = 8;
     public static final int ICON_INDEX_ADDITIONAL = 9;
-    private int[] iconsSet;
+    private Drawable[] iconsSet;
 
     public void createIconsSet (Context context) {
-        iconsSet = new int[ICONS_COUNT];
-        iconsSet[ICON_INDEX_THUNDERSTORM] = R.drawable.ic_thunderstorm;
-        iconsSet[ICON_INDEX_DRIZZLE] = R.drawable.ic_drizzle;
-        iconsSet[ICON_INDEX_RAIN] = R.drawable.ic_rain;
-        iconsSet[ICON_INDEX_SNOW] = R.drawable.ic_snow;
-        iconsSet[ICON_INDEX_ATMOSPHERE] = R.drawable.ic_fog;
-        iconsSet[ICON_INDEX_SUN] = R.drawable.ic_sun;
-        iconsSet[ICON_INDEX_MOON] = R.drawable.ic_moon;
-        iconsSet[ICON_INDEX_CLOUDS] = R.drawable.ic_cloud;
-        iconsSet[ICON_INDEX_EXTREME] = R.drawable.ic_extreme;
-        iconsSet[ICON_INDEX_ADDITIONAL] = R.drawable.ic_launcher;
+        iconsSet = new Drawable[ICONS_COUNT];
+        iconsSet[ICON_INDEX_THUNDERSTORM] = ContextCompat.getDrawable(context, R.drawable.ic_thunderstorm);
+        iconsSet[ICON_INDEX_DRIZZLE] = ContextCompat.getDrawable(context, R.drawable.ic_drizzle);
+        iconsSet[ICON_INDEX_RAIN] = ContextCompat.getDrawable(context, R.drawable.ic_rain);
+        iconsSet[ICON_INDEX_SNOW] = ContextCompat.getDrawable(context, R.drawable.ic_snow);
+        iconsSet[ICON_INDEX_ATMOSPHERE] = ContextCompat.getDrawable(context, R.drawable.ic_fog);
+        iconsSet[ICON_INDEX_SUN] = ContextCompat.getDrawable(context, R.drawable.ic_sun);
+        iconsSet[ICON_INDEX_MOON] = ContextCompat.getDrawable(context, R.drawable.ic_moon);
+        iconsSet[ICON_INDEX_CLOUDS] = ContextCompat.getDrawable(context, R.drawable.ic_cloud);
+        iconsSet[ICON_INDEX_EXTREME] = ContextCompat.getDrawable(context, R.drawable.ic_extreme);
+        iconsSet[ICON_INDEX_ADDITIONAL] = ContextCompat.getDrawable(context, R.mipmap.ic_launcher);
     }
 
-    public int getWeatherIcon (int iconNumber)
+    public Drawable getWeatherIcon (int iconNumber)
     {
-        return iconsSet[iconNumber];
+        if (iconsSet[iconNumber] != null) {
+            return iconsSet[iconNumber];
+        } else {
+            return iconsSet[ICON_INDEX_ADDITIONAL];
+        }
     }
 
     public synchronized void setReceiver(IWeatherReceiver receiver) {
