@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import com.khasang.forecast.Logger;
 import com.khasang.forecast.R;
 
@@ -21,12 +22,20 @@ import com.khasang.forecast.R;
  *
  * Текущая погода "уезжает вверх".
  * У графика изменяется высота.
+ *
+ *
+ * FIXME
+ * Порой при скролинге и нажатии на FAB вылетает ошибка
+ * java.lang.IllegalStateException: An anchor may not be changed after CoordinatorLayout measurement begins before layout is complete.
+ *
+ * FIXME
+ * При движении пальцем вверх-вниз все начинает дрожать (на слабых девайсах даже при обычном скролинге)
  */
 public class WeatherScrollListener extends RecyclerView.OnScrollListener {
 
     private final String TAG = this.getClass().getSimpleName();
 
-    private float chartHeight;
+    private int chartHeight;
     private int appBarHeight;
     private boolean appBarVisible = true;
 
@@ -42,9 +51,10 @@ public class WeatherScrollListener extends RecyclerView.OnScrollListener {
         this.appBarLayout = appBarLayout;
 
         // Максимальная высота графика
-        this.chartHeight = context.getResources().getDimension(R.dimen.chart_height);
+        this.chartHeight = (int) context.getResources().getDimension(R.dimen.chart_height);
 
-        this.appBarHeight = appBarLayout.getLayoutParams().height;
+        // Максимальная высота текущей погоды
+        this.appBarHeight = (int) context.getResources().getDimension(R.dimen.appbar_height);
 
         // Убираем дефотное поведение - исчезновение FAB после исчезновения родителя
         CoordinatorLayout.LayoutParams fabLayoutParams = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
@@ -77,8 +87,8 @@ public class WeatherScrollListener extends RecyclerView.OnScrollListener {
         if (appBarVisible) {
             // FAB на текущей погоде - сдвигаем Layout вверх
 
-            CoordinatorLayout.LayoutParams appBarLayoutParams =
-                (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
+            RelativeLayout.LayoutParams appBarLayoutParams =
+                (RelativeLayout.LayoutParams) appBarLayout.getLayoutParams();
 
             int newTopMargin = appBarLayoutParams.topMargin - dy;
             if (-newTopMargin > appBarHeight) {
@@ -101,7 +111,7 @@ public class WeatherScrollListener extends RecyclerView.OnScrollListener {
         if (newHeight > chartHeight) {
             // Устанавливаем высоту ровно на необходимую высоту, на случай если
             // пользователь быстро скрольнул
-            newHeight = (int) chartHeight;
+            newHeight = chartHeight;
         }
         chatLayout.getLayoutParams().height = newHeight;
         chatLayout.requestLayout();
@@ -136,8 +146,8 @@ public class WeatherScrollListener extends RecyclerView.OnScrollListener {
     }
 
     private void scrollAppBarDown(int dy) {
-        CoordinatorLayout.LayoutParams appBarLayoutParams =
-            (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
+        RelativeLayout.LayoutParams appBarLayoutParams =
+            (RelativeLayout.LayoutParams) appBarLayout.getLayoutParams();
 
         int newTopMargin = appBarLayoutParams.topMargin - dy;
         if (newTopMargin > 0) {
