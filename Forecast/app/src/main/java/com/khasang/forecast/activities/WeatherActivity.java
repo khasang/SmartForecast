@@ -1,5 +1,6 @@
 package com.khasang.forecast.activities;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -45,6 +46,7 @@ import com.khasang.forecast.fragments.HourlyForecastFragment;
 import com.khasang.forecast.interfaces.IMessageProvider;
 import com.khasang.forecast.interfaces.IPermissionCallback;
 import com.khasang.forecast.interfaces.IWeatherReceiver;
+import com.khasang.forecast.position.Position;
 import com.khasang.forecast.position.PositionManager;
 import com.khasang.forecast.position.Weather;
 import com.khasang.forecast.stations.WeatherStation;
@@ -52,6 +54,7 @@ import com.mikepenz.community_material_typeface_library.CommunityMaterial;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
+import com.mikepenz.iconics.context.IconicsContextWrapper;
 import com.mikepenz.ionicons_typeface_library.Ionicons;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
 import com.mikepenz.materialdrawer.AccountHeader;
@@ -115,9 +118,15 @@ public class WeatherActivity extends AppCompatActivity
     private boolean opened = false;
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(IconicsContextWrapper.wrap(newBase));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         PositionManager.getInstance(this, this);
+        PositionManager.getInstance().createIconsSet(this);
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         String colorScheme = sp.getString(getString(R.string.pref_color_scheme_key), getString(R.string.pref_color_scheme_teal));
         int drowerHeaderArrayIndex = 0;
@@ -170,18 +179,6 @@ public class WeatherActivity extends AppCompatActivity
         progressbar = (ProgressBar) findViewById(R.id.progressbar);
         progressbar.setIndeterminate(true);
 
-        IconicsDrawable icon_wind = new IconicsDrawable(this)
-                .icon(Meteoconcs.Icon.met_wind)
-                .color(ContextCompat.getColor(this, R.color.current_weather_color))
-                .paddingDp(2)
-                .sizeDp(24);
-        IconicsDrawable icon_hum = new IconicsDrawable(this)
-                .icon(WeatherIcons.Icon.wic_humidity)
-                .color(ContextCompat.getColor(this, R.color.current_weather_color))
-                .paddingDp(2)
-                .sizeDp(24);
-        ((ImageView) findViewById(R.id.icon_wind)).setImageDrawable(icon_wind);
-        ((ImageView) findViewById(R.id.icon_hum)).setImageDrawable(icon_hum);
         /** Слушатели нажатий объектов */
         IconicsDrawable icon_calendar = new IconicsDrawable(this)
                 .color(ContextCompat.getColor(this, R.color.current_weather_color))
@@ -646,8 +643,8 @@ public class WeatherActivity extends AppCompatActivity
         description.setText(String.format("%s",
                 wCurrent.getDescription().substring(0, 1).toUpperCase() + wCurrent.getDescription()
                         .substring(1)));
-        int iconId = wCurrent.getPrecipitation()
-                .getIconResId(AppUtils.isDayFromString(String.format(Locale.getDefault(), "%tR", date)));
+        int iconId = PositionManager.getInstance().getWeatherIcon(wCurrent.getPrecipitation()
+                .getIconNumber(AppUtils.isDayFromString(String.format(Locale.getDefault(), "%tR", date))));
         currWeather.setImageResource(iconId == 0 ? R.mipmap.ic_launcher : iconId);
 
         wind.setText(Html.fromHtml(

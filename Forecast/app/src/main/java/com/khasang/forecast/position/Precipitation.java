@@ -11,56 +11,56 @@ public class Precipitation {
 
     public static enum Type {
         THUNDERSTORM {
-            public int getIconResId(boolean isDay) {
-                return R.drawable.ic_thunderstorm;
+            public int getIconNumber(boolean isDay) {
+                return PositionManager.ICON_INDEX_THUNDERSTORM;
             }
         },
         DRIZZLE {
-            public int getIconResId(boolean isDay) {
-                return R.drawable.ic_drizzle;
+            public int getIconNumber(boolean isDay) {
+                return PositionManager.ICON_INDEX_DRIZZLE;
             }
         },
         RAIN {
-            public int getIconResId(boolean isDay) {
-                return R.drawable.ic_rain;
+            public int getIconNumber(boolean isDay) {
+                return PositionManager.ICON_INDEX_RAIN;
             }
         },
         SNOW {
-            public int getIconResId(boolean isDay) {
-                return R.drawable.ic_snow;
+            public int getIconNumber(boolean isDay) {
+                return PositionManager.ICON_INDEX_SNOW;
             }
         },
         ATMOSPHERE {
-            public int getIconResId(boolean isDay) {
-                return R.drawable.ic_fog;
+            public int getIconNumber(boolean isDay) {
+                return PositionManager.ICON_INDEX_ATMOSPHERE;
             }
         },
         CLEAR {
-            public int getIconResId(boolean isDay) {
+            public int getIconNumber(boolean isDay) {
                 if (isDay) {
-                    return R.drawable.ic_sun;
+                    return PositionManager.ICON_INDEX_SUN;
                 } else {
-                    return R.drawable.ic_moon;
+                    return PositionManager.ICON_INDEX_MOON;
                 }
             }
         },
         CLOUDS {
-            public int getIconResId(boolean isDay) {
-                return R.drawable.ic_cloud;
+            public int getIconNumber(boolean isDay) {
+                return PositionManager.ICON_INDEX_CLOUDS;
             }
         },
         EXTREME {
-            public int getIconResId(boolean isDay) {
-                return R.drawable.ic_extreme;
+            public int getIconNumber(boolean isDay) {
+                return PositionManager.ICON_INDEX_EXTREME;
             }
         },
         ADDITIONAL {
-            public int getIconResId(boolean isDay) {
-                return 0;
+            public int getIconNumber(boolean isDay) {
+                return PositionManager.ICON_INDEX_ADDITIONAL;
             }
         };
 
-        public abstract int getIconResId(boolean isDay);
+        public abstract int getIconNumber(boolean isDay);
     }
 
     @Override

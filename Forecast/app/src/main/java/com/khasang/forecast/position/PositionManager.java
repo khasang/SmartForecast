@@ -2,6 +2,7 @@ package com.khasang.forecast.position;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -26,6 +27,7 @@ import com.khasang.forecast.exceptions.NoAvailableAddressesException;
 import com.khasang.forecast.sqlite.SQLiteProcessData;
 import com.khasang.forecast.stations.WeatherStation;
 import com.khasang.forecast.stations.WeatherStationFactory;
+import com.mikepenz.iconics.IconicsDrawable;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -56,6 +58,38 @@ public class PositionManager {
     private SQLiteProcessData dbManager;
     private boolean lastResponseIsFailure;
     private CurrentLocationManager locationManager;
+
+    private static final int ICONS_COUNT = 10;
+    public static final int ICON_INDEX_THUNDERSTORM = 0;
+    public static final int ICON_INDEX_DRIZZLE = 1;
+    public static final int ICON_INDEX_RAIN = 2;
+    public static final int ICON_INDEX_SNOW = 3;
+    public static final int ICON_INDEX_ATMOSPHERE = 4;
+    public static final int ICON_INDEX_SUN = 5;
+    public static final int ICON_INDEX_MOON = 6;
+    public static final int ICON_INDEX_CLOUDS = 7;
+    public static final int ICON_INDEX_EXTREME = 8;
+    public static final int ICON_INDEX_ADDITIONAL = 9;
+    private int[] iconsSet;
+
+    public void createIconsSet (Context context) {
+        iconsSet = new int[ICONS_COUNT];
+        iconsSet[ICON_INDEX_THUNDERSTORM] = R.drawable.ic_thunderstorm;
+        iconsSet[ICON_INDEX_DRIZZLE] = R.drawable.ic_drizzle;
+        iconsSet[ICON_INDEX_RAIN] = R.drawable.ic_rain;
+        iconsSet[ICON_INDEX_SNOW] = R.drawable.ic_snow;
+        iconsSet[ICON_INDEX_ATMOSPHERE] = R.drawable.ic_fog;
+        iconsSet[ICON_INDEX_SUN] = R.drawable.ic_sun;
+        iconsSet[ICON_INDEX_MOON] = R.drawable.ic_moon;
+        iconsSet[ICON_INDEX_CLOUDS] = R.drawable.ic_cloud;
+        iconsSet[ICON_INDEX_EXTREME] = R.drawable.ic_extreme;
+        iconsSet[ICON_INDEX_ADDITIONAL] = R.drawable.ic_launcher;
+    }
+
+    public int getWeatherIcon (int iconNumber)
+    {
+        return iconsSet[iconNumber];
+    }
 
     public synchronized void setReceiver(IWeatherReceiver receiver) {
         this.receiver = receiver;
