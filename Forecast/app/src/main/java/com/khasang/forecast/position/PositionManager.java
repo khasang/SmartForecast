@@ -29,6 +29,7 @@ import com.khasang.forecast.sqlite.SQLiteProcessData;
 import com.khasang.forecast.stations.WeatherStation;
 import com.khasang.forecast.stations.WeatherStationFactory;
 import com.mikepenz.iconics.IconicsDrawable;
+import com.mikepenz.meteocons_typeface_library.Meteoconcs;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -75,16 +76,40 @@ public class PositionManager {
 
     public void createIconsSet (Context context) {
         iconsSet = new Drawable[ICONS_COUNT];
-        iconsSet[ICON_INDEX_THUNDERSTORM] = ContextCompat.getDrawable(context, R.drawable.ic_thunderstorm);
-        iconsSet[ICON_INDEX_DRIZZLE] = ContextCompat.getDrawable(context, R.drawable.ic_drizzle);
-        iconsSet[ICON_INDEX_RAIN] = ContextCompat.getDrawable(context, R.drawable.ic_rain);
-        iconsSet[ICON_INDEX_SNOW] = ContextCompat.getDrawable(context, R.drawable.ic_snow);
-        iconsSet[ICON_INDEX_ATMOSPHERE] = ContextCompat.getDrawable(context, R.drawable.ic_fog);
-        iconsSet[ICON_INDEX_SUN] = ContextCompat.getDrawable(context, R.drawable.ic_sun);
-        iconsSet[ICON_INDEX_MOON] = ContextCompat.getDrawable(context, R.drawable.ic_moon);
-        iconsSet[ICON_INDEX_CLOUDS] = ContextCompat.getDrawable(context, R.drawable.ic_cloud);
-        iconsSet[ICON_INDEX_EXTREME] = ContextCompat.getDrawable(context, R.drawable.ic_extreme);
-        iconsSet[ICON_INDEX_ADDITIONAL] = ContextCompat.getDrawable(context, R.mipmap.ic_launcher);
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        String iconSet = sp.getString(context.getString(R.string.pref_icons_set_key), context.getString(R.string.pref_icons_set_default));
+        if (iconSet.equals(context.getString(R.string.pref_icons_set_mike))) {
+            iconsSet[ICON_INDEX_THUNDERSTORM] = new IconicsDrawable(context)
+                    .icon(Meteoconcs.Icon.met_cloud_flash);
+            iconsSet[ICON_INDEX_DRIZZLE] = new IconicsDrawable(context)
+                    .icon(Meteoconcs.Icon.met_drizzle);
+            iconsSet[ICON_INDEX_RAIN] = new IconicsDrawable(context)
+                    .icon(Meteoconcs.Icon.met_rain);
+            iconsSet[ICON_INDEX_SNOW] = new IconicsDrawable(context)
+                    .icon(Meteoconcs.Icon.met_snow_heavy);
+            iconsSet[ICON_INDEX_ATMOSPHERE] = new IconicsDrawable(context)
+                    .icon(Meteoconcs.Icon.met_fog);
+            iconsSet[ICON_INDEX_SUN] = new IconicsDrawable(context)
+                    .icon(Meteoconcs.Icon.met_sun);
+            iconsSet[ICON_INDEX_MOON] = new IconicsDrawable(context)
+                    .icon(Meteoconcs.Icon.met_moon);
+            iconsSet[ICON_INDEX_CLOUDS] = new IconicsDrawable(context)
+                    .icon(Meteoconcs.Icon.met_cloud);
+            iconsSet[ICON_INDEX_EXTREME] = new IconicsDrawable(context)
+                    .icon(Meteoconcs.Icon.met_clouds_flash);
+        } else {
+            iconsSet[ICON_INDEX_THUNDERSTORM] = ContextCompat.getDrawable(context, R.drawable.ic_thunderstorm);
+            iconsSet[ICON_INDEX_DRIZZLE] = ContextCompat.getDrawable(context, R.drawable.ic_drizzle);
+            iconsSet[ICON_INDEX_RAIN] = ContextCompat.getDrawable(context, R.drawable.ic_rain);
+            iconsSet[ICON_INDEX_SNOW] = ContextCompat.getDrawable(context, R.drawable.ic_snow);
+            iconsSet[ICON_INDEX_ATMOSPHERE] = ContextCompat.getDrawable(context, R.drawable.ic_fog);
+            iconsSet[ICON_INDEX_SUN] = ContextCompat.getDrawable(context, R.drawable.ic_sun);
+            iconsSet[ICON_INDEX_MOON] = ContextCompat.getDrawable(context, R.drawable.ic_moon);
+            iconsSet[ICON_INDEX_CLOUDS] = ContextCompat.getDrawable(context, R.drawable.ic_cloud);
+            iconsSet[ICON_INDEX_EXTREME] = ContextCompat.getDrawable(context, R.drawable.ic_extreme);
+        }
+        iconsSet[ICON_INDEX_ADDITIONAL] = new IconicsDrawable(context)
+                .icon(Meteoconcs.Icon.met_na);
     }
 
     public Drawable getWeatherIcon (int iconNumber)

@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.R;
+import com.khasang.forecast.position.PositionManager;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -100,7 +101,6 @@ public class SettingsActivity extends AppCompatActivity {
             onSharedPreferenceChanged(sharedPreferences, getString(R.string.pref_location_key));
             onSharedPreferenceChanged(sharedPreferences, getString(R.string.pref_welcome_key));
             onSharedPreferenceChanged(sharedPreferences, getString(R.string.pref_speed_key));
-            onSharedPreferenceChanged(sharedPreferences, getString(R.string.pref_icons_set_key));
 
             Preference preference = findPreference(getString(R.string.pref_night_mode_key));
             if (preference instanceof ListPreference) {
@@ -115,6 +115,15 @@ public class SettingsActivity extends AppCompatActivity {
             if (preference instanceof ListPreference) {
                 ListPreference listPreference = (ListPreference) preference;
                 int prefIndex = listPreference.findIndexOfValue(sharedPreferences.getString(getString(R.string.pref_color_scheme_key), ""));
+                if (prefIndex >= 0) {
+                    preference.setSummary(listPreference.getEntries()[prefIndex]);
+                }
+            }
+
+            preference = findPreference(getString(R.string.pref_icons_set_key));
+            if (preference instanceof ListPreference) {
+                ListPreference listPreference = (ListPreference) preference;
+                int prefIndex = listPreference.findIndexOfValue(sharedPreferences.getString(getString(R.string.pref_icons_set_key), getString(R.string.pref_icons_set_default)));
                 if (prefIndex >= 0) {
                     preference.setSummary(listPreference.getEntries()[prefIndex]);
                 }
@@ -154,6 +163,8 @@ public class SettingsActivity extends AppCompatActivity {
                 } else if (key.equals(getString(R.string.pref_color_scheme_key))) {
                     SettingsActivity.setRecreateMainActivity(true);
                     getActivity().recreate();
+                }  else if (key.equals(getString(R.string.pref_icons_set_key))) {
+                    PositionManager.getInstance().createIconsSet(getActivity());
                 }
             }
         }
