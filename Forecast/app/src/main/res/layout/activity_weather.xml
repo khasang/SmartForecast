@@ -12,10 +12,24 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
+        <FrameLayout
+            android:id="@+id/fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ProgressBar
+                android:id="@+id/progressbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|top"/>
+        </FrameLayout>
+
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appbar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/appbar_height"
+            android:layout_alignParentTop="true"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:elevation="@dimen/appbar_elevation">
 
@@ -143,20 +157,6 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="30dp"/>
 
-        </FrameLayout>
-
-        <FrameLayout
-            android:id="@+id/fragment_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/appbar"
-            android:layout_above="@id/chart_layout">
-
-            <ProgressBar
-                android:id="@+id/progressbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|top"/>
         </FrameLayout>
 
     </RelativeLayout>
