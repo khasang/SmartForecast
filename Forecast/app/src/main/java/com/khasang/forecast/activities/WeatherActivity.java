@@ -90,6 +90,7 @@ public class WeatherActivity extends AppCompatActivity
 
     private static final int CHOOSE_CITY = 1;
     private static final int CHOOSE_SETTINGS = 2;
+    public static final String CURRENT_CITY_TAG = "CURRENT_CITY";
     private static final String TAG = WeatherActivity.class.getSimpleName();
 
     private TextView temperature;
