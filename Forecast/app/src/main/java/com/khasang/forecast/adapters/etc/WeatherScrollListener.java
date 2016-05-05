@@ -1,7 +1,6 @@
 package com.khasang.forecast.adapters.etc;
 
 import android.content.Context;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
@@ -33,14 +32,14 @@ public class WeatherScrollListener extends RecyclerView.OnScrollListener {
 
     private FloatingActionButton fab;
     private FrameLayout chatLayout;
-    private AppBarLayout appBarLayout;
+    private RelativeLayout appBarLayoutWrapper;
 
     public WeatherScrollListener(Context context, FloatingActionButton fab, FrameLayout chatLayout,
-        AppBarLayout appBarLayout) {
+        RelativeLayout appBarLayoutWrapper) {
 
         this.fab = fab;
         this.chatLayout = chatLayout;
-        this.appBarLayout = appBarLayout;
+        this.appBarLayoutWrapper = appBarLayoutWrapper;
 
         // Максимальная высота графика
         this.chartHeight = (int) context.getResources().getDimension(R.dimen.chart_height);
@@ -79,8 +78,8 @@ public class WeatherScrollListener extends RecyclerView.OnScrollListener {
         if (appBarVisible) {
             // FAB на текущей погоде - сдвигаем Layout вверх
 
-            RelativeLayout.LayoutParams appBarLayoutParams =
-                (RelativeLayout.LayoutParams) appBarLayout.getLayoutParams();
+            CoordinatorLayout.LayoutParams appBarLayoutParams =
+                (CoordinatorLayout.LayoutParams) appBarLayoutWrapper.getLayoutParams();
 
             int newTopMargin = appBarLayoutParams.topMargin - dy;
             if (-newTopMargin > appBarHeight) {
@@ -90,7 +89,7 @@ public class WeatherScrollListener extends RecyclerView.OnScrollListener {
                 appBarVisible = false;
             }
             appBarLayoutParams.topMargin = newTopMargin;
-            appBarLayout.requestLayout();
+            appBarLayoutWrapper.requestLayout();
         } else {
             Logger.println(TAG, "Текущая погода скрылась - перекидываем FAB на Layout графика");
             fabLayoutParams.setAnchorId(R.id.chart_layout);
@@ -138,14 +137,16 @@ public class WeatherScrollListener extends RecyclerView.OnScrollListener {
     }
 
     private void scrollAppBarDown(int dy) {
-        RelativeLayout.LayoutParams appBarLayoutParams =
-            (RelativeLayout.LayoutParams) appBarLayout.getLayoutParams();
+        CoordinatorLayout.LayoutParams appBarLayoutParams =
+            (CoordinatorLayout.LayoutParams) appBarLayoutWrapper.getLayoutParams();
 
         int newTopMargin = appBarLayoutParams.topMargin - dy;
         if (newTopMargin > 0) {
             // Устанавливаем margin равным 0, на случай если пользователь быстро скрольнул
             newTopMargin = 0;
         }
+        Logger.println(TAG, "newTopMargin: " + newTopMargin);
+        Logger.println(TAG, "appBarLayoutParams height: " + appBarLayoutParams.height);
         appBarLayoutParams.topMargin = newTopMargin;
         chatLayout.requestLayout();
     }

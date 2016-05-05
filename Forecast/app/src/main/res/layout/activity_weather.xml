@@ -8,20 +8,15 @@
     android:layout_height="match_parent"
     tools:context=".activities.WeatherActivity">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
         <FrameLayout
             android:id="@+id/fragment_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        </FrameLayout>
+            android:layout_height="match_parent"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:id="@+id/appbar_wrapper">
 
             <android.support.design.widget.AppBarLayout
                 android:id="@+id/appbar"
@@ -145,6 +140,7 @@
                 style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:indeterminate="true"
                 android:layout_below="@id/appbar"
                 />
 
@@ -154,9 +150,10 @@
             android:id="@+id/chart_layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_alignParentBottom="true"
             android:background="@color/primary"
             android:elevation="@dimen/appbar_elevation"
+            app:layout_anchor="@id/fragment_container"
+            app:layout_anchorGravity="bottom"
             tools:targetApi="lollipop">
 
             <com.khasang.forecast.chart.WeatherChart
@@ -166,8 +163,6 @@
                 android:layout_marginTop="30dp"/>
 
         </FrameLayout>
-
-    </RelativeLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -31,6 +30,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.khasang.forecast.AppUtils;
@@ -84,7 +84,7 @@ public class WeatherActivity extends AppCompatActivity
     private WeatherChart chart;
     private NavigationDrawer navigationDrawer;
     private FrameLayout chatLayout;
-    private AppBarLayout appBarLayout;
+    private RelativeLayout appBarLayoutWrapper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +98,7 @@ public class WeatherActivity extends AppCompatActivity
         checkPermissions();
 
         if (findViewById(R.id.fragment_container) != null) {
-            WeatherScrollListener weatherScrollListener = new WeatherScrollListener(this, fab, chatLayout, appBarLayout);
+            WeatherScrollListener weatherScrollListener = new WeatherScrollListener(this, fab, chatLayout, appBarLayoutWrapper);
 
             hourlyForecastFragment = new HourlyForecastFragment();
             hourlyForecastFragment.addScrollListener(weatherScrollListener);
@@ -123,10 +123,9 @@ public class WeatherActivity extends AppCompatActivity
         wind = (TextView) findViewById(R.id.wind);
         humidity = (TextView) findViewById(R.id.humidity);
         progressbar = (ProgressBar) findViewById(R.id.progressbar);
-        progressbar.setIndeterminate(true);
         chart = (WeatherChart) findViewById(R.id.chart);
         chatLayout = (FrameLayout) findViewById(R.id.chart_layout);
-        appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
+        appBarLayoutWrapper = (RelativeLayout) findViewById(R.id.appbar_wrapper);
 
         /** Слушатели нажатий объектов */
         fab.setOnClickListener(this);
