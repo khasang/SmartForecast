@@ -84,12 +84,13 @@ public class PositionManager {
         return instance;
     }
 
-    public static PositionManager getInstance(IMessageProvider provider) {
+    public static PositionManager getInstance(IMessageProvider provider, IWeatherReceiver receiver) {
         if (instance == null) {
             synchronized (PositionManager.class) {
                 if (instance == null) {
                     instance = new PositionManager();
                     instance.setMessageProvider(provider);
+                    instance.setReceiver(receiver);
                     instance.initManager();
                 }
             }
@@ -311,7 +312,7 @@ public class PositionManager {
     }
 
     /**
-     * Метод, с помощью которого из списока "Избранных" выбираем другую локацию в качестве текущей
+     * Метод, с помощью которого из списка городов выбираем другую локацию в качестве текущей
      *
      * @param name объект типа {@link String}, содержащий название города
      */
@@ -379,7 +380,7 @@ public class PositionManager {
      * @param cityID идентификатор местоположения
      * @return обьект типа {@link Position}
      */
-    private Position getPosition(int cityID) {
+    public Position getPosition(int cityID) {
         if (cityID == 0) {
             return currentLocation;
         }
@@ -469,6 +470,7 @@ public class PositionManager {
             } catch (NullPointerException e) {
                 // Отсроченный запрос активити уже уничтожено
                 e.printStackTrace();
+                updateWeatherFromDB();
             }
         }
     }

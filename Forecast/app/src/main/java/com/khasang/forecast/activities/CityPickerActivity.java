@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -24,7 +26,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,6 +58,10 @@ import com.khasang.forecast.adapters.CityPickerAdapter;
 import com.khasang.forecast.adapters.etc.HidingScrollListener;
 import com.khasang.forecast.adapters.GooglePlacesAutocompleteAdapter;
 import com.khasang.forecast.view.DelayedAutoCompleteTextView;
+import com.mikepenz.community_material_typeface_library.CommunityMaterial;
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.iconics.IconicsDrawable;
+import com.mikepenz.ionicons_typeface_library.Ionicons;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -88,6 +94,19 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        String colorScheme = sp.getString(getString(R.string.pref_color_scheme_key), getString(R.string.pref_color_scheme_teal));
+        if (colorScheme.equals(getString(R.string.pref_color_scheme_brown))) {
+            setTheme(R.style.AppTheme_CityPicker_Brown);
+        } else if (colorScheme.equals(getString(R.string.pref_color_scheme_teal))) {
+            setTheme(R.style.AppTheme_CityPicker_Teal);
+        } else if (colorScheme.equals(getString(R.string.pref_color_scheme_indigo))) {
+            setTheme(R.style.AppTheme_CityPicker_Indigo);
+        } else if (colorScheme.equals(getString(R.string.pref_color_scheme_purple))) {
+            setTheme(R.style.AppTheme_CityPicker_Purple);
+        } else {
+            setTheme(R.style.AppTheme_CityPicker_Green);
+        }
         setContentView(R.layout.activity_city_picker);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -117,6 +136,10 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             }
         });
         fabBtn = (FloatingActionButton) findViewById(R.id.fabBtn);
+        IconicsDrawable icon = new IconicsDrawable(this)
+                .color(ContextCompat.getColor(this, R.color.current_weather_color))
+                .icon(CommunityMaterial.Icon.cmd_plus);
+        fabBtn.setImageDrawable(icon);
         fabBtn.setOnClickListener(this);
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.simple_grow);
         setupFooter();
@@ -300,16 +323,17 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
     // Вспомогательный метод для добавления города в список
     private void addItem(String city, Coordinate coordinate) {
-        if (coordinate != null) {
-            if (!PositionManager.getInstance().positionInListPresent(city)) {
-                PositionManager.getInstance().addPosition(city, coordinate);
-                cityPickerAdapter.addCityToNewLocationsList(city);
-                cityList.add(city);
-                Collections.sort(cityList);
-                cityPickerAdapter.notifyDataSetChanged();
-            } else {
-                showMessageToUser(R.string.city_exist, Snackbar.LENGTH_LONG);
-            }
+        if (coordinate == null) {
+            coordinate = new Coordinate(0, 0);
+        }
+        if (!PositionManager.getInstance().positionInListPresent(city)) {
+            PositionManager.getInstance().addPosition(city, coordinate);
+            cityPickerAdapter.addCityToNewLocationsList(city);
+            cityList.add(city);
+            Collections.sort(cityList);
+            cityPickerAdapter.notifyDataSetChanged();
+        } else {
+            showMessageToUser(R.string.city_exist, Snackbar.LENGTH_LONG);
         }
         swapVisibilityTextOrList();
     }
@@ -420,15 +444,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    /*
-        public void hideSoftKeyboard(Context context) {
-            if (getCurrentFocus() != null) {
-                InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
-                inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-            }
-        }
-    */
-
     private void showChooseCityDialog() {
         final Pattern pattern = Pattern.compile("^[\\w\\s,`'()-]+$");
         final View view = getLayoutInflater().inflate(R.layout.dialog_pick_location, (ViewGroup) null);
@@ -455,7 +470,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 .setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String positionName = chooseCity.getText().toString();
+                        String positionName = chooseCity.getText().toString().trim();
                         try {
                             addItem(positionName, getTownCoordinates(positionName));
                         } catch (NullPointerException e) {
@@ -518,31 +533,12 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 if ((chooseCity.getText().toString().trim().length() % 4 == 0) || (lastSym == ' ') || (lastSym == '-')) {
                     setMarkersOnMap(map);
                 }
-            }
-        });
-        dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
-            @Override
-            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                if (event.getAction() == KeyEvent.ACTION_DOWN) {
-                    switch (keyCode) {
-                        case KeyEvent.KEYCODE_ENTER:    // 66
-                            hideSoftKeyboard(getApplicationContext());
-                            googlePlacesAutocompleteAdapter.clear();
-                            break;
-                        case KeyEvent.KEYCODE_BACK:     // 4
-                            dialog.cancel();
-                            closeMap(map);
-                            break;
-                        default:
-                            Log.i("DIALOG_ENTER", "Key code - " + Integer.toString(keyCode));
-                            return false;
-                    }
-                    Log.i("DIALOG_ENTER", "Key code - " + Integer.toString(keyCode));
+                if (s.toString().contains("\n")) {
+                    chooseCity.setText(s.toString().replace('\n',' ').trim());
+                    hideSoftKeyboard(getApplicationContext());
                 }
-                return true;
             }
         });
-        /*
         dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
             @Override
             public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
@@ -552,6 +548,10 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                             hideSoftKeyboard(getApplicationContext());
                             googlePlacesAutocompleteAdapter.clear();
                             break;
+                        case KeyEvent.KEYCODE_BACK:     // 4
+                            dialog.cancel();
+                            closeMap(map);
+                            break;
                         default:
                             return false;
                     }
@@ -559,18 +559,31 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 return true;
             }
         });
-        */
+
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        //dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         dialog.show();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.menu_activity_city_picker, menu);
-        menu.findItem(R.id.clear_favorite).setVisible(true);
-        return super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_activity_city_picker, menu);
+        final MenuItem item = menu.findItem(R.id.clear_favorite);
+        item.setActionView(R.layout.iv_action_delete_all);
+
+        IconicsDrawable icon = new IconicsDrawable(this)
+                .icon(GoogleMaterial.Icon.gmd_delete)
+                .color(ContextCompat.getColor(this, R.color.current_weather_color))
+                .paddingDp(4);
+
+        ImageView deleteAllBtn = (ImageView) item.getActionView().findViewById(R.id.delete_all_city_button);
+        deleteAllBtn.setImageDrawable(icon);
+        deleteAllBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onOptionsItemSelected(item);
+            }
+        });
+        return true;
     }
 
     @Override

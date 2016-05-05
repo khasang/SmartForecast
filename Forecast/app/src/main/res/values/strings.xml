@@ -147,4 +147,29 @@
     <string name="error_get_coordinates">Can\'t determine the coordinates of the requested location</string>
     <string name="shared_last_active_position_name" translatable="false">last_active_position_name</string>
     <string name="forecast_unavailable">Forecast unavailable</string>
+
+    <!-- TODO TRANSLATE -->
+    <string name="pref_header_personalization">Персонализация</string>
+    <string name="pref_night_mode_key" translatable="false">night_mode</string>
+    <string name="pref_night_mode_title">Тема</string>
+    <string name="pref_night_mode_off_label">Дневная тема</string>
+    <string name="pref_night_mode_on_label">Ночная тема</string>
+    <string name="pref_night_mode_auto_label">Основана на времени суток</string>
+    <string name="pref_night_mode_off" translatable="false">night_mode_off</string>
+    <string name="pref_night_mode_on" translatable="false">night_mode_on</string>
+    <string name="pref_night_mode_auto" translatable="false">night_mode_auto</string>
+
+    <string name="pref_color_scheme_key" translatable="false">color_scheme</string>
+    <string name="pref_color_scheme_title">Цветовая схема</string>
+    <string name="pref_color_scheme_green_label">Зеленая</string>
+    <string name="pref_color_scheme_brown_label">Коричневая</string>
+    <string name="pref_color_scheme_teal_label">Бирюзовая</string>
+    <string name="pref_color_scheme_indigo_label">Темно-синяя</string>
+    <string name="pref_color_scheme_purple_label">Фиолетовая</string>
+    <string name="pref_color_scheme_green" translatable="false">color_scheme_green</string>
+    <string name="pref_color_scheme_brown" translatable="false">color_scheme_brown</string>
+    <string name="pref_color_scheme_teal" translatable="false">color_scheme_teal</string>
+    <string name="pref_color_scheme_indigo" translatable="false">color_scheme_indigo</string>
+    <string name="pref_color_scheme_purple" translatable="false">color_scheme_purple</string>
+
 </resources>

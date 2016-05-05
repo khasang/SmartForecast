@@ -4,7 +4,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.content.res.TypedArray;
+import android.graphics.PorterDuff;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -18,6 +22,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -49,6 +54,25 @@ import com.khasang.forecast.interfaces.IWeatherReceiver;
 import com.khasang.forecast.position.PositionManager;
 import com.khasang.forecast.position.Weather;
 import com.khasang.forecast.stations.WeatherStation;
+import com.mikepenz.community_material_typeface_library.CommunityMaterial;
+import com.mikepenz.fontawesome_typeface_library.FontAwesome;
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.iconics.IconicsDrawable;
+import com.mikepenz.ionicons_typeface_library.Ionicons;
+import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
+import com.mikepenz.materialdrawer.AccountHeader;
+import com.mikepenz.materialdrawer.AccountHeaderBuilder;
+import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.holder.StringHolder;
+import com.mikepenz.materialdrawer.model.DividerDrawerItem;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
+import com.mikepenz.meteocons_typeface_library.Meteoconcs;
+import com.mikepenz.octicons_typeface_library.Octicons;
+import com.mikepenz.weather_icons_typeface_library.WeatherIcons;
+
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
@@ -65,6 +89,7 @@ public class WeatherActivity extends AppCompatActivity
         IPermissionCallback, IMessageProvider, NavigationDrawer.OnNavigationItemClickListener {
 
     private static final int CHOOSE_CITY = 1;
+    private static final int CHOOSE_SETTINGS = 2;
     private static final String TAG = WeatherActivity.class.getSimpleName();
 
     private TextView temperature;
@@ -89,6 +114,25 @@ public class WeatherActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        PositionManager.getInstance(this, this);
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        String colorScheme = sp.getString(getString(R.string.pref_color_scheme_key), getString(R.string.pref_color_scheme_teal));
+        int drowerHeaderArrayIndex = 0;
+        if (colorScheme.equals(getString(R.string.pref_color_scheme_brown))) {
+            setTheme(R.style.AppTheme_Main_Brown);
+            drowerHeaderArrayIndex = 1;
+        } else if (colorScheme.equals(getString(R.string.pref_color_scheme_teal))) {
+            setTheme(R.style.AppTheme_Main_Teal);
+            drowerHeaderArrayIndex = 2;
+        } else if (colorScheme.equals(getString(R.string.pref_color_scheme_indigo))) {
+            setTheme(R.style.AppTheme_Main_Indigo);
+            drowerHeaderArrayIndex = 3;
+        } else if (colorScheme.equals(getString(R.string.pref_color_scheme_purple))) {
+            setTheme(R.style.AppTheme_Main_Purple);
+            drowerHeaderArrayIndex = 4;
+        } else {
+            setTheme(R.style.AppTheme_Main_Green);
+        }
         setContentView(R.layout.activity_weather);
 
         initFields();
@@ -97,6 +141,12 @@ public class WeatherActivity extends AppCompatActivity
         startAnimations();
         checkPermissions();
 
+        if (savedInstanceState != null) {
+            String savedCurrentCity = savedInstanceState.getString(CURRENT_CITY_TAG, "");
+            if (!savedCurrentCity.isEmpty()) {
+                PositionManager.getInstance().setCurrentPosition(savedCurrentCity);
+            }
+        }
         if (findViewById(R.id.fragment_container) != null) {
             WeatherScrollListener weatherScrollListener = new WeatherScrollListener(this, fab, chatLayout, appBarLayoutWrapper);
 
@@ -127,7 +177,27 @@ public class WeatherActivity extends AppCompatActivity
         chatLayout = (FrameLayout) findViewById(R.id.chart_layout);
         appBarLayoutWrapper = (RelativeLayout) findViewById(R.id.appbar_wrapper);
 
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            progressbar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this, R.color.accent), PorterDuff.Mode.SRC_ATOP);
+        }
+
+        IconicsDrawable icon_wind = new IconicsDrawable(this)
+                .icon(Meteoconcs.Icon.met_wind)
+                .color(ContextCompat.getColor(this, R.color.current_weather_color))
+                .paddingDp(2)
+                .sizeDp(24);
+        IconicsDrawable icon_hum = new IconicsDrawable(this)
+                .icon(WeatherIcons.Icon.wic_humidity)
+                .color(ContextCompat.getColor(this, R.color.current_weather_color))
+                .paddingDp(2)
+                .sizeDp(24);
+        ((ImageView) findViewById(R.id.icon_wind)).setImageDrawable(icon_wind);
+        ((ImageView) findViewById(R.id.icon_hum)).setImageDrawable(icon_hum);
         /** Слушатели нажатий объектов */
+        IconicsDrawable icon_calendar = new IconicsDrawable(this)
+                .color(ContextCompat.getColor(this, R.color.current_weather_color))
+                .icon(Octicons.Icon.oct_calendar);
+        fab.setImageDrawable(icon_calendar);
         fab.setOnClickListener(this);
         temperature.setOnClickListener(this);
         setSupportActionBar(toolbar);
@@ -260,9 +330,16 @@ public class WeatherActivity extends AppCompatActivity
                 Logger.println(TAG, newCity);
                 PositionManager.getInstance().setCurrentPosition(newCity);
             } else {
-                if (!PositionManager.getInstance()
-                        .positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {
+                if (!PositionManager.getInstance().positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {
                     showProgress(false);
+                }
+            }
+        } else if (requestCode == CHOOSE_SETTINGS) {
+            SettingsActivity.setRecreateMainActivity(false);
+            if (resultCode == RESULT_OK) {
+                boolean recreateActivity = data.getBooleanExtra(SettingsActivity.SETTINGS_TAG, false);
+                if (recreateActivity) {
+                    WeatherActivity.this.recreate();
                 }
             }
         }
@@ -271,16 +348,23 @@ public class WeatherActivity extends AppCompatActivity
     public void startSettingsActivity() {
         Intent intent = new Intent(this, SettingsActivity.class);
         Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle();
-        ActivityCompat.startActivity(this, intent, bundle);
+        ActivityCompat.startActivityForResult(this, intent, CHOOSE_SETTINGS, bundle);
     }
 
     /**
      * Изменяет отображаемый город WeatherActivity
      */
     public void changeDisplayedCity(String newCity) {
+        PositionManager.getInstance().setMessageProvider(this);
+        PositionManager.getInstance().setReceiver(this);
         PositionManager.getInstance().setCurrentPosition(newCity);
         PositionManager.getInstance().updateWeatherFromDB();
         onRefresh();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     @Override
@@ -302,38 +386,48 @@ public class WeatherActivity extends AppCompatActivity
         navigationDrawer.updateBadges(isLocationPermissionGranted);
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        PositionManager.getInstance()
-                .setUseGpsModule(sp.getBoolean(getString(R.string.pref_gps_key), true));
-        if (sp.getString(getString(R.string.pref_units_key), getString(R.string.pref_units_celsius))
-                .equals(getString(R.string.pref_units_celsius))) {
+        int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+
+        if (sp.getString(getString(R.string.pref_night_mode_key), "").equals(getString(R.string.pref_night_mode_off)) && (currentNightMode != Configuration.UI_MODE_NIGHT_NO)) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            recreate();
+        } else if (sp.getString(getString(R.string.pref_night_mode_key), "").equals(getString(R.string.pref_night_mode_on))
+                && (currentNightMode != Configuration.UI_MODE_NIGHT_YES)) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            recreate();
+        }
+
+        PositionManager.getInstance().setUseGpsModule(sp.getBoolean(getString(R.string.pref_gps_key), true));
+        if (sp.getString(getString(R.string.pref_units_key), getString(R.string.pref_units_celsius)).equals(getString(R.string.pref_units_celsius))) {
             PositionManager.getInstance().setTemperatureMetric(AppUtils.TemperatureMetrics.CELSIUS);
-        } else if (sp.getString(getString(R.string.pref_units_key),
-                getString(R.string.pref_units_celsius)).equals(getString(R.string.pref_units_kelvin))) {
+        } else if (sp.getString(getString(R.string.pref_units_key), getString(R.string.pref_units_celsius)).equals(getString(R.string.pref_units_kelvin))) {
             PositionManager.getInstance().setTemperatureMetric(AppUtils.TemperatureMetrics.KELVIN);
-        } else if (sp.getString(getString(R.string.pref_units_key),
-                getString(R.string.pref_units_celsius)).equals(getString(R.string.pref_units_fahrenheit))) {
+        } else if (sp.getString(getString(R.string.pref_units_key), getString(R.string.pref_units_celsius)).equals(getString(R.string.pref_units_fahrenheit))) {
             PositionManager.getInstance().setTemperatureMetric(AppUtils.TemperatureMetrics.FAHRENHEIT);
         } else {
             PositionManager.getInstance().setTemperatureMetric(AppUtils.TemperatureMetrics.CELSIUS);
         }
-        if (sp.getString(getString(R.string.pref_speed_key), getString(R.string.pref_speed_meter_sec))
-                .equals(getString(R.string.pref_speed_meter_sec))) {
+
+        if (sp.getString(getString(R.string.pref_speed_key), getString(R.string.pref_speed_meter_sec)).equals(getString(R.string.pref_speed_meter_sec))) {
             PositionManager.getInstance().setSpeedMetric(AppUtils.SpeedMetrics.METER_PER_SECOND);
-        } else if (sp.getString(getString(R.string.pref_speed_key),
-                getString(R.string.pref_speed_meter_sec)).equals(getString(R.string.pref_speed_foot_sec))) {
+        } else if (sp.getString(getString(R.string.pref_speed_key), getString(R.string.pref_speed_meter_sec)).equals(getString(R.string.pref_speed_foot_sec))) {
             PositionManager.getInstance().setSpeedMetric(AppUtils.SpeedMetrics.FOOT_PER_SECOND);
-        } else if (sp.getString(getString(R.string.pref_speed_key),
-                getString(R.string.pref_speed_meter_sec)).equals(getString(R.string.pref_speed_km_hour))) {
+        } else if (sp.getString(getString(R.string.pref_speed_key), getString(R.string.pref_speed_meter_sec)).equals(getString(R.string.pref_speed_km_hour))) {
             PositionManager.getInstance().setSpeedMetric(AppUtils.SpeedMetrics.KM_PER_HOURS);
-        } else if (sp.getString(getString(R.string.pref_speed_key),
-                getString(R.string.pref_speed_meter_sec))
-                .equals(getString(R.string.pref_speed_mile_hour))) {
+        } else if (sp.getString(getString(R.string.pref_speed_key), getString(R.string.pref_speed_meter_sec)).equals(getString(R.string.pref_speed_mile_hour))) {
             PositionManager.getInstance().setSpeedMetric(AppUtils.SpeedMetrics.MILES_PER_HOURS);
         } else {
             PositionManager.getInstance().setSpeedMetric(AppUtils.SpeedMetrics.METER_PER_SECOND);
         }
+
         PositionManager.getInstance().updateWeatherFromDB();
         onRefresh();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(CURRENT_CITY_TAG, PositionManager.getInstance().getCurrentPositionName());
     }
 
     @Override
@@ -365,7 +459,14 @@ public class WeatherActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.menu_activity_weather, menu);
         final MenuItem item = menu.findItem(R.id.menu_item_refresh);
         item.setActionView(R.layout.iv_action_refresh);
+
+        IconicsDrawable icon = new IconicsDrawable(this)
+                .paddingDp(3)
+                .icon(GoogleMaterial.Icon.gmd_refresh)
+                .color(ContextCompat.getColor(this, R.color.current_weather_color));
+
         syncBtn = (ImageView) item.getActionView().findViewById(R.id.refreshButton);
+        syncBtn.setImageDrawable(icon);
         syncBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -471,21 +572,24 @@ public class WeatherActivity extends AppCompatActivity
 
     private void switchDisplayMode() {
         final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        IconicsDrawable icon = new IconicsDrawable(this)
+                .color(ContextCompat.getColor(this, R.color.current_weather_color));
         if (dailyForecastFragment.isHidden()) {
             ft.show(dailyForecastFragment).hide(hourlyForecastFragment).commit();
-            fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_by_hour));
+            icon.icon(Octicons.Icon.oct_clock);
             updateWeatherChart(false);
 
             boolean appbarVisible = chatLayout.getLayoutParams().height == 0;
             dailyForecastFragment.scroll(appbarVisible);
         } else {
             ft.show(hourlyForecastFragment).hide(dailyForecastFragment).commit();
-            fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_by_day));
+			icon.icon(Octicons.Icon.oct_calendar);
             updateWeatherChart(true);
 
             boolean appbarVisible = chatLayout.getLayoutParams().height == 0;
             hourlyForecastFragment.scroll(appbarVisible);
         }
+        fab.setImageDrawable(icon);
     }
 
     /**
@@ -501,13 +605,14 @@ public class WeatherActivity extends AppCompatActivity
             showProgress(false);
             return;
         }
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Logger.println(TAG, "Start animation");
-                PositionManager.getInstance().updateWeather();
-            }
-        }, 500);
+        PositionManager.getInstance().updateWeather();
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                Logger.println(TAG, "Start animation");
+//                PositionManager.getInstance().updateWeather();
+//            }
+//        }, 500);
     }
 
     public void showProgress(boolean loading) {

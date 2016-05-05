@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_splash"
     tools:context=".activities.SplashScreenActivity">
 
     <pl.droidsonroids.gif.GifImageView
@@ -23,7 +24,7 @@
         android:fontFamily="sans-serif-thin"
         android:gravity="bottom|center_horizontal"
         android:text="@string/welcome_def_str"
-        android:textColor="@color/primary_dark"
+        android:textColor="@color/splash_screen_shimmer_text"
         android:textSize="35sp"
         android:visibility="gone"
         app:reflectionColor="@color/background_splash" />
