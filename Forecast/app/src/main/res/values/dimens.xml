@@ -8,6 +8,7 @@
 
     <dimen name="chart_line_width">0.5dp</dimen>
     <dimen name="chart_circle_radius">3dp</dimen>
-    <dimen name="chart_value_size">4dp</dimen>
+    <dimen name="chart_value_size">10dp</dimen>
+    <dimen name="chart_xaxis_size">8dp</dimen>
     <dimen name="chart_height">150dp</dimen>
 </resources>

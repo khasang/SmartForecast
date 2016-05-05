@@ -2,9 +2,11 @@ package com.khasang.forecast.chart;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.utils.Utils;
 import com.khasang.forecast.R;
 import java.util.List;
 
@@ -57,7 +59,15 @@ public class WeatherLineDataSet extends LineDataSet {
     private void defaultInit() {
         setColor(ContextCompat.getColor(context, R.color.chart_line)); // цвет линии
         setLineWidth(context.getResources().getDimension(R.dimen.chart_line_width)); // толщина линии
-        setDrawFilled(false); // запрещаем заливку цвета под графиком
+
+      setDrawFilled(true); // разрешаем заливку цвета под графиком
+      if (Utils.getSDKInt() >= 18) {
+          Drawable drawable = ContextCompat.getDrawable(context, R.drawable.chart_fade);
+          setFillDrawable(drawable);
+        }
+        else {
+          setFillColor(ContextCompat.getColor(context, R.color.primary_light));
+        }
 
         // разрешаем закругление линии
         // это плохо влияет на производительность https://github.com/PhilJay/MPAndroidChart/wiki/DataSet-classes-in-detail

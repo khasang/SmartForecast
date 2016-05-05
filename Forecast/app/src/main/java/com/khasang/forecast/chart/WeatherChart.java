@@ -11,6 +11,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.MyApplication;
+import com.khasang.forecast.R;
 import com.khasang.forecast.position.Weather;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -53,6 +54,7 @@ public class WeatherChart extends LineChart {
         legend.setEnabled(false); // убираем легенду графика
 
         getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM); // устанавливаем шкалу X снизу
+        getXAxis().setTextSize(getContext().getResources().getDimension(R.dimen.chart_xaxis_size));
 
         getAxisLeft().setEnabled(false); // убираем шкалу Y слева
         getAxisRight().setEnabled(false); // убираем шкалу Y справа
