@@ -1,6 +1,8 @@
 package com.khasang.forecast.activities.etc;
 
 import android.app.Activity;
+import android.content.res.Configuration;
+import android.content.res.TypedArray;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import com.khasang.forecast.R;
@@ -10,6 +12,8 @@ import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.ionicons_typeface_library.Ionicons;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
+import com.mikepenz.materialdrawer.AccountHeader;
+import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.holder.StringHolder;
@@ -49,7 +53,23 @@ public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
     // после того, как пользователь изменил их
     private int[] favoriteCitiesIdentifiers;
 
-    public NavigationDrawer(Activity activity, Toolbar toolbar) {
+    public NavigationDrawer(Activity activity, Toolbar toolbar, int drowerHeaderArrayIndex) {
+        TypedArray headersArray;
+        int currentNightMode = activity.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
+            headersArray = activity.getResources().obtainTypedArray(R.array.night_headers);
+        } else {
+            headersArray = activity.getResources().obtainTypedArray(R.array.day_headers);
+        }
+
+        int header = headersArray.getResourceId(drowerHeaderArrayIndex, 0);
+        headersArray.recycle();
+
+        AccountHeader accountHeader = new AccountHeaderBuilder()
+                .withActivity(activity)
+                .withHeaderBackground(header)
+                .build();
+
         /** Инициализация элементов меню */
         DividerDrawerItem divider = new DividerDrawerItem();
         currentPlace = new PrimaryDrawerItem().withName(R.string.drawer_item_current_place)
@@ -81,7 +101,7 @@ public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
             .withToolbar(toolbar)
             .withSelectedItem(-1)
             .withActionBarDrawerToggle(true)
-            .withHeader(R.layout.drawer_header)
+            .withAccountHeader(accountHeader)
             .addDrawerItems(currentPlace, cityList, favorites, divider, settings, feedBack)
             .addStickyDrawerItems(footer)
             .withOnDrawerItemClickListener(this)

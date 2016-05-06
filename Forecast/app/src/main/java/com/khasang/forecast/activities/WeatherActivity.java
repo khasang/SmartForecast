@@ -137,7 +137,7 @@ public class WeatherActivity extends AppCompatActivity
         setContentView(R.layout.activity_weather);
 
         initFields();
-        initNavigationDrawer();
+        initNavigationDrawer(drowerHeaderArrayIndex);
         setAnimationForWidgets();
         startAnimations();
         checkPermissions();
@@ -204,8 +204,8 @@ public class WeatherActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
     }
 
-    private void initNavigationDrawer() {
-        navigationDrawer = new NavigationDrawer(this, toolbar);
+    private void initNavigationDrawer(int drowerHeaderArrayIndex) {
+        navigationDrawer = new NavigationDrawer(this, toolbar, drowerHeaderArrayIndex);
         navigationDrawer.setNavigationItemClickListener(this);
     }
 
