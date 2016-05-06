@@ -43,6 +43,9 @@ public class WeatherChart extends LineChart {
     }
 
     public void updateForecast(Map<Calendar, Weather> forecast, boolean hourlyWeatherChart) {
+        if (forecast == null) {
+            return;
+        }
         this.forecast = forecast;
         LineData data = initLineData(hourlyWeatherChart);
 
