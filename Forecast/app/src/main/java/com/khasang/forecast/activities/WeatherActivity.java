@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.content.res.TypedArray;
 import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Build;
@@ -54,25 +53,11 @@ import com.khasang.forecast.interfaces.IWeatherReceiver;
 import com.khasang.forecast.position.PositionManager;
 import com.khasang.forecast.position.Weather;
 import com.khasang.forecast.stations.WeatherStation;
-import com.mikepenz.community_material_typeface_library.CommunityMaterial;
-import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
-import com.mikepenz.ionicons_typeface_library.Ionicons;
-import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
-import com.mikepenz.materialdrawer.AccountHeader;
-import com.mikepenz.materialdrawer.AccountHeaderBuilder;
-import com.mikepenz.materialdrawer.Drawer;
-import com.mikepenz.materialdrawer.DrawerBuilder;
-import com.mikepenz.materialdrawer.holder.StringHolder;
-import com.mikepenz.materialdrawer.model.DividerDrawerItem;
-import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
-import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
-import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.meteocons_typeface_library.Meteoconcs;
 import com.mikepenz.octicons_typeface_library.Octicons;
 import com.mikepenz.weather_icons_typeface_library.WeatherIcons;
-
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
@@ -657,6 +642,6 @@ public class WeatherActivity extends AppCompatActivity
         } else {
             forecast = dailyForecastFragment.getForecasts();
         }
-        chart.updateForecast(forecast, isHourFragmentVisible);
+        chart.updateForecast(this, forecast, isHourFragmentVisible);
     }
 }

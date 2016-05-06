@@ -1,6 +1,7 @@
 package com.khasang.forecast.chart;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
@@ -40,11 +41,12 @@ public class WeatherChart extends LineChart {
         super(context, attrs, defStyle);
     }
 
-    public void updateForecast(Map<Calendar, Weather> forecast, boolean hourlyWeatherChart) {
+    public void updateForecast(Context context, Map<Calendar, Weather> forecast,
+        boolean hourlyWeatherChart) {
         if (forecast == null) {
             return;
         }
-        LineData data = initLineData(forecast, hourlyWeatherChart);
+        LineData data = initLineData(context, forecast, hourlyWeatherChart);
 
         setData(data); // устанавливаем данные для отображения
         setTouchEnabled(false); // запрещаем все взаимодействия с графиком прикосновениями
@@ -55,6 +57,7 @@ public class WeatherChart extends LineChart {
 
         getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM); // устанавливаем шкалу X снизу
         getXAxis().setTextSize(getContext().getResources().getDimension(R.dimen.chart_xaxis_size));
+        getXAxis().setTextColor(ContextCompat.getColor(context, R.color.chart_text));
 
         getAxisLeft().setEnabled(false); // убираем шкалу Y слева
         getAxisRight().setEnabled(false); // убираем шкалу Y справа
@@ -62,7 +65,8 @@ public class WeatherChart extends LineChart {
         animateY(2000, Easing.EasingOption.EaseInOutBack);  // устанавливаем анимацию появления данных
     }
 
-    private LineData initLineData(Map<Calendar, Weather> forecast, boolean hourlyWeatherChart) {
+    private LineData initLineData(Context context, Map<Calendar, Weather> forecast,
+        boolean hourlyWeatherChart) {
         List<String> xValues = new ArrayList<>();
         List<Entry> yValues = new ArrayList<>();
 
@@ -89,7 +93,9 @@ public class WeatherChart extends LineChart {
         dataSets.add(set);
 
         LineData data = new LineData(xValues, dataSets);
-        data.setValueFormatter(new ChartValueFormatter()); // устанавливаем кастомный форматтер отображения текста над точками графика
+        data.setValueFormatter(
+            new ChartValueFormatter()); // устанавливаем кастомный форматтер отображения текста над точками графика
+        data.setValueTextColor(ContextCompat.getColor(context, R.color.chart_text));
 
         return data;
     }
