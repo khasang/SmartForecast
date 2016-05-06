@@ -538,7 +538,7 @@ public class AppUtils {
      * Получение времени для графика
      **/
     public static String getChartTime(Context context, Calendar calendar) {
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH", Locale.getDefault());
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
         return timeFormat.format(calendar.getTime());
     }
 }

@@ -28,8 +28,6 @@ import java.util.Map;
  */
 public class WeatherChart extends LineChart {
 
-    private Map<Calendar, Weather> forecast;
-
     public WeatherChart(Context context) {
         super(context);
     }
@@ -46,8 +44,7 @@ public class WeatherChart extends LineChart {
         if (forecast == null) {
             return;
         }
-        this.forecast = forecast;
-        LineData data = initLineData(hourlyWeatherChart);
+        LineData data = initLineData(forecast, hourlyWeatherChart);
 
         setData(data); // устанавливаем данные для отображения
         setTouchEnabled(false); // запрещаем все взаимодействия с графиком прикосновениями
@@ -65,7 +62,7 @@ public class WeatherChart extends LineChart {
         animateY(2000, Easing.EasingOption.EaseInOutBack);  // устанавливаем анимацию появления данных
     }
 
-    private LineData initLineData(boolean hourlyWeatherChart) {
+    private LineData initLineData(Map<Calendar, Weather> forecast, boolean hourlyWeatherChart) {
         List<String> xValues = new ArrayList<>();
         List<Entry> yValues = new ArrayList<>();
 
