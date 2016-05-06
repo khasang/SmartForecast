@@ -100,7 +100,9 @@ public abstract class CommonForecastFragment extends Fragment {
         recyclerView.setItemAnimator(itemAnimator);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
-        recyclerView.addOnScrollListener(scrollListener);
+        if (scrollListener != null) {
+            recyclerView.addOnScrollListener(scrollListener);
+        }
 
         tvEmptyList = (TextView) v.findViewById(R.id.tvEmptyList);
 
