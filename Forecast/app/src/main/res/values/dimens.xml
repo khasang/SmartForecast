@@ -6,7 +6,7 @@
     <dimen name="appbar_height">220dp</dimen>
     <dimen name="fab_elevation">6dp</dimen>
 
-    <dimen name="chart_line_width">0.5dp</dimen>
+    <dimen name="chart_line_width">0.8dp</dimen>
     <dimen name="chart_circle_radius">3dp</dimen>
     <dimen name="chart_value_size">10dp</dimen>
     <dimen name="chart_xaxis_size">8dp</dimen>

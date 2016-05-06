@@ -37,7 +37,7 @@
     <color name="material_drawer_selected_text">@color/primary_green</color>
     <color name="splash_screen_shimmer_text">@color/material_drawer_selected_text</color>
 
-    <color name="chart_line">#F1F8E9</color>
+    <color name="chart_line">@color/accent</color>
     <color name="chart_max_temperature">#F44336</color>
     <color name="chart_min_temperature">#2196F3</color>
     <color name="chart_current_time">#FFFFFF</color>
