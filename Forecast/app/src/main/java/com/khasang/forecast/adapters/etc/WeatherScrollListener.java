@@ -145,8 +145,6 @@ public class WeatherScrollListener extends RecyclerView.OnScrollListener {
             // Устанавливаем margin равным 0, на случай если пользователь быстро скрольнул
             newTopMargin = 0;
         }
-        Logger.println(TAG, "newTopMargin: " + newTopMargin);
-        Logger.println(TAG, "appBarLayoutParams height: " + appBarLayoutParams.height);
         appBarLayoutParams.topMargin = newTopMargin;
         chatLayout.requestLayout();
     }
