@@ -40,5 +40,5 @@
     <color name="chart_line">@color/accent</color>
     <color name="chart_max_temperature">#F44336</color>
     <color name="chart_min_temperature">#2196F3</color>
-    <color name="chart_text">#FFFFFF</color>
+    <color name="chart_text">@color/current_weather_color</color>
 </resources>

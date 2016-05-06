@@ -113,7 +113,7 @@
                         android:id="@+id/temperature"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="#fff"
+                        android:textColor="@color/current_weather_color"
                         android:textSize="56sp"
                         tools:text="--/--" />
 
@@ -124,7 +124,7 @@
                         android:layout_alignLeft="@+id/temperature"
                         android:layout_below="@+id/temperature"
                         android:maxLines="2"
-                        android:textColor="#fff"
+                        android:textColor="@color/current_weather_color"
                         android:textSize="24sp"
                         tools:text="--/--" />
 
