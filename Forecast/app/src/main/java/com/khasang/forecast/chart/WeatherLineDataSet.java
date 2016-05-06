@@ -63,7 +63,7 @@ public class WeatherLineDataSet extends LineDataSet {
         setLineWidth(context.getResources().getDimension(R.dimen.chart_line_width)); // толщина линии
 
         setDrawFilled(true); // разрешаем заливку цвета под графиком
-        if (Utils.getSDKInt() >= 18) {
+        if (Utils.getSDKInt() > 18) {
             Drawable drawable = ContextCompat.getDrawable(context, R.drawable.chart_fade);
             setFillDrawable(drawable);
         } else {
