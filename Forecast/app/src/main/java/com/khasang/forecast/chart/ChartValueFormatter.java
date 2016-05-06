@@ -18,7 +18,7 @@ public class ChartValueFormatter implements ValueFormatter {
     if (value > 0) {
       return String.format("+%.0f",value);
     } else {
-      return String.format("%.0f",-4.3213);
+      return String.format("%.0f",value);
     }
   }
 }
