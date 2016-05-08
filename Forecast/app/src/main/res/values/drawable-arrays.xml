@@ -17,16 +17,4 @@
         <item>@drawable/header_night_indigo</item>
         <item>@drawable/header_night_purple</item>
     </string-array>
-
-    <string-array name="default_icons">
-        <item>@drawable/ic_thunderstorm</item>
-        <item>@drawable/ic_drizzle</item>
-        <item>@drawable/ic_rain</item>
-        <item>@drawable/ic_snow</item>
-        <item>@drawable/ic_fog</item>
-        <item>@drawable/ic_sun</item>
-        <item>@drawable/ic_moon</item>
-        <item>@drawable/ic_cloud</item>
-        <item>@drawable/ic_extreme</item>
-    </string-array>
 </resources>
