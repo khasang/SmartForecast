@@ -59,7 +59,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         String tvTemperature = String.format(res == 0 ? "%d" : "%+d", res);
         holder.tvTemperature.setText(tvTemperature);
         holder.tvTempUnit.setText(PositionManager.getInstance().getTemperatureMetric().toStringValue());
-        Drawable weatherIcon = PositionManager.getInstance().getWeatherIcon(dataset.get(position).getPrecipitation().getIconNumber(AppUtils.isDayFromString(dayOfWeek)));
+        Drawable weatherIcon = PositionManager.getInstance().getWeatherIcon(dataset.get(position).getPrecipitation().getIconIndex(AppUtils.isDayFromString(dayOfWeek)));
         holder.ivWeatherIcon.setImageDrawable(weatherIcon);
         String description = dataset.get(position).getDescription();
         String capitalizedDescription = description.substring(0, 1).toUpperCase() + description.substring(1);

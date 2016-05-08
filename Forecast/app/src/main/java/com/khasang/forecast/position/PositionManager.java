@@ -61,21 +61,101 @@ public class PositionManager {
     private boolean lastResponseIsFailure;
     private CurrentLocationManager locationManager;
 
-    private static final int ICONS_COUNT = 10;
-    public static final int ICON_INDEX_THUNDERSTORM = 0;
-    public static final int ICON_INDEX_DRIZZLE = 1;
-    public static final int ICON_INDEX_RAIN = 2;
-    public static final int ICON_INDEX_SNOW = 3;
-    public static final int ICON_INDEX_ATMOSPHERE = 4;
-    public static final int ICON_INDEX_SUN = 5;
-    public static final int ICON_INDEX_MOON = 6;
-    public static final int ICON_INDEX_CLOUDS = 7;
-    public static final int ICON_INDEX_EXTREME = 8;
-    public static final int ICON_INDEX_ADDITIONAL = 9;
+    //Main icons set
+    private static final int MAIN_ICONS_COUNT = 10;
+
+    //Extended icons set
+    private static final int EXTENDED_ICONS_COUNT = 10;
+
+    public static final int ICON_INDEX_THUNDERSTORM_LIGHT_RAIN = 0;
+    public static final int ICON_INDEX_THUNDERSTORM_RAIN = 1;
+    public static final int ICON_INDEX_THUNDERSTORM_HEAVY_RAIN = 2;
+    public static final int ICON_INDEX_LIGHT_THUNDERSTORM = 3;
+    public static final int ICON_INDEX_THUNDERSTORM = 4;
+    public static final int ICON_INDEX_HEAVY_THUNDERSTORM = 5;
+    public static final int ICON_INDEX_RAGGED_THUNDERSTORM = 6;
+    public static final int ICON_INDEX_THUNDERSTORM_LIGHT_DRIZZLE = 7;
+    public static final int ICON_INDEX_THUNDERSTORM_DRIZZLE = 8;
+    public static final int ICON_INDEX_THUNDERSTORM_HEAVY_DRIZZLE = 9;
+
+    public static final int ICON_INDEX_LIGHT_INTENSITY_DRIZZLE = 10;
+    public static final int ICON_INDEX_DRIZZLE = 11;
+    public static final int ICON_INDEX_HEAVY_INTENSITY_DRIZZLE = 12;
+    public static final int ICON_INDEX_LIGHT_INTENSITY_DRIZZLE_RAIN = 13;
+    public static final int ICON_INDEX_DRIZZLE_RAIN = 14;
+    public static final int ICON_INDEX_HEAVY_INTENSITY_DRIZZLE_RAIN = 15;
+    public static final int ICON_INDEX_SHOWER_RAIN_AND_DRIZZLE = 16;
+    public static final int ICON_INDEX_HEAVY_SHOWER_RAIN_AND_DRIZZLE = 17;
+    public static final int ICON_INDEX_SHOWER_DRIZZLE = 18;
+
+    public static final int ICON_INDEX_LIGHT_RAIN = 19;
+    public static final int ICON_INDEX_MODERATE_RAIN = 20;
+    public static final int ICON_INDEX_HEAVY_INTENSITY_RAIN = 21;
+    public static final int ICON_INDEX_VERY_HEAVY_RAIN = 22;
+    public static final int ICON_INDEX_EXTREME_RAIN = 23;
+    public static final int ICON_INDEX_FREEZING_RAIN = 24;
+    public static final int ICON_INDEX_LIGHT_INTENSITY_SHOWER_RAIN = 25;
+    public static final int ICON_INDEX_SHOWER_RAIN = 26;
+    public static final int ICON_INDEX_HEAVY_INTENSITY_SHOWER_RAIN = 27;
+    public static final int ICON_INDEX_RAGGED_SHOWER_RAIN = 28;
+
+    public static final int ICON_INDEX_LIGHT_SNOW = 29;
+    public static final int ICON_INDEX_SNOW = 30;
+    public static final int ICON_INDEX_HEAVY_SNOW = 31;
+    public static final int ICON_INDEX_SLEET = 32;
+    public static final int ICON_INDEX_SHOWER_SLEET = 33;
+    public static final int ICON_INDEX_LIGHT_RAIN_AND_SNOW = 34;
+    public static final int ICON_INDEX_RAIN_AND_SNOW = 35;
+    public static final int ICON_INDEX_LIGHT_SHOWER_SNOW = 36;
+    public static final int ICON_INDEX_SHOWER_SNOW = 37;
+    public static final int ICON_INDEX_HEAVY_SHOWER_SNOW = 38;
+
+    public static final int ICON_INDEX_MIST = 39;
+    public static final int ICON_INDEX_SMOKE = 40;
+    public static final int ICON_INDEX_HAZE = 41;
+    public static final int ICON_INDEX_SAND_DUST_WHIRLS = 42;
+    public static final int ICON_INDEX_FOG = 43;
+    public static final int ICON_INDEX_SAND = 44;
+    public static final int ICON_INDEX_DUST = 45;
+    public static final int ICON_INDEX_VOLCANIC_ASH = 46;
+    public static final int ICON_INDEX_SQUALLS = 47;
+    public static final int ICON_INDEX_TORNADO = 48;
+
+    public static final int ICON_INDEX_CLEAR_SKY_SUN = 49;
+    public static final int ICON_INDEX_CLEAR_SKY_MOON = 50;
+
+    public static final int ICON_INDEX_FEW_CLOUDS = 51;
+    public static final int ICON_INDEX_SCATTERED_CLOUDS = 52;
+    public static final int ICON_INDEX_BROKEN_CLOUDS = 53;
+    public static final int ICON_INDEX_OVERCAST_CLOUDS = 54;
+
+    public static final int ICON_INDEX_EXTREME_TORNADO = 55;
+    public static final int ICON_INDEX_EXTREME_TROPICAL_STORM = 56;
+    public static final int ICON_INDEX_EXTREME_HURRICANE = 57;
+    public static final int ICON_INDEX_EXTREME_COLD = 58;
+    public static final int ICON_INDEX_EXTREME_HOT = 59;
+    public static final int ICON_INDEX_EXTREME_WINDY = 60;
+    public static final int ICON_INDEX_EXTREME_HAIL = 61;
+
+    public static final int ICON_INDEX_CALM = 62;
+    public static final int ICON_INDEX_LIGHT_BREEZE = 63;
+    public static final int ICON_INDEX_GENTLE_BREEZE = 64;
+    public static final int ICON_INDEX_MODERATE_BREEZE = 65;
+    public static final int ICON_INDEX_FRESH_BREEZE = 66;
+    public static final int ICON_INDEX_STRONG_BREEZE = 67;
+    public static final int ICON_INDEX_HIGH_WIND_NEAR_GALE = 67;
+    public static final int ICON_INDEX_GALE = 68;
+    public static final int ICON_INDEX_SEVERE_GALE = 69;
+    public static final int ICON_INDEX_STORM = 70;
+    public static final int ICON_INDEX_VIOLENT_STORM = 71;
+    public static final int ICON_INDEX_HURRICANE = 72;
+
+    public static final int ICON_INDEX_NA = 73;
+
     private Drawable[] iconsSet;
 
     public void createIconsSet (Context context) {
-        iconsSet = new Drawable[ICONS_COUNT];
+        iconsSet = new Drawable[MAIN_ICONS_COUNT];
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         String iconSet = sp.getString(context.getString(R.string.pref_icons_set_key), context.getString(R.string.pref_icons_set_default));
         if (iconSet.equals(context.getString(R.string.pref_icons_set_mike))) {
@@ -83,32 +163,32 @@ public class PositionManager {
                     .icon(Meteoconcs.Icon.met_cloud_flash);
             iconsSet[ICON_INDEX_DRIZZLE] = new IconicsDrawable(context)
                     .icon(Meteoconcs.Icon.met_drizzle);
-            iconsSet[ICON_INDEX_RAIN] = new IconicsDrawable(context)
+            iconsSet[ICON_INDEX_MODERATE_RAIN] = new IconicsDrawable(context)
                     .icon(Meteoconcs.Icon.met_rain);
             iconsSet[ICON_INDEX_SNOW] = new IconicsDrawable(context)
                     .icon(Meteoconcs.Icon.met_snow_heavy);
-            iconsSet[ICON_INDEX_ATMOSPHERE] = new IconicsDrawable(context)
+            iconsSet[ICON_INDEX_FOG] = new IconicsDrawable(context)
                     .icon(Meteoconcs.Icon.met_fog);
-            iconsSet[ICON_INDEX_SUN] = new IconicsDrawable(context)
+            iconsSet[ICON_INDEX_CLEAR_SKY_SUN] = new IconicsDrawable(context)
                     .icon(Meteoconcs.Icon.met_sun);
-            iconsSet[ICON_INDEX_MOON] = new IconicsDrawable(context)
+            iconsSet[ICON_INDEX_CLEAR_SKY_MOON] = new IconicsDrawable(context)
                     .icon(Meteoconcs.Icon.met_moon);
-            iconsSet[ICON_INDEX_CLOUDS] = new IconicsDrawable(context)
+            iconsSet[ICON_INDEX_FEW_CLOUDS] = new IconicsDrawable(context)
                     .icon(Meteoconcs.Icon.met_cloud);
-            iconsSet[ICON_INDEX_EXTREME] = new IconicsDrawable(context)
+            iconsSet[ICON_INDEX_EXTREME_TORNADO] = new IconicsDrawable(context)
                     .icon(Meteoconcs.Icon.met_clouds_flash);
         } else {
             iconsSet[ICON_INDEX_THUNDERSTORM] = ContextCompat.getDrawable(context, R.drawable.ic_thunderstorm);
             iconsSet[ICON_INDEX_DRIZZLE] = ContextCompat.getDrawable(context, R.drawable.ic_drizzle);
-            iconsSet[ICON_INDEX_RAIN] = ContextCompat.getDrawable(context, R.drawable.ic_rain);
+            iconsSet[ICON_INDEX_MODERATE_RAIN] = ContextCompat.getDrawable(context, R.drawable.ic_rain);
             iconsSet[ICON_INDEX_SNOW] = ContextCompat.getDrawable(context, R.drawable.ic_snow);
-            iconsSet[ICON_INDEX_ATMOSPHERE] = ContextCompat.getDrawable(context, R.drawable.ic_fog);
-            iconsSet[ICON_INDEX_SUN] = ContextCompat.getDrawable(context, R.drawable.ic_sun);
-            iconsSet[ICON_INDEX_MOON] = ContextCompat.getDrawable(context, R.drawable.ic_moon);
-            iconsSet[ICON_INDEX_CLOUDS] = ContextCompat.getDrawable(context, R.drawable.ic_cloud);
-            iconsSet[ICON_INDEX_EXTREME] = ContextCompat.getDrawable(context, R.drawable.ic_extreme);
+            iconsSet[ICON_INDEX_FOG] = ContextCompat.getDrawable(context, R.drawable.ic_fog);
+            iconsSet[ICON_INDEX_CLEAR_SKY_SUN] = ContextCompat.getDrawable(context, R.drawable.ic_sun);
+            iconsSet[ICON_INDEX_CLEAR_SKY_MOON] = ContextCompat.getDrawable(context, R.drawable.ic_moon);
+            iconsSet[ICON_INDEX_FEW_CLOUDS] = ContextCompat.getDrawable(context, R.drawable.ic_cloud);
+            iconsSet[ICON_INDEX_EXTREME_TORNADO] = ContextCompat.getDrawable(context, R.drawable.ic_extreme);
         }
-        iconsSet[ICON_INDEX_ADDITIONAL] = new IconicsDrawable(context)
+        iconsSet[ICON_INDEX_NA] = new IconicsDrawable(context)
                 .icon(Meteoconcs.Icon.met_na);
     }
 
@@ -117,7 +197,7 @@ public class PositionManager {
         if (iconsSet[iconNumber] != null) {
             return iconsSet[iconNumber];
         } else {
-            return iconsSet[ICON_INDEX_ADDITIONAL];
+            return iconsSet[ICON_INDEX_NA];
         }
     }
 

@@ -47,7 +47,6 @@ import com.khasang.forecast.fragments.HourlyForecastFragment;
 import com.khasang.forecast.interfaces.IMessageProvider;
 import com.khasang.forecast.interfaces.IPermissionCallback;
 import com.khasang.forecast.interfaces.IWeatherReceiver;
-import com.khasang.forecast.position.Position;
 import com.khasang.forecast.position.PositionManager;
 import com.khasang.forecast.position.Weather;
 import com.khasang.forecast.stations.WeatherStation;
@@ -643,7 +642,7 @@ public class WeatherActivity extends AppCompatActivity
                 wCurrent.getDescription().substring(0, 1).toUpperCase() + wCurrent.getDescription()
                         .substring(1)));
         Drawable weatherIcon = PositionManager.getInstance().getWeatherIcon(wCurrent.getPrecipitation()
-                .getIconNumber(AppUtils.isDayFromString(String.format(Locale.getDefault(), "%tR", date))));
+                .getIconIndex(AppUtils.isDayFromString(String.format(Locale.getDefault(), "%tR", date))));
 
         currWeather.setImageDrawable(weatherIcon);
 

@@ -1,7 +1,5 @@
 package com.khasang.forecast.position;
 
-import com.khasang.forecast.R;
-
 /**
  * Created by Veda on 24.11.15.
  */
@@ -11,56 +9,56 @@ public class Precipitation {
 
     public static enum Type {
         THUNDERSTORM {
-            public int getIconNumber(boolean isDay) {
+            public int getIconIndex(boolean isDay) {
                 return PositionManager.ICON_INDEX_THUNDERSTORM;
             }
         },
         DRIZZLE {
-            public int getIconNumber(boolean isDay) {
+            public int getIconIndex(boolean isDay) {
                 return PositionManager.ICON_INDEX_DRIZZLE;
             }
         },
         RAIN {
-            public int getIconNumber(boolean isDay) {
-                return PositionManager.ICON_INDEX_RAIN;
+            public int getIconIndex(boolean isDay) {
+                return PositionManager.ICON_INDEX_MODERATE_RAIN;
             }
         },
         SNOW {
-            public int getIconNumber(boolean isDay) {
+            public int getIconIndex(boolean isDay) {
                 return PositionManager.ICON_INDEX_SNOW;
             }
         },
         ATMOSPHERE {
-            public int getIconNumber(boolean isDay) {
-                return PositionManager.ICON_INDEX_ATMOSPHERE;
+            public int getIconIndex(boolean isDay) {
+                return PositionManager.ICON_INDEX_FOG;
             }
         },
         CLEAR {
-            public int getIconNumber(boolean isDay) {
+            public int getIconIndex(boolean isDay) {
                 if (isDay) {
-                    return PositionManager.ICON_INDEX_SUN;
+                    return PositionManager.ICON_INDEX_CLEAR_SKY_SUN;
                 } else {
-                    return PositionManager.ICON_INDEX_MOON;
+                    return PositionManager.ICON_INDEX_CLEAR_SKY_MOON;
                 }
             }
         },
         CLOUDS {
-            public int getIconNumber(boolean isDay) {
-                return PositionManager.ICON_INDEX_CLOUDS;
+            public int getIconIndex(boolean isDay) {
+                return PositionManager.ICON_INDEX_FEW_CLOUDS;
             }
         },
         EXTREME {
-            public int getIconNumber(boolean isDay) {
-                return PositionManager.ICON_INDEX_EXTREME;
+            public int getIconIndex(boolean isDay) {
+                return PositionManager.ICON_INDEX_EXTREME_TORNADO;
             }
         },
         ADDITIONAL {
-            public int getIconNumber(boolean isDay) {
-                return PositionManager.ICON_INDEX_ADDITIONAL;
+            public int getIconIndex(boolean isDay) {
+                return PositionManager.ICON_INDEX_CALM;
             }
         };
 
-        public abstract int getIconNumber(boolean isDay);
+        public abstract int getIconIndex(boolean isDay);
     }
 
     @Override
