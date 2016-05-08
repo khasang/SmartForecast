@@ -100,7 +100,7 @@ public class CityPickerAdapter extends HeaderFooterAdapter<String> {
             if (mark) {
                 cardView.setCardBackgroundColor(ContextCompat.getColor(MyApplication.getAppContext(), R.color.new_city_card));
             } else {
-                cardView.setCardBackgroundColor(Color.WHITE);
+                cardView.setCardBackgroundColor(ContextCompat.getColor(MyApplication.getAppContext(), R.color.city_card_background));
             }
         }
     }
