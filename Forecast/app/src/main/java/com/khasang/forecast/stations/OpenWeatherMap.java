@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.stetho.okhttp.StethoInterceptor;
 import com.khasang.forecast.AppUtils;
+import com.khasang.forecast.R;
 import com.khasang.forecast.position.Coordinate;
 import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.position.PositionManager;
@@ -49,7 +50,7 @@ public class OpenWeatherMap extends WeatherStation {
     /**
      * API ключ.
      */
-    private static final String APP_ID = "850f0bd2560d6ea117167544e52ea59d";
+    private static final String APP_ID = MyApplication.getAppContext().getString(R.string.open_weather_map_key);
 
     /**
      * Количество 3-х часовых интервалов для запроса к API.
@@ -155,11 +156,17 @@ public class OpenWeatherMap extends WeatherStation {
      */
     @Override
     public void updateWeather(final LinkedList<ResponseType> requestQueue, final int cityID, final Coordinate coordinate) {
-        if (coordinate == null) {
-            PositionManager.getInstance().onFailureResponse(requestQueue, cityID, getServiceType());
+        Call<OpenWeatherMapResponse> call;
+        if (coordinate == null || (coordinate.getLongitude() == 0 && coordinate.getLatitude() == 0)) {
+            String positionName = PositionManager.getInstance().getPosition(cityID).getLocationName();
+            if (positionName.isEmpty()) {
+                PositionManager.getInstance().onFailureResponse(requestQueue, cityID, getServiceType());
+                return;
+            }
+            call = service.getCurrent(positionName);
+        } else {
+            call = service.getCurrent(coordinate.getLatitude(), coordinate.getLongitude());
         }
-        Call<OpenWeatherMapResponse> call = service.getCurrent(coordinate.getLatitude(),
-                coordinate.getLongitude());
         call.enqueue(new Callback<OpenWeatherMapResponse>() {
             @Override
             public void onResponse(Response<OpenWeatherMapResponse> response, Retrofit retrofit) {
@@ -191,13 +198,19 @@ public class OpenWeatherMap extends WeatherStation {
      * @param coordinate  объект типа {@link Coordinate}, содержащий географические координаты
      */
     @Override
-    public void updateHourlyWeather(final LinkedList<ResponseType> requestList, final int cityID, final Coordinate coordinate) {
-        if (coordinate == null) {
-            PositionManager.getInstance().onFailureResponse(requestList, cityID, getServiceType());
+    public void updateHourlyWeather(final LinkedList<ResponseType> requestList,
+                                    final int cityID, final Coordinate coordinate) {
+        Call<OpenWeatherMapResponse> call;
+        if (coordinate == null || (coordinate.getLongitude() == 0 && coordinate.getLatitude() == 0)) {
+            String positionName = PositionManager.getInstance().getPosition(cityID).getLocationName();
+            if (positionName.isEmpty()) {
+                PositionManager.getInstance().onFailureResponse(requestList, cityID, getServiceType());
+                return;
+            }
+            call = service.getHourly(positionName, TIME_PERIOD);
+        } else {
+            call = service.getHourly(coordinate.getLatitude(), coordinate.getLongitude(), TIME_PERIOD);
         }
-        Call<OpenWeatherMapResponse> call = service.getHourly(coordinate.getLatitude(),
-                coordinate.getLongitude(),
-                TIME_PERIOD);
         call.enqueue(new Callback<OpenWeatherMapResponse>() {
             @Override
             public void onResponse(Response<OpenWeatherMapResponse> response, Retrofit retrofit) {
@@ -228,13 +241,19 @@ public class OpenWeatherMap extends WeatherStation {
      * @param coordinate  объект типа {@link Coordinate}, содержащий географические координаты
      */
     @Override
-    public void updateWeeklyWeather(final LinkedList<ResponseType> requestList, final int cityID, final Coordinate coordinate) {
-        if (coordinate == null) {
-            PositionManager.getInstance().onFailureResponse(requestList, cityID, getServiceType());
+    public void updateWeeklyWeather(final LinkedList<ResponseType> requestList,
+                                    final int cityID, final Coordinate coordinate) {
+        Call<DailyResponse> call;
+        if (coordinate == null || (coordinate.getLongitude() == 0 && coordinate.getLatitude() == 0)) {
+            String positionName = PositionManager.getInstance().getPosition(cityID).getLocationName();
+            if (positionName.isEmpty()) {
+                PositionManager.getInstance().onFailureResponse(requestList, cityID, getServiceType());
+                return;
+            }
+            call = service.getDaily(positionName, DAYS_PERIOD);
+        } else {
+            call = service.getDaily(coordinate.getLatitude(), coordinate.getLongitude(), DAYS_PERIOD);
         }
-        Call<DailyResponse> call = service.getDaily(coordinate.getLatitude(),
-                coordinate.getLongitude(),
-                DAYS_PERIOD);
         call.enqueue(new Callback<DailyResponse>() {
             @Override
             public void onResponse(Response<DailyResponse> response, Retrofit retrofit) {

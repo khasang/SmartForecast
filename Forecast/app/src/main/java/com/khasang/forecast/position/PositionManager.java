@@ -84,12 +84,13 @@ public class PositionManager {
         return instance;
     }
 
-    public static PositionManager getInstance(IMessageProvider provider) {
+    public static PositionManager getInstance(IMessageProvider provider, IWeatherReceiver receiver) {
         if (instance == null) {
             synchronized (PositionManager.class) {
                 if (instance == null) {
                     instance = new PositionManager();
                     instance.setMessageProvider(provider);
+                    instance.setReceiver(receiver);
                     instance.initManager();
                 }
             }
@@ -130,9 +131,16 @@ public class PositionManager {
         } else {
             state = true;
             favouritesPositions.add(cityName);
+            Collections.sort(favouritesPositions);
         }
         dbManager.saveTownFavourite(state, cityName);
         return state;
+    }
+
+    public void removeFavoriteCity(String city) {
+        if (favouritesPositions != null) {
+            favouritesPositions.remove(city);
+        }
     }
 
     public boolean isFavouriteCity(String cityName) {
@@ -141,6 +149,12 @@ public class PositionManager {
         } catch (NullPointerException | ClassCastException e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    public void clearFavorites() {
+        if (favouritesPositions != null) {
+            favouritesPositions.clear();
         }
     }
 
@@ -286,15 +300,19 @@ public class PositionManager {
             positions.remove(name);
             dbManager.deleteTown(name);
         }
+        if (isFavouriteCity(name)) {
+            removeFavoriteCity(name);
+        }
     }
 
     public void removePositions() {
         positions.clear();
+        clearFavorites();
         dbManager.deleteTowns();
     }
 
     /**
-     * Метод, с помощью которого из списока "Избранных" выбираем другую локацию в качестве текущей
+     * Метод, с помощью которого из списка городов выбираем другую локацию в качестве текущей
      *
      * @param name объект типа {@link String}, содержащий название города
      */
@@ -362,7 +380,7 @@ public class PositionManager {
      * @param cityID идентификатор местоположения
      * @return обьект типа {@link Position}
      */
-    private Position getPosition(int cityID) {
+    public Position getPosition(int cityID) {
         if (cityID == 0) {
             return currentLocation;
         }
@@ -452,6 +470,7 @@ public class PositionManager {
             } catch (NullPointerException e) {
                 // Отсроченный запрос активити уже уничтожено
                 e.printStackTrace();
+                updateWeatherFromDB();
             }
         }
     }

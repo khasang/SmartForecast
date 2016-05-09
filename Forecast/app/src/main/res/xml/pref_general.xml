@@ -56,4 +56,24 @@
             android:title="@string/pref_title_enable_gps" />
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/pref_header_personalization">
+        <ListPreference
+            android:defaultValue="@string/pref_color_scheme_teal"
+            android:entries="@array/pref_color_scheme_options"
+            android:entryValues="@array/pref_color_scheme_values"
+            android:key="@string/pref_color_scheme_key"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="@string/pref_color_scheme_title" />
+        />
+        <ListPreference
+            android:defaultValue="@string/pref_night_mode_off"
+            android:entries="@array/pref_night_mode_options"
+            android:entryValues="@array/pref_night_mode_values"
+            android:key="@string/pref_night_mode_key"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="@string/pref_night_mode_title" />
+    </PreferenceCategory>
+
 </PreferenceScreen>
