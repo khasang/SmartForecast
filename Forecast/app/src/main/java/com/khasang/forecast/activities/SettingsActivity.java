@@ -164,7 +164,7 @@ public class SettingsActivity extends AppCompatActivity {
                     SettingsActivity.setRecreateMainActivity(true);
                     getActivity().recreate();
                 }  else if (key.equals(getString(R.string.pref_icons_set_key))) {
-                    PositionManager.getInstance().createIconsSet(getActivity());
+                    PositionManager.getInstance().generateIconSet(getActivity());
                 }
             }
         }
