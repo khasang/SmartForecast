@@ -22,7 +22,7 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -41,28 +41,25 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.khasang.forecast.AppUtils;
+import com.khasang.forecast.Logger;
 import com.khasang.forecast.Maps;
 import com.khasang.forecast.MyApplication;
+import com.khasang.forecast.R;
+import com.khasang.forecast.adapters.CityPickerAdapter;
+import com.khasang.forecast.adapters.GooglePlacesAutocompleteAdapter;
+import com.khasang.forecast.adapters.etc.HidingScrollListener;
 import com.khasang.forecast.exceptions.EmptyCurrentAddressException;
 import com.khasang.forecast.exceptions.NoAvailableAddressesException;
 import com.khasang.forecast.interfaces.IMapDataReceiver;
 import com.khasang.forecast.interfaces.IMessageProvider;
 import com.khasang.forecast.location.LocationParser;
 import com.khasang.forecast.position.Coordinate;
-import com.khasang.forecast.Logger;
 import com.khasang.forecast.position.PositionManager;
-import com.khasang.forecast.R;
-import com.khasang.forecast.adapters.CityPickerAdapter;
-import com.khasang.forecast.adapters.etc.HidingScrollListener;
-import com.khasang.forecast.adapters.GooglePlacesAutocompleteAdapter;
 import com.khasang.forecast.view.DelayedAutoCompleteTextView;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
-import com.mikepenz.ionicons_typeface_library.Ionicons;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -121,6 +118,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         cityPickerAdapter = new CityPickerAdapter(cityList, this, this);
         recyclerView.setAdapter(cityPickerAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
         swapVisibilityTextOrList();
 
         /** Вычисляет степень прокрутки и выполняет нужное действие.*/
@@ -142,7 +140,9 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         fabBtn.setImageDrawable(icon);
         fabBtn.setOnClickListener(this);
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.simple_grow);
-        setupFooter();
+
+        setupHeaderHeight();
+        setupFooterHeight();
         createItemList();
 
         ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
@@ -171,9 +171,22 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     }
 
     /**
+     * Задает размер для Header
+     */
+    private void setupHeaderHeight() {
+        // Calculate ActionBar height
+        TypedValue tv = new TypedValue();
+        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+            int actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,
+                getResources().getDisplayMetrics());
+            cityPickerAdapter.setHeaderHeight(actionBarHeight);
+        }
+    }
+
+    /**
      * Задает размер для Footer
      */
-    private void setupFooter() {
+    private void setupFooterHeight() {
         CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) fabBtn.getLayoutParams();
         int fabBottomMargin = lp.bottomMargin;
         cityPickerAdapter.setFooterHeight(fabBottomMargin * 4); // размеры FAB получить не удается
