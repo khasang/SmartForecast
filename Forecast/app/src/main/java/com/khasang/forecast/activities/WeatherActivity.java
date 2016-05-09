@@ -195,7 +195,7 @@ public class WeatherActivity extends AppCompatActivity
     }
 
     @Override
-    public void OnNavigationItemClicked(int identifier) {
+    public void onNavigationItemClicked(int identifier) {
         switch (identifier) {
             case NavigationDrawer.NAVIGATION_CURRENT_PLACE:
                 changeDisplayedCity("");
@@ -314,7 +314,7 @@ public class WeatherActivity extends AppCompatActivity
                 String newCity = data.getStringExtra(CityPickerActivity.CITY_PICKER_TAG);
                 toolbar.setTitle(newCity.split(",")[0]);
                 Logger.println(TAG, newCity);
-                PositionManager.getInstance().setCurrentPosition(newCity);
+                changeDisplayedCity(newCity);
             } else {
                 if (!PositionManager.getInstance().positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {
                     showProgress(false);

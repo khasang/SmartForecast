@@ -42,7 +42,7 @@ public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
     private PrimaryDrawerItem currentPlace;
     private PrimaryDrawerItem favorites;
     private Drawer result;
-    private boolean opened;
+    private boolean favoritesExposed;
     private OnNavigationItemClickListener navigationItemClickListener;
 
     // Активный пункт, открытый в основном окне - это может быть текущая позиция или один из
@@ -115,19 +115,19 @@ public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
      */
     @Override
     public boolean onItemClick(View v, int position, IDrawerItem drawerItem) {
-        if (drawerItem == null) {
+        if (drawerItem == null || !result.isDrawerOpen()) {
             return false;
         }
         int identifier = drawerItem.getIdentifier();
         if (navigationItemClickListener != null) {
-            navigationItemClickListener.OnNavigationItemClicked(identifier);
+            navigationItemClickListener.onNavigationItemClicked(identifier);
         }
         switch (identifier) {
             case NAVIGATION_CITY_LIST:
                 // TODO: нужен идентификатор города
                 // Можно было бы не скрывать список городов, если один из них активен. Без идентификатора
                 // это сделать сложно
-                opened = false;
+                favoritesExposed = false;
                 result.closeDrawer();
                 break;
             case NAVIGATION_SETTINGS:
@@ -135,7 +135,7 @@ public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
                 result.closeDrawer();
                 break;
             case NAVIGATION_FAVORITES:
-                opened = !opened;
+                favoritesExposed = !favoritesExposed;
                 updateFavorites();
                 break;
             case NAVIGATION_APP_NAME:
@@ -172,7 +172,7 @@ public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
         } else {
             favorites.withEnabled(true);
             result.updateBadge(2, new StringHolder(String.valueOf(favCities.size())));
-            if (opened) {
+            if (favoritesExposed) {
                 favoriteCitiesIdentifiers = new int[favCities.size()];
                 for (int i = favCities.size() - 1; i >= 0; i--) {
                     int identifier = SUB_ITEMS_BASE_INDEX + i;
@@ -206,6 +206,6 @@ public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
 
     public interface OnNavigationItemClickListener {
 
-        void OnNavigationItemClicked(int identifier);
+        void onNavigationItemClicked(int identifier);
     }
 }
