@@ -172,4 +172,19 @@
     <string name="pref_color_scheme_indigo" translatable="false">color_scheme_indigo</string>
     <string name="pref_color_scheme_purple" translatable="false">color_scheme_purple</string>
 
+    <string name="tab_name_team">Команда</string>
+    <string name="tab_name_versions">Версии</string>
+    <string name="tab_name_features">Возможности</string>
+    <string name="drawer_item_about">О приложении</string>
+    <string name="history"><b>Основные возможности приложения:\n</b><i>
+        * Ведение списка "Избранных" городов, "интеллектуальное" добавление города в список всего лишь
+        по нескольким буквам.\n
+        * Приложение отображает текущие погодные условия, а так же прогноз
+        на сутки и неделю для выбранного из списка города.\n
+        * Отображение последнего выбранного города при перезапуске приложения.\n
+        * Преобразование температуры в различные метрики (Цельсий,
+        Фаренгейт либо Кельвин) при клике на температуру, хранение последней выбранной метрики
+        при выходе из приложения.\n
+        * Приложение использует надежный и популярный источник данных.\n\n</i>
+        </string>
 </resources>
