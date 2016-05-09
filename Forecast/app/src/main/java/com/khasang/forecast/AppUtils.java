@@ -378,11 +378,10 @@ public class AppUtils {
     }
 
     public static Drawable[] createIconsSet(Context context) {
-        Drawable[] iconsSet;
-        iconsSet = new Drawable[ICONS_COUNT];
+        Drawable[] iconsSet = new Drawable[ICONS_COUNT];
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        String iconSet = sp.getString(context.getString(R.string.pref_icons_set_key), context.getString(R.string.pref_icons_set_default));
-        if (iconSet.equals(context.getString(R.string.pref_icons_set_mike))) {
+        String iconSetType = sp.getString(context.getString(R.string.pref_icons_set_key), context.getString(R.string.pref_icons_set_default));
+        if (iconSetType.equals(context.getString(R.string.pref_icons_set_mike))) {
             iconsSet[ICON_INDEX_THUNDERSTORM] = new IconicsDrawable(context)
                     .icon(Meteoconcs.Icon.met_cloud_flash);
             iconsSet[ICON_INDEX_DRIZZLE] = new IconicsDrawable(context)
@@ -402,15 +401,42 @@ public class AppUtils {
             iconsSet[ICON_INDEX_EXTREME_TORNADO] = new IconicsDrawable(context)
                     .icon(Meteoconcs.Icon.met_clouds_flash);
         } else {
-            iconsSet[ICON_INDEX_THUNDERSTORM] = ContextCompat.getDrawable(context, R.drawable.ic_thunderstorm);
-            iconsSet[ICON_INDEX_DRIZZLE] = ContextCompat.getDrawable(context, R.drawable.ic_drizzle);
-            iconsSet[ICON_INDEX_MODERATE_RAIN] = ContextCompat.getDrawable(context, R.drawable.ic_rain);
-            iconsSet[ICON_INDEX_SNOW] = ContextCompat.getDrawable(context, R.drawable.ic_snow);
-            iconsSet[ICON_INDEX_FOG] = ContextCompat.getDrawable(context, R.drawable.ic_fog);
-            iconsSet[ICON_INDEX_CLEAR_SKY_SUN] = ContextCompat.getDrawable(context, R.drawable.ic_sun);
-            iconsSet[ICON_INDEX_CLEAR_SKY_MOON] = ContextCompat.getDrawable(context, R.drawable.ic_moon);
-            iconsSet[ICON_INDEX_FEW_CLOUDS] = ContextCompat.getDrawable(context, R.drawable.ic_cloud);
-            iconsSet[ICON_INDEX_EXTREME_TORNADO] = ContextCompat.getDrawable(context, R.drawable.ic_extreme);
+            Drawable thunderstorm = ContextCompat.getDrawable(context, R.drawable.ic_thunderstorm);
+            Drawable drizzle = ContextCompat.getDrawable(context, R.drawable.ic_drizzle);
+            Drawable rain = ContextCompat.getDrawable(context, R.drawable.ic_rain);
+            Drawable snow = ContextCompat.getDrawable(context, R.drawable.ic_snow);
+            Drawable atmosphere = ContextCompat.getDrawable(context, R.drawable.ic_fog);
+            Drawable sun = ContextCompat.getDrawable(context, R.drawable.ic_sun);
+            Drawable moon = ContextCompat.getDrawable(context, R.drawable.ic_moon);
+            Drawable clouds = ContextCompat.getDrawable(context, R.drawable.ic_cloud);
+            Drawable extreme = ContextCompat.getDrawable(context, R.drawable.ic_extreme);
+
+            for (int i = ICON_INDEX_THUNDERSTORM_LIGHT_RAIN; i <= ICON_INDEX_THUNDERSTORM_HEAVY_DRIZZLE; i++) {
+                iconsSet[i] = thunderstorm;
+            }
+            for (int i = ICON_INDEX_LIGHT_INTENSITY_DRIZZLE; i <= ICON_INDEX_SHOWER_DRIZZLE; i++) {
+                iconsSet[i] = drizzle;
+            }
+            for (int i = ICON_INDEX_LIGHT_RAIN; i <= ICON_INDEX_RAGGED_SHOWER_RAIN; i++) {
+                iconsSet[i] = rain;
+            }
+            for (int i = ICON_INDEX_LIGHT_SNOW; i <= ICON_INDEX_HEAVY_SHOWER_SNOW; i++) {
+                iconsSet[i] = snow;
+            }
+            for (int i = ICON_INDEX_MIST; i <= ICON_INDEX_TORNADO; i++) {
+                iconsSet[i] = atmosphere;
+            }
+            iconsSet[ICON_INDEX_CLEAR_SKY_SUN] = sun;
+            iconsSet[ICON_INDEX_CLEAR_SKY_MOON] = moon;
+            for (int i = ICON_INDEX_FEW_CLOUDS; i <= ICON_INDEX_OVERCAST_CLOUDS_NIGHT; i++) {
+                iconsSet[i] = clouds;
+            }
+            for (int i = ICON_INDEX_EXTREME_TORNADO; i <= ICON_INDEX_EXTREME_HAIL; i++) {
+                iconsSet[i] = extreme;
+            }
+            for (int i = ICON_INDEX_CALM; i <= ICON_INDEX_HURRICANE; i++) {
+                iconsSet[i] = extreme;
+            }
         }
         iconsSet[ICON_INDEX_NA] = new IconicsDrawable(context)
                 .icon(Meteoconcs.Icon.met_na);
