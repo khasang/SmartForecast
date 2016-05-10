@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-maps/8.4.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="04de44f90606c77f3b28cf44861f306290505aac">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/com.google.android.gms-play-services-maps-8.4.0_4eb5685fc4f11039793e484a5913c2bb80cd0871.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.3.0/jars/libs/internal_impl-23.3.0.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="4da5a4d697d32497c6f85567a5112e62fdfd0676">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/internal_impl-23.3.0_e2a24ba0bd33163ae30ace6116add0854e7c1984.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/exploded-aar/com.mikepenz/community-material-typeface/1.3.41.1/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="25f0ed3aa7988dc42d6c1008b20df420cc94d958">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/com.mikepenz-community-material-typeface-1.3.41.1_4938b0cfd0978f76195fadf1a197c16f607f4ad6.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/.gradle/caches/modules-2/files-2.1/com.github.PhilJay/MPAndroidChart/v2.2.4/7abd1ecef320da6a7679b137083151401fe8bf43/MPAndroidChart-v2.2.4.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="7abd1ecef320da6a7679b137083151401fe8bf43">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/MPAndroidChart-v2.2.4_ff357d97a8b0d39891e0374320451e1115210423.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/exploded-aar/com.mikepenz/iconics-core/2.5.4/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="dcacf665e5536c0da76732c56bae2ae1e202d5da">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/com.mikepenz-iconics-core-2.5.4_5dae13b7ae5bc468b330135e1b696df5fa4ba1c3.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/exploded-aar/com.crashlytics.sdk.android/crashlytics-core/2.3.8/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="c9ef45dcbd082cd63aac09a5e2cd443adb5df837">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/com.crashlytics.sdk.android-crashlytics-core-2.3.8_197326b41f9e38758ab45f1896e658aecf91b8bd.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/exploded-aar/com.android.support/design/23.3.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="f0001e71cea6ae432a00021c6f727f5ef0f3d27e">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/com.android.support-design-23.3.0_1c648e5561d875b365f8fd720ec0f35d36eda89e.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-identity/8.4.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="b82b8e847173c28efffcd291b2a0b1ae9ad17fa4">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/com.google.android.gms-play-services-identity-8.4.0_77570ea457b8ef2aa5b05fe209efda98eb4ad19e.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/exploded-aar/com.mikepenz/entypo-typeface/1.0.0.1/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="5adae3e0e643d29f77b1fb9a5d7ffcca47d5cac6">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/com.mikepenz-entypo-typeface-1.0.0.1_d73b7246bf717eefbaa22f75271ef04d452f95ad.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/exploded-aar/com.mikepenz/meteocons-typeface/1.1.0.1/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="e030b0ef4b38a9746188f563af4faff265bb4be0">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/com.mikepenz-meteocons-typeface-1.1.0.1_8c6f3d543cd3460e4ed828d8c978c167fb84cbcc.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/exploded-aar/com.romainpiel.shimmer/library/1.4.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="605019d3e4be636f5dd74c83d05198994e3a2ce9">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/com.romainpiel.shimmer-library-1.4.0_eb3e97e1b3d6ae7b7604eff27381a1066a7d4fc2.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/exploded-aar/com.mikepenz/octicons-typeface/3.2.0.1/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="b1e24161fcf88ca05a3f868d7f98de30beac5e64">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/com.mikepenz-octicons-typeface-3.2.0.1_69aa0ae8875f2890d0c81e95ef81450c0eba6505.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/Android/Sdk/extras/android/m2repository/com/android/support/support-annotations/23.3.0/support-annotations-23.3.0.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="db7791d75a07fef9844d06236c1c59ba7bf6997c">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/support-annotations-23.3.0_30b19301c01673a3f5c334569640b41983ae33c6.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/exploded-aar/com.crashlytics.sdk.android/answers/1.3.6/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="9af3b9b8114e685291aa00e6572b0a9131244956">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/com.crashlytics.sdk.android-answers-1.3.6_e6a4a00d182d58f80ba39bf3dc5a5067c72cc7e7.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/exploded-aar/com.mikepenz/ionicons-typeface/2.0.1.1/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="dcdc378ec20dbeaaf0173eedac6b38c45489b257">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/com.mikepenz-ionicons-typeface-2.0.1.1_9c31d18c4e7d28bc0c3350f163f4483852e21eb9.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp/logging-interceptor/2.6.0/77dc6e1eedd47953b41ef936f20b9b693fe73f6f/logging-interceptor-2.6.0.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="77dc6e1eedd47953b41ef936f20b9b693fe73f6f">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/logging-interceptor-2.6.0_5d8ba32fba75f8dad4cd6bf28746b0a22aa804f9.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/exploded-aar/com.github.gabrielemariotti.recyclerview/recyclerview-animators/0.3.0-SNAPSHOT/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="940a4e6d5d64deee58c07673cb65a4557e1637af">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/com.github.gabrielemariotti.recyclerview-recyclerview-animators-0.3.0-SNAPSHOT_be1b259be15a8971749e34d866efbb6a2a8ddd1b.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/exploded-aar/com.crashlytics.sdk.android/crashlytics/2.5.5/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="611605b6b640c1558f9bdea41de8ff837ab68ca8">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/com.crashlytics.sdk.android-crashlytics-2.5.5_2bd1943c0b973e95f754634483a9705c0c700aad.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/exploded-aar/com.mikepenz/typeicons-typeface/2.0.7.1/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="37eb2b5d6dafb73bce2073db7545fe0cfd1ed1b3">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/com.mikepenz-typeicons-typeface-2.0.7.1_339359652fdda1b800a3eee30a821fc8598a4a98.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.3.1/ecb6e1f8e4b0e84c4b886c2f14a1500caf309757/gson-2.3.1.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="ecb6e1f8e4b0e84c4b886c2f14a1500caf309757">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/gson-2.3.1_d1e5af8bd8ced67b9ff7445adb4e7624bed6034b.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/exploded-aar/com.mikepenz/materialdrawer/4.6.4/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="25c8422fe5a0acee6cee4f7e52449c2802f6ca19">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/com.mikepenz-materialdrawer-4.6.4_f1e2e5046ff5ff37035212575e90636191e25840.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/exploded-aar/net.frakbot/jumpingbeans/1.3.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="75bfbf7ea42b9c0b6b18070f60fda66932904331">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/net.frakbot-jumpingbeans-1.3.0_2d0cd478e8429e0e3466f27af43993c065c1d98d.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/exploded-aar/com.mikepenz/material-design-iconic-typeface/2.2.0.1/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="27bd073c1d188457050a9169e7dfe03ea0271dbc">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/com.mikepenz-material-design-iconic-typeface-2.2.0.1_6ba086d9e2d2ea1dd325351e0590a44b98ac0638.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/exploded-aar/com.android.support/preference-v7/23.3.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="0ba60f3bba23144a2f54a77ae29d6375c5eaec10">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/com.android.support-preference-v7-23.3.0_2077a64d0e69e89d214c58b33d2fb8d500b2611f.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/exploded-aar/com.android.support/preference-v14/23.3.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="c1e9eb4d8586880e449d9273ee0bb0544fa7fb61">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/com.android.support-preference-v14-23.3.0_8d5a2024e7eac145e3c0b9b65c72babc916b75f0.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/exploded-aar/com.android.support/cardview-v7/23.3.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="82ce13fd19cdfde0e392f03c27edeba8d4333648">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/com.android.support-cardview-v7-23.3.0_ba0a50bdb0854fd3bed87416cbb0f68b4c32eadf.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/23.3.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="a0b5d60246cd9d4f3f2443611b3b4c25265840b5">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/com.android.support-support-vector-drawable-23.3.0_4c940bc479367568d8f684c19e71bc6dff364a64.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/exploded-aar/com.mikepenz/fontawesome-typeface/4.5.0.1/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="9ec06b192478fcc1acd79f399926c48444c02f86">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/com.mikepenz-fontawesome-typeface-4.5.0.1_50a8065427473bcf0541e4e9d9acc8b67c9e4ed2.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.3.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="8a034dd16c0dfd75fe86c52c2cd581592acc684a">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/com.android.support-support-v4-23.3.0_17bd2f682e63d01bcc04d21b75c5c2170b990918.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/exploded-aar/jp.wasabeef/recyclerview-animators/2.1.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="0b148ce9bfaa624702b7bd0a099bfdf44b46c936">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/jp.wasabeef-recyclerview-animators-2.1.0_bc23b82ed184af762485fe1ab14e9ac6fbd863b4.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/.gradle/caches/modules-2/files-2.1/com.squareup.retrofit/retrofit/2.0.0-beta2/880d9e0997b2d1bfc98e0d121ced33ee5d04aac4/retrofit-2.0.0-beta2.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="880d9e0997b2d1bfc98e0d121ced33ee5d04aac4">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/retrofit-2.0.0-beta2_caefe52761789af56cfb9bff639677201138a513.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="fef2b3e4b6b1b0e5fe7b69fa137a5fa55a3182ab">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/com.google.android.gms-play-services-base-8.4.0_6a717b68414e69ec211b81cf99f9197bd5df5cc9.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/exploded-aar/pl.droidsonroids.gif/android-gif-drawable/1.1.7/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="d6825a79ca6c134dd6f26fc15eff443b5215dbdc">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/pl.droidsonroids.gif-android-gif-drawable-1.1.7_a502b8c8ac70fe414c7536c9c3c99a8eb7245515.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/exploded-aar/com.mikepenz/foundation-icons-typeface/3.0.0.1/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="f9c6fccd9ee97a5b242c74493e38a99a7eb689d8">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/com.mikepenz-foundation-icons-typeface-3.0.0.1_e9c85e0240cd0fc0ab73bc102fdf2daca0fa6f7d.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/.gradle/caches/modules-2/files-2.1/com.squareup.retrofit/converter-gson/2.0.0-beta2/392c3d09e0f5e7087544093cc0cb23bb9c7af5fa/converter-gson-2.0.0-beta2.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="392c3d09e0f5e7087544093cc0cb23bb9c7af5fa">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/converter-gson-2.0.0-beta2_5a98894239f8a960f2bca87083c93d04a4416bbe.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/exploded-aar/io.fabric.sdk.android/fabric/1.3.10/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="a5db9a2dd46d84285ef737f65030b74b6e8ee2a4">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/io.fabric.sdk.android-fabric-1.3.10_5b5b73ad6412084f3ee711a972c87dec11ddbd32.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/.gradle/caches/modules-2/files-2.1/com.squareup.okio/okio/1.6.0/98476622f10715998eacf9240d6b479f12c66143/okio-1.6.0.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="98476622f10715998eacf9240d6b479f12c66143">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/okio-1.6.0_6a77a5817506c6d76eef69888fa72b1c88e51057.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/.gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/2.0.1/516c03b21d50a644d538de0f0369c620989cd8f0/jsr305-2.0.1.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="516c03b21d50a644d538de0f0369c620989cd8f0">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/jsr305-2.0.1_4c619cce0e36ef1c69d7a5ba11d834c9fcffcc7b.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/exploded-aar/com.crashlytics.sdk.android/beta/1.1.4/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="ad5bb101ced4d3939225c9b57e5a3d81547c1fbb">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/com.crashlytics.sdk.android-beta-1.1.4_9115dc713200bc600888d0b0924d66fa5128b01c.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/exploded-aar/com.mikepenz/weather-icons-typeface/2.0.10.1/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="25117c3249c2873fc9f31b0c89d6bd9ba202ce9e">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/com.mikepenz-weather-icons-typeface-2.0.10.1_30f34c80ad9d3d325752c6fb1817e5357bc7b93a.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-location/8.4.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="a8412b654dab86d57bf90683367488211c8a81f1">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/com.google.android.gms-play-services-location-8.4.0_c2ac59e4c851b8c4d5ffd8c5d4a36f7fe71da39b.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/.gradle/caches/modules-2/files-2.1/commons-cli/commons-cli/1.2/2bf96b7aa8b611c177d329452af1dc933e14501c/commons-cli-1.2.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="2bf96b7aa8b611c177d329452af1dc933e14501c">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/commons-cli-1.2_ee3148bf941bb0935c59b580ab91f46f6a8144a3.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/.gradle/caches/modules-2/files-2.1/com.squareup.okhttp/okhttp/2.6.0/212387a39088ecd3daff8e3bfc3bdc4123e33c67/okhttp-2.6.0.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="212387a39088ecd3daff8e3bfc3bdc4123e33c67">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/okhttp-2.6.0_208c6a2e41422f8ae9e2a43e0431e60153dfcc9a.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/.gradle/caches/modules-2/files-2.1/com.facebook.stetho/stetho-okhttp/1.2.0/6c5c9380e245c4ff5be2b2a49dcbb0200c39798e/stetho-okhttp-1.2.0.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="6c5c9380e245c4ff5be2b2a49dcbb0200c39798e">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/stetho-okhttp-1.2.0_b49c3e522b79451e8fcad49b55228406ee16c73e.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/23.3.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="23be6993826b8fd88bbc8d14928bb3b8960d3d4e">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/com.android.support-animated-vector-drawable-23.3.0_874e4c149c499f3bc37198304bec9e39e4202781.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.4.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="8e673cdfadd8f2d98fdb2fda2285c30f6e449782">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/com.google.android.gms-play-services-basement-8.4.0_84b3e23ffe55a1b84da9e2212d01c447e3a4f2c8.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/exploded-aar/com.mikepenz/devicon-typeface/2.0.0.1/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="88c7cb2ec88bc3a35a9ca7326cad631a5683913a">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/com.mikepenz-devicon-typeface-2.0.0.1_d6018d199e405bfc22afaa20f104ce1501f5192f.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="1b8e03daaa43fb0a4cd57e378167c2fd70454c1e">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/com.android.support-appcompat-v7-23.3.0_1927ad9de689eef56e5736eaf77cf61a14e6a4f8.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/23.3.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="debf30ce0a7560396b6235edef77e447006454c2">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/com.android.support-recyclerview-v7-23.3.0_4a3df254903d363bf466ebef04c2c88cdfd63ff4.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/exploded-aar/com.android.support/gridlayout-v7/23.3.0/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="003ebdacd5f75067b8724f92bd5eefa323d870aa">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/com.android.support-gridlayout-v7-23.3.0_de8284eade96492423653e0a2f0b2136cd7332a2.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/exploded-aar/com.mikepenz/materialize/0.5.1/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="25e8af11fff99ad02250f52f2436e25f60cc1bbe">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/com.mikepenz-materialize-0.5.1_94a57ad3555963ca1dbcec3a6c46e67b844d0f4f.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/.gradle/caches/modules-2/files-2.1/com.facebook.stetho/stetho/1.2.0/1d6cdb8ce8185b8b23213fad48a83987fb6d2d67/stetho-1.2.0.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="1d6cdb8ce8185b8b23213fad48a83987fb6d2d67">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/stetho-1.2.0_d5da9709cccb64dc8bbf6fe9ed2681a9e3ea1215.jar" />
+    </item>
+    <item
+        jar="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/exploded-aar/com.mikepenz/google-material-typeface/2.1.0.1.original/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.3"
+        sha1="e0cf0253b06ae679e60476827c56d54a53f2e390">
+        <dex dex="/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/pre-dexed/debug/com.mikepenz-google-material-typeface-2.1.0.1.original_f1b04da5735fa20e17a143a0b6b4e0dce3c975ff.jar" />
+    </item>
+
+</items>

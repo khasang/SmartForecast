@@ -1,0 +1,26 @@
+[
+    {
+        "merged": "/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/res/merged/debug/transition-v21/settings_activity_enter_transition.xml",
+        "source": "/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/src/main/res/transition-v21/settings_activity_enter_transition.xml"
+    },
+    {
+        "merged": "/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/res/merged/debug/transition-v21/location_picker_exit_transition.xml",
+        "source": "/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/src/main/res/transition-v21/location_picker_exit_transition.xml"
+    },
+    {
+        "merged": "/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/res/merged/debug/transition-v21/weather_activity_enter_transition.xml",
+        "source": "/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/src/main/res/transition-v21/weather_activity_enter_transition.xml"
+    },
+    {
+        "merged": "/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/res/merged/debug/transition-v21/weather_activity_exit_transition.xml",
+        "source": "/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/src/main/res/transition-v21/weather_activity_exit_transition.xml"
+    },
+    {
+        "merged": "/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/res/merged/debug/transition-v21/location_picker_enter_transition.xml",
+        "source": "/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/src/main/res/transition-v21/location_picker_enter_transition.xml"
+    },
+    {
+        "merged": "/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/build/intermediates/res/merged/debug/transition-v21/settings_activity_exit_transition.xml",
+        "source": "/home/qwsa/Android/AndroidStudioProjects/Khasang/Android_20151115/Forecast/app/src/main/res/transition-v21/settings_activity_exit_transition.xml"
+    }
+]

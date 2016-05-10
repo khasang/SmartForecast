@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/relLayMain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.khasang.forecast.view.DelayedAutoCompleteTextView
+            android:id="@+id/editTextCityName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
+            android:layout_marginTop="10dp"
+            android:layout_toLeftOf="@+id/btnClear"
+            android:layout_toStartOf="@+id/btnClear"
+            android:ems="10"
+            android:hint="@string/title_choose_city"
+            android:imeOptions="flagNoExtractUi|actionDone"
+            android:inputType="textCapSentences|textMultiLine"
+            android:singleLine="false" />
+
+        <ProgressBar
+            android:id="@+id/autocomplete_progressbar"
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginRight="16dp"
+            android:layout_toLeftOf="@+id/btnClear"
+            android:visibility="gone" />
+
+        <com.mikepenz.iconics.view.IconicsButton
+            android:id="@+id/btnClear"
+            style="@style/AppTheme.Button"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/editTextCityName"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/editTextCityName"
+            android:background="@null"
+            android:contentDescription="@string/clear_new_location_name"
+            android:text="{gmd-clear}"
+            android:textSize="34dp" />
+    </RelativeLayout>
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="476dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/relLayMain" />
+    
+</RelativeLayout>
