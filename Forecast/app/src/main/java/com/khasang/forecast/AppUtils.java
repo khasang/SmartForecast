@@ -400,6 +400,59 @@ public class AppUtils {
                     .icon(Meteoconcs.Icon.met_cloud);
             iconsSet[ICON_INDEX_EXTREME_TORNADO] = new IconicsDrawable(context)
                     .icon(Meteoconcs.Icon.met_clouds_flash);
+        } else if (iconSetType.equals(context.getString(R.string.pref_icons_set_owm))) {
+            Drawable thunderstorm = ContextCompat.getDrawable(context, R.raw.ic_owm_thunderstorm);
+            Drawable drizzle = ContextCompat.getDrawable(context, R.raw.ic_owm_drizzle);
+            Drawable rain_day = ContextCompat.getDrawable(context, R.raw.ic_owm_day_light_rain);
+            Drawable rain_night = ContextCompat.getDrawable(context, R.raw.ic_owm_night_light_rain);
+            Drawable snow = ContextCompat.getDrawable(context, R.raw.ic_owm_snow);
+            Drawable atmosphere = ContextCompat.getDrawable(context, R.raw.ic_owm_atmosphere);
+            Drawable sun = ContextCompat.getDrawable(context, R.raw.ic_owm_day_clear);
+            Drawable moon = ContextCompat.getDrawable(context, R.raw.ic_owm_night_clear);
+            Drawable clouds_few_day = ContextCompat.getDrawable(context, R.raw.ic_owm_day_clouds);
+            Drawable clouds_few_night = ContextCompat.getDrawable(context, R.raw.ic_owm_night_clouds);
+            Drawable clouds_scattered = ContextCompat.getDrawable(context, R.raw.ic_owm_clouds);
+            Drawable clouds_broken = ContextCompat.getDrawable(context, R.raw.ic_owm_overcast_clouds);
+            Drawable extreme = ContextCompat.getDrawable(context, R.drawable.ic_extreme);
+
+            for (int i = ICON_INDEX_THUNDERSTORM_LIGHT_RAIN; i <= ICON_INDEX_THUNDERSTORM_HEAVY_DRIZZLE; i++) {
+                iconsSet[i] = thunderstorm;
+            }
+            for (int i = ICON_INDEX_LIGHT_INTENSITY_DRIZZLE; i <= ICON_INDEX_SHOWER_DRIZZLE; i++) {
+                iconsSet[i] = drizzle;
+            }
+            for (int i = ICON_INDEX_LIGHT_RAIN; i <= ICON_INDEX_EXTREME_RAIN; i++) {
+                iconsSet[i] = rain_day;
+            }
+            iconsSet[ICON_INDEX_FREEZING_RAIN] = snow;
+            for (int i = ICON_INDEX_LIGHT_INTENSITY_SHOWER_RAIN; i <= ICON_INDEX_RAGGED_SHOWER_RAIN; i++) {
+                iconsSet[i] = drizzle;
+            }
+            for (int i = ICON_INDEX_LIGHT_RAIN_NIGHT; i <= ICON_INDEX_EXTREME_RAIN_NIGHT; i++) {
+                iconsSet[i] = rain_night;
+            }
+            for (int i = ICON_INDEX_LIGHT_SNOW; i <= ICON_INDEX_HEAVY_SHOWER_SNOW; i++) {
+                iconsSet[i] = snow;
+            }
+            for (int i = ICON_INDEX_MIST; i <= ICON_INDEX_TORNADO; i++) {
+                iconsSet[i] = atmosphere;
+            }
+            iconsSet[ICON_INDEX_CLEAR_SKY_SUN] = sun;
+            iconsSet[ICON_INDEX_CLEAR_SKY_MOON] = moon;
+            iconsSet[ICON_INDEX_FEW_CLOUDS] = clouds_few_day;
+            iconsSet[ICON_INDEX_FEW_CLOUDS_NIGHT] = clouds_few_night;
+            iconsSet[ICON_INDEX_SCATTERED_CLOUDS] = clouds_scattered;
+            iconsSet[ICON_INDEX_SCATTERED_CLOUDS_NIGHT] = clouds_scattered;
+            iconsSet[ICON_INDEX_BROKEN_CLOUDS] = clouds_broken;
+            iconsSet[ICON_INDEX_BROKEN_CLOUDS_NIGHT] = clouds_broken;
+            iconsSet[ICON_INDEX_OVERCAST_CLOUDS] = clouds_broken;
+            iconsSet[ICON_INDEX_OVERCAST_CLOUDS_NIGHT] = clouds_broken;
+            for (int i = ICON_INDEX_EXTREME_TORNADO; i <= ICON_INDEX_EXTREME_HAIL; i++) {
+                iconsSet[i] = extreme;
+            }
+            for (int i = ICON_INDEX_CALM; i <= ICON_INDEX_HURRICANE; i++) {
+                iconsSet[i] = extreme;
+            }
         } else {
             Drawable thunderstorm = ContextCompat.getDrawable(context, R.drawable.ic_thunderstorm);
             Drawable drizzle = ContextCompat.getDrawable(context, R.drawable.ic_drizzle);
