@@ -462,31 +462,18 @@ public class AppUtils {
             iconsSet[ICON_INDEX_EXTREME_WINDY] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_905);
             iconsSet[ICON_INDEX_EXTREME_HAIL] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_906);
 
-            iconsSet[] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_531);
-            iconsSet[] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_531);
-            iconsSet[] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_531);
-            iconsSet[] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_531);
-            iconsSet[] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_531);
-            iconsSet[] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_531);
-            iconsSet[] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_531);
-            iconsSet[] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_531);
-            iconsSet[] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_531);
-            iconsSet[] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_531);
-            iconsSet[] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_531);
-            iconsSet[] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_531);
-            
-            public static final int ICON_INDEX_CALM = 71;
-            public static final int ICON_INDEX_LIGHT_BREEZE = 72;
-            public static final int ICON_INDEX_GENTLE_BREEZE = 73;
-            public static final int ICON_INDEX_MODERATE_BREEZE = 74;
-            public static final int ICON_INDEX_FRESH_BREEZE = 75;
-            public static final int ICON_INDEX_STRONG_BREEZE = 76;
-            public static final int ICON_INDEX_HIGH_WIND_NEAR_GALE = 77;
-            public static final int ICON_INDEX_GALE = 78;
-            public static final int ICON_INDEX_SEVERE_GALE = 79;
-            public static final int ICON_INDEX_STORM = 80;
-            public static final int ICON_INDEX_VIOLENT_STORM = 81;
-            public static final int ICON_INDEX_HURRICANE = 82;
+            iconsSet[ICON_INDEX_CALM] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_wind_beaufort_1);
+            iconsSet[ICON_INDEX_LIGHT_BREEZE] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_wind_beaufort_2);
+            iconsSet[ICON_INDEX_GENTLE_BREEZE] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_wind_beaufort_3);
+            iconsSet[ICON_INDEX_MODERATE_BREEZE] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_wind_beaufort_4);
+            iconsSet[ICON_INDEX_FRESH_BREEZE] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_wind_beaufort_5);
+            iconsSet[ICON_INDEX_STRONG_BREEZE] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_wind_beaufort_6);
+            iconsSet[ICON_INDEX_HIGH_WIND_NEAR_GALE] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_wind_beaufort_7);
+            iconsSet[ICON_INDEX_GALE] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_wind_beaufort_8);
+            iconsSet[ICON_INDEX_SEVERE_GALE] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_wind_beaufort_9);
+            iconsSet[ICON_INDEX_STORM] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_wind_beaufort_10);
+            iconsSet[ICON_INDEX_VIOLENT_STORM] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_wind_beaufort_11);
+            iconsSet[ICON_INDEX_HURRICANE] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_wind_beaufort_12);
 
         } else if (iconSetType.equals(context.getString(R.string.pref_icons_set_owm))) {
             Drawable thunderstorm = ContextCompat.getDrawable(context, R.raw.ic_owm_thunderstorm);
@@ -579,8 +566,7 @@ public class AppUtils {
                 iconsSet[i] = extreme;
             }
         }
-        iconsSet[ICON_INDEX_NA] = new IconicsDrawable(context)
-                .icon(Meteoconcs.Icon.met_na);
+        iconsSet[ICON_INDEX_NA] = new IconicsDrawable(context).icon(Meteoconcs.Icon.met_na);
         return iconsSet;
     }
 
