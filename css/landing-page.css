@@ -17,8 +17,16 @@ h3,
 h4,
 h5,
 h6 {
-    font-family: "Lato","Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-family: Arial,sans-serif;
     font-weight: 700;
+}
+
+ul.list-inline.intro-social-buttons li a {
+	width: 200px;
+}
+
+ul.list-inline.banner-social-buttons li a {
+	width: 200px;
 }
 
 .lead {
@@ -79,10 +87,17 @@ h6 {
     .intro-divider {
         width: 100%;
     }
+    
+    ul.list-inline.intro-social-buttons li a {
+		width:100%;
+	}
+	
+    ul.list-inline.banner-social-buttons li a {
+	width:100%;
+    }
 }
 
 .network-name {
-    text-transform: uppercase;
     font-size: 14px;
     font-weight: 400;
     letter-spacing: 2px;
@@ -127,7 +142,7 @@ h6 {
 }
 
 .banner-social-buttons {
-    float: right;
+    float: center;
     margin-top: 0;
 }
 
