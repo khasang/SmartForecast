@@ -2,6 +2,8 @@ package com.khasang.forecast.position;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -9,6 +11,7 @@ import android.location.Location;
 import android.net.ConnectivityManager;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.PreferenceManager;
 
 import com.khasang.forecast.AppUtils;
@@ -27,6 +30,7 @@ import com.khasang.forecast.exceptions.NoAvailableAddressesException;
 import com.khasang.forecast.sqlite.SQLiteProcessData;
 import com.khasang.forecast.stations.WeatherStation;
 import com.khasang.forecast.stations.WeatherStationFactory;
+import com.mikepenz.iconics.IconicsDrawable;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -63,12 +67,24 @@ public class PositionManager {
         iconsSet = AppUtils.createIconsSet(context);
     }
 
-    public Drawable getWeatherIcon(int iconNumber, boolean isCurrentIconRequest) {
+    public Drawable getWeatherIcon(int iconNumber) {
         if (iconsSet[iconNumber] != null) {
             return iconsSet[iconNumber];
-        } else {
-            return iconsSet[AppUtils.ICON_INDEX_NA];
         }
+        return ((IconicsDrawable) iconsSet[AppUtils.ICON_INDEX_NA]).paddingDp(8);
+    }
+
+    public Drawable getWeatherIcon(int iconNumber, int color) {
+        Drawable icon;
+        if (iconsSet[iconNumber] != null) {
+            icon = iconsSet[iconNumber];
+        } else {
+            icon = iconsSet[AppUtils.ICON_INDEX_NA];
+        }
+        ((IconicsDrawable) icon)
+                .paddingDp(8)
+                .color(color);
+        return icon;
     }
 
     public synchronized void setReceiver(IWeatherReceiver receiver) {

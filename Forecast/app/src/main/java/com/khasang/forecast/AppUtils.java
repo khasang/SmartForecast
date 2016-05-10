@@ -21,7 +21,6 @@ import com.khasang.forecast.position.Precipitation;
 import com.khasang.forecast.position.Weather;
 import com.khasang.forecast.position.Wind;
 import com.mikepenz.iconics.IconicsDrawable;
-import com.mikepenz.meteocons_typeface_library.Meteoconcs;
 import com.mikepenz.weather_icons_typeface_library.WeatherIcons;
 
 import java.text.SimpleDateFormat;
@@ -382,7 +381,7 @@ public class AppUtils {
         Drawable[] iconsSet = new Drawable[ICONS_COUNT];
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         String iconSetType = sp.getString(context.getString(R.string.pref_icons_set_key), context.getString(R.string.pref_icons_set_default));
-        if (iconSetType.equals(context.getString(R.string.pref_icons_set_mike))) {
+        if (iconSetType.equals(context.getString(R.string.pref_icons_set_mike_color)) || iconSetType.equals(context.getString(R.string.pref_icons_set_mike_bw))) {
             iconsSet[ICON_INDEX_THUNDERSTORM_LIGHT_RAIN] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_200);
             iconsSet[ICON_INDEX_THUNDERSTORM_RAIN] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_201);
             iconsSet[ICON_INDEX_THUNDERSTORM_HEAVY_RAIN] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_202);
@@ -436,9 +435,9 @@ public class AppUtils {
             iconsSet[ICON_INDEX_HAZE] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_721);
             iconsSet[ICON_INDEX_SAND_DUST_WHIRLS] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_731);
             iconsSet[ICON_INDEX_FOG] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_741);
-            iconsSet[ICON_INDEX_SAND] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_761);
-            iconsSet[ICON_INDEX_DUST] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_761);
-            iconsSet[ICON_INDEX_VOLCANIC_ASH] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_762);
+            iconsSet[ICON_INDEX_SAND] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_sandstorm);
+            iconsSet[ICON_INDEX_DUST] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_sandstorm);
+            iconsSet[ICON_INDEX_VOLCANIC_ASH] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_volcano);
             iconsSet[ICON_INDEX_SQUALLS] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_771);
             iconsSet[ICON_INDEX_TORNADO] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_781);
 
@@ -566,7 +565,7 @@ public class AppUtils {
                 iconsSet[i] = extreme;
             }
         }
-        iconsSet[ICON_INDEX_NA] = new IconicsDrawable(context).icon(Meteoconcs.Icon.met_na);
+        iconsSet[ICON_INDEX_NA] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_na);
         return iconsSet;
     }
 

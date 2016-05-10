@@ -77,13 +77,15 @@
     <string-array name="icons_set_options">
         <item>@string/pref_icons_set_default_label</item>
         <item>@string/pref_icons_set_owm_label</item>
-        <item>@string/pref_icons_set_mike_label</item>
+        <item>@string/pref_icons_set_mike_color_label</item>
+        <item>@string/pref_icons_set_mike_bw_label</item>
     </string-array>
 
     <string-array name="icons_set_values">
         <item>@string/pref_icons_set_default</item>
         <item>@string/pref_icons_set_owm</item>
-        <item>@string/pref_icons_set_mike</item>
+        <item>@string/pref_icons_set_mike_color</item>
+        <item>@string/pref_icons_set_mike_bw</item>
     </string-array>
 
 </resources>
