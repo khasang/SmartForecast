@@ -2,14 +2,11 @@
 #      Main Configs       #
 # ----------------------- #
 
-url: http://yoursite.com
+url: http://khasang.github.io/SmartForecast/
 title: Smart Forecast
-email: your-email@domain.com
+email: smartforecast@khasang.org
 author: Khasang
 description: > # "Write an awesome description for your new site here. 
-  You can edit this line in _config.yml. It will appear in your document 
-  head meta (for Google search results) and in your feed.xml site 
-  description.
 copyright: 'Copyright &copy; 2016 Smart Forecast. All Rights Reserved.'
 
 # ----------------------- #
@@ -26,8 +23,11 @@ permalink: pretty
 
 social:
   - title: android
+    txt: "Google Play"
     url: https://play.google.com/store/apps/details?id=com.khasang.forecast
   - title: github
+    txt: "GitHub"
     url: https://github.com/khasang/SmartForecast
   - title: vk
-    url: http://vk.com/khasang
+    txt: "VK"
+    url: http://vk.com/smartforecast
