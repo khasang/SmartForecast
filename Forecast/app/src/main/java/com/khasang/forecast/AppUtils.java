@@ -22,6 +22,7 @@ import com.khasang.forecast.position.Weather;
 import com.khasang.forecast.position.Wind;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.meteocons_typeface_library.Meteoconcs;
+import com.mikepenz.weather_icons_typeface_library.WeatherIcons;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -382,24 +383,111 @@ public class AppUtils {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         String iconSetType = sp.getString(context.getString(R.string.pref_icons_set_key), context.getString(R.string.pref_icons_set_default));
         if (iconSetType.equals(context.getString(R.string.pref_icons_set_mike))) {
-            iconsSet[ICON_INDEX_THUNDERSTORM] = new IconicsDrawable(context)
-                    .icon(Meteoconcs.Icon.met_cloud_flash);
-            iconsSet[ICON_INDEX_DRIZZLE] = new IconicsDrawable(context)
-                    .icon(Meteoconcs.Icon.met_drizzle);
-            iconsSet[ICON_INDEX_MODERATE_RAIN] = new IconicsDrawable(context)
-                    .icon(Meteoconcs.Icon.met_rain);
-            iconsSet[ICON_INDEX_SNOW] = new IconicsDrawable(context)
-                    .icon(Meteoconcs.Icon.met_snow_heavy);
-            iconsSet[ICON_INDEX_FOG] = new IconicsDrawable(context)
-                    .icon(Meteoconcs.Icon.met_fog);
-            iconsSet[ICON_INDEX_CLEAR_SKY_SUN] = new IconicsDrawable(context)
-                    .icon(Meteoconcs.Icon.met_sun);
-            iconsSet[ICON_INDEX_CLEAR_SKY_MOON] = new IconicsDrawable(context)
-                    .icon(Meteoconcs.Icon.met_moon);
-            iconsSet[ICON_INDEX_FEW_CLOUDS] = new IconicsDrawable(context)
-                    .icon(Meteoconcs.Icon.met_cloud);
-            iconsSet[ICON_INDEX_EXTREME_TORNADO] = new IconicsDrawable(context)
-                    .icon(Meteoconcs.Icon.met_clouds_flash);
+            iconsSet[ICON_INDEX_THUNDERSTORM_LIGHT_RAIN] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_200);
+            iconsSet[ICON_INDEX_THUNDERSTORM_RAIN] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_201);
+            iconsSet[ICON_INDEX_THUNDERSTORM_HEAVY_RAIN] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_202);
+            iconsSet[ICON_INDEX_LIGHT_THUNDERSTORM] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_210);
+            iconsSet[ICON_INDEX_THUNDERSTORM] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_211);
+            iconsSet[ICON_INDEX_HEAVY_THUNDERSTORM] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_212);
+            iconsSet[ICON_INDEX_RAGGED_THUNDERSTORM] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_221);
+            iconsSet[ICON_INDEX_THUNDERSTORM_LIGHT_DRIZZLE] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_230);
+            iconsSet[ICON_INDEX_THUNDERSTORM_DRIZZLE] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_231);
+            iconsSet[ICON_INDEX_THUNDERSTORM_HEAVY_DRIZZLE] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_232);
+
+            iconsSet[ICON_INDEX_LIGHT_INTENSITY_DRIZZLE] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_300);
+            iconsSet[ICON_INDEX_DRIZZLE] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_301);
+            iconsSet[ICON_INDEX_HEAVY_INTENSITY_DRIZZLE] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_302);
+            iconsSet[ICON_INDEX_LIGHT_INTENSITY_DRIZZLE_RAIN] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_310);
+            iconsSet[ICON_INDEX_DRIZZLE_RAIN] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_311);
+            iconsSet[ICON_INDEX_HEAVY_INTENSITY_DRIZZLE_RAIN] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_312);
+            iconsSet[ICON_INDEX_SHOWER_RAIN_AND_DRIZZLE] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_313);
+            iconsSet[ICON_INDEX_HEAVY_SHOWER_RAIN_AND_DRIZZLE] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_314);
+            iconsSet[ICON_INDEX_SHOWER_DRIZZLE] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_321);
+
+            iconsSet[ICON_INDEX_LIGHT_RAIN] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_day_500);
+            iconsSet[ICON_INDEX_MODERATE_RAIN] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_day_501);
+            iconsSet[ICON_INDEX_HEAVY_INTENSITY_RAIN] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_day_502);
+            iconsSet[ICON_INDEX_VERY_HEAVY_RAIN] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_day_503);
+            iconsSet[ICON_INDEX_EXTREME_RAIN] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_day_504);
+            iconsSet[ICON_INDEX_LIGHT_RAIN_NIGHT] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_night_500);
+            iconsSet[ICON_INDEX_MODERATE_RAIN_NIGHT] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_night_501);
+            iconsSet[ICON_INDEX_HEAVY_INTENSITY_RAIN_NIGHT] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_night_502);
+            iconsSet[ICON_INDEX_VERY_HEAVY_RAIN_NIGHT] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_night_503);
+            iconsSet[ICON_INDEX_EXTREME_RAIN_NIGHT] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_night_504);
+            iconsSet[ICON_INDEX_FREEZING_RAIN] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_511);
+            iconsSet[ICON_INDEX_LIGHT_INTENSITY_SHOWER_RAIN] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_520);
+            iconsSet[ICON_INDEX_SHOWER_RAIN] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_521);
+            iconsSet[ICON_INDEX_HEAVY_INTENSITY_SHOWER_RAIN] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_522);
+            iconsSet[ICON_INDEX_RAGGED_SHOWER_RAIN] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_531);
+
+            iconsSet[ICON_INDEX_LIGHT_SNOW] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_600);
+            iconsSet[ICON_INDEX_SNOW] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_601);
+            iconsSet[ICON_INDEX_HEAVY_SNOW] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_602);
+            iconsSet[ICON_INDEX_SLEET] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_611);
+            iconsSet[ICON_INDEX_SHOWER_SLEET] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_612);
+            iconsSet[ICON_INDEX_LIGHT_RAIN_AND_SNOW] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_615);
+            iconsSet[ICON_INDEX_RAIN_AND_SNOW] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_616);
+            iconsSet[ICON_INDEX_LIGHT_SHOWER_SNOW] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_620);
+            iconsSet[ICON_INDEX_SHOWER_SNOW] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_621);
+            iconsSet[ICON_INDEX_HEAVY_SHOWER_SNOW] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_622);
+
+            iconsSet[ICON_INDEX_MIST] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_731);
+            iconsSet[ICON_INDEX_SMOKE] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_711);
+            iconsSet[ICON_INDEX_HAZE] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_721);
+            iconsSet[ICON_INDEX_SAND_DUST_WHIRLS] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_731);
+            iconsSet[ICON_INDEX_FOG] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_741);
+            iconsSet[ICON_INDEX_SAND] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_761);
+            iconsSet[ICON_INDEX_DUST] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_761);
+            iconsSet[ICON_INDEX_VOLCANIC_ASH] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_762);
+            iconsSet[ICON_INDEX_SQUALLS] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_771);
+            iconsSet[ICON_INDEX_TORNADO] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_781);
+
+            iconsSet[ICON_INDEX_CLEAR_SKY_SUN] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_day_800);
+            iconsSet[ICON_INDEX_CLEAR_SKY_MOON] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_night_800);
+
+            iconsSet[ICON_INDEX_FEW_CLOUDS] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_day_801);
+            iconsSet[ICON_INDEX_FEW_CLOUDS_NIGHT] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_night_801);
+            iconsSet[ICON_INDEX_SCATTERED_CLOUDS] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_day_802);
+            iconsSet[ICON_INDEX_SCATTERED_CLOUDS_NIGHT] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_night_802);
+            iconsSet[ICON_INDEX_BROKEN_CLOUDS] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_803);
+            iconsSet[ICON_INDEX_BROKEN_CLOUDS_NIGHT] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_803);
+            iconsSet[ICON_INDEX_OVERCAST_CLOUDS] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_804);
+            iconsSet[ICON_INDEX_OVERCAST_CLOUDS_NIGHT] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_804);
+
+            iconsSet[ICON_INDEX_EXTREME_TORNADO] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_900);
+            iconsSet[ICON_INDEX_EXTREME_TROPICAL_STORM] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_901);
+            iconsSet[ICON_INDEX_EXTREME_HURRICANE] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_902);
+            iconsSet[ICON_INDEX_EXTREME_COLD] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_903);
+            iconsSet[ICON_INDEX_EXTREME_HOT] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_904);
+            iconsSet[ICON_INDEX_EXTREME_WINDY] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_905);
+            iconsSet[ICON_INDEX_EXTREME_HAIL] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_906);
+
+            iconsSet[] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_531);
+            iconsSet[] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_531);
+            iconsSet[] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_531);
+            iconsSet[] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_531);
+            iconsSet[] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_531);
+            iconsSet[] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_531);
+            iconsSet[] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_531);
+            iconsSet[] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_531);
+            iconsSet[] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_531);
+            iconsSet[] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_531);
+            iconsSet[] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_531);
+            iconsSet[] = new IconicsDrawable(context).icon(WeatherIcons.Icon.wic_owm_531);
+            
+            public static final int ICON_INDEX_CALM = 71;
+            public static final int ICON_INDEX_LIGHT_BREEZE = 72;
+            public static final int ICON_INDEX_GENTLE_BREEZE = 73;
+            public static final int ICON_INDEX_MODERATE_BREEZE = 74;
+            public static final int ICON_INDEX_FRESH_BREEZE = 75;
+            public static final int ICON_INDEX_STRONG_BREEZE = 76;
+            public static final int ICON_INDEX_HIGH_WIND_NEAR_GALE = 77;
+            public static final int ICON_INDEX_GALE = 78;
+            public static final int ICON_INDEX_SEVERE_GALE = 79;
+            public static final int ICON_INDEX_STORM = 80;
+            public static final int ICON_INDEX_VIOLENT_STORM = 81;
+            public static final int ICON_INDEX_HURRICANE = 82;
+
         } else if (iconSetType.equals(context.getString(R.string.pref_icons_set_owm))) {
             Drawable thunderstorm = ContextCompat.getDrawable(context, R.raw.ic_owm_thunderstorm);
             Drawable drizzle = ContextCompat.getDrawable(context, R.raw.ic_owm_drizzle);

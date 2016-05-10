@@ -642,7 +642,7 @@ public class WeatherActivity extends AppCompatActivity
                 wCurrent.getDescription().substring(0, 1).toUpperCase() + wCurrent.getDescription()
                         .substring(1)));
         Drawable weatherIcon = PositionManager.getInstance().getWeatherIcon(wCurrent.getPrecipitation()
-                .getIconIndex(AppUtils.isDayFromString(String.format(Locale.getDefault(), "%tR", date))));
+                .getIconIndex(AppUtils.isDayFromString(String.format(Locale.getDefault(), "%tR", date))), true);
 
         currWeather.setImageDrawable(weatherIcon);
 

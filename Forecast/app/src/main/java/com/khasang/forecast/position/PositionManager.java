@@ -63,7 +63,7 @@ public class PositionManager {
         iconsSet = AppUtils.createIconsSet(context);
     }
 
-    public Drawable getWeatherIcon(int iconNumber) {
+    public Drawable getWeatherIcon(int iconNumber, boolean isCurrentIconRequest) {
         if (iconsSet[iconNumber] != null) {
             return iconsSet[iconNumber];
         } else {
