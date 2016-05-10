@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!-- From: file:/Users/mikepenz/Drive/Development/AndroidLibraries/Android-Iconics/meteocons-typeface-library/src/main/res/values/font_meteocons.xml -->
-    <eat-comment/>
-    <string name="define_font_meteocons">com.mikepenz.meteocons_typeface_library.Meteoconcs</string>
-</resources>

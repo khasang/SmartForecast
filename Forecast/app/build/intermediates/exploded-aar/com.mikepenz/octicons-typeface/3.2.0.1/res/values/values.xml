@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!-- From: file:/Users/mikepenz/Drive/Development/AndroidLibraries/Android-Iconics/octicons-typeface-library/src/main/res/values/font_community_octicons.xml -->
-    <eat-comment/>
-    <string name="define_font_octicons">com.mikepenz.octicons_typeface_library.Octicons</string>
-</resources>

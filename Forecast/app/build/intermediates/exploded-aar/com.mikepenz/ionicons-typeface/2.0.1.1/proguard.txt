@@ -1,1 +1,0 @@
--keep class com.mikepenz.ionicons_typeface_library.Ionicons { *; }
