@@ -1,8 +1,0 @@
-int attr freezesAnimation 0x7f010002
-int attr gifSource 0x7f010000
-int attr isOpaque 0x7f010001
-int[] styleable GifTextureView { 0x7f010000, 0x7f010001 }
-int styleable GifTextureView_gifSource 0
-int styleable GifTextureView_isOpaque 1
-int[] styleable GifView { 0x7f010002 }
-int styleable GifView_freezesAnimation 0

@@ -1,1 +1,0 @@
--keep class com.mikepenz.octicons_typeface_library.Octicons { *; }
