@@ -3,11 +3,7 @@ package com.khasang.forecast.position;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.content.res.TypedArray;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.DrawableContainer;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -69,61 +65,6 @@ public class PositionManager {
     private boolean isSvgIconsUsed = false;
     private int currentWeatherIconColor;
     private int forecastWeatherIconColor;
-
-    public void generateIconSet(Context context) {
-        iconsSet = AppUtils.createIconsSet(context);
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        String iconsSet = sp.getString(context.getString(R.string.pref_icons_set_key), context.getString(R.string.pref_icons_set_default));
-        currentWeatherIconColor = ContextCompat.getColor(context, R.color.current_weather_color);
-        forecastWeatherIconColor = ContextCompat.getColor(context, R.color.text_primary);
-        if (iconsSet.equals(context.getString(R.string.pref_icons_set_mike_color))) {
-            isSvgIconsUsed = true;
-            int currentNightMode = context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
-            String colorScheme = sp.getString(context.getString(R.string.pref_color_scheme_key), context.getString(R.string.pref_color_scheme_teal));
-            if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {}
-            else if (colorScheme.equals(context.getString(R.string.pref_color_scheme_brown))) {
-                forecastWeatherIconColor = ContextCompat.getColor(context, R.color.primary_brown);
-            } else if (colorScheme.equals(context.getString(R.string.pref_color_scheme_teal))) {
-                forecastWeatherIconColor = ContextCompat.getColor(context, R.color.primary_teal);
-            } else if (colorScheme.equals(context.getString(R.string.pref_color_scheme_indigo))) {
-                forecastWeatherIconColor = ContextCompat.getColor(context, R.color.primary_indigo);
-            } else if (colorScheme.equals(context.getString(R.string.pref_color_scheme_purple))) {
-                forecastWeatherIconColor = ContextCompat.getColor(context, R.color.primary_purple);
-            } else {
-                forecastWeatherIconColor = ContextCompat.getColor(context, R.color.primary_green);
-            }
-        } else if (iconsSet.equals(context.getString(R.string.pref_icons_set_mike_bw))) {
-            isSvgIconsUsed = true;
-        } else {
-            isSvgIconsUsed = false;
-        }
-    }
-
-    public Drawable getWeatherIcon(int iconNumber, boolean isCurrentWeatherIcon) {
-        Drawable icon = null;
-        if (iconsSet[iconNumber] != null) {
-            icon = iconsSet[iconNumber];
-            if (isSvgIconsUsed) {
-                if (isCurrentWeatherIcon) {
-                    IconicsDrawable cIcon = ((IconicsDrawable) icon).clone();
-                    cIcon.color(currentWeatherIconColor);
-                    return cIcon;
-                } else {
-                    icon = ((IconicsDrawable) icon)
-                            .color(forecastWeatherIconColor);
-                }
-            }
-        } else if (isCurrentWeatherIcon){
-            IconicsDrawable cIcon = ((IconicsDrawable) iconsSet[AppUtils.ICON_INDEX_NA])
-                    .clone();
-            cIcon.color(currentWeatherIconColor);
-            return cIcon;
-        } else {
-            icon = ((IconicsDrawable) iconsSet[AppUtils.ICON_INDEX_NA])
-                    .color(forecastWeatherIconColor);
-        }
-        return icon;
-    }
 
     public synchronized void setReceiver(IWeatherReceiver receiver) {
         this.receiver = receiver;
@@ -787,5 +728,58 @@ public class PositionManager {
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
+    }
+
+    public void generateIconSet(Context context) {
+        iconsSet = AppUtils.createIconsSet(context);
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        String iconsSet = sp.getString(context.getString(R.string.pref_icons_set_key), context.getString(R.string.pref_icons_set_default));
+        currentWeatherIconColor = ContextCompat.getColor(context, R.color.current_weather_color);
+        forecastWeatherIconColor = ContextCompat.getColor(context, R.color.text_primary);
+        if (iconsSet.equals(context.getString(R.string.pref_icons_set_mike_color))) {
+            isSvgIconsUsed = true;
+            int currentNightMode = context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+            String colorScheme = sp.getString(context.getString(R.string.pref_color_scheme_key), context.getString(R.string.pref_color_scheme_teal));
+            if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
+            } else if (colorScheme.equals(context.getString(R.string.pref_color_scheme_brown))) {
+                forecastWeatherIconColor = ContextCompat.getColor(context, R.color.primary_brown);
+            } else if (colorScheme.equals(context.getString(R.string.pref_color_scheme_teal))) {
+                forecastWeatherIconColor = ContextCompat.getColor(context, R.color.primary_teal);
+            } else if (colorScheme.equals(context.getString(R.string.pref_color_scheme_indigo))) {
+                forecastWeatherIconColor = ContextCompat.getColor(context, R.color.primary_indigo);
+            } else if (colorScheme.equals(context.getString(R.string.pref_color_scheme_purple))) {
+                forecastWeatherIconColor = ContextCompat.getColor(context, R.color.primary_purple);
+            } else {
+                forecastWeatherIconColor = ContextCompat.getColor(context, R.color.primary_green);
+            }
+        } else {
+            isSvgIconsUsed = iconsSet.equals(context.getString(R.string.pref_icons_set_mike_bw));
+        }
+    }
+
+    public Drawable getWeatherIcon(int iconNumber, boolean isCurrentWeatherIcon) {
+        Drawable icon = null;
+        if (iconsSet[iconNumber] != null) {
+            icon = iconsSet[iconNumber];
+            if (isSvgIconsUsed) {
+                if (isCurrentWeatherIcon) {
+                    IconicsDrawable cIcon = ((IconicsDrawable) icon).clone();
+                    cIcon.color(currentWeatherIconColor);
+                    return cIcon;
+                } else {
+                    icon = ((IconicsDrawable) icon)
+                            .color(forecastWeatherIconColor);
+                }
+            }
+        } else if (isCurrentWeatherIcon) {
+            IconicsDrawable cIcon = ((IconicsDrawable) iconsSet[AppUtils.ICON_INDEX_NA])
+                    .clone();
+            cIcon.color(currentWeatherIconColor);
+            return cIcon;
+        } else {
+            icon = ((IconicsDrawable) iconsSet[AppUtils.ICON_INDEX_NA])
+                    .color(forecastWeatherIconColor);
+        }
+        return icon;
     }
 }
