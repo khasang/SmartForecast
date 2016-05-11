@@ -2,9 +2,11 @@ package com.khasang.forecast.position;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.DrawableContainer;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -61,29 +63,59 @@ public class PositionManager {
     private SQLiteProcessData dbManager;
     private boolean lastResponseIsFailure;
     private CurrentLocationManager locationManager;
+
     private Drawable[] iconsSet;
+    private boolean isSvgIconsUsed = false;
+    private int currentWeatherIconColor;
+    private int forecastWeatherIconColor;
 
     public void generateIconSet(Context context) {
         iconsSet = AppUtils.createIconsSet(context);
-    }
-
-    public Drawable getWeatherIcon(int iconNumber) {
-        if (iconsSet[iconNumber] != null) {
-            return iconsSet[iconNumber];
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        String colorScheme = sp.getString(context.getString(R.string.pref_icons_set_key), context.getString(R.string.pref_icons_set_default));
+        currentWeatherIconColor = ContextCompat.getColor(context, R.color.current_weather_color);
+        forecastWeatherIconColor = ContextCompat.getColor(context, R.color.text_primary);
+        if (colorScheme.equals(context.getString(R.string.pref_icons_set_mike_color))) {
+            isSvgIconsUsed = true;
+            forecastWeatherIconColor = ContextCompat.getColor(context, R.color.primary_brown);
+        } else if (colorScheme.equals(context.getString(R.string.pref_icons_set_mike_bw))) {
+            isSvgIconsUsed = true;
+        } else {
+            isSvgIconsUsed = false;
         }
-        return ((IconicsDrawable) iconsSet[AppUtils.ICON_INDEX_NA]).paddingDp(8);
     }
 
-    public Drawable getWeatherIcon(int iconNumber, int color) {
-        Drawable icon;
+    private int getColorFromAttr (Context ctx, int addressInRClass) {
+        int colorId;
+        int [] attrs = new int[] {addressInRClass};
+        TypedArray ta = ctx.obtainStyledAttributes(attrs);
+        colorId = ta.getColor(0, ContextCompat.getColor(ctx, R.color.text_primary));
+        ta.recycle();
+        return colorId;
+    }
+
+    public Drawable getWeatherIcon(int iconNumber, boolean isCurrentWeatherIcon) {
+        Drawable icon = null;
         if (iconsSet[iconNumber] != null) {
             icon = iconsSet[iconNumber];
+            if (isSvgIconsUsed) {
+                if (isCurrentWeatherIcon) {
+                    icon = ((IconicsDrawable) icon)
+                            .color(currentWeatherIconColor);
+                } else {
+                    icon = ((IconicsDrawable) icon)
+                            .color(forecastWeatherIconColor);
+                }
+            }
+        } else if (isCurrentWeatherIcon){
+            icon = ((IconicsDrawable) iconsSet[AppUtils.ICON_INDEX_NA])
+                    .paddingDp(8)
+                    .color(ContextCompat.getColor(MyApplication.getAppContext(), currentWeatherIconColor));
         } else {
-            icon = iconsSet[AppUtils.ICON_INDEX_NA];
+            icon = ((IconicsDrawable) iconsSet[AppUtils.ICON_INDEX_NA])
+                    .paddingDp(8)
+                    .color(ContextCompat.getColor(MyApplication.getAppContext(), forecastWeatherIconColor));
         }
-        ((IconicsDrawable) icon)
-                .paddingDp(8)
-                .color(color);
         return icon;
     }
 

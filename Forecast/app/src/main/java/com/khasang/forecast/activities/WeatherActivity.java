@@ -641,17 +641,8 @@ public class WeatherActivity extends AppCompatActivity
         description.setText(String.format("%s",
                 wCurrent.getDescription().substring(0, 1).toUpperCase() + wCurrent.getDescription()
                         .substring(1)));
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        String iconSetType = sp.getString(getString(R.string.pref_icons_set_key), getString(R.string.pref_icons_set_default));
-        Drawable weatherIcon;
-
-        if (iconSetType.equals(getString(R.string.pref_icons_set_mike_color)) || iconSetType.equals(getString(R.string.pref_icons_set_mike_bw))) {
-            weatherIcon = PositionManager.getInstance().getWeatherIcon(wCurrent.getPrecipitation()
-                    .getIconIndex(AppUtils.isDayFromString(String.format(Locale.getDefault(), "%tR", date))), ContextCompat.getColor(this, R.color.current_weather_color));
-        } else {
-            weatherIcon = PositionManager.getInstance().getWeatherIcon(wCurrent.getPrecipitation()
-                    .getIconIndex(AppUtils.isDayFromString(String.format(Locale.getDefault(), "%tR", date))));
-        }
+        Drawable weatherIcon = PositionManager.getInstance().getWeatherIcon(wCurrent.getPrecipitation()
+                    .getIconIndex(AppUtils.isDayFromString(String.format(Locale.getDefault(), "%tR", date))), true);
         currWeather.setImageDrawable(weatherIcon);
 
         wind.setText(Html.fromHtml(
