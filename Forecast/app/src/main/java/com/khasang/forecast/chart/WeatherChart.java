@@ -56,6 +56,9 @@ public class WeatherChart extends LineChart {
         getXAxis().setTextSize(getContext().getResources().getDimension(R.dimen.chart_xaxis_size));
         getXAxis().setTextColor(ContextCompat.getColor(getContext(), R.color.chart_text));
 
+        // отступ между X осью и подписями под графиком
+        getXAxis().setYOffset(getContext().getResources().getDimension(R.dimen.chart_y_offset));
+
         getAxisLeft().setEnabled(false); // убираем шкалу Y слева
         getAxisRight().setEnabled(false); // убираем шкалу Y справа
 
