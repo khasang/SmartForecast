@@ -16,7 +16,6 @@ import com.khasang.forecast.R;
 import com.khasang.forecast.position.Weather;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -71,7 +70,6 @@ public class WeatherChart extends LineChart {
         List<Entry> yValues = new ArrayList<>();
 
         List<Calendar> calendars = new ArrayList<>(forecast.keySet());
-        Collections.sort(calendars); // сортируем время (приходит "перевернутая" Map forecast)
         for (int i = 0; i < calendars.size(); i++) {
             Calendar calendar = calendars.get(i);
             String time;
