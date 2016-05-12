@@ -642,6 +642,6 @@ public class WeatherActivity extends AppCompatActivity
         } else {
             forecast = dailyForecastFragment.getForecasts();
         }
-        chart.updateForecast(this, forecast, isHourFragmentVisible);
+        chart.updateForecast(forecast, isHourFragmentVisible);
     }
 }
