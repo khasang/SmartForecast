@@ -1,5 +1,6 @@
 <resources>
-    <dimen name="chart_value_size">18sp</dimen>
-    <dimen name="chart_xaxis_size">18sp</dimen>
-    <dimen name="chart_y_offset">5sp</dimen>
+    <dimen name="chart_value_size">17sp</dimen>
+    <dimen name="chart_xaxis_size">17sp</dimen>
+    <dimen name="chart_y_offset">6sp</dimen>
+    <dimen name="chart_height">200dp</dimen>
 </resources>
