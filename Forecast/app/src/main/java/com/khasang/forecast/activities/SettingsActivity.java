@@ -15,19 +15,18 @@ import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
-
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.R;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    public static final String SETTINGS_TAG = "com.khasang.forecast.activities.SettingsActivity";
-    private static boolean recreateMainActivity;
+    private static boolean themeChanged;
 
     static {
-        recreateMainActivity = false;
+        themeChanged = false;
     }
 
     @Override
@@ -59,6 +58,11 @@ public class SettingsActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                leaveActivity();
+            }
+        });
     }
 
     @Override
@@ -79,14 +83,22 @@ public class SettingsActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent answerIntent = new Intent();
-        answerIntent.putExtra(SETTINGS_TAG, recreateMainActivity);
-        setResult(RESULT_OK, answerIntent);
-        ActivityCompat.finishAfterTransition(this);
+        leaveActivity();
     }
 
-    public static void setRecreateMainActivity(boolean recreate) {
-        recreateMainActivity = recreate;
+    public static void setThemeChanged(boolean changed) {
+        themeChanged = changed;
+    }
+
+    private void leaveActivity() {
+        if (themeChanged) {
+            themeChanged = false;
+
+            Intent intent = new Intent(this, WeatherActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        }
+        ActivityCompat.finishAfterTransition(this);
     }
 
     public static class GeneralPreferenceFragment extends PreferenceFragmentCompat
@@ -148,10 +160,10 @@ public class SettingsActivity extends AppCompatActivity {
                     } else {
                         // неподдерживаемая функциональность
                     }
-                    SettingsActivity.setRecreateMainActivity(true);
+                    SettingsActivity.setThemeChanged(true);
                     getActivity().recreate();
                 } else if (key.equals(getString(R.string.pref_color_scheme_key))) {
-                    SettingsActivity.setRecreateMainActivity(true);
+                    SettingsActivity.setThemeChanged(true);
                     getActivity().recreate();
                 }
             }

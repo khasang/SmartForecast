@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Build;
@@ -21,7 +20,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -74,7 +72,6 @@ public class WeatherActivity extends AppCompatActivity
         IPermissionCallback, IMessageProvider, NavigationDrawer.OnNavigationItemClickListener {
 
     private static final int CHOOSE_CITY = 1;
-    private static final int CHOOSE_SETTINGS = 2;
     public static final String CURRENT_CITY_TAG = "CURRENT_CITY";
     private static final String TAG = WeatherActivity.class.getSimpleName();
 
@@ -103,26 +100,26 @@ public class WeatherActivity extends AppCompatActivity
         PositionManager.getInstance(this, this);
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         String colorScheme = sp.getString(getString(R.string.pref_color_scheme_key), getString(R.string.pref_color_scheme_teal));
-        int drowerHeaderArrayIndex = 0;
+        int drawerHeaderArrayIndex = 0;
         if (colorScheme.equals(getString(R.string.pref_color_scheme_brown))) {
             setTheme(R.style.AppTheme_Main_Brown);
-            drowerHeaderArrayIndex = 1;
+            drawerHeaderArrayIndex = 1;
         } else if (colorScheme.equals(getString(R.string.pref_color_scheme_teal))) {
             setTheme(R.style.AppTheme_Main_Teal);
-            drowerHeaderArrayIndex = 2;
+            drawerHeaderArrayIndex = 2;
         } else if (colorScheme.equals(getString(R.string.pref_color_scheme_indigo))) {
             setTheme(R.style.AppTheme_Main_Indigo);
-            drowerHeaderArrayIndex = 3;
+            drawerHeaderArrayIndex = 3;
         } else if (colorScheme.equals(getString(R.string.pref_color_scheme_purple))) {
             setTheme(R.style.AppTheme_Main_Purple);
-            drowerHeaderArrayIndex = 4;
+            drawerHeaderArrayIndex = 4;
         } else {
             setTheme(R.style.AppTheme_Main_Green);
         }
         setContentView(R.layout.activity_weather);
 
         initFields();
-        initNavigationDrawer(drowerHeaderArrayIndex);
+        initNavigationDrawer(drawerHeaderArrayIndex);
         setAnimationForWidgets();
         startAnimations();
         checkPermissions();
@@ -189,8 +186,8 @@ public class WeatherActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
     }
 
-    private void initNavigationDrawer(int drowerHeaderArrayIndex) {
-        navigationDrawer = new NavigationDrawer(this, toolbar, drowerHeaderArrayIndex);
+    private void initNavigationDrawer(int drawerHeaderArrayIndex) {
+        navigationDrawer = new NavigationDrawer(this, toolbar, drawerHeaderArrayIndex);
         navigationDrawer.setNavigationItemClickListener(this);
     }
 
@@ -320,21 +317,12 @@ public class WeatherActivity extends AppCompatActivity
                     showProgress(false);
                 }
             }
-        } else if (requestCode == CHOOSE_SETTINGS) {
-            SettingsActivity.setRecreateMainActivity(false);
-            if (resultCode == RESULT_OK) {
-                boolean recreateActivity = data.getBooleanExtra(SettingsActivity.SETTINGS_TAG, false);
-                if (recreateActivity) {
-                    WeatherActivity.this.recreate();
-                }
-            }
         }
     }
 
     public void startSettingsActivity() {
         Intent intent = new Intent(this, SettingsActivity.class);
-        Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle();
-        ActivityCompat.startActivityForResult(this, intent, CHOOSE_SETTINGS, bundle);
+        startActivity(intent);
     }
 
     /**
@@ -372,17 +360,6 @@ public class WeatherActivity extends AppCompatActivity
         navigationDrawer.updateBadges(isLocationPermissionGranted);
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
-
-        if (sp.getString(getString(R.string.pref_night_mode_key), "").equals(getString(R.string.pref_night_mode_off)) && (currentNightMode != Configuration.UI_MODE_NIGHT_NO)) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-            recreate();
-        } else if (sp.getString(getString(R.string.pref_night_mode_key), "").equals(getString(R.string.pref_night_mode_on))
-                && (currentNightMode != Configuration.UI_MODE_NIGHT_YES)) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-            recreate();
-        }
-
         PositionManager.getInstance().setUseGpsModule(sp.getBoolean(getString(R.string.pref_gps_key), true));
         if (sp.getString(getString(R.string.pref_units_key), getString(R.string.pref_units_celsius)).equals(getString(R.string.pref_units_celsius))) {
             PositionManager.getInstance().setTemperatureMetric(AppUtils.TemperatureMetrics.CELSIUS);
@@ -635,7 +612,7 @@ public class WeatherActivity extends AppCompatActivity
         toast.show();
     }
 
-    private void updateWeatherChart(boolean isHourFragmentVisible) {
+    private void updateWeatherChart(final boolean isHourFragmentVisible) {
         Map<Calendar, Weather> forecast;
         if (isHourFragmentVisible) {
             forecast = hourlyForecastFragment.getForecasts();
