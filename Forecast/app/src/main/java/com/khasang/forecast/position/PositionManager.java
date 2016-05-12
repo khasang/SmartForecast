@@ -131,6 +131,7 @@ public class PositionManager {
         } else {
             state = true;
             favouritesPositions.add(cityName);
+            Collections.sort(favouritesPositions);
         }
         dbManager.saveTownFavourite(state, cityName);
         return state;
