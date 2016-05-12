@@ -322,7 +322,8 @@ public class WeatherActivity extends AppCompatActivity
 
     public void startSettingsActivity() {
         Intent intent = new Intent(this, SettingsActivity.class);
-        startActivity(intent);
+        Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle();
+        startActivity(intent, bundle);
     }
 
     /**
