@@ -10,7 +10,6 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.khasang.forecast.AppUtils;
-import com.khasang.forecast.Logger;
 import com.khasang.forecast.R;
 import com.khasang.forecast.position.Weather;
 import java.util.ArrayList;
@@ -57,22 +56,17 @@ public class WeatherChart extends LineChart {
 
         getAxisLeft().setEnabled(false); // убираем шкалу Y слева
         getAxisRight().setEnabled(false); // убираем шкалу Y справа
-
-        setLogEnabled(true);
     }
 
     public void updateForecast(Map<Calendar, Weather> forecast, boolean hourlyWeatherChart) {
-        Logger.println("TAG", "updateForecast");
         if (forecast == null) {
             return;
         }
         LineData data = initLineData(forecast, hourlyWeatherChart);
         setData(data); // устанавливаем данные для отображения
 
-        LineData lineData = getLineData();
-        Logger.println("TAG", "lineData null? " + (lineData == null));
-
-        animateY(2000, Easing.EasingOption.EaseInOutBack);  // устанавливаем анимацию появления данных
+        // устанавливаем анимацию появления данных
+        animateY(2000, Easing.EasingOption.EaseInOutBack);
     }
 
     private LineData initLineData(Map<Calendar, Weather> forecast, boolean hourlyWeatherChart) {
