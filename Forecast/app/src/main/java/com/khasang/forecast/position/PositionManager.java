@@ -80,6 +80,10 @@ public class PositionManager {
 
     private PositionManager() {
         lastResponseIsFailure = false;
+        iconNa = new IconicsDrawable(MyApplication.getAppContext())
+                .icon(WeatherIcons.Icon.wic_na)
+                .sizeDp(80)
+                .paddingDp(4);
     }
 
     public static PositionManager getInstance() {
@@ -733,11 +737,6 @@ public class PositionManager {
     }
 
     public void generateIconSet(Context context) {
-        iconNa = new IconicsDrawable(MyApplication.getAppContext())
-                .icon(WeatherIcons.Icon.wic_na)
-                .sizeDp(80)
-                .paddingDp(4)
-                .color(forecastWeatherIconColor);
         iconsSet = AppUtils.createIconsSet(context);
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         String iconsSet = sp.getString(context.getString(R.string.pref_icons_set_key), context.getString(R.string.pref_icons_set_default));
