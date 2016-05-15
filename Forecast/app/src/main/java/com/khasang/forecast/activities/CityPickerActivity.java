@@ -22,7 +22,7 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -41,28 +41,25 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.khasang.forecast.AppUtils;
+import com.khasang.forecast.Logger;
 import com.khasang.forecast.Maps;
 import com.khasang.forecast.MyApplication;
+import com.khasang.forecast.R;
+import com.khasang.forecast.adapters.CityPickerAdapter;
+import com.khasang.forecast.adapters.GooglePlacesAutocompleteAdapter;
+import com.khasang.forecast.adapters.etc.HidingScrollListener;
 import com.khasang.forecast.exceptions.EmptyCurrentAddressException;
 import com.khasang.forecast.exceptions.NoAvailableAddressesException;
 import com.khasang.forecast.interfaces.IMapDataReceiver;
 import com.khasang.forecast.interfaces.IMessageProvider;
 import com.khasang.forecast.location.LocationParser;
 import com.khasang.forecast.position.Coordinate;
-import com.khasang.forecast.Logger;
 import com.khasang.forecast.position.PositionManager;
-import com.khasang.forecast.R;
-import com.khasang.forecast.adapters.RecyclerAdapter;
-import com.khasang.forecast.adapters.etc.HidingScrollListener;
-import com.khasang.forecast.adapters.GooglePlacesAutocompleteAdapter;
 import com.khasang.forecast.view.DelayedAutoCompleteTextView;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
-import com.mikepenz.ionicons_typeface_library.Ionicons;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -83,7 +80,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
     private TextView infoTV;
     private RecyclerView recyclerView;
-    private RecyclerAdapter recyclerAdapter;
+    private CityPickerAdapter cityPickerAdapter;
     List<String> cityList;
 
     private Toolbar toolbar;
@@ -118,9 +115,10 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         infoTV = (TextView) findViewById(R.id.infoTV);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         cityList = new ArrayList<>();
-        recyclerAdapter = new RecyclerAdapter(cityList, this, this);
-        recyclerView.setAdapter(recyclerAdapter);
+        cityPickerAdapter = new CityPickerAdapter(cityList, this, this);
+        recyclerView.setAdapter(cityPickerAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
         swapVisibilityTextOrList();
 
         /** Вычисляет степень прокрутки и выполняет нужное действие.*/
@@ -142,7 +140,9 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         fabBtn.setImageDrawable(icon);
         fabBtn.setOnClickListener(this);
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.simple_grow);
-        setupFooter();
+
+        setupHeaderHeight();
+        setupFooterHeight();
         createItemList();
 
         ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
@@ -154,10 +154,14 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 int position = recyclerView.getChildAdapterPosition(viewHolder.itemView) - 1;
-                PositionManager.getInstance().removePosition(cityList.get(position));
-                cityList.remove(position);
-                recyclerAdapter.notifyDataSetChanged();
-                swapVisibilityTextOrList();
+                try {
+                    PositionManager.getInstance().removePosition(cityList.get(position));
+                    cityList.remove(position);
+                    cityPickerAdapter.notifyDataSetChanged();
+                    swapVisibilityTextOrList();
+                } catch (IndexOutOfBoundsException e) {
+                    // Игнорируем свайпы не по элементам списка
+                }
             }
         };
 
@@ -167,12 +171,25 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     }
 
     /**
+     * Задает размер для Header
+     */
+    private void setupHeaderHeight() {
+        // Calculate ActionBar height
+        TypedValue tv = new TypedValue();
+        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+            int actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,
+                getResources().getDisplayMetrics());
+            cityPickerAdapter.setHeaderHeight(actionBarHeight);
+        }
+    }
+
+    /**
      * Задает размер для Footer
      */
-    private void setupFooter() {
+    private void setupFooterHeight() {
         CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) fabBtn.getLayoutParams();
         int fabBottomMargin = lp.bottomMargin;
-        recyclerAdapter.setFooterHeight(fabBottomMargin);
+        cityPickerAdapter.setFooterHeight(fabBottomMargin * 4); // размеры FAB получить не удается
     }
 
     private void swapVisibilityTextOrList() {
@@ -260,7 +277,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         CityPickerActivity.this.clearList();
-                        recyclerAdapter.notifyDataSetChanged();
+                        cityPickerAdapter.notifyDataSetChanged();
                     }
                 });
                 builder.setNegativeButton(R.string.btn_no, new DialogInterface.OnClickListener() {
@@ -324,10 +341,10 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         }
         if (!PositionManager.getInstance().positionInListPresent(city)) {
             PositionManager.getInstance().addPosition(city, coordinate);
-            recyclerAdapter.addCityToNewLocationsList(city);
+            cityPickerAdapter.addCityToNewLocationsList(city);
             cityList.add(city);
             Collections.sort(cityList);
-            recyclerAdapter.notifyDataSetChanged();
+            cityPickerAdapter.notifyDataSetChanged();
         } else {
             showMessageToUser(R.string.city_exist, Snackbar.LENGTH_LONG);
         }

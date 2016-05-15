@@ -1030,6 +1030,14 @@ public class AppUtils {
     }
 
     /**
+     * Получение дня для графика
+     **/
+    public static String getChartDayName(Context context, Calendar calendar) {
+        SimpleDateFormat dayFormat = new SimpleDateFormat("dd.MM", Locale.getDefault());
+        return dayFormat.format(calendar.getTime());
+    }
+
+    /**
      * Получение времени
      **/
     public static String getTime(Context context, Calendar calendar) {
@@ -1043,5 +1051,13 @@ public class AppUtils {
                     + ", "
                     + context.getString(R.string.tomorrow).toLowerCase();
         }
+    }
+
+    /**
+     * Получение времени для графика
+     **/
+    public static String getChartTime(Context context, Calendar calendar) {
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        return timeFormat.format(calendar.getTime());
     }
 }

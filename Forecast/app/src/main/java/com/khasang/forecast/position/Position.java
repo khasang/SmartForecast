@@ -67,6 +67,10 @@ public class Position implements IPosition {
         result = 17 * result + cityID;
         return result;
     }
+
+    @Override public String toString() {
+        return "Position{name=" + name + ", cityID=" + cityID + ", coordinate=" + coordinate + "}";
+    }
 }
 
 
