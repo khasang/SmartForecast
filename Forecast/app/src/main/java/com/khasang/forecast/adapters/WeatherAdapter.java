@@ -1,6 +1,7 @@
 package com.khasang.forecast.adapters;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,8 +60,10 @@ public class WeatherAdapter extends HeaderFooterAdapter<Weather> {
             String temperatureMetric = PositionManager.getInstance().getTemperatureMetric().toStringValue();
             holder.tvTempUnit.setText(temperatureMetric);
 
-            int iconId = weather.getPrecipitation().getIconResId(AppUtils.isDayFromString(dateTime));
-            holder.ivWeatherIcon.setImageResource(iconId == 0 ? R.mipmap.ic_launcher : iconId);
+            int iconId = weather.getPrecipitation().getIconIndex(AppUtils.isDayFromString(dateTime));
+            Drawable weatherIcon = PositionManager.getInstance()
+                    .getWeatherIcon(iconId, false);
+            holder.ivWeatherIcon.setImageDrawable(weatherIcon);
 
             String description = weather.getDescription();
             String capitalizedDescription = description.substring(0, 1).toUpperCase() + description.substring(1);
