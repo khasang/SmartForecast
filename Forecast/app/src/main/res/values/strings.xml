@@ -175,11 +175,9 @@
     <string name="pref_icons_set_key" translatable="false">icons_set</string>
     <string name="pref_icons_set_title">Набор иконок</string>
     <string name="pref_icons_set_default_label">Стандартный набор</string>
-    <string name="pref_icons_set_owm_label">Иконки OpenWeatherMap</string>
     <string name="pref_icons_set_mike_color_label">Набор цветовой схемы</string>
     <string name="pref_icons_set_mike_bw_label">Чёрно-белый набор</string>
     <string name="pref_icons_set_default" translatable="false">icon_set_default</string>
-    <string name="pref_icons_set_owm" translatable="false">icons_set_owm</string>
     <string name="pref_icons_set_mike_color" translatable="false">icons_set_mike_color</string>
     <string name="pref_icons_set_mike_bw" translatable="false">icons_set_mike_bw</string>
 </resources>
