@@ -17,6 +17,7 @@ import com.khasang.forecast.position.Weather;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Created by aleksandrlihovidov on 05.12.15.
@@ -43,7 +44,11 @@ public abstract class CommonForecastFragment extends Fragment {
         } else {
             tvEmptyList.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
-            this.forecasts = forecasts;
+
+            // создаем отсортированную по ключам Map
+            this.forecasts = new TreeMap<>();
+            this.forecasts.putAll(forecasts);
+
             sDate.clear();
             weathers.clear();
             updateForecasts();
@@ -56,12 +61,10 @@ public abstract class CommonForecastFragment extends Fragment {
     }
 
     public void scroll(boolean appbarVisible) {
-        // данные в адаптере перевернуты
-
         if (appbarVisible) {
-            layoutManager.scrollToPosition(adapter.getItemCount() - 2);
-        } else {
             layoutManager.scrollToPosition(1);
+        } else {
+            layoutManager.scrollToPosition(adapter.getItemCount() - 2);
         }
     }
 
@@ -73,7 +76,6 @@ public abstract class CommonForecastFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         sDate = new ArrayList<>();
         weathers = new ArrayList<>();
     }
@@ -86,15 +88,13 @@ public abstract class CommonForecastFragment extends Fragment {
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
 
         layoutManager = new LinearLayoutManager(getActivity());
-        layoutManager.setReverseLayout(true);
-        layoutManager.setStackFromEnd(true);
 
         int headerHeight = (int) getContext().getResources().getDimension(R.dimen.appbar_height);
         int footerHeight = (int) getContext().getResources().getDimension(R.dimen.chart_height);
 
         adapter = new WeatherAdapter(sDate, weathers);
-        adapter.setFooterHeight(headerHeight); // данные в адаптере перевернуты
-        adapter.setHeaderHeight(footerHeight); // данные в адаптере перевернуты
+        adapter.setHeaderHeight(headerHeight);
+        adapter.setFooterHeight(footerHeight);
 
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
         recyclerView.setItemAnimator(itemAnimator);

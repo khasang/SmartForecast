@@ -53,7 +53,7 @@ public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
     // после того, как пользователь изменил их
     private int[] favoriteCitiesIdentifiers;
 
-    public NavigationDrawer(Activity activity, Toolbar toolbar, int drowerHeaderArrayIndex) {
+    public NavigationDrawer(Activity activity, Toolbar toolbar, int drawerHeaderArrayIndex) {
         TypedArray headersArray;
         int currentNightMode = activity.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
         if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
@@ -62,7 +62,7 @@ public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
             headersArray = activity.getResources().obtainTypedArray(R.array.day_headers);
         }
 
-        int header = headersArray.getResourceId(drowerHeaderArrayIndex, 0);
+        int header = headersArray.getResourceId(drawerHeaderArrayIndex, 0);
         headersArray.recycle();
 
         AccountHeader accountHeader = new AccountHeaderBuilder()
