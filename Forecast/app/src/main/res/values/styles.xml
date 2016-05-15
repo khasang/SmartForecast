@@ -92,6 +92,18 @@
 
     <style name="AppTheme.Settings.Purple" parent="PurpleStyle" />
 
+    <style name="AppTheme.About" parent="AppTheme" />
+
+    <style name="AppTheme.About.Green" parent="GreenStyle" />
+
+    <style name="AppTheme.About.Brown" parent="BrownStyle" />
+
+    <style name="AppTheme.About.Teal" parent="TealStyle" />
+
+    <style name="AppTheme.About.Indigo" parent="IndigoStyle" />
+
+    <style name="AppTheme.About.Purple" parent="PurpleStyle" />
+
 
     <style name="Toolbar" parent="Widget.AppCompat.Toolbar">
         <item name="android:background">?attr/colorPrimary</item>

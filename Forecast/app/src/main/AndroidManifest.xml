@@ -56,6 +56,16 @@
                 android:value="com.khasang.forecast.activities.WeatherActivity"/>
         </activity>
 
+        <activity
+            android:name=".activities.AboutActivity"
+            android:label="@string/title_activity_about"
+            android:parentActivityName=".activities.WeatherActivity"
+            android:theme="@style/AppTheme.About">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.khasang.forecast.activities.WeatherActivity"/>
+        </activity>
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />

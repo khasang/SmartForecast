@@ -216,6 +216,9 @@ public class WeatherActivity extends AppCompatActivity
                 Intent feedbackIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 startActivity(feedbackIntent);
                 break;
+            case NavigationDrawer.NAVIGATION_ABOUT:
+                startAboutActivity();
+                break;
             case NavigationDrawer.NAVIGATION_FAVORITES:
             case NavigationDrawer.NAVIGATION_APP_NAME:
                 break;
@@ -322,6 +325,12 @@ public class WeatherActivity extends AppCompatActivity
 
     public void startSettingsActivity() {
         Intent intent = new Intent(this, SettingsActivity.class);
+        Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle();
+        startActivity(intent, bundle);
+    }
+
+    public void startAboutActivity() {
+        Intent intent = new Intent(this, AboutActivity.class);
         Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle();
         startActivity(intent, bundle);
     }
