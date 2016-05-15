@@ -36,8 +36,20 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    productFlavors {
+        effectiveInstantRun {
+            minSdkVersion 21
+        }
+        production {
+            minSdkVersion 16
+        }
+    }
     repositories {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+    }
+    dexOptions {
+        maxProcessCount 4
+        javaMaxHeapSize "2g"
     }
 }
 
