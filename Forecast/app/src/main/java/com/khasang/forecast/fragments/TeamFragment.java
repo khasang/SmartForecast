@@ -23,5 +23,4 @@ public class TeamFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_team, container, false);
         return view;
     }
-
 }
