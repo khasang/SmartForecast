@@ -105,7 +105,7 @@ public class SettingsActivity extends AppCompatActivity {
             Preference preference = findPreference(getString(R.string.pref_night_mode_key));
             if (preference instanceof ListPreference) {
                 ListPreference listPreference = (ListPreference) preference;
-                int prefIndex = listPreference.findIndexOfValue(sharedPreferences.getString(getString(R.string.pref_night_mode_key), ""));
+                int prefIndex = listPreference.findIndexOfValue(sharedPreferences.getString(getString(R.string.pref_night_mode_key), getString(R.string.pref_night_mode_off)));
                 if (prefIndex >= 0) {
                     preference.setSummary(listPreference.getEntries()[prefIndex]);
                 }
@@ -114,7 +114,7 @@ public class SettingsActivity extends AppCompatActivity {
             preference = findPreference(getString(R.string.pref_color_scheme_key));
             if (preference instanceof ListPreference) {
                 ListPreference listPreference = (ListPreference) preference;
-                int prefIndex = listPreference.findIndexOfValue(sharedPreferences.getString(getString(R.string.pref_color_scheme_key), ""));
+                int prefIndex = listPreference.findIndexOfValue(sharedPreferences.getString(getString(R.string.pref_color_scheme_key), getString(R.string.pref_color_scheme_teal)));
                 if (prefIndex >= 0) {
                     preference.setSummary(listPreference.getEntries()[prefIndex]);
                 }
@@ -165,6 +165,7 @@ public class SettingsActivity extends AppCompatActivity {
                     getActivity().recreate();
                 }  else if (key.equals(getString(R.string.pref_icons_set_key))) {
                     PositionManager.getInstance().generateIconSet(getActivity());
+                    SettingsActivity.setThemeChanged(true);
                 }
             }
         }
