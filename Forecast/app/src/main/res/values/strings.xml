@@ -148,24 +148,23 @@
     <string name="shared_last_active_position_name" translatable="false">last_active_position_name</string>
     <string name="forecast_unavailable">Forecast unavailable</string>
 
-    <!-- TODO TRANSLATE -->
-    <string name="pref_header_personalization">Персонализация</string>
+    <string name="pref_header_personalization">Personalization</string>
     <string name="pref_night_mode_key" translatable="false">night_mode</string>
-    <string name="pref_night_mode_title">Тема</string>
-    <string name="pref_night_mode_off_label">Дневная тема</string>
-    <string name="pref_night_mode_on_label">Ночная тема</string>
-    <string name="pref_night_mode_auto_label">Основана на времени суток</string>
+    <string name="pref_night_mode_title">The theme</string>
+    <string name="pref_night_mode_off_label">Day theme</string>
+    <string name="pref_night_mode_on_label">Night theme</string>
+    <string name="pref_night_mode_auto_label">Based on the time of day</string>
     <string name="pref_night_mode_off" translatable="false">night_mode_off</string>
     <string name="pref_night_mode_on" translatable="false">night_mode_on</string>
     <string name="pref_night_mode_auto" translatable="false">night_mode_auto</string>
 
     <string name="pref_color_scheme_key" translatable="false">color_scheme</string>
-    <string name="pref_color_scheme_title">Цветовая схема</string>
-    <string name="pref_color_scheme_green_label">Зеленая</string>
-    <string name="pref_color_scheme_brown_label">Коричневая</string>
-    <string name="pref_color_scheme_teal_label">Бирюзовая</string>
-    <string name="pref_color_scheme_indigo_label">Темно-синяя</string>
-    <string name="pref_color_scheme_purple_label">Фиолетовая</string>
+    <string name="pref_color_scheme_title">Color scheme</string>
+    <string name="pref_color_scheme_green_label">Green</string>
+    <string name="pref_color_scheme_brown_label">Brown</string>
+    <string name="pref_color_scheme_teal_label">Turquoise</string>
+    <string name="pref_color_scheme_indigo_label">Dark blue</string>
+    <string name="pref_color_scheme_purple_label">Purple</string>
     <string name="pref_color_scheme_green" translatable="false">color_scheme_green</string>
     <string name="pref_color_scheme_brown" translatable="false">color_scheme_brown</string>
     <string name="pref_color_scheme_teal" translatable="false">color_scheme_teal</string>
@@ -173,10 +172,10 @@
     <string name="pref_color_scheme_purple" translatable="false">color_scheme_purple</string>
 
     <string name="pref_icons_set_key" translatable="false">icons_set</string>
-    <string name="pref_icons_set_title">Набор иконок</string>
-    <string name="pref_icons_set_default_label">Стандартный набор</string>
-    <string name="pref_icons_set_mike_color_label">Набор цветовой схемы</string>
-    <string name="pref_icons_set_mike_bw_label">Чёрно-белый набор</string>
+    <string name="pref_icons_set_title">Set of icons</string>
+    <string name="pref_icons_set_default_label">Standard set</string>
+    <string name="pref_icons_set_mike_color_label">Set the color scheme</string>
+    <string name="pref_icons_set_mike_bw_label">Black and white set</string>
     <string name="pref_icons_set_default" translatable="false">icon_set_default</string>
     <string name="pref_icons_set_mike_color" translatable="false">icons_set_mike_color</string>
     <string name="pref_icons_set_mike_bw" translatable="false">icons_set_mike_bw</string>
