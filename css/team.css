@@ -65,6 +65,7 @@ img.crowdin {
 	max-width: 50%; 
 	height: auto;
 	padding: 20px;
+	border: 1px solid #ffffff;
 }	
 	
 img.crowdin:hover {
