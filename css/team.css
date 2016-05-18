@@ -43,14 +43,16 @@ ul.social-buttons li a:active {
     background-color: #43A047; /*#fed136;*/
 }
 
-.my-block{ 
-    src="img/team/apple.png"
-    width: 225px; 
-    height: 225px; 
-    display: block;
-}
-.my-block:hover{
-    src="img/team/minime.gif"
-    width: 225px; 
-    height: 225px; 
+.my-block {
+  display: block;
+  text-align: center;
+ }
+
+.my-block:hover, .my-block:focus, .my-block:active {
+  background: url("img/team/minime.gif") no-repeat 50% 50%;
+ }
+
+.my-block:hover img, .my-block:focus img, .my-block:active img  {
+  background: transparent;
+  visibility: hidden;
 }
