@@ -66,6 +66,9 @@ img.crowdin {
 	height: auto;
 	padding: 20px;
 	border: 1px solid #ffffff;
+	opacity: 0.8;
+	filter: alpha(opacity=80);
+ 	-webkit-transition: opacity 1s linear;
 }	
 	
 img.crowdin:hover {
@@ -73,4 +76,7 @@ img.crowdin:hover {
 	-moz-box-shadow: 0 0 5px rgba(0,0,0,0.5);
 	-webkit-box-shadow: 0 0 5px rgba(0,0,0,0.5);
 	box-shadow: 0 0 5px rgba(0,0,0,0.5);
+	opacity: 1;
+	filter: alpha(opacity=100);
+ 	-webkit-transition: opacity 1s linear;
 }
