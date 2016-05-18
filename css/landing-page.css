@@ -179,3 +179,8 @@ footer {
 p.copyright {
     margin: 15px 0 0;
 }
+
+.section-divider-bottom {
+    padding: 50px 0;
+    border-bottom: 1px solid #e7e7e7;
+}
