@@ -44,7 +44,7 @@ ul.social-buttons li a:active {
 }
 
 .my-block{ 
-    background: url(img/team/apple.png);
+    background: url("img/team/apple.png");
     display: block;
 }
 .my-block:hover{
