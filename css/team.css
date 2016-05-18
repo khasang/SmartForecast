@@ -62,7 +62,8 @@ ul.social-buttons li a:active {
 .my-block:hover img.main-image, .my-block img.main-image:hover {opacity:0;filter:alpha(opacity=0);}
 
 div.shadow-crowdin-effect {
-	width: 300px;
+	max-width: 50%; 
+	height: auto;
 	margin: 20px;
 	border: 1px solid #ccc;
 	padding: 10px;
