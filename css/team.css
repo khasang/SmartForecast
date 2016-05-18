@@ -49,7 +49,7 @@ ul.social-buttons li a:active {
  }
 
 .my-block:hover, .my-block:focus, .my-block:active {
-  background: url("img/team/minime.gif") no-repeat 50% 50%;
+  background: url("https://raw.githubusercontent.com/khasang/SmartForecast/gh-pages/img/team/minime.gif") no-repeat 50% 50%;
  }
 
 .my-block:hover img, .my-block:focus img, .my-block:active img  {
