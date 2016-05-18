@@ -44,9 +44,9 @@ ul.social-buttons li a:active {
 }
 
 .my-block{ 
-    background: url("img/team/apple.png");
+    background: url("https://raw.githubusercontent.com/khasang/SmartForecast/gh-pages/img/team/apple.png");
     display: block;
 }
 .my-block:hover{
-    background: url("img/team/minime.gif") ;
+    background: url("https://raw.githubusercontent.com/khasang/SmartForecast/gh-pages/img/team/minime.gif") ;
 }
