@@ -61,14 +61,15 @@ ul.social-buttons li a:active {
 .my-block:hover img.additional-image {opacity:1;filter:alpha(opacity=100);}
 .my-block:hover img.main-image, .my-block img.main-image:hover {opacity:0;filter:alpha(opacity=0);}
 
-.crowdinBox { 
-    max-width: 50%; 
-    height: auto;
-    background: url(http://www.corelangs.com/css/box/img/water.jpg) no-repeat; 
-} 
+div.shadow-crowdin-effect {
+	width: 300px;
+	margin: 20px;
+	border: 1px solid #ccc;
+	padding: 10px;
+	}
 
-.crowdin:hover { 
-    -moz-box-shadow: 0 0 10px #ccc; 
-    -webkit-box-shadow: 0 0 10px #ccc; 
-    box-shadow: 0 0 10px #ccc; 
-}
+div.shadow-crowdin-effect:hover {
+	-moz-box-shadow: 0 0 5px rgba(0,0,0,0.5);
+	-webkit-box-shadow: 0 0 5px rgba(0,0,0,0.5);
+	box-shadow: 0 0 5px rgba(0,0,0,0.5);
+	}
