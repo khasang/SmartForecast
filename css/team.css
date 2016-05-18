@@ -45,8 +45,12 @@ ul.social-buttons li a:active {
 
 .my-block{ 
     src="img/team/apple.png"
+    width: 225px; 
+    height: 225px; 
     display: block;
 }
 .my-block:hover{
     src="img/team/minime.gif"
+    width: 225px; 
+    height: 225px; 
 }
