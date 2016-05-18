@@ -71,3 +71,15 @@ div.shadow-crowdin-effect:hover {
 	-webkit-box-shadow: 0 0 5px rgba(0,0,0,0.5);
 	box-shadow: 0 0 5px rgba(0,0,0,0.5);
 	}
+	
+img.opacity {
+	opacity: 0.5;
+	filter: alpha(opacity=50);
+ 	-webkit-transition: opacity 1s linear;
+	}	
+	
+img.opacity:hover {
+	opacity: 1;
+	filter: alpha(opacity=100);
+ 	-webkit-transition: opacity 1s linear;
+	}
