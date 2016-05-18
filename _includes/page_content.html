@@ -1,22 +1,5 @@
 <section id="services">
 <!-- Page Content -->
-<div class="row container content-section text-center">
-    <div class="col-lg-8 col-lg-offset-2">
-      <br/><br/>
-        <h2>Развитие проекта</h2>
-        <br/>
-        <div class="brief">
-          <p class="lead" align="justify">&quot;Smart Forecast&quot; это проект с открытым исходным кодом. 
-          Он был запущен для изучения последних технологий в разработке мобильных приложений под OS Android. 
-          При огромной конкуренции в категории "Погода", мы не претендовали на большое количество пользователей, 
-          работали на голом энтузиазме и радовались каждому новому скачиванию. Однако, день за днем количество 
-          пользователей росло, и на данный момент мы имеем довольно обширную аудиторию, о которой изначально 
-          даже не мечтали.</p>
-          <br/>	
-        </div>
-        <br/>
-      </div>
-</div>
 {% for post in site.posts reversed %}
   {% capture thecycle %}{% cycle 'odd', 'even' %}{% endcapture %}
     {% if thecycle == 'odd' %}
