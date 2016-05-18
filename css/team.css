@@ -73,6 +73,8 @@ div.shadow-crowdin-effect:hover {
 	}
 	
 img.opacity {
+	max-width: 50%; 
+	height: auto;
 	opacity: 0.5;
 	filter: alpha(opacity=50);
  	-webkit-transition: opacity 1s linear;
