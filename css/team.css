@@ -45,6 +45,7 @@ ul.social-buttons li a:active {
 
 .my-block{ 
     background-image: img/team/apple.png;
+    display: block;
 }
 .my-block:hover{
     background-image: img/team/minime.gif;
