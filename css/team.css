@@ -64,9 +64,6 @@ ul.social-buttons li a:active {
 div.shadow-crowdin-effect {
 	max-width: 50%; 
 	height: auto;
-	margin: 20px;
-	border: 1px solid #ccc;
-	padding: 10px;
 	}
 
 div.shadow-crowdin-effect:hover {
