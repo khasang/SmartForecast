@@ -57,6 +57,6 @@ ul.social-buttons li a:active {
     top: 0; 
 }
 
-.my-block img.first-image {opacity:0;filter:alpha(opacity=0);}
-.my-block:hover img.first-image {opacity:1;filter:alpha(opacity=100);}
-.my-block:hover img.second-image, .my-block img.second-image:hover {opacity:0;filter:alpha(opacity=0);}
+.my-block img.additional-image {opacity:0;filter:alpha(opacity=0);}
+.my-block:hover img.additional-image {opacity:1;filter:alpha(opacity=100);}
+.my-block:hover img.main-image, .my-block img.main-image:hover {opacity:0;filter:alpha(opacity=0);}
