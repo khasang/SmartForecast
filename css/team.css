@@ -43,16 +43,20 @@ ul.social-buttons li a:active {
     background-color: #43A047; /*#fed136;*/
 }
 
-.my-block {
-  display: block;
-  text-align: center;
- }
-
-.my-block:hover, .my-block:focus, .my-block:active {
-  background: url("https://raw.githubusercontent.com/khasang/SmartForecast/gh-pages/img/team/minime.gif") no-repeat 50% 50%;
- }
-
-.my-block:hover img, .my-block:focus img, .my-block:active img  {
-  background: transparent;
-  visibility: hidden;
+.my-block { 
+    position:relative; 
+    margin:0 auto; 
+    height: 400px;
+    width:400px;
+    display: block;
 }
+
+.my-block img { 
+    left: 0; 
+    position:absolute; 
+    top: 0; 
+}
+
+.my-block img.first-image {opacity:0;filter:alpha(opacity=0);}
+.my-block:hover img.first-image {opacity:1;filter:alpha(opacity=100);}
+.my-block:hover img.second-image, .my-block img.second-image:hover {opacity:0;filter:alpha(opacity=0);}
