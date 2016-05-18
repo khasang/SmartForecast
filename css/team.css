@@ -17,3 +17,15 @@
 .team-member p {
     margin-top: 0;
 }
+
+.my-block{ 
+    background-image: img/team/3.jpg;
+    height: 50%;
+    width: 50%;
+
+}
+.my-block:hover{
+    background-image: img/team/minime.gif;
+    height: 50%;
+    width: 50%;
+}
