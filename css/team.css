@@ -111,8 +111,7 @@ img.crowdin:hover {
   width: 0px;
   height: 0px;
   opacity: 0;
-  border: 5px solid transparent;
-  border-width: 150px;
+  border: 150px solid transparent;
   -moz-transition: opacity 0.15s linear 0s, border-width 0.35s linear 0.1s;
   -o-transition: opacity 0.15s linear 0s, border-width 0.35s linear 0.1s;
   -ms-transition: opacity 0.15s linear 0s, border-width 0.35s linear 0.1s;
