@@ -147,5 +147,14 @@ img.crowdin:hover {
   opacity: 1;
   border-width: 0px;
 }
+
+.eff-18 .blur_layout {
+  position: absolute;
+  min-width: 100%;
+  min-height: 100%;
+  opacity: 1;
+  border: 150px solid transparent;
+
+}
       
       
