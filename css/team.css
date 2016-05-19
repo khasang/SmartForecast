@@ -105,7 +105,7 @@ img.crowdin:hover {
 	-webkit-filter: grayscale(100%);
 }
 
-.eff-18 img:hover {
+.eff-18:hover .img {
   	-webkit-filter: grayscale(0%);
 }
 
