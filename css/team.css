@@ -150,6 +150,9 @@ img.crowdin:hover {
 .eff-18 .blur-effect {
   width: 100%;
   height: 100%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
   opacity: 1;
   border: 150px solid rgba(255,255,255,0.6);
 }
