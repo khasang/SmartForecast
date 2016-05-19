@@ -85,6 +85,7 @@ public class SettingsActivity extends AppCompatActivity {
 
             Intent intent = new Intent(this, WeatherActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.putExtra(WeatherActivity.ACTIVE_CITY_TAG, PositionManager.getInstance().getCurrentPositionName());
             startActivity(intent);
         }
         ActivityCompat.finishAfterTransition(this);

@@ -74,6 +74,7 @@ public class WeatherActivity extends AppCompatActivity
 
     private static final int CHOOSE_CITY = 1;
     public static final String CURRENT_CITY_TAG = "CURRENT_CITY";
+    public static final String ACTIVE_CITY_TAG = "ACTIVE_CITY";
     private static final String TAG = WeatherActivity.class.getSimpleName();
 
     private TextView temperature;
@@ -105,6 +106,11 @@ public class WeatherActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         PositionManager.getInstance(this, this);
         PositionManager.getInstance().generateIconSet(this);
+        Intent intent = getIntent();
+        String active_city = intent.getStringExtra(WeatherActivity.ACTIVE_CITY_TAG);
+        if (!(active_city == null || active_city.isEmpty())) {
+            PositionManager.getInstance().setCurrentPosition(active_city);
+        }
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         String colorScheme = sp.getString(getString(R.string.pref_color_scheme_key), getString(R.string.pref_color_scheme_teal));
