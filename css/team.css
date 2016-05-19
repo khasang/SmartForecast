@@ -95,8 +95,18 @@ img.crowdin:hover {
   position: relative;
 }
 .eff-18 img {
-  min-width: 100%;
-  min-height: 100%;
+  	min-width: 100%;
+  	min-height: 100%;
+	-webkit-transition: all 1s ease;
+	-moz-transition: all 1s ease;
+	-o-transition: all 1s ease;
+	-ms-transition: all 1s ease;
+	transition: all 1s ease;
+	-webkit-filter: grayscale(100%);
+}
+
+.eff-18 img:hover {
+  	-webkit-filter: grayscale(0%);
 }
 
 .eff-18 .triangle-set {
