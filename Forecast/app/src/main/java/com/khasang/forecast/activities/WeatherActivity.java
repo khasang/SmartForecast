@@ -5,10 +5,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
-import android.content.res.TypedArray;
-import android.graphics.drawable.Drawable;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -473,7 +471,6 @@ public class WeatherActivity extends AppCompatActivity
             case HOURLY:
                 Logger.println(TAG, "Принят HOURLY прогноз");
                 hourlyForecastFragment.setDatasAndAnimate(forecast);
-                // Первая отрисовка графика при получении данных
                 if (hourlyForecastFragment.isVisible()) {
                     updateWeatherChart(true);
                 }
@@ -481,6 +478,9 @@ public class WeatherActivity extends AppCompatActivity
             case DAILY:
                 Logger.println(TAG, "Принят DAILY прогноз");
                 dailyForecastFragment.setDatasAndAnimate(forecast);
+                if (dailyForecastFragment.isVisible()) {
+                    updateWeatherChart(true);
+                }
                 break;
             default:
                 Logger.println(TAG, "Принят необрабатываемый прогноз");
