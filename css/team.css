@@ -92,7 +92,7 @@ img.crowdin:hover {
   cursor: pointer;
   position: relative;
 }
-.triangle-set img {
+.eff-18 img {
   	min-width: 100%;
   	min-height: 100%;
 	-webkit-transition: all 1s ease;
@@ -100,7 +100,6 @@ img.crowdin:hover {
 	-o-transition: all 1s ease;
 	-ms-transition: all 1s ease;
 	transition: all 1s ease;
-
 }
 
 .eff-18 .triangle-set {
