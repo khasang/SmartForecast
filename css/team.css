@@ -113,7 +113,7 @@ img.crowdin:hover {
   position: absolute;
   width: 25%;
   height: 25%;
-  opacity: 1;
+  opacity: 0;
   border: 150px solid transparent;
   -moz-transition: opacity 0.15s linear 0s, border-width 0.35s linear 0.1s;
   -o-transition: opacity 0.15s linear 0s, border-width 0.35s linear 0.1s;
@@ -143,7 +143,7 @@ img.crowdin:hover {
 }
 
 .eff-18:hover .triangle {
-  opacity: 0;
+  opacity: 1;
   border-width: 0px;
 }
       
