@@ -76,12 +76,13 @@ img.crowdin:hover {
 }
 
 .black-white {
-  -webkit-transition: all 1s ease;
-     -moz-transition: all 1s ease;
-       -o-transition: all 1s ease;
-      -ms-transition: all 1s ease;
-          transition: all 1s ease;
+ 	-webkit-transition: all 1s ease;
+ 	-moz-transition: all 1s ease;
+ 	-o-transition: all 1s ease;
+ 	-ms-transition: all 1s ease;
+  	transition: all 1s ease;
+  	-webkit-filter: grayscale(100%);
 }
 .black-white:hover {
-  -webkit-filter: grayscale(100%);
+  	-webkit-filter: grayscale(0%);
 }
