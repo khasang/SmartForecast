@@ -66,7 +66,11 @@
                             android:id="@+id/icon_wind"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical" />
+                            android:layout_gravity="center_vertical"
+                            app:ico_color="@color/current_weather_color"
+                            app:ico_icon="met_wind"
+                            app:ico_padding="2dp"
+                            app:ico_size="24dp" />
 
                         <TextView
                             android:id="@+id/wind"
@@ -89,7 +93,11 @@
                             android:id="@+id/icon_hum"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical" />
+                            android:layout_gravity="center_vertical"
+                            app:ico_color="@color/current_weather_color"
+                            app:ico_icon="wic_humidity"
+                            app:ico_padding="2dp"
+                            app:ico_size="24dp" />
 
                         <TextView
                             android:id="@+id/humidity"

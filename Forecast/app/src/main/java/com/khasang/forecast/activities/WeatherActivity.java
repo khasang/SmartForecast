@@ -1,10 +1,12 @@
 package com.khasang.forecast.activities;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -53,9 +55,8 @@ import com.khasang.forecast.position.Weather;
 import com.khasang.forecast.stations.WeatherStation;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
-import com.mikepenz.meteocons_typeface_library.Meteoconcs;
+import com.mikepenz.iconics.context.IconicsContextWrapper;
 import com.mikepenz.octicons_typeface_library.Octicons;
-import com.mikepenz.weather_icons_typeface_library.WeatherIcons;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
@@ -73,6 +74,7 @@ public class WeatherActivity extends AppCompatActivity
 
     private static final int CHOOSE_CITY = 1;
     public static final String CURRENT_CITY_TAG = "CURRENT_CITY";
+    public static final String ACTIVE_CITY_TAG = "ACTIVE_CITY";
     private static final String TAG = WeatherActivity.class.getSimpleName();
 
     private TextView temperature;
@@ -95,9 +97,21 @@ public class WeatherActivity extends AppCompatActivity
     private RelativeLayout appBarLayoutWrapper;
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(IconicsContextWrapper.wrap(newBase));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         PositionManager.getInstance(this, this);
+        PositionManager.getInstance().generateIconSet(this);
+        Intent intent = getIntent();
+        String active_city = intent.getStringExtra(WeatherActivity.ACTIVE_CITY_TAG);
+        if (!(active_city == null || active_city.isEmpty())) {
+            PositionManager.getInstance().setCurrentPosition(active_city);
+        }
+
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         String colorScheme = sp.getString(getString(R.string.pref_color_scheme_key), getString(R.string.pref_color_scheme_teal));
         int drawerHeaderArrayIndex = 0;
@@ -164,18 +178,6 @@ public class WeatherActivity extends AppCompatActivity
             progressbar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this, R.color.accent), PorterDuff.Mode.SRC_ATOP);
         }
 
-        IconicsDrawable icon_wind = new IconicsDrawable(this)
-                .icon(Meteoconcs.Icon.met_wind)
-                .color(ContextCompat.getColor(this, R.color.current_weather_color))
-                .paddingDp(2)
-                .sizeDp(24);
-        IconicsDrawable icon_hum = new IconicsDrawable(this)
-                .icon(WeatherIcons.Icon.wic_humidity)
-                .color(ContextCompat.getColor(this, R.color.current_weather_color))
-                .paddingDp(2)
-                .sizeDp(24);
-        ((ImageView) findViewById(R.id.icon_wind)).setImageDrawable(icon_wind);
-        ((ImageView) findViewById(R.id.icon_hum)).setImageDrawable(icon_hum);
         /** Слушатели нажатий объектов */
         IconicsDrawable icon_calendar = new IconicsDrawable(this)
                 .color(ContextCompat.getColor(this, R.color.current_weather_color))
@@ -484,7 +486,6 @@ public class WeatherActivity extends AppCompatActivity
             case HOURLY:
                 Logger.println(TAG, "Принят HOURLY прогноз");
                 hourlyForecastFragment.setDatasAndAnimate(forecast);
-                // Первая отрисовка графика при получении данных
                 if (hourlyForecastFragment.isVisible()) {
                     updateWeatherChart(true);
                 }
@@ -492,6 +493,9 @@ public class WeatherActivity extends AppCompatActivity
             case DAILY:
                 Logger.println(TAG, "Принят DAILY прогноз");
                 dailyForecastFragment.setDatasAndAnimate(forecast);
+                if (dailyForecastFragment.isVisible()) {
+                    updateWeatherChart(true);
+                }
                 break;
             default:
                 Logger.println(TAG, "Принят необрабатываемый прогноз");
@@ -515,9 +519,9 @@ public class WeatherActivity extends AppCompatActivity
         description.setText(String.format("%s",
                 wCurrent.getDescription().substring(0, 1).toUpperCase() + wCurrent.getDescription()
                         .substring(1)));
-        int iconId = wCurrent.getPrecipitation()
-                .getIconResId(AppUtils.isDayFromString(String.format(Locale.getDefault(), "%tR", date)));
-        currWeather.setImageResource(iconId == 0 ? R.mipmap.ic_launcher : iconId);
+        Drawable weatherIcon = PositionManager.getInstance().getWeatherIcon(wCurrent.getPrecipitation()
+                    .getIconIndex(AppUtils.isDayFromString(String.format(Locale.getDefault(), "%tR", date))), true);
+        currWeather.setImageDrawable(weatherIcon);
 
         wind.setText(Html.fromHtml(
                 String.format("%s %.0f%s", wCurrent.getWindDirection().getDirectionString(),

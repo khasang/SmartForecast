@@ -46,24 +46,6 @@
         <item>@string/pref_welcome_default_label</item>
     </string-array>
 
-    <!-- Headers array - Day -->
-    <string-array name="day_headers">
-        <item>@drawable/header_day_green</item>
-        <item>@drawable/header_day_brown</item>
-        <item>@drawable/header_day_teal</item>
-        <item>@drawable/header_day_indigo</item>
-        <item>@drawable/header_day_purple</item>
-    </string-array>
-
-    <!-- Headers array - Night -->
-    <string-array name="night_headers">
-        <item>@drawable/header_night_green</item>
-        <item>@drawable/header_night_brown</item>
-        <item>@drawable/header_night_teal</item>
-        <item>@drawable/header_night_indigo</item>
-        <item>@drawable/header_night_purple</item>
-    </string-array>
-
     <string-array name="pref_night_mode_options">
         <item>@string/pref_night_mode_off_label</item>
         <item>@string/pref_night_mode_on_label</item>
@@ -90,6 +72,18 @@
         <item>@string/pref_color_scheme_brown</item>
         <item>@string/pref_color_scheme_indigo</item>
         <item>@string/pref_color_scheme_purple</item>
+    </string-array>
+
+    <string-array name="icons_set_options">
+        <item>@string/pref_icons_set_default_label</item>
+        <item>@string/pref_icons_set_mike_color_label</item>
+        <item>@string/pref_icons_set_mike_bw_label</item>
+    </string-array>
+
+    <string-array name="icons_set_values">
+        <item>@string/pref_icons_set_default</item>
+        <item>@string/pref_icons_set_mike_color</item>
+        <item>@string/pref_icons_set_mike_bw</item>
     </string-array>
 
 </resources>

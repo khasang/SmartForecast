@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.R;
+import com.khasang.forecast.position.PositionManager;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -32,19 +33,7 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        String colorScheme = sp.getString(getString(R.string.pref_color_scheme_key), getString(R.string.pref_color_scheme_teal));
-        if (colorScheme.equals(getString(R.string.pref_color_scheme_brown))) {
-            setTheme(R.style.AppTheme_Settings_Brown);
-        } else if (colorScheme.equals(getString(R.string.pref_color_scheme_teal))) {
-            setTheme(R.style.AppTheme_Settings_Teal);
-        } else if (colorScheme.equals(getString(R.string.pref_color_scheme_indigo))) {
-            setTheme(R.style.AppTheme_Settings_Indigo);
-        } else if (colorScheme.equals(getString(R.string.pref_color_scheme_purple))) {
-            setTheme(R.style.AppTheme_Settings_Purple);
-        } else {
-            setTheme(R.style.AppTheme_Settings_Green);
-        }
+        setTheme(AppUtils.getCurrentTheme(this));
         setContentView(R.layout.activity_settings);
         setupToolbar();
         getSupportFragmentManager().beginTransaction()
@@ -96,6 +85,7 @@ public class SettingsActivity extends AppCompatActivity {
 
             Intent intent = new Intent(this, WeatherActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.putExtra(WeatherActivity.ACTIVE_CITY_TAG, PositionManager.getInstance().getCurrentPositionName());
             startActivity(intent);
         }
         ActivityCompat.finishAfterTransition(this);
@@ -116,7 +106,7 @@ public class SettingsActivity extends AppCompatActivity {
             Preference preference = findPreference(getString(R.string.pref_night_mode_key));
             if (preference instanceof ListPreference) {
                 ListPreference listPreference = (ListPreference) preference;
-                int prefIndex = listPreference.findIndexOfValue(sharedPreferences.getString(getString(R.string.pref_night_mode_key), ""));
+                int prefIndex = listPreference.findIndexOfValue(sharedPreferences.getString(getString(R.string.pref_night_mode_key), getString(R.string.pref_night_mode_off)));
                 if (prefIndex >= 0) {
                     preference.setSummary(listPreference.getEntries()[prefIndex]);
                 }
@@ -125,7 +115,16 @@ public class SettingsActivity extends AppCompatActivity {
             preference = findPreference(getString(R.string.pref_color_scheme_key));
             if (preference instanceof ListPreference) {
                 ListPreference listPreference = (ListPreference) preference;
-                int prefIndex = listPreference.findIndexOfValue(sharedPreferences.getString(getString(R.string.pref_color_scheme_key), ""));
+                int prefIndex = listPreference.findIndexOfValue(sharedPreferences.getString(getString(R.string.pref_color_scheme_key), getString(R.string.pref_color_scheme_teal)));
+                if (prefIndex >= 0) {
+                    preference.setSummary(listPreference.getEntries()[prefIndex]);
+                }
+            }
+
+            preference = findPreference(getString(R.string.pref_icons_set_key));
+            if (preference instanceof ListPreference) {
+                ListPreference listPreference = (ListPreference) preference;
+                int prefIndex = listPreference.findIndexOfValue(sharedPreferences.getString(getString(R.string.pref_icons_set_key), getString(R.string.pref_icons_set_default)));
                 if (prefIndex >= 0) {
                     preference.setSummary(listPreference.getEntries()[prefIndex]);
                 }
@@ -165,6 +164,9 @@ public class SettingsActivity extends AppCompatActivity {
                 } else if (key.equals(getString(R.string.pref_color_scheme_key))) {
                     SettingsActivity.setThemeChanged(true);
                     getActivity().recreate();
+                }  else if (key.equals(getString(R.string.pref_icons_set_key))) {
+                    PositionManager.getInstance().generateIconSet(getActivity());
+                    SettingsActivity.setThemeChanged(true);
                 }
             }
         }

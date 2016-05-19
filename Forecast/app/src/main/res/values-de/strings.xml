@@ -122,4 +122,23 @@
 
     <string name="error_get_coordinates">Kann nicht die Koordinaten der angeforderten Standort bestimmen</string>
     <string name="forecast_unavailable">Forecast unavailable</string>
+
+    <!-- TODO TRANSLATE -->
+    <string name="pref_header_personalization">Personalisierung</string>
+    <string name="pref_night_mode_title">Thema</string>
+    <string name="pref_night_mode_off_label">Tagthema</string>
+    <string name="pref_night_mode_on_label">Nachtthema</string>
+    <string name="pref_night_mode_auto_label">Auf der Tageszeit basiert</string>
+
+    <string name="pref_color_scheme_title">Farbschema</string>
+    <string name="pref_color_scheme_green_label">Grün</string>
+    <string name="pref_color_scheme_brown_label">Braun</string>
+    <string name="pref_color_scheme_teal_label">Türkis</string>
+    <string name="pref_color_scheme_indigo_label">Dunkel-blau</string>
+    <string name="pref_color_scheme_purple_label">Lila</string>
+
+    <string name="pref_icons_set_title">Icon Set</string>
+    <string name="pref_icons_set_default_label">Standard Set</string>
+    <string name="pref_icons_set_mike_color_label">Farbschema Set</string>
+    <string name="pref_icons_set_mike_bw_label">Schwarz-weiß-Set</string>
 </resources>

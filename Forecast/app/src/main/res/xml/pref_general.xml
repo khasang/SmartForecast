@@ -22,16 +22,6 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_category_start">
-        <!--
-            <ListPreference
-                android:defaultValue="@string/pref_welcome_default"
-                android:entries="@array/pref_welcome_options"
-                android:entryValues="@array/pref_welcome_values"
-                android:key="@string/pref_welcome_key"
-                android:negativeButtonText="@null"
-                android:positiveButtonText="@null"
-                android:title="@string/pref_title_welcome_string" />
-        -->
         <SwitchPreference
             android:defaultValue="@string/pref_welcome_default_switch"
             android:key="@string/pref_welcome_key_switch"
@@ -65,7 +55,7 @@
             android:negativeButtonText="@null"
             android:positiveButtonText="@null"
             android:title="@string/pref_color_scheme_title" />
-        />
+
         <ListPreference
             android:defaultValue="@string/pref_night_mode_off"
             android:entries="@array/pref_night_mode_options"
@@ -74,6 +64,15 @@
             android:negativeButtonText="@null"
             android:positiveButtonText="@null"
             android:title="@string/pref_night_mode_title" />
+
+        <ListPreference
+            android:defaultValue="@string/pref_icons_set_default"
+            android:entries="@array/icons_set_options"
+            android:entryValues="@array/icons_set_values"
+            android:key="@string/pref_icons_set_key"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="@string/pref_icons_set_title" />
     </PreferenceCategory>
 
 </PreferenceScreen>
