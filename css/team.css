@@ -97,6 +97,7 @@ img.crowdin:hover {
 .eff-18 img {
   min-width: 100%;
   min-height: 100%;
+  opacity: 0;
 }
 
 .eff-18 .triangle-set {
