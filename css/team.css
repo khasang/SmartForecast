@@ -146,14 +146,19 @@ img.crowdin:hover {
   opacity: 1;
   border-width: 0px;
 }
-
-.eff-18 .blur_layout {
+      
+.eff-18 .blur-effect {
+  width: 100%;
+  height: 100%;
   position: absolute;
-  min-width: 100%;
-  min-height: 100%;
+  top: 0px;
+  left: 0px;
   opacity: 1;
   border: 150px solid transparent;
-
+  -moz-transition: opacity 0.15s linear 0s, border-width 0.35s linear 0.1s;
+  -o-transition: opacity 0.15s linear 0s, border-width 0.35s linear 0.1s;
+  -ms-transition: opacity 0.15s linear 0s, border-width 0.35s linear 0.1s;
+  -webkit-transition: opacity 0.15s linear 0s, border-width 0.35s linear 0.1s;
+  transition: opacity 0.15s linear 0s, border-width 0.35s linear 0.1s;
 }
-      
       
