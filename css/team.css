@@ -119,22 +119,22 @@ img.crowdin:hover {
   transition: opacity 0.15s linear 0s, border-width 0.35s linear 0.1s;
 }
 .eff-18 .triangle-1 {
-  border-top: 5px solid rgba(255,255,255,0.6);
+  border-top: 150px solid rgba(255,255,255,0.6);
   top: 0px;
   left: 0px;
 }
 .eff-18 .triangle-2 {
-  border-right: 5px solid rgba(255,255,255,0.6);
+  border-right: 150px solid rgba(255,255,255,0.6);
   top: 0px;
   right: 0px;
 }
 .eff-18 .triangle-3 {
-  border-bottom: 5px solid rgba(255,255,255,0.6);
+  border-bottom: 150px solid rgba(255,255,255,0.6);
   bottom: 0px;
   right: 0px;
 }
 .eff-18 .triangle-4 {
-  border-left: 5px solid rgba(255,255,255,0.6);
+  border-left: 150px solid rgba(255,255,255,0.6);
   bottom: 0px;
   left: 0px;
 }
