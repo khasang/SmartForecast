@@ -100,11 +100,10 @@ img.crowdin:hover {
 	-o-transition: all 1s ease;
 	-ms-transition: all 1s ease;
 	transition: all 1s ease;
-	-webkit-filter: grayscale(100%);
 }
 
 .eff-18:hover img {
-  	-webkit-filter: grayscale(0%);
+
 }
 
 .eff-18 .triangle-set {
