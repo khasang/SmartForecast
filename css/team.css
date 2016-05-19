@@ -88,8 +88,7 @@ img.crowdin:hover {
 }
 
 .eff-18 {
-  width: 225px;
-  height: 225px;	
+  height: width;	
   overflow: hidden;
   cursor: pointer;
   position: relative;
