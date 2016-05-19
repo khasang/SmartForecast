@@ -39,7 +39,6 @@ ul.list-inline.banner-social-buttons li a {
     padding-bottom: 50px;
     text-align: center;
     color: #f8f8f8;
-    opacity: 0;
     background: url(../img/intro-bg.jpg) no-repeat center center;
     background-size: cover;
 }
