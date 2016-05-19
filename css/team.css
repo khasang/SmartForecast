@@ -97,7 +97,7 @@ img.crowdin:hover {
 .eff-18 img {
   min-width: 100%;
   min-height: 100%;
-  opacity: 0;
+  -webkit-filter: grayscale(100%);
 }
 
 .eff-18 .triangle-set {
@@ -143,6 +143,12 @@ img.crowdin:hover {
 .eff-18:hover .triangle {
   opacity: 0;
   border-width: 150px;
+}
+
+.eff-18 img {
+  min-width: 100%;
+  min-height: 100%;
+  -webkit-filter: grayscale(0%);
 }
       
       
