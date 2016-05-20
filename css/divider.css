@@ -28,7 +28,7 @@ p.separator {
 }
 
 .separator1 .bg {
-	background: url(../images/bg2.jpg) repeat center;
+	background: url(../images/vodopad.jpg) repeat center;
 	background-size: cover !important;
 	-webkit-background-size: cover !important;
 	margin: 0 auto;
@@ -40,7 +40,7 @@ p.separator {
 }
 
 .separator1 .bg2 {
-	background: url(../images/bg2.jpg) repeat center;
+	background: url(../images/vodopad.jpg) repeat center;
 }
 
 .separator1 .bg3 {
