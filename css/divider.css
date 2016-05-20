@@ -41,6 +41,7 @@ p.separator {
 
 .separator1 .bg2 {
 	background: url(../images/vodopad.jpg) repeat center;
+	background-image: url('https://raw.githubusercontent.com/khasang/SmartForecast/gh-pages/img/vodopad.jpg')
 }
 
 .separator1 .bg3 {
