@@ -46,6 +46,7 @@ p.separator {
 
 .separator1 .bg3 {
 	background: url(../images/bg3.jpg) repeat center;
+	background-image: url('https://raw.githubusercontent.com/khasang/SmartForecast/gh-pages/img/raduga.jpg')
 }
 
 .separator1 .bg4 {
