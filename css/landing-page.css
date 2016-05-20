@@ -127,7 +127,8 @@ ul.list-inline.banner-social-buttons li a {
 .banner {
     padding: 100px 0;
     color: #f8f8f8;
-    background-image: url('https://raw.githubusercontent.com/khasang/SmartForecast/gh-pages/img/footer.jpg')
+    background: url(../img/footer.jpg) no-repeat center center;
+    background-size: cover;
 }
 
 .banner h2 {
