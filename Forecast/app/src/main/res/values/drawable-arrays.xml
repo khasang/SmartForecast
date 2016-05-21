@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Headers array - Day -->
-    <string-array name="day_headers">
+    <string-array name="day_headers" translatable="false">
         <item>@drawable/header_day_green</item>
         <item>@drawable/header_day_brown</item>
         <item>@drawable/header_day_teal</item>
@@ -10,7 +10,7 @@
     </string-array>
 
     <!-- Headers array - Night -->
-    <string-array name="night_headers">
+    <string-array name="night_headers" translatable="false">
         <item>@drawable/header_night_green</item>
         <item>@drawable/header_night_brown</item>
         <item>@drawable/header_night_teal</item>
