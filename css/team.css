@@ -44,7 +44,7 @@ ul.social-buttons li a:active {
 }
 
 .my-block { 
-    position:relative; 
+    position: relative; 
     overflow: hidden;
 /*        display: block;
     margin:0 auto; */
@@ -55,7 +55,7 @@ ul.social-buttons li a:active {
     top: 0; 
     width: 100%;
     height: 100%;
-    position: absolute;
+    position: relative;
 }
 
 .my-block img.additional-image {
