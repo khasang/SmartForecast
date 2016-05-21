@@ -60,9 +60,6 @@ ul.social-buttons li a:active {
 }
 
 .my-block img.additional-image {
-    left: 0; 
-    top: 0; 
-    position:relative; 
     opacity:0;
     filter:alpha(opacity=0);
 }
