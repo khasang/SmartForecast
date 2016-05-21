@@ -59,7 +59,14 @@ ul.social-buttons li a:active {
   	height: 100%;
 }
 
-.my-block img.additional-image {opacity:0;filter:alpha(opacity=0);}
+.my-block img.additional-image {
+    left: 0; 
+    top: 0; 
+    position:relative; 
+    opacity:0;
+    filter:alpha(opacity=0);
+}
+
 .my-block:hover img.additional-image {opacity:1;filter:alpha(opacity=100);}
 .my-block:hover img.main-image, .my-block img.main-image:hover {opacity:0;filter:alpha(opacity=0);}
 	
