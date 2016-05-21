@@ -46,9 +46,8 @@ ul.social-buttons li a:active {
 .my-block { 
     position:relative; 
     margin:0 auto; 
-
-     width: 100%;
-    height: 100%;
+    height: 225px;
+    width: 225px; 
     display: block;
 }
 
