@@ -62,6 +62,8 @@ p.separator {
 
 .back-image .bg {
 	background: url(../images/header.jpg) repeat center;
+	background-size: cover !important;
+	-webkit-background-size: cover !important;
 	margin: 0 auto;
 	padding: 0;
 	position: absolute;
