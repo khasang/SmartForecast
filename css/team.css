@@ -51,8 +51,9 @@ ul.social-buttons li a:active {
 }
 
 .my-block img { 
+    left: 0; 
+    top: 0; 
 
-    position:absolute; 
 
       	width: 100%;
   	height: 100%;
