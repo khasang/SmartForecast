@@ -53,3 +53,9 @@ p.separator {
 	background: url(../images/footer.jpg) repeat center;
 	background-image: url('https://raw.githubusercontent.com/khasang/SmartForecast/gh-pages/img/footer.jpg')
 }
+
+.back-image {
+	width: 100%;
+	height: 100%;
+	position: relative;
+}
