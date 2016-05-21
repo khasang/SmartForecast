@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="pref_units_values">
+        <item>@string/pref_units_celsius</item>
+        <item>@string/pref_units_kelvin</item>
+        <item>@string/pref_units_fahrenheit</item>
+    </string-array>
+
+    <string-array name="pref_units_options">
+        <item>@string/pref_units_label_celsius</item>
+        <item>@string/pref_units_label_kelvin</item>
+        <item>@string/pref_units_label_fahrenheit</item>
+    </string-array>
+
+    <string-array name="pref_speed_values">
+        <item>@string/pref_speed_meter_sec</item>
+        <item>@string/pref_speed_foot_sec</item>
+        <item>@string/pref_speed_km_hour</item>
+        <item>@string/pref_speed_mile_hour</item>
+    </string-array>
+
+    <string-array name="pref_speed_options">
+        <item>@string/pref_speed_meter_sec_label</item>
+        <item>@string/pref_speed_foot_sec_label</item>
+        <item>@string/pref_speed_km_hour_label</item>
+        <item>@string/pref_speed_mile_hour_label</item>
+    </string-array>
+
+    <string-array name="pref_location_options">
+        <item>@string/pref_location_label_current</item>
+        <item>@string/pref_location_label_last</item>
+    </string-array>
+
+    <string-array name="pref_location_values">
+        <item>@string/pref_location_current</item>
+        <item>@string/pref_location_last</item>
+    </string-array>
+
+    <string-array name="pref_welcome_values">
+        <item>@string/pref_welcome_off</item>
+        <item>@string/pref_welcome_default</item>
+    </string-array>
+
+    <string-array name="pref_welcome_options">
+        <item>@string/pref_welcome_off_label</item>
+        <item>@string/pref_welcome_default_label</item>
+    </string-array>
+
+    <string-array name="pref_night_mode_options">
+        <item>@string/pref_night_mode_off_label</item>
+        <item>@string/pref_night_mode_on_label</item>
+        <item>@string/pref_night_mode_auto_label</item>
+    </string-array>
+
+    <string-array name="pref_night_mode_values">
+        <item>@string/pref_night_mode_off</item>
+        <item>@string/pref_night_mode_on</item>
+        <item>@string/pref_night_mode_auto</item>
+    </string-array>
+
+    <string-array name="pref_color_scheme_options">
+        <item>@string/pref_color_scheme_teal_label</item>
+        <item>@string/pref_color_scheme_green_label</item>
+        <item>@string/pref_color_scheme_brown_label</item>
+        <item>@string/pref_color_scheme_indigo_label</item>
+        <item>@string/pref_color_scheme_purple_label</item>
+    </string-array>
+
+    <string-array name="pref_color_scheme_values">
+        <item>@string/pref_color_scheme_teal</item>
+        <item>@string/pref_color_scheme_green</item>
+        <item>@string/pref_color_scheme_brown</item>
+        <item>@string/pref_color_scheme_indigo</item>
+        <item>@string/pref_color_scheme_purple</item>
+    </string-array>
+
+    <string-array name="icons_set_options">
+        <item>@string/pref_icons_set_default_label</item>
+        <item>@string/pref_icons_set_mike_color_label</item>
+        <item>@string/pref_icons_set_mike_bw_label</item>
+    </string-array>
+
+    <string-array name="icons_set_values">
+        <item>@string/pref_icons_set_default</item>
+        <item>@string/pref_icons_set_mike_color</item>
+        <item>@string/pref_icons_set_mike_bw</item>
+    </string-array>
+
+</resources>

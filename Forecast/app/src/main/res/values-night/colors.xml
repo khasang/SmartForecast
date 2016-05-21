@@ -1,20 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary">#388E3C</color>
-    <color name="primary_dark">#2E7D32</color>
-    <color name="primary_light">#4CAF50</color>
+    <color name="primary_green">#2E7D32</color>
+    <color name="primary_green_dark">#1B5E20</color>
+    <color name="primary_green_light">#4CAF50</color>
 
-    <color name="background_window">#FF7F7F7F</color>
-    <color name="background_card">#FF696969</color>
-    <color name="new_city_card">#FF3F3F3F</color>
+    <color name="primary_brown">#4E342E</color>
+    <color name="primary_brown_dark">#3E2723</color>
+    <color name="primary_brown_light">#795548</color>
 
-    <color name="primary_text">#FAFAFA</color>
-    <color name="secondary_text">#EFEFEF</color>
+    <color name="primary_indigo">#283593</color>
+    <color name="primary_indigo_dark">#1A237E</color>
+    <color name="primary_indigo_light">#3F51B5</color>
 
-    <color name="material_drawer_background">@color/background_window</color>
-    <color name="material_drawer_selected">@color/background_card</color>
-    <color name="material_drawer_primary_text">@color/primary_text</color>
-    <color name="material_drawer_secondary_text">@color/primary_text</color>
+    <color name="primary_teal">#00695C</color>
+    <color name="primary_teal_dark">#004D40</color>
+    <color name="primary_teal_light">#009688</color>
+
+    <color name="primary_purple">#6A1B9A</color>
+    <color name="primary_purple_dark">#4A148C</color>
+    <color name="primary_purple_light">#9C27B0</color>
+
+    <color name="text_primary">@android:color/primary_text_dark</color>
+    <color name="text_secondary">@android:color/secondary_text_dark</color>
+
+    <color name="city_card_background">@color/cardview_dark_background</color>
+    <color name="new_city_card">#FF696969</color>
+
+    <color name="background_toast">@color/city_card_background</color>
+
+    <color name="material_drawer_background">@color/material_drawer_dark_background</color>
+    <color name="material_drawer_hint_text">@color/material_drawer_dark_hint_text</color>
+    <color name="material_drawer_hint_icon">@color/material_drawer_dark_hint_icon</color>
+    <color name="material_drawer_divider">@color/material_drawer_dark_divider</color>
+    <color name="material_drawer_selected">@color/material_drawer_divider</color>
+
+    <color name="material_drawer_selected_text">@color/primary_green</color>
+    <color name="material_drawer_primary_text">@color/text_primary</color>
+    <color name="material_drawer_secondary_text">@color/text_primary</color>
     <color name="material_drawer_primary_icon">@color/material_drawer_primary_text</color>
-    <color name="material_drawer_selected_text">@color/primary_light</color>
 </resources>

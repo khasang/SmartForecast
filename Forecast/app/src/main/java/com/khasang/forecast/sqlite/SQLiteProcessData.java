@@ -86,11 +86,25 @@ public class SQLiteProcessData {
     }
 
     // Загрузка последних сохраненных координат из настроек.
+    // bug: parseDouble уходит в Exception при возвращении пустого значения "" latitude|longitude из БД
     public Coordinate loadLastPositionCoordinates() {
         ArrayList<HashMap<String, String>> recList = SQLiteWork.getInstance().queryOpen(SQLiteFields.QUERY_SELECT_SETTINGS, null);
+        double latitude;
+        double longitude;
         try {
-            double latitude = Double.parseDouble(recList.get(0).get(SQLiteFields.CURRENT_LATITUDE));
-            double longitude = Double.parseDouble(recList.get(0).get(SQLiteFields.CURRENT_LONGITUDE));
+            String stringLatitude = recList.get(0).get(SQLiteFields.CURRENT_LATITUDE);
+            if(stringLatitude.equals("")){
+                latitude = 0;
+            } else {
+                latitude = Double.parseDouble(stringLatitude);
+            }
+
+            String stringLongitude = recList.get(0).get(SQLiteFields.CURRENT_LONGITUDE);
+            if(stringLongitude.equals("")){
+                longitude = 0;
+            } else {
+                longitude = Double.parseDouble(stringLongitude);
+            }
 
             return new Coordinate(latitude, longitude);
         } catch (Exception e){

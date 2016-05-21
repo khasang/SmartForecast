@@ -122,4 +122,23 @@
 
     <string name="error_get_coordinates">Не могу определить координаты запрашиваемого местоположения</string>
     <string name="forecast_unavailable">Прогноз погоды недоступен</string>
+
+    <!-- TODO TRANSLATE -->
+    <string name="pref_header_personalization">Персонализация</string>
+    <string name="pref_night_mode_title">Тема</string>
+    <string name="pref_night_mode_off_label">Дневная тема</string>
+    <string name="pref_night_mode_on_label">Ночная тема</string>
+    <string name="pref_night_mode_auto_label">Основана на времени суток</string>
+
+    <string name="pref_color_scheme_title">Цветовая схема</string>
+    <string name="pref_color_scheme_green_label">Зеленая</string>
+    <string name="pref_color_scheme_brown_label">Коричневая</string>
+    <string name="pref_color_scheme_teal_label">Бирюзовая</string>
+    <string name="pref_color_scheme_indigo_label">Темно-синяя</string>
+    <string name="pref_color_scheme_purple_label">Фиолетовая</string>
+
+    <string name="pref_icons_set_title">Набор иконок</string>
+    <string name="pref_icons_set_default_label">Стандартный набор</string>
+    <string name="pref_icons_set_mike_color_label">Набор цветовой схемы</string>
+    <string name="pref_icons_set_mike_bw_label">Чёрно-белый набор</string>
 </resources>

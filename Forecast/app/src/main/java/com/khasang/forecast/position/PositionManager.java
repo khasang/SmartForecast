@@ -2,12 +2,15 @@ package com.khasang.forecast.position;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.PreferenceManager;
 
 import com.khasang.forecast.AppUtils;
@@ -26,6 +29,8 @@ import com.khasang.forecast.exceptions.NoAvailableAddressesException;
 import com.khasang.forecast.sqlite.SQLiteProcessData;
 import com.khasang.forecast.stations.WeatherStation;
 import com.khasang.forecast.stations.WeatherStationFactory;
+import com.mikepenz.iconics.IconicsDrawable;
+import com.mikepenz.weather_icons_typeface_library.WeatherIcons;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -57,6 +62,12 @@ public class PositionManager {
     private boolean lastResponseIsFailure;
     private CurrentLocationManager locationManager;
 
+    private Drawable[] iconsSet;
+    IconicsDrawable iconNa = null;
+    private boolean isSvgIconsUsed = false;
+    private int currentWeatherIconColor;
+    private int forecastWeatherIconColor;
+
     public synchronized void setReceiver(IWeatherReceiver receiver) {
         this.receiver = receiver;
     }
@@ -69,6 +80,10 @@ public class PositionManager {
 
     private PositionManager() {
         lastResponseIsFailure = false;
+        iconNa = new IconicsDrawable(MyApplication.getAppContext())
+                .icon(WeatherIcons.Icon.wic_na)
+                .sizeDp(80)
+                .paddingDp(4);
     }
 
     public static PositionManager getInstance() {
@@ -84,12 +99,13 @@ public class PositionManager {
         return instance;
     }
 
-    public static PositionManager getInstance(IMessageProvider provider) {
+    public static PositionManager getInstance(IMessageProvider provider, IWeatherReceiver receiver) {
         if (instance == null) {
             synchronized (PositionManager.class) {
                 if (instance == null) {
                     instance = new PositionManager();
                     instance.setMessageProvider(provider);
+                    instance.setReceiver(receiver);
                     instance.initManager();
                 }
             }
@@ -130,9 +146,16 @@ public class PositionManager {
         } else {
             state = true;
             favouritesPositions.add(cityName);
+            Collections.sort(favouritesPositions);
         }
         dbManager.saveTownFavourite(state, cityName);
         return state;
+    }
+
+    public void removeFavoriteCity(String city) {
+        if (favouritesPositions != null) {
+            favouritesPositions.remove(city);
+        }
     }
 
     public boolean isFavouriteCity(String cityName) {
@@ -141,6 +164,12 @@ public class PositionManager {
         } catch (NullPointerException | ClassCastException e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    public void clearFavorites() {
+        if (favouritesPositions != null) {
+            favouritesPositions.clear();
         }
     }
 
@@ -286,15 +315,19 @@ public class PositionManager {
             positions.remove(name);
             dbManager.deleteTown(name);
         }
+        if (isFavouriteCity(name)) {
+            removeFavoriteCity(name);
+        }
     }
 
     public void removePositions() {
         positions.clear();
+        clearFavorites();
         dbManager.deleteTowns();
     }
 
     /**
-     * Метод, с помощью которого из списока "Избранных" выбираем другую локацию в качестве текущей
+     * Метод, с помощью которого из списка городов выбираем другую локацию в качестве текущей
      *
      * @param name объект типа {@link String}, содержащий название города
      */
@@ -362,7 +395,7 @@ public class PositionManager {
      * @param cityID идентификатор местоположения
      * @return обьект типа {@link Position}
      */
-    private Position getPosition(int cityID) {
+    public Position getPosition(int cityID) {
         if (cityID == 0) {
             return currentLocation;
         }
@@ -452,6 +485,7 @@ public class PositionManager {
             } catch (NullPointerException e) {
                 // Отсроченный запрос активити уже уничтожено
                 e.printStackTrace();
+                updateWeatherFromDB();
             }
         }
     }
@@ -701,5 +735,68 @@ public class PositionManager {
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
+    }
+
+    public void generateIconSet(Context context) {
+        iconsSet = AppUtils.createIconsSet(context);
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        String iconsSet = sp.getString(context.getString(R.string.pref_icons_set_key), context.getString(R.string.pref_icons_set_default));
+        currentWeatherIconColor = ContextCompat.getColor(context, R.color.current_weather_color);
+        forecastWeatherIconColor = ContextCompat.getColor(context, R.color.text_primary);
+        if (iconsSet.equals(context.getString(R.string.pref_icons_set_mike_color))) {
+            isSvgIconsUsed = true;
+            int currentNightMode = context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+            String colorScheme = sp.getString(context.getString(R.string.pref_color_scheme_key), context.getString(R.string.pref_color_scheme_teal));
+            if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
+            } else if (colorScheme.equals(context.getString(R.string.pref_color_scheme_brown))) {
+                forecastWeatherIconColor = ContextCompat.getColor(context, R.color.primary_brown);
+            } else if (colorScheme.equals(context.getString(R.string.pref_color_scheme_teal))) {
+                forecastWeatherIconColor = ContextCompat.getColor(context, R.color.primary_teal);
+            } else if (colorScheme.equals(context.getString(R.string.pref_color_scheme_indigo))) {
+                forecastWeatherIconColor = ContextCompat.getColor(context, R.color.primary_indigo);
+            } else if (colorScheme.equals(context.getString(R.string.pref_color_scheme_purple))) {
+                forecastWeatherIconColor = ContextCompat.getColor(context, R.color.primary_purple);
+            } else {
+                forecastWeatherIconColor = ContextCompat.getColor(context, R.color.primary_green);
+            }
+        } else {
+            isSvgIconsUsed = iconsSet.equals(context.getString(R.string.pref_icons_set_mike_bw));
+        }
+    }
+
+    public Drawable getWeatherIcon(int iconNumber, boolean isCurrentWeatherIcon) {
+        Drawable icon = null;
+        try {
+            if (iconsSet[iconNumber] != null) {
+                icon = iconsSet[iconNumber];
+                if (isSvgIconsUsed) {
+                    if (isCurrentWeatherIcon) {
+                        IconicsDrawable cIcon = ((IconicsDrawable) icon).clone();
+                        cIcon.color(currentWeatherIconColor);
+                        return cIcon;
+                    } else {
+                        icon = ((IconicsDrawable) icon)
+                                .color(forecastWeatherIconColor);
+                    }
+                }
+            } else if (isCurrentWeatherIcon) {
+                IconicsDrawable cIcon = ((IconicsDrawable) iconsSet[AppUtils.ICON_INDEX_NA])
+                        .clone();
+                cIcon.color(currentWeatherIconColor);
+                return cIcon;
+            } else {
+                icon = ((IconicsDrawable) iconsSet[AppUtils.ICON_INDEX_NA])
+                        .color(forecastWeatherIconColor);
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            if (isCurrentWeatherIcon) {
+                icon = iconNa.clone();
+                ((IconicsDrawable) icon).color(currentWeatherIconColor);
+            } else {
+                icon = iconNa.color(forecastWeatherIconColor);
+            }
+        }
+        return icon;
     }
 }

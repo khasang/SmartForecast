@@ -2,22 +2,43 @@
 <resources>
     <color name="accent">#FFC107</color>
 
-    <color name="icons">#FFFFFF</color>
-    <color name="divider">#B6B6B6</color>
+    <color name="primary_green">#4CAF50</color>
+    <color name="primary_green_dark">#388E3C</color>
+    <color name="primary_green_light">#C8E6C9</color>
 
-    <color name="snackbar_text">#FFFFFF</color>
-    <color name="background_splash">#E3EFF7</color>
-    <color name="background_toast">#CFCFCF</color>
+    <color name="primary_brown">#795548</color>
+    <color name="primary_brown_dark">#5D4037</color>
+    <color name="primary_brown_light">#D7CCC8</color>
 
-    <color name="primary">#4CAF50</color>
-    <color name="primary_dark">#388E3C</color>
-    <color name="primary_light">#C8E6C9</color>
+    <color name="primary_indigo">#3F51B5</color>
+    <color name="primary_indigo_dark">#303F9F</color>
+    <color name="primary_indigo_light">#C5CAE9</color>
 
-    <color name="background_window">#FFF5F5F5</color>
-    <color name="background_card">@color/background_window</color>
+    <color name="primary_teal">#009688</color>
+    <color name="primary_teal_dark">#00796B</color>
+    <color name="primary_teal_light">#B2DFDB</color>
+
+    <color name="primary_purple">#9C27B0</color>
+    <color name="primary_purple_dark">#7B1FA2</color>
+    <color name="primary_purple_light">#FFCCBC</color>
+
+    <color name="text_primary">@android:color/primary_text_light</color>
+    <color name="text_secondary">@android:color/secondary_text_light</color>
+
+    <color name="city_card_background">@color/cardview_light_background</color>
     <color name="new_city_card">#FFF8E1</color>
 
-    <color name="primary_text">#212121</color>
-    <color name="secondary_text">#727272</color>
+    <color name="background_toast">#CFCFCF</color>
+    <color name="background_splash">#E3EFF7</color>
 
+    <color name="current_weather_color">#F3F3F3</color>
+    <color name="snackbar_text">@color/current_weather_color</color>
+
+    <color name="material_drawer_selected_text">@color/primary_green</color>
+    <color name="splash_screen_shimmer_text">@color/material_drawer_selected_text</color>
+
+    <color name="chart_line">@color/accent</color>
+    <color name="chart_max_temperature">#F44336</color>
+    <color name="chart_min_temperature">#2196F3</color>
+    <color name="chart_text">@color/current_weather_color</color>
 </resources>
