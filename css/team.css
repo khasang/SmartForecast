@@ -49,6 +49,7 @@ ul.social-buttons li a:active {
     height: 225px;
     width: 225px; 
     display: block;
+    overflow: hidden;
 }
 
 .my-block img { 
@@ -89,7 +90,6 @@ img.crowdin:hover {
 
 .eff-18 {
   overflow: hidden;
-  cursor: pointer;
   position: relative;
 }
 .eff-18 img {
