@@ -48,6 +48,8 @@ ul.social-buttons li a:active {
     margin:0 auto; 
     /* height: 225px;
     width: 225px; */
+    width: 100%;
+    height: 100%;
     display: block;
 }
 
