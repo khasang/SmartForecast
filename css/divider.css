@@ -74,5 +74,5 @@ p.separator {
 
 .back-image .bg2 {
 	background: url(../images/header.jpg) repeat center;
-	background-image: url('../images/header.jpg')
+	background-image: url('https://raw.githubusercontent.com/khasang/SmartForecast/gh-pages/img/header.jpg')
 }
