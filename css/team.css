@@ -54,12 +54,16 @@ ul.social-buttons li a:active {
     left: 0; 
     top: 0; 
     position:relative; 
-
       	width: 100%;
   	height: 100%;
 }
 
 .my-block img.additional-image {
+	    left: 0; 
+    top: 0; 
+    position:relative; 
+      	width: 100%;
+  	height: 100%;
     opacity:0;
     filter:alpha(opacity=0);
 }
