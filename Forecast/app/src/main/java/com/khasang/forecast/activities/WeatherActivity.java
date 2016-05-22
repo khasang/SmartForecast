@@ -204,12 +204,13 @@ public class WeatherActivity extends AppCompatActivity
             case NavigationDrawer.NAVIGATION_CITY_LIST:
                 startCityPickerActivity();
                 break;
+            case NavigationDrawer.NAVIGATION_FAVORITES:
+                break;
             case NavigationDrawer.NAVIGATION_SETTINGS:
                 startSettingsActivity();
                 break;
             case NavigationDrawer.NAVIGATION_FEEDBACK:
-                onInviteClicked();
-           /*     String url;
+                String url;
                 switch (Locale.getDefault().getLanguage()) {
                     case "ru":
                         url = MyApplication.getAppContext().getString(R.string.google_form_ru);
@@ -219,9 +220,11 @@ public class WeatherActivity extends AppCompatActivity
                         break;
                 }
                 Intent feedbackIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                startActivity(feedbackIntent);*/
+                startActivity(feedbackIntent);
                 break;
-            case NavigationDrawer.NAVIGATION_FAVORITES:
+            case NavigationDrawer.NAVIGATION_INVITE:
+                onInviteClicked();
+                break;
             case NavigationDrawer.NAVIGATION_APP_NAME:
                 break;
             default:

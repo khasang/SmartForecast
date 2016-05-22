@@ -39,7 +39,8 @@ public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
     public static final int NAVIGATION_FAVORITES = 2;
     public static final int NAVIGATION_SETTINGS = 3;
     public static final int NAVIGATION_FEEDBACK = 4;
-    public static final int NAVIGATION_APP_NAME = 5;
+    public static final int NAVIGATION_INVITE = 5;
+    public static final int NAVIGATION_APP_NAME = 6;
 
     public static final int SUB_ITEMS_BASE_INDEX = 2000;
 
@@ -96,6 +97,10 @@ public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
             .withIcon(GoogleMaterial.Icon.gmd_feedback)
             .withIdentifier(NAVIGATION_FEEDBACK);
 
+        SecondaryDrawerItem invite = new SecondaryDrawerItem().withName(R.string.drawer_item_invite)
+                .withIcon(GoogleMaterial.Icon.gmd_message)
+                .withIdentifier(NAVIGATION_INVITE);
+
         PrimaryDrawerItem footer = new PrimaryDrawerItem().withName(R.string.app_name)
             .withEnabled(false)
             .withIdentifier(NAVIGATION_APP_NAME);
@@ -106,7 +111,7 @@ public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
             .withSelectedItem(-1)
             .withActionBarDrawerToggle(true)
             .withAccountHeader(accountHeader)
-            .addDrawerItems(currentPlace, cityList, favorites, divider, settings, feedBack)
+            .addDrawerItems(currentPlace, cityList, favorites, divider, settings, feedBack, invite)
             .addStickyDrawerItems(footer)
             .withOnDrawerItemClickListener(this)
             .build();
@@ -127,6 +132,7 @@ public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
             navigationItemClickListener.onNavigationItemClicked(identifier);
         }
         switch (identifier) {
+            case NAVIGATION_CURRENT_PLACE:
             case NAVIGATION_CITY_LIST:
                 // TODO: нужен идентификатор города
                 // Можно было бы не скрывать список городов, если один из них активен. Без идентификатора
@@ -134,17 +140,19 @@ public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
                 favoritesExposed = false;
                 result.closeDrawer();
                 break;
-            case NAVIGATION_SETTINGS:
-            case NAVIGATION_FEEDBACK:
-                result.closeDrawer();
-                break;
             case NAVIGATION_FAVORITES:
                 favoritesExposed = !favoritesExposed;
                 updateFavorites();
                 break;
+            case NAVIGATION_SETTINGS:
+                break;
+            case NAVIGATION_FEEDBACK:
+                result.closeDrawer();
+                break;
+            case NAVIGATION_INVITE:
+                break;
             case NAVIGATION_APP_NAME:
                 break;
-            case NAVIGATION_CURRENT_PLACE:
             default:
                 activeIdentifier = identifier;
                 result.closeDrawer();
