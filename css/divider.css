@@ -93,9 +93,5 @@ p.separator {
 	z-index: 200;
 	width: 100%;
 	height: 100%;
-}
-
-.back-contact .bg2 {
-	background: url(../images/footer.jpg) repeat center;
 	background-image: url('https://raw.githubusercontent.com/khasang/SmartForecast/gh-pages/img/footer.jpg')
 }
