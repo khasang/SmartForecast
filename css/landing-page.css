@@ -130,22 +130,21 @@ ul.list-inline.banner-social-buttons li a {
     background: url(../img/raduga.jpg) no-repeat center center; 
     background-size: cover;
     
-    	width: 100%;
-	height: 100%;
 	position: relative;
 }
 
 
-.back-contact .bg {
-
-	
+.banner .bg {
+	background: url(../images/footer.jpg) repeat center;
+	background-size: cover !important;
+	-webkit-background-size: cover !important;
 	margin: 0 auto;
 	padding: 0;
 	position: relative;
 	z-index: 200;
 	width: 100%;
 	height: 100%;
-
+	background-image: url('https://raw.githubusercontent.com/khasang/SmartForecast/gh-pages/img/footer.jpg')
 }
 
 .banner h2 {
