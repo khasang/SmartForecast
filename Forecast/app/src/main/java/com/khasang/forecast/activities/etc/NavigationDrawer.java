@@ -1,10 +1,14 @@
 package com.khasang.forecast.activities.etc;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.net.Uri;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+
+import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.khasang.forecast.R;
 import com.khasang.forecast.position.PositionManager;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
@@ -208,4 +212,5 @@ public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
 
         void onNavigationItemClicked(int identifier);
     }
+
 }
