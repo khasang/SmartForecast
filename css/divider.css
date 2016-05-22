@@ -84,7 +84,7 @@ p.separator {
 }
 
 .back-contact .bg {
-	background: url(../images/header.jpg) repeat center;
+	background: url(../images/footer.jpg) repeat center;
 	background-size: cover !important;
 	-webkit-background-size: cover !important;
 	margin: 0 auto;
@@ -97,5 +97,5 @@ p.separator {
 
 .back-contact .bg2 {
 	background: url(../images/footer.jpg) repeat center;
-	background-image: url('https://raw.githubusercontent.com/khasang/SmartForecast/gh-pages/img/raduga.jpg')
+	background-image: url('https://raw.githubusercontent.com/khasang/SmartForecast/gh-pages/img/footer.jpg')
 }
