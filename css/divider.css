@@ -89,7 +89,7 @@ p.separator {
 	position: relative;
 	-webkit-background-size: cover !important;
 	padding: 0;
-	margin: 0 0;
+	margin: 0 auto;
 	
 	z-index: 200;
 	width: 100%;
