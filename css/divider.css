@@ -86,12 +86,8 @@ p.separator {
 .back-contact .bg {
 	background: url(../images/footer.jpg) repeat center;
 	background-size: cover !important;
+	position: relative;
 	-webkit-background-size: cover !important;
-	margin: 0 auto;
-	padding: 0;
-	position: absolute;
-	z-index: 200;
-	width: 100%;
-	height: 100%;
+
 	background-image: url('https://raw.githubusercontent.com/khasang/SmartForecast/gh-pages/img/footer.jpg')
 }
