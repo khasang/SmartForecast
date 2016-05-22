@@ -86,7 +86,7 @@ p.separator {
 	background-size: cover !important;
 	-webkit-background-size: cover !important;
 	margin: 0 auto;
-	padding: 0;
+	padding: 100px 0;
 	position: relative;
 	z-index: 200;
 	width: 100%;
