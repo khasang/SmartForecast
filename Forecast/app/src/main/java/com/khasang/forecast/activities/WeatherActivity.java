@@ -37,6 +37,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.Logger;
 import com.khasang.forecast.MyApplication;
@@ -57,6 +58,7 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.iconics.context.IconicsContextWrapper;
 import com.mikepenz.octicons_typeface_library.Octicons;
+
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
@@ -154,10 +156,10 @@ public class WeatherActivity extends AppCompatActivity
             dailyForecastFragment.addScrollListener(weatherScrollListener);
 
             getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, hourlyForecastFragment)
-                .add(R.id.fragment_container, dailyForecastFragment)
-                .hide(dailyForecastFragment)
-                .commit();
+                    .add(R.id.fragment_container, hourlyForecastFragment)
+                    .add(R.id.fragment_container, dailyForecastFragment)
+                    .hide(dailyForecastFragment)
+                    .commit();
         }
     }
 
@@ -223,8 +225,8 @@ public class WeatherActivity extends AppCompatActivity
                 break;
             default:
                 String newCity = PositionManager.getInstance()
-                    .getFavouritesList()
-                    .get(identifier - NavigationDrawer.SUB_ITEMS_BASE_INDEX);
+                        .getFavouritesList()
+                        .get(identifier - NavigationDrawer.SUB_ITEMS_BASE_INDEX);
                 changeDisplayedCity(newCity);
         }
     }
@@ -359,7 +361,7 @@ public class WeatherActivity extends AppCompatActivity
 
         PermissionChecker permissionChecker = new PermissionChecker();
         boolean isLocationPermissionGranted =
-            permissionChecker.isPermissionGranted(this, PERMISSION_REQUEST_FINE_LOCATION);
+                permissionChecker.isPermissionGranted(this, PERMISSION_REQUEST_FINE_LOCATION);
         navigationDrawer.updateBadges(isLocationPermissionGranted);
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
@@ -511,7 +513,7 @@ public class WeatherActivity extends AppCompatActivity
                 wCurrent.getDescription().substring(0, 1).toUpperCase() + wCurrent.getDescription()
                         .substring(1)));
         Drawable weatherIcon = PositionManager.getInstance().getWeatherIcon(wCurrent.getPrecipitation()
-                    .getIconIndex(AppUtils.isDayFromString(String.format(Locale.getDefault(), "%tR", date))), true);
+                .getIconIndex(AppUtils.isDayFromString(String.format(Locale.getDefault(), "%tR", date))), true);
         currWeather.setImageDrawable(weatherIcon);
 
         wind.setText(Html.fromHtml(
@@ -551,7 +553,7 @@ public class WeatherActivity extends AppCompatActivity
             dailyForecastFragment.scroll(appbarVisible);
         } else {
             ft.show(hourlyForecastFragment).hide(dailyForecastFragment).commit();
-			icon.icon(Octicons.Icon.oct_calendar);
+            icon.icon(Octicons.Icon.oct_calendar);
             updateWeatherChart(true);
 
             boolean appbarVisible = chatLayout.getLayoutParams().height == 0;

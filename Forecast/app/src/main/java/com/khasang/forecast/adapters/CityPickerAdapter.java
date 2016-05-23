@@ -1,7 +1,6 @@
 package com.khasang.forecast.adapters;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -10,9 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
 import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.R;
 import com.khasang.forecast.position.PositionManager;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,19 +25,16 @@ public class CityPickerAdapter extends HeaderFooterAdapter<String> {
 
     private List<String> newCities;
     private View.OnClickListener onClickListener;
-    private View.OnLongClickListener onLongClickListener;
 
-    public CityPickerAdapter(List<String> itemList, View.OnClickListener onClickListener,
-        View.OnLongClickListener onLongClickListener) {
+    public CityPickerAdapter(List<String> itemList, View.OnClickListener onClickListener) {
         super(itemList);
         this.onClickListener = onClickListener;
-        this.onLongClickListener = onLongClickListener;
         this.newCities = new ArrayList<>();
     }
 
     public void addCityToNewLocationsList(String city) {
-    newCities.add(city);
-  }
+        newCities.add(city);
+    }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -46,7 +44,7 @@ public class CityPickerAdapter extends HeaderFooterAdapter<String> {
         } else {
             Context context = parent.getContext();
             View view = LayoutInflater.from(context).inflate(R.layout.recycler_item, parent, false);
-            return new ViewHolder(view, onClickListener, onLongClickListener);
+            return new ViewHolder(view, onClickListener);
         }
     }
 
@@ -74,14 +72,13 @@ public class CityPickerAdapter extends HeaderFooterAdapter<String> {
         private ImageButton itemImageButton;
         private CardView cardView;
 
-        public ViewHolder(View itemView, View.OnClickListener listener, View.OnLongClickListener longListener) {
+        public ViewHolder(View itemView, View.OnClickListener listener) {
             super(itemView);
             cardView = (CardView) itemView;
             itemTextView = (TextView) cardView.findViewById(R.id.cityTW);
             itemImageButton = ((ImageButton) cardView.findViewById(R.id.starBtn));
             itemImageButton.setOnClickListener(listener);
             cardView.setOnClickListener(listener);
-            cardView.setOnLongClickListener(longListener);
         }
 
         public void setItemText(CharSequence text) {
