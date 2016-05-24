@@ -1,6 +1,5 @@
 package com.khasang.forecast;
 
-
 import android.util.Log;
 
 import com.squareup.okhttp.Call;
@@ -26,10 +25,9 @@ public class PlaceProvider {
     private final static String PLACE_API_BASE_URL = "https://maps.googleapis.com/maps/api/place/autocomplete/json";
     private final static String API_KEY = MyApplication.getAppContext().getString(R.string.place_provider_key);
 
+    ArrayList<String> resultList = null;
 
-    ArrayList resultList = null;
-
-    public ArrayList autocomplete(String input) {
+    public ArrayList<String> autocomplete(String input) {
         try {
             String URL = PLACE_API_BASE_URL + "?key="
                     + API_KEY + "&input="
@@ -53,7 +51,7 @@ public class PlaceProvider {
                     try {
                         JSONObject jsonObject = new JSONObject(jsonData);
                         JSONArray jsonArray = jsonObject.getJSONArray("predictions");
-                        resultList = new ArrayList(jsonArray.length());
+                        resultList = new ArrayList<String>(jsonArray.length());
                         for (int i = 0; i < jsonArray.length(); i++) {
                             Log.i(TAG, jsonArray.getJSONObject(i).getString("description"));
                             resultList.add(jsonArray.getJSONObject(i).getString("description"));

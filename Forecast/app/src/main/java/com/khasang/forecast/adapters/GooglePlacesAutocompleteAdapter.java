@@ -24,7 +24,7 @@ public class GooglePlacesAutocompleteAdapter extends ArrayAdapter
     private PlaceProvider mPlaceProvider;
     private final static int MAX_RESULT = 10;
     private Context mContext;
-
+    
     public GooglePlacesAutocompleteAdapter(Context context, int textViewResourceId) {
         super(context, textViewResourceId);
         mContext = context;
@@ -55,14 +55,18 @@ public class GooglePlacesAutocompleteAdapter extends ArrayAdapter
 
     @Override
     public Filter getFilter() {
-        Filter filter = new Filter() {
+        return new Filter() {
+            FilterResults filterResults = new FilterResults();
+
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
-                FilterResults filterResults = new FilterResults();
                 if (constraint != null) {
-                    List<String> predictions = mPlaceProvider.autocomplete(constraint.toString());
-                    filterResults.values = predictions;
-                    filterResults.count = predictions.size();
+                    char lastSym = constraint.charAt(constraint.length() - 1);
+                    if ((constraint.length() % 4 == 0) || (lastSym == ' ') || (lastSym == '-') || (constraint.length() == 2)) {
+                        List<String> predictions = mPlaceProvider.autocomplete(constraint.toString());
+                        filterResults.values = predictions;
+                        filterResults.count = predictions.size();
+                    }
                 }
                 return filterResults;
             }
@@ -77,6 +81,5 @@ public class GooglePlacesAutocompleteAdapter extends ArrayAdapter
                 }
             }
         };
-        return filter;
     }
 }
