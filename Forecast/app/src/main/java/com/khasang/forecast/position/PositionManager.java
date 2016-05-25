@@ -469,7 +469,7 @@ public class PositionManager {
             if (!activePosition.getLocationName().isEmpty()) {
                 updateWeatherFromDB();
             }
-            sendMessage(R.string.update_error_net_not_availble, Snackbar.LENGTH_LONG);
+            sendMessage(R.string.update_error_net_not_available, Snackbar.LENGTH_LONG);
         } else {
             LinkedList<WeatherStation.ResponseType> requestQueue = new LinkedList<>();
             requestQueue.add(WeatherStation.ResponseType.CURRENT);

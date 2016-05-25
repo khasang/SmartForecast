@@ -7,15 +7,15 @@ import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 
 import com.khasang.forecast.R;
-import com.khasang.forecast.fragments.AboutFragment;
+import com.khasang.forecast.fragments.TeamFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Активити "О приложении"
+ * Активити про разработчиков
  */
-public class AboutActivity extends AppCompatActivity {
+public class TeamActivity extends AppCompatActivity {
 
     @BindView(R.id.toolbar) Toolbar toolbar;
 
@@ -26,15 +26,15 @@ public class AboutActivity extends AppCompatActivity {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         String colorScheme = sp.getString(getString(R.string.pref_color_scheme_key), getString(R.string.pref_color_scheme_teal));
         if (colorScheme.equals(getString(R.string.pref_color_scheme_brown))) {
-            setTheme(R.style.AppTheme_About_Brown);
+            setTheme(R.style.AppTheme_Team_Brown);
         } else if (colorScheme.equals(getString(R.string.pref_color_scheme_teal))) {
-            setTheme(R.style.AppTheme_About_Teal);
+            setTheme(R.style.AppTheme_Team_Teal);
         } else if (colorScheme.equals(getString(R.string.pref_color_scheme_indigo))) {
-            setTheme(R.style.AppTheme_About_Indigo);
+            setTheme(R.style.AppTheme_Team_Indigo);
         } else if (colorScheme.equals(getString(R.string.pref_color_scheme_purple))) {
-            setTheme(R.style.AppTheme_About_Purple);
+            setTheme(R.style.AppTheme_Team_Purple);
         } else {
-            setTheme(R.style.AppTheme_About_Green);
+            setTheme(R.style.AppTheme_Team_Green);
         }
         setContentView(R.layout.activity_one_fragment);
         ButterKnife.bind(this);
@@ -44,7 +44,15 @@ public class AboutActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         getSupportFragmentManager().beginTransaction()
-            .replace(R.id.fragment_container, new AboutFragment())
+            .replace(R.id.fragment_container, new TeamFragment())
             .commit();
+    }
+
+    private void setupToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 }

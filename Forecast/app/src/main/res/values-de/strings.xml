@@ -27,7 +27,7 @@
     <string name="change_location">Standort verändern</string>
     <string name="city_exist">Die Stadt ist in der Liste schon anwesend.</string>
     <string name="update_error_location_not_found">Die Stadt fehlt in die Ortliste.</string>
-    <string name="update_error_net_not_availble">Der Fehler der Erneuerung. Das Netz ist unzugänglich.</string>
+    <string name="update_error_net_not_available">Der Fehler der Erneuerung. Das Netz ist unzugänglich.</string>
     <string name="update_error_from">"Der Fehler der Erneuerung des Wetters von der Station "</string>
     <string name="coordinates_not_found">Die Koordinaten der Lage %1$s sind nicht aufgedeckt.\nDie Ortung ist nicht beigefügt</string>
     <string name="msg_add_city">Um fortzufahren, müssen Sie eine Stadt hinzufügen.</string>
