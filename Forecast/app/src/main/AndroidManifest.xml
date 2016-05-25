@@ -59,8 +59,7 @@
         <activity
             android:name=".activities.AboutActivity"
             android:label="@string/title_activity_about"
-            android:parentActivityName=".activities.WeatherActivity"
-            android:theme="@style/AppTheme.About">
+            android:parentActivityName=".activities.WeatherActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.khasang.forecast.activities.WeatherActivity"/>
@@ -69,8 +68,7 @@
         <activity
             android:name=".activities.ChangelogActivity"
             android:label="@string/title_activity_changelog"
-            android:parentActivityName=".activities.AboutActivity"
-            android:theme="@style/AppTheme.Changelog">
+            android:parentActivityName=".activities.AboutActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.khasang.forecast.activities.AboutActivity"/>
@@ -79,8 +77,7 @@
         <activity
             android:name=".activities.TeamActivity"
             android:label="@string/title_activity_team"
-            android:parentActivityName=".activities.AboutActivity"
-            android:theme="@style/AppTheme.Team">
+            android:parentActivityName=".activities.AboutActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.khasang.forecast.activities.AboutActivity"/>

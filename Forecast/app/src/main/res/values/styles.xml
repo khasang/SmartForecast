@@ -93,43 +93,15 @@
     <style name="AppTheme.Settings.Purple" parent="PurpleStyle" />
 
 
-    <style name="AppTheme.About" parent="AppTheme" />
+    <style name="AppTheme.Green" parent="GreenStyle" />
 
-    <style name="AppTheme.About.Green" parent="GreenStyle" />
+    <style name="AppTheme.Brown" parent="BrownStyle" />
 
-    <style name="AppTheme.About.Brown" parent="BrownStyle" />
+    <style name="AppTheme.Teal" parent="TealStyle" />
 
-    <style name="AppTheme.About.Teal" parent="TealStyle" />
+    <style name="AppTheme.Indigo" parent="IndigoStyle" />
 
-    <style name="AppTheme.About.Indigo" parent="IndigoStyle" />
-
-    <style name="AppTheme.About.Purple" parent="PurpleStyle" />
-
-
-    <style name="AppTheme.Changelog" parent="AppTheme" />
-
-    <style name="AppTheme.Changelog.Green" parent="GreenStyle" />
-
-    <style name="AppTheme.Changelog.Brown" parent="BrownStyle" />
-
-    <style name="AppTheme.Changelog.Teal" parent="TealStyle" />
-
-    <style name="AppTheme.Changelog.Indigo" parent="IndigoStyle" />
-
-    <style name="AppTheme.Changelog.Purple" parent="PurpleStyle" />
-
-
-    <style name="AppTheme.Team" parent="AppTheme" />
-
-    <style name="AppTheme.Team.Green" parent="GreenStyle" />
-
-    <style name="AppTheme.Team.Brown" parent="BrownStyle" />
-
-    <style name="AppTheme.Team.Teal" parent="TealStyle" />
-
-    <style name="AppTheme.Team.Indigo" parent="IndigoStyle" />
-
-    <style name="AppTheme.Team.Purple" parent="PurpleStyle" />
+    <style name="AppTheme.Purple" parent="PurpleStyle" />
 
 
     <style name="Toolbar" parent="Widget.AppCompat.Toolbar">
