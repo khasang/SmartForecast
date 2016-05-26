@@ -6,25 +6,9 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <TextView
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Версия 2.6
-
-Добавлено несколько цветовых схем.
-“Ночной” режим.
-Альтернативные наборы иконок.
-График изменения температуры."
-        android:layout_marginBottom="16dp"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Версия 2.3
-
-Новая заставка приложения.
-Добавлено полноценное меню настроек.
-Недавно добавленные населенные пункты теперь подсвечиваются в списке."
-        android:layout_marginBottom="16dp"/>
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>
