@@ -6,6 +6,8 @@
 
 [Web-page](http://khasang.github.io/SmartForecast/)
 
+e-mail: smartforecast@khasang.org
+
 ## About
 
 "Smart Forecast" - so simple in use free application with rich functionality. From "Smart Forecast" you will be always informed on weather "behind a window", or in any settlement of the world, beginning from huge megalopolises and finishing with silent small Tibetan villages. Through the easy intuitive interface it is enough to look at the screen to learn about all weather characteristics of the chosen location.
