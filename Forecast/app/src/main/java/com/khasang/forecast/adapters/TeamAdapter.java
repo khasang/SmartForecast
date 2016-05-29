@@ -1,29 +1,34 @@
 package com.khasang.forecast.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.khasang.forecast.R;
 import com.khasang.forecast.models.Developer;
+import com.khasang.forecast.models.Link;
 
 import java.util.List;
 
 public class TeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    private Context context;
     private List<Developer> developers;
 
-    public TeamAdapter(List<Developer> developers) {
+    public TeamAdapter(Context context, List<Developer> developers) {
+        this.context = context;
         this.developers = developers;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
         View v = LayoutInflater.from(context).inflate(R.layout.item_developer, parent, false);
         return new ViewHolder(v);
     }
@@ -42,6 +47,23 @@ public class TeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         holder.nameView.setText(developer.getName());
         holder.descriptionView.setText(developer.getDescription());
         holder.imageView.setImageResource(developer.getResId());
+
+        List<Link> links = developer.getLinks();
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.weight = 1;
+        for (final Link link : links) {
+            TextView textView = new TextView(context);
+            textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            textView.setLayoutParams(params);
+            textView.setText(link.getTitle());
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(link.getUrl())));
+                }
+            });
+            holder.links.addView(textView);
+        }
     }
 
     private class ViewHolder extends RecyclerView.ViewHolder {
@@ -49,6 +71,7 @@ public class TeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private TextView nameView;
         private TextView descriptionView;
         private ImageView imageView;
+        private LinearLayout links;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -56,6 +79,7 @@ public class TeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             nameView = (TextView) itemView.findViewById(R.id.name);
             descriptionView = (TextView) itemView.findViewById(R.id.description);
             imageView = (ImageView) itemView.findViewById(R.id.image);
+            links = (LinearLayout) itemView.findViewById(R.id.links);
         }
     }
 }
