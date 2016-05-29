@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="place_provider_key" translatable="false">"AIzaSyBR70pjZmykrJsIG9eNHzKKzX0WDZVddQc"</string>
-    <string name="open_weather_map_key" translatable="false">"850f0bd2560d6ea117167544e52ea59d"</string>
-    <string name="google_maps_v2_key" translatable="false">"AIzaSyCFVjbg_jrTzPJpkw2Rm7Aa1DjVPiugOM4"</string>
-</resources>
