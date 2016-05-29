@@ -20,11 +20,12 @@ import java.util.List;
  */
 public class GooglePlacesAutocompleteAdapter extends ArrayAdapter
         implements Filterable {
+
     private List<String> resultList;
     private PlaceProvider mPlaceProvider;
-    private final static int MAX_RESULT = 10;
+    private final static int MAX_RESULT = 5;
     private Context mContext;
-    
+
     public GooglePlacesAutocompleteAdapter(Context context, int textViewResourceId) {
         super(context, textViewResourceId);
         mContext = context;
@@ -62,8 +63,8 @@ public class GooglePlacesAutocompleteAdapter extends ArrayAdapter
             protected FilterResults performFiltering(CharSequence constraint) {
                 if (constraint != null) {
                     char lastSym = constraint.charAt(constraint.length() - 1);
-                    if ((constraint.length() % 4 == 0) || (lastSym == ' ') || (lastSym == '-') || (constraint.length() == 2)) {
-                        List<String> predictions = mPlaceProvider.autocomplete(constraint.toString());
+                    if ((constraint.length() % 3 == 0) || (lastSym == ' ') || (lastSym == '-')) {
+                        List<String> predictions = mPlaceProvider.autocomplete(constraint.toString(), MAX_RESULT);
                         filterResults.values = predictions;
                         filterResults.count = predictions.size();
                     }
