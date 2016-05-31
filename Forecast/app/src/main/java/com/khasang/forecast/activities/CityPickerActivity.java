@@ -47,6 +47,7 @@ import com.khasang.forecast.R;
 import com.khasang.forecast.adapters.CityPickerAdapter;
 import com.khasang.forecast.adapters.GooglePlacesAutocompleteAdapter;
 import com.khasang.forecast.adapters.etc.HidingScrollListener;
+import com.khasang.forecast.api.GoogleMapsGeocoding;
 import com.khasang.forecast.exceptions.EmptyCurrentAddressException;
 import com.khasang.forecast.exceptions.NoAvailableAddressesException;
 import com.khasang.forecast.interfaces.IMapDataReceiver;
@@ -84,7 +85,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
     private Toolbar toolbar;
     private volatile FloatingActionButton fabBtn;
-
+    private GoogleMapsGeocoding googleMapsGeocoding;
     private DelayedAutoCompleteTextView chooseCity;
 
     @Override
@@ -323,8 +324,10 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
     // Вспомогательный метод для добавления города в список
     private void addItem(String city, Coordinate coordinate) {
+        boolean needCoordinateRequest = false;
         if (coordinate == null) {
             coordinate = new Coordinate(0, 0);
+            needCoordinateRequest = true;
         }
         if (!PositionManager.getInstance().positionInListPresent(city)) {
             PositionManager.getInstance().addPosition(city, coordinate);
@@ -332,6 +335,10 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             cityList.add(city);
             Collections.sort(cityList);
             cityPickerAdapter.notifyDataSetChanged();
+            if (needCoordinateRequest) {
+                googleMapsGeocoding = new GoogleMapsGeocoding();
+                googleMapsGeocoding.requestCoordinates(city);
+            }
         } else {
             showMessageToUser(R.string.city_exist, Snackbar.LENGTH_LONG);
         }

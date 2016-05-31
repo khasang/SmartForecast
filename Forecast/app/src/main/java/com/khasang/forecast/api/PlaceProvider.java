@@ -38,7 +38,7 @@ public class PlaceProvider {
             JSONObject jsonObject = new JSONObject(jsonData);
             JSONArray jsonArray = jsonObject.getJSONArray("predictions");
             int size = (maxResult <= jsonArray.length()) ? maxResult : jsonArray.length();
-            resultList = new ArrayList<String>(jsonArray.length());
+            resultList = new ArrayList<>(jsonArray.length());
             for (int i = 0; i < size; i++) {
                 resultList.add(jsonArray.getJSONObject(i).getString("description"));
             }
