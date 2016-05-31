@@ -176,6 +176,7 @@
         app:borderWidth="0dp"
         app:elevation="@dimen/fab_elevation"
         app:layout_anchor="@id/appbar"
-        app:layout_anchorGravity="bottom|end" />
+        app:layout_anchorGravity="bottom|end"
+        app:layout_behavior="com.khasang.forecast.beahaviors.FabOnTopBehavior"/>
 
 </android.support.design.widget.CoordinatorLayout>

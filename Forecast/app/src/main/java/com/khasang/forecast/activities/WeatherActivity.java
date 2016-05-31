@@ -144,13 +144,8 @@ public class WeatherActivity extends AppCompatActivity
             }
         }
         if (findViewById(R.id.fragment_container) != null) {
-//            WeatherScrollListener weatherScrollListener = new WeatherScrollListener(this, fab, chatLayout, appBarLayoutWrapper);
-
             hourlyForecastFragment = new HourlyForecastFragment();
-//            hourlyForecastFragment.addScrollListener(weatherScrollListener);
-
             dailyForecastFragment = new DailyForecastFragment();
-//            dailyForecastFragment.addScrollListener(weatherScrollListener);
 
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, hourlyForecastFragment)
