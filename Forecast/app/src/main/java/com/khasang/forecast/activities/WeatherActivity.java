@@ -34,7 +34,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,7 +43,6 @@ import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.PermissionChecker;
 import com.khasang.forecast.R;
 import com.khasang.forecast.activities.etc.NavigationDrawer;
-import com.khasang.forecast.adapters.etc.WeatherScrollListener;
 import com.khasang.forecast.chart.WeatherChart;
 import com.khasang.forecast.fragments.DailyForecastFragment;
 import com.khasang.forecast.fragments.HourlyForecastFragment;
@@ -96,7 +94,6 @@ public class WeatherActivity extends AppCompatActivity
     private WeatherChart chart;
     private NavigationDrawer navigationDrawer;
     private FrameLayout chatLayout;
-    private RelativeLayout appBarLayoutWrapper;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -147,13 +144,13 @@ public class WeatherActivity extends AppCompatActivity
             }
         }
         if (findViewById(R.id.fragment_container) != null) {
-            WeatherScrollListener weatherScrollListener = new WeatherScrollListener(this, fab, chatLayout, appBarLayoutWrapper);
+//            WeatherScrollListener weatherScrollListener = new WeatherScrollListener(this, fab, chatLayout, appBarLayoutWrapper);
 
             hourlyForecastFragment = new HourlyForecastFragment();
-            hourlyForecastFragment.addScrollListener(weatherScrollListener);
+//            hourlyForecastFragment.addScrollListener(weatherScrollListener);
 
             dailyForecastFragment = new DailyForecastFragment();
-            dailyForecastFragment.addScrollListener(weatherScrollListener);
+//            dailyForecastFragment.addScrollListener(weatherScrollListener);
 
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, hourlyForecastFragment)
@@ -174,7 +171,6 @@ public class WeatherActivity extends AppCompatActivity
         progressbar = (ProgressBar) findViewById(R.id.progressbar);
         chart = (WeatherChart) findViewById(R.id.chart);
         chatLayout = (FrameLayout) findViewById(R.id.chart_layout);
-        appBarLayoutWrapper = (RelativeLayout) findViewById(R.id.appbar_wrapper);
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             progressbar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this, R.color.accent), PorterDuff.Mode.SRC_ATOP);
