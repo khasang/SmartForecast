@@ -1,5 +1,7 @@
-package com.khasang.forecast;
+package com.khasang.forecast.api;
 
+import com.khasang.forecast.MyApplication;
+import com.khasang.forecast.R;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
