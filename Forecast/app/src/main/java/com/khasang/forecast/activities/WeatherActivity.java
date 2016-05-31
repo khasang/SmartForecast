@@ -43,6 +43,7 @@ import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.PermissionChecker;
 import com.khasang.forecast.R;
 import com.khasang.forecast.activities.etc.NavigationDrawer;
+import com.khasang.forecast.chart.ChartAppearance;
 import com.khasang.forecast.chart.WeatherChart;
 import com.khasang.forecast.fragments.DailyForecastFragment;
 import com.khasang.forecast.fragments.HourlyForecastFragment;
@@ -93,7 +94,7 @@ public class WeatherActivity extends AppCompatActivity
 
     private WeatherChart chart;
     private NavigationDrawer navigationDrawer;
-    private FrameLayout chatLayout;
+    private FrameLayout chartLayout;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -153,6 +154,7 @@ public class WeatherActivity extends AppCompatActivity
                     .hide(dailyForecastFragment)
                     .commit();
         }
+        new ChartAppearance(this, fab, chartLayout);
     }
 
     private void initFields() {
@@ -165,7 +167,7 @@ public class WeatherActivity extends AppCompatActivity
         humidity = (TextView) findViewById(R.id.humidity);
         progressbar = (ProgressBar) findViewById(R.id.progressbar);
         chart = (WeatherChart) findViewById(R.id.chart);
-        chatLayout = (FrameLayout) findViewById(R.id.chart_layout);
+        chartLayout = (FrameLayout) findViewById(R.id.chart_layout);
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             progressbar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this, R.color.accent), PorterDuff.Mode.SRC_ATOP);
@@ -540,14 +542,14 @@ public class WeatherActivity extends AppCompatActivity
             icon.icon(Octicons.Icon.oct_clock);
             updateWeatherChart(false);
 
-            boolean appbarVisible = chatLayout.getLayoutParams().height == 0;
+            boolean appbarVisible = chartLayout.getLayoutParams().height == 0;
             dailyForecastFragment.scroll(appbarVisible);
         } else {
             ft.show(hourlyForecastFragment).hide(dailyForecastFragment).commit();
             icon.icon(Octicons.Icon.oct_calendar);
             updateWeatherChart(true);
 
-            boolean appbarVisible = chatLayout.getLayoutParams().height == 0;
+            boolean appbarVisible = chartLayout.getLayoutParams().height == 0;
             hourlyForecastFragment.scroll(appbarVisible);
         }
         fab.setImageDrawable(icon);
