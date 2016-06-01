@@ -10,10 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import com.khasang.forecast.R;
 import com.khasang.forecast.adapters.WeatherAdapter;
-import com.khasang.forecast.adapters.etc.WeatherScrollListener;
 import com.khasang.forecast.position.Weather;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Map;
@@ -32,7 +33,6 @@ public abstract class CommonForecastFragment extends Fragment {
     protected WeatherAdapter adapter;
     protected ArrayList<String> sDate;
     protected ArrayList<Weather> weathers;
-    protected WeatherScrollListener scrollListener;
     protected LinearLayoutManager layoutManager;
 
     protected abstract void updateForecasts();
@@ -98,19 +98,9 @@ public abstract class CommonForecastFragment extends Fragment {
         recyclerView.setItemAnimator(itemAnimator);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
-        if (scrollListener != null) {
-            recyclerView.addOnScrollListener(scrollListener);
-        }
 
         tvEmptyList = (TextView) v.findViewById(R.id.tvEmptyList);
 
         return v;
-    }
-
-    public void addScrollListener(WeatherScrollListener scrollListener) {
-        this.scrollListener = scrollListener;
-        if (recyclerView != null) {
-            recyclerView.addOnScrollListener(scrollListener);
-        }
     }
 }
