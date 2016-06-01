@@ -35,7 +35,7 @@ public class FabOnBottomBehavior extends CoordinatorLayout.Behavior<FloatingActi
         if (dependency instanceof AppBarLayout) {
             if (dependency.getBottom() > APPBAR_MIN_HEIGHT && !alreadyHide) {
                 alreadyHide = true;
-                hideFab(child);
+                hideChart(child);
                 return true;
             }
             return false;
@@ -43,27 +43,12 @@ public class FabOnBottomBehavior extends CoordinatorLayout.Behavior<FloatingActi
         return super.onDependentViewChanged(parent, child, dependency);
     }
 
-    private void hideFab(FloatingActionButton fab) {
-        fab.hide(new FloatingActionButton.OnVisibilityChangedListener() {
-            @Override
-            public void onHidden(FloatingActionButton fab) {
-                super.onHidden(fab);
-                hideChart(fab);
-            }
-        });
-    }
-
     private void hideChart(final FloatingActionButton fab) {
         Animation a = new Animation() {
             @Override
             protected void applyTransformation(float interpolatedTime, Transformation t) {
-                if (interpolatedTime == 1) {
-                    chartLayout.getLayoutParams().height = 0;
-                    setFabOnTop(fab);
-                } else {
-                    chartLayout.getLayoutParams().height = maxChartHeight - (int) (maxChartHeight * interpolatedTime);
-                    chartLayout.requestLayout();
-                }
+                chartLayout.getLayoutParams().height = maxChartHeight - (int) (maxChartHeight * interpolatedTime);
+                chartLayout.requestLayout();
             }
 
             @Override
@@ -74,7 +59,32 @@ public class FabOnBottomBehavior extends CoordinatorLayout.Behavior<FloatingActi
 
         // 1dp/ms
         a.setDuration((int) (maxChartHeight / chartLayout.getContext().getResources().getDisplayMetrics().density));
+        a.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                chartLayout.getLayoutParams().height = 0;
+                hideFab(fab);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
         chartLayout.startAnimation(a);
+    }
+
+    private void hideFab(FloatingActionButton fab) {
+        fab.hide(new FloatingActionButton.OnVisibilityChangedListener() {
+            @Override
+            public void onHidden(FloatingActionButton fab) {
+                super.onHidden(fab);
+                setFabOnTop(fab);
+            }
+        });
     }
 
     private void setFabOnTop(FloatingActionButton fab) {
