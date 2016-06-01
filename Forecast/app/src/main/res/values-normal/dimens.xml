@@ -1,5 +1,0 @@
-<resources>
-    <dimen name="chart_value_size">7sp</dimen>
-    <dimen name="chart_xaxis_size">7sp</dimen>
-    <dimen name="chart_y_offset">3sp</dimen>
-</resources>
