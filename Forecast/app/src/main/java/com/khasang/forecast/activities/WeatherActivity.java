@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -43,7 +44,7 @@ import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.PermissionChecker;
 import com.khasang.forecast.R;
 import com.khasang.forecast.activities.etc.NavigationDrawer;
-import com.khasang.forecast.chart.ChartAppearance;
+import com.khasang.forecast.behaviors.FabOnTopBehavior;
 import com.khasang.forecast.chart.WeatherChart;
 import com.khasang.forecast.fragments.DailyForecastFragment;
 import com.khasang.forecast.fragments.HourlyForecastFragment;
@@ -154,7 +155,6 @@ public class WeatherActivity extends AppCompatActivity
                     .hide(dailyForecastFragment)
                     .commit();
         }
-        new ChartAppearance(this, fab, chartLayout);
     }
 
     private void initFields() {
@@ -174,11 +174,17 @@ public class WeatherActivity extends AppCompatActivity
         }
 
         /** Слушатели нажатий объектов */
-        IconicsDrawable icon_calendar = new IconicsDrawable(this)
+        IconicsDrawable iconCalendar = new IconicsDrawable(this)
                 .color(ContextCompat.getColor(this, R.color.current_weather_color))
                 .icon(Octicons.Icon.oct_calendar);
-        fab.setImageDrawable(icon_calendar);
+        fab.setImageDrawable(iconCalendar);
         fab.setOnClickListener(this);
+
+        /** Behavior для FAB */
+        CoordinatorLayout.LayoutParams fabLayoutParams = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+        int maxChartHeight = (int)  getResources().getDimension(R.dimen.chart_height);
+        fabLayoutParams.setBehavior(new FabOnTopBehavior(chartLayout, maxChartHeight));
+
         temperature.setOnClickListener(this);
         setSupportActionBar(toolbar);
     }
