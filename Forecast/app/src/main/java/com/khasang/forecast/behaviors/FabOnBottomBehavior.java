@@ -57,8 +57,8 @@ public class FabOnBottomBehavior extends CoordinatorLayout.Behavior<FloatingActi
             }
         };
 
-        // 1dp/ms
-        a.setDuration((int) (maxChartHeight / chartLayout.getContext().getResources().getDisplayMetrics().density));
+        // 1dp/ms должно быть (как и при появлении графика), но зрительно происходит быстрее, поэтому умножили на 2
+        a.setDuration((int) (2 * maxChartHeight / chartLayout.getContext().getResources().getDisplayMetrics().density));
         a.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
