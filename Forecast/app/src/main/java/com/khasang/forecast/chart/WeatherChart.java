@@ -1,8 +1,11 @@
 package com.khasang.forecast.chart;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.view.ViewConfiguration;
+
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -12,6 +15,7 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.R;
 import com.khasang.forecast.position.Weather;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -48,14 +52,26 @@ public class WeatherChart extends LineChart {
         getLegend().setEnabled(false); // убираем легенду графика
 
         getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM); // устанавливаем шкалу X снизу
-        getXAxis().setTextSize(getContext().getResources().getDimension(R.dimen.chart_xaxis_size));
+
+        Resources resources = getContext().getResources();
+        float density = resources.getDisplayMetrics().density;
+        float textSize = resources.getDimension(R.dimen.chart_xaxis_size) / density;
+        getXAxis().setTextSize(textSize);
         getXAxis().setTextColor(ContextCompat.getColor(getContext(), R.color.chart_text));
 
+        float offset = resources.getDimension(R.dimen.chart_y_offset) / density;
         // отступ между X осью и подписями под графиком
-        getXAxis().setYOffset(getContext().getResources().getDimension(R.dimen.chart_y_offset));
+        getXAxis().setYOffset(offset);
 
         getAxisLeft().setEnabled(false); // убираем шкалу Y слева
         getAxisRight().setEnabled(false); // убираем шкалу Y справа
+
+        // Проверка на наличие сенсорных клавиш
+        if(!ViewConfiguration.get(getContext()).hasPermanentMenuKey()) {
+            setExtraBottomOffset(10);
+        } else {
+            setExtraBottomOffset(5);
+        }
     }
 
     public void updateForecast(Map<Calendar, Weather> forecast, boolean hourlyWeatherChart) {
