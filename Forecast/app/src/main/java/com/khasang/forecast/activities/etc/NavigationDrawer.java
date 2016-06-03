@@ -97,10 +97,6 @@ public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
             .withIcon(GoogleMaterial.Icon.gmd_feedback)
             .withIdentifier(NAVIGATION_FEEDBACK);
 
-        SecondaryDrawerItem invite = new SecondaryDrawerItem().withName(R.string.drawer_item_invite)
-                .withIcon(GoogleMaterial.Icon.gmd_message)
-                .withIdentifier(NAVIGATION_INVITE);
-
         PrimaryDrawerItem footer = new PrimaryDrawerItem().withName(R.string.app_name)
             .withEnabled(false)
             .withIdentifier(NAVIGATION_APP_NAME);
@@ -111,7 +107,7 @@ public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
             .withSelectedItem(-1)
             .withActionBarDrawerToggle(true)
             .withAccountHeader(accountHeader)
-            .addDrawerItems(currentPlace, cityList, favorites, divider, settings, feedBack, invite)
+            .addDrawerItems(currentPlace, cityList, favorites, divider, settings, feedBack)
             .addStickyDrawerItems(footer)
             .withOnDrawerItemClickListener(this)
             .build();
@@ -148,8 +144,6 @@ public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
                 break;
             case NAVIGATION_FEEDBACK:
                 result.closeDrawer();
-                break;
-            case NAVIGATION_INVITE:
                 break;
             case NAVIGATION_APP_NAME:
                 break;

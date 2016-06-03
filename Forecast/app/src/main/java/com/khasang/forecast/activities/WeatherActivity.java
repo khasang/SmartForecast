@@ -221,9 +221,6 @@ public class WeatherActivity extends AppCompatActivity
                 Intent feedbackIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 startActivity(feedbackIntent);
                 break;
-        /*    case NavigationDrawer.NAVIGATION_INVITE:
-                onInviteClicked();
-                break;*/
             case NavigationDrawer.NAVIGATION_APP_NAME:
                 break;
             default:
@@ -579,13 +576,6 @@ public class WeatherActivity extends AppCompatActivity
             return;
         }
         PositionManager.getInstance().updateWeather();
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                Logger.println(TAG, "Start animation");
-//                PositionManager.getInstance().updateWeather();
-//            }
-//        }, 500);
     }
 
     public void showProgress(boolean loading) {
@@ -632,15 +622,4 @@ public class WeatherActivity extends AppCompatActivity
         chart.updateForecast(forecast, isHourFragmentVisible);
     }
 
-
-    private static final int REQUEST_INVITE = 0;
-    private void onInviteClicked() {
-        Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.invitation_title))
-                .setMessage(getString(R.string.invitation_message))
-                .setDeepLink(Uri.parse(getString(R.string.invitation_deep_link)))
-                .setCustomImage(Uri.parse(getString(R.string.invitation_custom_image)))
-                .setCallToActionText(getString(R.string.invitation_cta))
-                .build();
-        startActivityForResult(intent, REQUEST_INVITE);
-    }
 }

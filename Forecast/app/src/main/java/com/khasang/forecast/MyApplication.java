@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.facebook.stetho.Stetho;
 import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crash.FirebaseCrash;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -25,6 +26,9 @@ public class MyApplication extends Application {
         DrawUtils.getInstance().init(this);
         MyApplication.context = getApplicationContext();
         Stetho.initializeWithDefaults(this);
+
+        FirebaseCrash.report(new Exception("My first Android non-fatal error"));
+        FirebaseCrash.log("Application created");
     }
 
     public static Context getAppContext() {
