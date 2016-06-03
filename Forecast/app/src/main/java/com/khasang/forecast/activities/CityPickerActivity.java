@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -15,7 +14,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -41,8 +39,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.khasang.forecast.AppUtils;
-import com.khasang.forecast.Logger;
 import com.khasang.forecast.Maps;
 import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.R;
@@ -60,6 +58,7 @@ import com.khasang.forecast.view.DelayedAutoCompleteTextView;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -74,7 +73,7 @@ import java.util.regex.Pattern;
  * Activity для выбора местоположения
  */
 
-public class CityPickerActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener, IMapDataReceiver, IMessageProvider {
+public class CityPickerActivity extends AppCompatActivity implements View.OnClickListener, IMapDataReceiver, IMessageProvider {
     private final String TAG = this.getClass().getSimpleName();
     public final static String CITY_PICKER_TAG = "com.khasang.forecast.activities.CityPickerActivity";
 
@@ -103,7 +102,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         infoTV = (TextView) findViewById(R.id.infoTV);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         cityList = new ArrayList<>();
-        cityPickerAdapter = new CityPickerAdapter(cityList, this, this);
+        cityPickerAdapter = new CityPickerAdapter(cityList, this);
         recyclerView.setAdapter(cityPickerAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -166,7 +165,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         TypedValue tv = new TypedValue();
         if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
             int actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,
-                getResources().getDisplayMetrics());
+                    getResources().getDisplayMetrics());
             cityPickerAdapter.setHeaderHeight(actionBarHeight);
         }
     }
@@ -453,6 +452,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         final GooglePlacesAutocompleteAdapter googlePlacesAutocompleteAdapter = new GooglePlacesAutocompleteAdapter(this, R.layout.autocomplete_city_textview_item);
         final Maps map = new Maps(this, this, this);
         chooseCity = (DelayedAutoCompleteTextView) view.findViewById(R.id.editTextCityName);
+        chooseCity.setThreshold(3);
         chooseCity.setAdapter(googlePlacesAutocompleteAdapter);
         chooseCity.setLoadingIndicator((ProgressBar) view.findViewById(R.id.autocomplete_progressbar));
         chooseCity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -535,7 +535,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                     setMarkersOnMap(map);
                 }
                 if (s.toString().contains("\n")) {
-                    chooseCity.setText(s.toString().replace('\n',' ').trim());
+                    chooseCity.setText(s.toString().replace('\n', ' ').trim());
                     hideSoftKeyboard(getApplicationContext());
                 }
             }
@@ -584,18 +584,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 onOptionsItemSelected(item);
             }
         });
-        return true;
-    }
-
-    @Override
-    public boolean onLongClick(View v) {
-        switch (v.getId()) {
-            case R.id.recycler_item:
-                final int position = recyclerView.getChildAdapterPosition(v);
-                TextView thisCity = (TextView) recyclerView.getChildAt(position).findViewById(R.id.cityTW);
-                String cityName = String.valueOf(thisCity.getText());
-                Logger.println(TAG, "OnLongClick: город - " + cityName);
-        }
         return true;
     }
 

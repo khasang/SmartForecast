@@ -10,6 +10,7 @@ import android.widget.ProgressBar;
 /**
  * Created by xsobolx on 12.12.2015.
  */
+
 public class DelayedAutoCompleteTextView extends AutoCompleteTextView {
 
     private static final int MESSAGE_TEXT_CHANGED = 100;
@@ -29,7 +30,6 @@ public class DelayedAutoCompleteTextView extends AutoCompleteTextView {
         super(context, attrs);
     }
 
-
     public void setLoadingIndicator(ProgressBar progressBar) {
         mLoadingIndicator = progressBar;
     }
@@ -40,52 +40,18 @@ public class DelayedAutoCompleteTextView extends AutoCompleteTextView {
 
     @Override
     protected void performFiltering(CharSequence text, int keyCode) {
-//        if(mLoadingIndicator != null){
-        mLoadingIndicator.setVisibility(VISIBLE);
-//        }
+        if (mLoadingIndicator != null) {
+            mLoadingIndicator.setVisibility(VISIBLE);
+        }
         mHandler.removeMessages(MESSAGE_TEXT_CHANGED);
         mHandler.sendMessageDelayed(mHandler.obtainMessage(MESSAGE_TEXT_CHANGED, text), mAutoCompleteDelay);
-        super.performFiltering(text, keyCode);
     }
 
     @Override
     public void onFilterComplete(int count) {
-//        if (mLoadingIndicator != null){
-        mLoadingIndicator.setVisibility(GONE);
-//        }
+        if (mLoadingIndicator != null) {
+            mLoadingIndicator.setVisibility(GONE);
+        }
         super.onFilterComplete(count);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

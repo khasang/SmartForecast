@@ -27,3 +27,4 @@ proguard/
 *.log
 
 Forecast/.idea/
+strings_api.xml

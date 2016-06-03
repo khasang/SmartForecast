@@ -20,9 +20,10 @@ import java.util.List;
  */
 public class GooglePlacesAutocompleteAdapter extends ArrayAdapter
         implements Filterable {
+
     private List<String> resultList;
     private PlaceProvider mPlaceProvider;
-    private final static int MAX_RESULT = 10;
+    private final static int MAX_RESULT = 5;
     private Context mContext;
 
     public GooglePlacesAutocompleteAdapter(Context context, int textViewResourceId) {
@@ -55,14 +56,18 @@ public class GooglePlacesAutocompleteAdapter extends ArrayAdapter
 
     @Override
     public Filter getFilter() {
-        Filter filter = new Filter() {
+        return new Filter() {
+            FilterResults filterResults = new FilterResults();
+
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
-                FilterResults filterResults = new FilterResults();
                 if (constraint != null) {
-                    List<String> predictions = mPlaceProvider.autocomplete(constraint.toString());
-                    filterResults.values = predictions;
-                    filterResults.count = predictions.size();
+                    char lastSym = constraint.charAt(constraint.length() - 1);
+                    if ((constraint.length() % 3 == 0) || (lastSym == ' ') || (lastSym == '-')) {
+                        List<String> predictions = mPlaceProvider.autocomplete(constraint.toString(), MAX_RESULT);
+                        filterResults.values = predictions;
+                        filterResults.count = predictions.size();
+                    }
                 }
                 return filterResults;
             }
@@ -77,6 +82,5 @@ public class GooglePlacesAutocompleteAdapter extends ArrayAdapter
                 }
             }
         };
-        return filter;
     }
 }
