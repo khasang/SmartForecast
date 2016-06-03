@@ -94,14 +94,13 @@ public class SplashScreenActivity
             e.printStackTrace();
         }
         gifDrawable.addAnimationListener(this);
-        gifImageView.setImageDrawable(gifDrawable);
+        if (gifImageView != null) {
+            gifImageView.setImageDrawable(gifDrawable);
+        }
         gifDrawable.start();
-        gifImageView.setVisibility(View.VISIBLE);
-
-        FirebaseCrash.log("SplashScreen created");
-        FirebaseCrash.report(new Exception("My first Android non-fatal error"));
-
-
+        if (gifImageView != null) {
+            gifImageView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
