@@ -125,7 +125,7 @@
                     android:layout_below="@+id/temperature"
                     android:maxLines="2"
                     android:textColor="@color/current_weather_color"
-                    android:textSize="24sp"
+                    android:textSize="20sp"
                     tools:text="--/--" />
 
             </RelativeLayout>

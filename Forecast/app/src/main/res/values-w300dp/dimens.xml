@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="chart_value_size">6dp</dimen>
-    <dimen name="chart_xaxis_size">5dp</dimen>
-    <dimen name="chart_y_offset">3dp</dimen>
+    <dimen name="chart_value_size">14dp</dimen>
+    <dimen name="chart_xaxis_size">11dp</dimen>
+    <dimen name="chart_y_offset">4dp</dimen>
 </resources>
