@@ -19,6 +19,7 @@ import android.view.animation.AnimationUtils;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.firebase.crash.FirebaseCrash;
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.R;
 import com.khasang.forecast.interfaces.IMessageProvider;
@@ -96,6 +97,11 @@ public class SplashScreenActivity
         gifImageView.setImageDrawable(gifDrawable);
         gifDrawable.start();
         gifImageView.setVisibility(View.VISIBLE);
+
+        FirebaseCrash.log("SplashScreen created");
+        FirebaseCrash.report(new Exception("My first Android non-fatal error"));
+
+
     }
 
     @Override

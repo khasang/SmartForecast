@@ -27,8 +27,8 @@ public class MyApplication extends Application {
         MyApplication.context = getApplicationContext();
         Stetho.initializeWithDefaults(this);
 
-        FirebaseCrash.report(new Exception("My first Android non-fatal error"));
-        FirebaseCrash.log("Application created");
+        //FirebaseCrash.report(new Exception("My first Android non-fatal error"));
+
     }
 
     public static Context getAppContext() {
