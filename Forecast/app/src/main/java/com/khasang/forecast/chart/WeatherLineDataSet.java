@@ -1,6 +1,7 @@
 package com.khasang.forecast.chart;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
@@ -76,7 +77,9 @@ public class WeatherLineDataSet extends LineDataSet {
         setDrawCubic(true);
         setCubicIntensity(0.1f);
 
-        setValueTextSize(context.getResources().getDimension(R.dimen.chart_value_size));    // размер текста
+        Resources resources = context.getResources();
+        float size = resources.getDimension(R.dimen.chart_value_size) / resources.getDisplayMetrics().density;
+        setValueTextSize(size);    // размер текста
         setDrawCircleHole(false);   // запрещаем кружок внутри кружка
 
         int[] colors = getColors(getYVals());
