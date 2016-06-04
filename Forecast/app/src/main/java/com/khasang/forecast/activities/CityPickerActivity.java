@@ -452,6 +452,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         final GooglePlacesAutocompleteAdapter googlePlacesAutocompleteAdapter = new GooglePlacesAutocompleteAdapter(this, R.layout.autocomplete_city_textview_item);
         final Maps map = new Maps(this, this, this);
         chooseCity = (DelayedAutoCompleteTextView) view.findViewById(R.id.editTextCityName);
+        chooseCity.setThreshold(3);
         chooseCity.setAdapter(googlePlacesAutocompleteAdapter);
         chooseCity.setLoadingIndicator((ProgressBar) view.findViewById(R.id.autocomplete_progressbar));
         chooseCity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
