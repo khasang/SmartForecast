@@ -37,7 +37,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.Logger;
 import com.khasang.forecast.MyApplication;
@@ -203,6 +203,8 @@ public class WeatherActivity extends AppCompatActivity
             case NavigationDrawer.NAVIGATION_CITY_LIST:
                 startCityPickerActivity();
                 break;
+            case NavigationDrawer.NAVIGATION_FAVORITES:
+                break;
             case NavigationDrawer.NAVIGATION_SETTINGS:
                 startSettingsActivity();
                 break;
@@ -222,7 +224,6 @@ public class WeatherActivity extends AppCompatActivity
             case NavigationDrawer.NAVIGATION_ABOUT:
                 startAboutActivity();
                 break;
-            case NavigationDrawer.NAVIGATION_FAVORITES:
             case NavigationDrawer.NAVIGATION_APP_NAME:
                 break;
             default:
@@ -584,13 +585,6 @@ public class WeatherActivity extends AppCompatActivity
             return;
         }
         PositionManager.getInstance().updateWeather();
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                Logger.println(TAG, "Start animation");
-//                PositionManager.getInstance().updateWeather();
-//            }
-//        }, 500);
     }
 
     public void showProgress(boolean loading) {
@@ -636,4 +630,5 @@ public class WeatherActivity extends AppCompatActivity
         }
         chart.updateForecast(forecast, isHourFragmentVisible);
     }
+
 }

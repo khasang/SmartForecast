@@ -19,6 +19,7 @@ import android.view.animation.AnimationUtils;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.firebase.crash.FirebaseCrash;
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.R;
 import com.khasang.forecast.interfaces.IMessageProvider;
@@ -93,9 +94,13 @@ public class SplashScreenActivity
             e.printStackTrace();
         }
         gifDrawable.addAnimationListener(this);
-        gifImageView.setImageDrawable(gifDrawable);
+        if (gifImageView != null) {
+            gifImageView.setImageDrawable(gifDrawable);
+        }
         gifDrawable.start();
-        gifImageView.setVisibility(View.VISIBLE);
+        if (gifImageView != null) {
+            gifImageView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

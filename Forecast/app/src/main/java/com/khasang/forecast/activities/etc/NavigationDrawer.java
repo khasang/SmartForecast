@@ -5,6 +5,7 @@ import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+
 import com.khasang.forecast.R;
 import com.khasang.forecast.position.PositionManager;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
@@ -21,6 +22,7 @@ import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
+
 import java.util.List;
 
 /**
@@ -36,6 +38,7 @@ public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
     public static final int NAVIGATION_SETTINGS = 3;
     public static final int NAVIGATION_FEEDBACK = 4;
     public static final int NAVIGATION_ABOUT = 5;
+    public static final int NAVIGATION_INVITE = 5;
     public static final int NAVIGATION_APP_NAME = 6;
 
     public static final int SUB_ITEMS_BASE_INDEX = 2000;
@@ -128,6 +131,7 @@ public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
             navigationItemClickListener.onNavigationItemClicked(identifier);
         }
         switch (identifier) {
+            case NAVIGATION_CURRENT_PLACE:
             case NAVIGATION_CITY_LIST:
                 // TODO: нужен идентификатор города
                 // Можно было бы не скрывать список городов, если один из них активен. Без идентификатора
@@ -146,7 +150,6 @@ public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
                 break;
             case NAVIGATION_APP_NAME:
                 break;
-            case NAVIGATION_CURRENT_PLACE:
             default:
                 activeIdentifier = identifier;
                 result.closeDrawer();
@@ -214,4 +217,5 @@ public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
 
         void onNavigationItemClicked(int identifier);
     }
+
 }
