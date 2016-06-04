@@ -48,7 +48,6 @@ public class FabOnTopBehavior extends CoordinatorLayout.Behavior<FloatingActionB
             @Override
             public void onHidden(FloatingActionButton fab) {
                 super.onHidden(fab);
-                Log.d("hideFab", "onHidden");
                 showChart(fab);
             }
         });
@@ -75,12 +74,10 @@ public class FabOnTopBehavior extends CoordinatorLayout.Behavior<FloatingActionB
         a.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-                Log.d("showChart", "onAnimationStart");
             }
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                Log.d("showChart", "onAnimationEnd");
                 setFabOnBottom(fab);
             }
 
