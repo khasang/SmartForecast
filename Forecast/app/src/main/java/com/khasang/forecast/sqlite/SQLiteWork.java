@@ -17,7 +17,7 @@ import java.util.HashMap;
 public class SQLiteWork {
 
     private SQLiteOpen dbWork;
-    private final int CURRENT_DB_VERSION = 5;
+    private final int CURRENT_DB_VERSION = 6;
     private static volatile SQLiteWork instance;
 
     private SQLiteWork() {

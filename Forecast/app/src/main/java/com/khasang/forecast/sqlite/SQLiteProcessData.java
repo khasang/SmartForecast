@@ -2,6 +2,7 @@ package com.khasang.forecast.sqlite;
 
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.position.Coordinate;
+import com.khasang.forecast.position.Position;
 import com.khasang.forecast.position.Precipitation;
 import com.khasang.forecast.position.Weather;
 import com.khasang.forecast.stations.WeatherStation;
@@ -49,6 +50,25 @@ public class SQLiteProcessData {
                         Double.toString(weather.getWindPower()), weather.getPrecipitation().name()
                 }
         );
+    }
+
+    // Обновление координат города
+    public void updatePositionCoordinates (Position position) {
+        SQLiteWork.getInstance().qExec(SQLiteFields.QUERY_UPDATE_TOWN_POSITION,
+                new String[]{
+                        Double.toString(position.getCoordinate().getLatitude()),
+                        Double.toString(position.getCoordinate().getLongitude()),
+                        position.getLocationName()
+                });
+    }
+
+    // Обновление временно
+    public void updateCityTimeZone (Position position) {
+        SQLiteWork.getInstance().qExec(SQLiteFields.QUERY_UPDATE_TOWN_TIME_ZONE,
+                new String[]{
+                        Integer.toString(position.getTimeZone()),
+                        position.getLocationName()
+                });
     }
 
     // Сохранение настроек
