@@ -7,150 +7,149 @@
     android:layout_height="match_parent"
     tools:context=".activities.WeatherActivity">
 
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:fitsSystemWindows="true"
+        app:elevation="@dimen/appbar_elevation">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_material"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:elevation="0dp" />
+
+        <android.support.v7.widget.GridLayout
+            android:id="@+id/currentWeather"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:columnCount="2">
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                app:layout_columnWeight="1">
+
+                <ImageView
+                    android:id="@+id/iv_curr_weather"
+                    android:layout_width="96dp"
+                    android:layout_height="96dp"
+                    android:src="@drawable/ic_cloud" />
+
+                <LinearLayout
+                    android:id="@+id/wind_speed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/iv_curr_weather"
+                    android:layout_below="@+id/iv_curr_weather"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/icon_wind"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        app:ico_color="@color/current_weather_color"
+                        app:ico_icon="met_wind"
+                        app:ico_padding="2dp"
+                        app:ico_size="24dp" />
+
+                    <TextView
+                        android:id="@+id/wind"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="16dp"
+                        android:textColor="@color/current_weather_color"
+                        tools:text="--/--" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/iv_curr_weather"
+                    android:layout_below="@+id/wind_speed"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/icon_hum"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        app:ico_color="@color/current_weather_color"
+                        app:ico_icon="wic_humidity"
+                        app:ico_padding="2dp"
+                        app:ico_size="24dp" />
+
+                    <TextView
+                        android:id="@+id/humidity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="16dp"
+                        android:textColor="@color/current_weather_color"
+                        tools:text="--/--" />
+                </LinearLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                app:layout_columnWeight="1">
+
+                <TextView
+                    android:id="@+id/temperature"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/current_weather_color"
+                    android:textSize="56sp"
+                    tools:text="--/--" />
+
+                <TextView
+                    android:id="@+id/precipitation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/temperature"
+                    android:layout_below="@+id/temperature"
+                    android:maxLines="2"
+                    android:textColor="@color/current_weather_color"
+                    android:textSize="20sp"
+                    tools:text="--/--" />
+
+            </RelativeLayout>
+
+        </android.support.v7.widget.GridLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <RelativeLayout
-        android:id="@+id/appbar_wrapper"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <android.support.design.widget.AppBarLayout
-            android:id="@+id/appbar"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/appbar_height"
-            android:layout_alignParentTop="true"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:elevation="@dimen/appbar_elevation">
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar_material"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:elevation="0dp" />
-
-            <android.support.v7.widget.GridLayout
-                android:id="@+id/currentWeather"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin"
-                app:columnCount="2">
-
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    app:layout_columnWeight="1">
-
-                    <ImageView
-                        android:id="@+id/iv_curr_weather"
-                        android:layout_width="96dp"
-                        android:layout_height="96dp"
-                        android:src="@drawable/ic_cloud" />
-
-                    <LinearLayout
-                        android:id="@+id/wind_speed"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignLeft="@+id/iv_curr_weather"
-                        android:layout_below="@+id/iv_curr_weather"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:id="@+id/icon_wind"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            app:ico_color="@color/current_weather_color"
-                            app:ico_icon="met_wind"
-                            app:ico_padding="2dp"
-                            app:ico_size="24dp" />
-
-                        <TextView
-                            android:id="@+id/wind"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="16dp"
-                            android:textColor="@color/current_weather_color"
-                            tools:text="--/--" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignLeft="@+id/iv_curr_weather"
-                        android:layout_below="@+id/wind_speed"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:id="@+id/icon_hum"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            app:ico_color="@color/current_weather_color"
-                            app:ico_icon="wic_humidity"
-                            app:ico_padding="2dp"
-                            app:ico_size="24dp" />
-
-                        <TextView
-                            android:id="@+id/humidity"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="16dp"
-                            android:textColor="@color/current_weather_color"
-                            tools:text="--/--" />
-                    </LinearLayout>
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    app:layout_columnWeight="1">
-
-                    <TextView
-                        android:id="@+id/temperature"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/current_weather_color"
-                        android:textSize="56sp"
-                        tools:text="--/--" />
-
-                    <TextView
-                        android:id="@+id/precipitation"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignLeft="@+id/temperature"
-                        android:layout_below="@+id/temperature"
-                        android:maxLines="2"
-                        android:textColor="@color/current_weather_color"
-                        android:textSize="24sp"
-                        tools:text="--/--" />
-
-                </RelativeLayout>
-
-            </android.support.v7.widget.GridLayout>
-
-        </android.support.design.widget.AppBarLayout>
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <ProgressBar
             android:id="@+id/progressbar"
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/appbar"
-            android:indeterminate="true" />
+            android:layout_gravity="center_horizontal|top"
+            android:indeterminate="true"/>
 
-    </RelativeLayout>
+    </FrameLayout>
+
 
     <FrameLayout
         android:id="@+id/chart_layout"
@@ -179,6 +178,6 @@
         app:borderWidth="0dp"
         app:elevation="@dimen/fab_elevation"
         app:layout_anchor="@id/appbar"
-        app:layout_anchorGravity="bottom|end" />
+        app:layout_anchorGravity="bottom|end"/>
 
 </android.support.design.widget.CoordinatorLayout>

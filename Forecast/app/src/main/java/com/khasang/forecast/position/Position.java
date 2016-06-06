@@ -8,8 +8,17 @@ public class Position implements IPosition {
     private String name;
     private int cityID;
     private Coordinate coordinate;
+    private int timeZone = 0;
 
     public Position() {
+    }
+
+    public int getTimeZone() {
+        return timeZone;
+    }
+
+    public void setTimeZone(int timeZone) {
+        this.timeZone = timeZone;
     }
 
     @Override

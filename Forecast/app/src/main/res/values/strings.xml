@@ -69,6 +69,7 @@
     <string name="drawer_item_favorites">Favorites</string>
     <string name="drawer_item_settings">Settings</string>
     <string name="drawer_item_feedback">Feedback</string>
+    <string name="drawer_item_invite">Invite friends</string>
 
     <string name="error_service_not_available">The coordinates of current location are not detected.</string>
     <string name="error_geo_service_not_available">The coordinates of the location are not detected.</string>
@@ -179,4 +180,13 @@
     <string name="pref_icons_set_default" translatable="false">icon_set_default</string>
     <string name="pref_icons_set_mike_color" translatable="false">icons_set_mike_color</string>
     <string name="pref_icons_set_mike_bw" translatable="false">icons_set_mike_bw</string>
+
+    <string name="invitation_title">Send App Invite Quickstart Invitation</string>
+    <string name="invitation_message">This app is terrific, give it a try and get $5 off!</string>
+    <string name="invitation_deep_link">http://example.com/offer/five_dollar_offer</string>
+    <string name="invitation_custom_image">https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png</string>
+    <string name="invitation_cta">Install!</string>
+
+
+
 </resources>

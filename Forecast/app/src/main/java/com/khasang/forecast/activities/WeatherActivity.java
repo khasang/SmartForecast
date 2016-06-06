@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -34,17 +35,16 @@ import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.Logger;
 import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.PermissionChecker;
 import com.khasang.forecast.R;
 import com.khasang.forecast.activities.etc.NavigationDrawer;
-import com.khasang.forecast.adapters.etc.WeatherScrollListener;
+import com.khasang.forecast.behaviors.FabOnTopBehavior;
 import com.khasang.forecast.chart.WeatherChart;
 import com.khasang.forecast.fragments.DailyForecastFragment;
 import com.khasang.forecast.fragments.HourlyForecastFragment;
@@ -95,8 +95,7 @@ public class WeatherActivity extends AppCompatActivity
 
     private WeatherChart chart;
     private NavigationDrawer navigationDrawer;
-    private FrameLayout chatLayout;
-    private RelativeLayout appBarLayoutWrapper;
+    private FrameLayout chartLayout;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -147,13 +146,8 @@ public class WeatherActivity extends AppCompatActivity
             }
         }
         if (findViewById(R.id.fragment_container) != null) {
-            WeatherScrollListener weatherScrollListener = new WeatherScrollListener(this, fab, chatLayout, appBarLayoutWrapper);
-
             hourlyForecastFragment = new HourlyForecastFragment();
-            hourlyForecastFragment.addScrollListener(weatherScrollListener);
-
             dailyForecastFragment = new DailyForecastFragment();
-            dailyForecastFragment.addScrollListener(weatherScrollListener);
 
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, hourlyForecastFragment)
@@ -173,19 +167,24 @@ public class WeatherActivity extends AppCompatActivity
         humidity = (TextView) findViewById(R.id.humidity);
         progressbar = (ProgressBar) findViewById(R.id.progressbar);
         chart = (WeatherChart) findViewById(R.id.chart);
-        chatLayout = (FrameLayout) findViewById(R.id.chart_layout);
-        appBarLayoutWrapper = (RelativeLayout) findViewById(R.id.appbar_wrapper);
+        chartLayout = (FrameLayout) findViewById(R.id.chart_layout);
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             progressbar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this, R.color.accent), PorterDuff.Mode.SRC_ATOP);
         }
 
         /** Слушатели нажатий объектов */
-        IconicsDrawable icon_calendar = new IconicsDrawable(this)
+        IconicsDrawable iconCalendar = new IconicsDrawable(this)
                 .color(ContextCompat.getColor(this, R.color.current_weather_color))
                 .icon(Octicons.Icon.oct_calendar);
-        fab.setImageDrawable(icon_calendar);
+        fab.setImageDrawable(iconCalendar);
         fab.setOnClickListener(this);
+
+        /** Behavior для FAB */
+        CoordinatorLayout.LayoutParams fabLayoutParams = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+        int maxChartHeight = (int)  getResources().getDimension(R.dimen.chart_height);
+        fabLayoutParams.setBehavior(new FabOnTopBehavior(chartLayout, maxChartHeight));
+
         temperature.setOnClickListener(this);
         setSupportActionBar(toolbar);
     }
@@ -204,6 +203,8 @@ public class WeatherActivity extends AppCompatActivity
             case NavigationDrawer.NAVIGATION_CITY_LIST:
                 startCityPickerActivity();
                 break;
+            case NavigationDrawer.NAVIGATION_FAVORITES:
+                break;
             case NavigationDrawer.NAVIGATION_SETTINGS:
                 startSettingsActivity();
                 break;
@@ -220,7 +221,6 @@ public class WeatherActivity extends AppCompatActivity
                 Intent feedbackIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 startActivity(feedbackIntent);
                 break;
-            case NavigationDrawer.NAVIGATION_FAVORITES:
             case NavigationDrawer.NAVIGATION_APP_NAME:
                 break;
             default:
@@ -549,14 +549,14 @@ public class WeatherActivity extends AppCompatActivity
             icon.icon(Octicons.Icon.oct_clock);
             updateWeatherChart(false);
 
-            boolean appbarVisible = chatLayout.getLayoutParams().height == 0;
+            boolean appbarVisible = chartLayout.getLayoutParams().height == 0;
             dailyForecastFragment.scroll(appbarVisible);
         } else {
             ft.show(hourlyForecastFragment).hide(dailyForecastFragment).commit();
             icon.icon(Octicons.Icon.oct_calendar);
             updateWeatherChart(true);
 
-            boolean appbarVisible = chatLayout.getLayoutParams().height == 0;
+            boolean appbarVisible = chartLayout.getLayoutParams().height == 0;
             hourlyForecastFragment.scroll(appbarVisible);
         }
         fab.setImageDrawable(icon);
@@ -576,13 +576,6 @@ public class WeatherActivity extends AppCompatActivity
             return;
         }
         PositionManager.getInstance().updateWeather();
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                Logger.println(TAG, "Start animation");
-//                PositionManager.getInstance().updateWeather();
-//            }
-//        }, 500);
     }
 
     public void showProgress(boolean loading) {
@@ -628,4 +621,5 @@ public class WeatherActivity extends AppCompatActivity
         }
         chart.updateForecast(forecast, isHourFragmentVisible);
     }
+
 }
