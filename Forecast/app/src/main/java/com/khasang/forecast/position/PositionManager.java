@@ -17,6 +17,7 @@ import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.PermissionChecker;
 import com.khasang.forecast.R;
+import com.khasang.forecast.api.GoogleMapsGeocoding;
 import com.khasang.forecast.exceptions.AccessFineLocationNotGrantedException;
 import com.khasang.forecast.exceptions.GpsIsDisabledException;
 import com.khasang.forecast.exceptions.NoAvailableLocationServiceException;
@@ -237,6 +238,12 @@ public class PositionManager {
             }
         }
         positions = positionFactory.getPositions();
+        for (Position pos : positions.values()) {
+            if ((pos.getCoordinate() == null) || (pos.getCoordinate().getLatitude() == 0 && pos.getCoordinate().getLongitude() == 0)) {
+                GoogleMapsGeocoding googleMapsGeocoding = new GoogleMapsGeocoding();
+                googleMapsGeocoding.requestCoordinates(pos.getLocationName());
+            }
+        }
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MyApplication.getAppContext());
         boolean saveCurrentLocation = sp.getString(MyApplication.getAppContext().getString(R.string.pref_location_key), MyApplication.getAppContext().getString(R.string.pref_location_current)).equals(MyApplication.getAppContext().getString(R.string.pref_location_current));
         String lastActivePositionName = sp.getString(MyApplication.getAppContext().getString(R.string.shared_last_active_position_name), "");
@@ -641,6 +648,15 @@ public class PositionManager {
             calendar.add(Calendar.DAY_OF_YEAR, DAY_PERIOD);
         }
         return forecast;
+    }
+
+    public void updatePositionCoordinates(String city, Coordinate coordinate) {
+        Position position = PositionManager.getInstance().getPosition(city);
+        if (position == null) {
+            return;
+        }
+        position.setCoordinate(coordinate);
+        dbManager.updatePositionCoordinates(position);
     }
 
     public void initLocationManager() {

@@ -2,6 +2,7 @@ package com.khasang.forecast.api;
 
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.R;
 import com.khasang.forecast.position.Coordinate;
@@ -19,8 +20,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by roman on 31.05.16.
@@ -52,19 +51,20 @@ public class GoogleMapsGeocoding {
                     try {
                         JSONObject jsonObject = new JSONObject(jsonData);
                         JSONArray jsonArray = jsonObject.getJSONArray("results");
-                        // TODO  1) Анализ статуса ответа
-                        //       2) Сохранение новых координат в БД
-                        //       3) При запуске программы проверять есть ли координаты (0; 0)
-                        //          и запрашивать их через Сервис
-                        Log.d (TAG, "Status: " + jsonObject.getString("status"));
+                        String status = jsonObject.getString("status");
+                        if (!status.equals("OK")) {
+                            String log = "GoogleMapsGeocoding: city <" + input + ">  response status <" + status + ">";
+                            throw new JSONException(log);
+                        }
                         JSONObject jsonGeometry = new JSONObject(jsonArray.getJSONObject(0).getString("geometry"));
                         JSONObject jsonLocation = new JSONObject(jsonGeometry.getString("location"));
                         Coordinate coordinate = new Coordinate();
                         coordinate.setLatitude(Double.parseDouble(jsonLocation.getString("lat")));
                         coordinate.setLongitude(Double.parseDouble(jsonLocation.getString("lng")));
-                        PositionManager.getInstance().getPosition(input).setCoordinate(coordinate);
+                        PositionManager.getInstance().updatePositionCoordinates(input, coordinate);
                     } catch (JSONException e) {
                         Log.e(TAG, e.getLocalizedMessage());
+                        Crashlytics.logException(e);
                     }
                 }
             });
@@ -72,5 +72,4 @@ public class GoogleMapsGeocoding {
             Log.e(TAG, e.getLocalizedMessage());
         }
     }
-
 }

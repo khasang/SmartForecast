@@ -85,7 +85,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
     private Toolbar toolbar;
     private volatile FloatingActionButton fabBtn;
-    private GoogleMapsGeocoding googleMapsGeocoding;
     private DelayedAutoCompleteTextView chooseCity;
 
     @Override
@@ -336,7 +335,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             Collections.sort(cityList);
             cityPickerAdapter.notifyDataSetChanged();
             if (needCoordinateRequest) {
-                googleMapsGeocoding = new GoogleMapsGeocoding();
+                GoogleMapsGeocoding googleMapsGeocoding = new GoogleMapsGeocoding();
                 googleMapsGeocoding.requestCoordinates(city);
             }
         } else {

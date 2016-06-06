@@ -63,10 +63,7 @@ public class Position implements IPosition {
             return false;
         }
         Position position = (Position) o;
-        if (cityID == position.cityID) {
-            return true;
-        }
-        return false;
+        return cityID == position.cityID;
     }
 
     @Override
