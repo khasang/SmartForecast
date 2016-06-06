@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+import io.fabric.sdk.android.Fabric;
+
 /**
  * Created by roman on 31.05.16.
  */
@@ -64,7 +66,9 @@ public class GoogleMapsGeocoding {
                         PositionManager.getInstance().updatePositionCoordinates(input, coordinate);
                     } catch (JSONException e) {
                         Log.e(TAG, e.getLocalizedMessage());
-                        Crashlytics.logException(e);
+                        if (Fabric.isInitialized()) {
+                            Crashlytics.logException(e);
+                        }
                     }
                 }
             });
