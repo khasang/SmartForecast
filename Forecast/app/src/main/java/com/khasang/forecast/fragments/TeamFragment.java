@@ -9,6 +9,7 @@ import android.view.View;
 import com.khasang.forecast.R;
 import com.khasang.forecast.adapters.TeamAdapter;
 import com.khasang.forecast.models.Developer;
+import com.khasang.forecast.models.Image;
 import com.khasang.forecast.models.Link;
 
 import java.util.ArrayList;
@@ -28,20 +29,35 @@ public class TeamFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         developers = new ArrayList<>();
 
-        Link developer1Link1 = new Link("GitHub", "https://github.com/khasang/SmartForecast");
-        Link developer1Link2 = new Link("VK", "https://vk.com/smartforecast");
-        Developer developer1 = new Developer("Smart Forecast", "Senior developer", android.R.drawable.star_big_on);
-        developer1.addLink(developer1Link1);
-        developer1.addLink(developer1Link2);
+        Image romanNovoselovImage = new Image("http://khasang.github" +
+                ".io/SmartForecast/img/team/roman.png", 400, 400);
+        Developer romanNovoselov = new Developer("Roman Novoselov", romanNovoselovImage, R.string.roman_novoselov);
+        Link romanNovoselovLink1 = new Link("SOF", "http://ru.stackoverflow.com/users/31321/roman-novoselov?tab=profile");
+        Link romanNovoselovLink2 = new Link("GitHub", "https://github.com/RNOVOSELOV");
+        Link romanNovoselovLink3 = new Link("LinkedIn", "https://www.linkedin.com/in/RNOVOSELOV");
+        romanNovoselov.addLink(romanNovoselovLink1);
+        romanNovoselov.addLink(romanNovoselovLink2);
+        romanNovoselov.addLink(romanNovoselovLink3);
 
-        Link developer2Link1 = new Link("Google+", "https://plus.google.com/+googleru");
-        Link developer2Link2 = new Link("GitHub", "https://github.com/khasang/SmartForecast");
-        Developer developer2 = new Developer("Forecast Smart", "UX designer", android.R.drawable.star_big_off);
-        developer2.addLink(developer2Link1);
-        developer2.addLink(developer2Link2);
+        Image alexandrLivodinovImage = new Image("http://khasang.github" +
+                ".io/SmartForecast/img/team/aleksandr.png", 300, 300);
+        Developer alexandrLivodinov = new Developer("Alexandr Livodinov", alexandrLivodinovImage, R.string.alexandr_lihovidov);
+        Link alexandrLivodinovLink1 = new Link("LinkedIn", "https://ru.linkedin.com/in/aleksandrlihovidov");
+        alexandrLivodinov.addLink(alexandrLivodinovLink1);
 
-        developers.add(developer1);
-        developers.add(developer2);
+        Image timofeyKorotkovImage = new Image("http://khasang.github" +
+                ".io/SmartForecast/img/team/minime.png", 225, 225);
+        Developer timofeyKorotkov = new Developer("Timofey Korotkov", timofeyKorotkovImage, R.string.timofey_korotkov);
+        Link timofeyKorotkovLink1 = new Link("WWW", "https://www.copypastestd.xyz/");
+        Link timofeyKorotkovLink2 = new Link("GitHub", "https://github.com/copypastestd");
+        Link timofeyKorotkovLink3 = new Link("LinkedIn", "https://www.linkedin.com/in/copypastestd");
+        timofeyKorotkov.addLink(timofeyKorotkovLink1);
+        timofeyKorotkov.addLink(timofeyKorotkovLink2);
+        timofeyKorotkov.addLink(timofeyKorotkovLink3);
+
+        developers.add(romanNovoselov);
+        developers.add(alexandrLivodinov);
+        developers.add(timofeyKorotkov);
     }
 
     @Override

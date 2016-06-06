@@ -9,6 +9,7 @@ import android.view.View;
 import com.khasang.forecast.R;
 import com.khasang.forecast.adapters.ChangelogAdapter;
 import com.khasang.forecast.models.Changelog;
+import com.khasang.forecast.models.Image;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
@@ -28,21 +29,21 @@ public class ChangelogFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         changelogs = new ArrayList<>();
 
+        Image changelog1Image = new Image("http://khasang.github.io/SmartForecast/img/services/version-2.6.png",
+                4268, 3840);
         Changelog changelog1 = new Changelog();
         changelog1.setVersion("Версия 2.6");
         changelog1.setDate(new GregorianCalendar(2016, 4, 25).getTime());
-        changelog1.setImageUrl("http://khasang.github.io/SmartForecast/img/services/version-2.6.png");
-        changelog1.setChangesRes(R.string.version_2_6);
-        changelog1.setImageWidth(4268);
-        changelog1.setImageHeight(3840);
+        changelog1.setImage(changelog1Image);
+        changelog1.setChangesResId(R.string.version_2_6);
 
+        Image changelog2Image = new Image("http://khasang.github.io/SmartForecast/img/services/V.2.3_combo.png",
+                4268, 3840);
         Changelog changelog2 = new Changelog();
         changelog2.setVersion("Версия 2.3");
         changelog2.setDate(new GregorianCalendar(2016, 3, 22).getTime());
-        changelog2.setImageUrl("http://khasang.github.io/SmartForecast/img/services/V.2.3_combo.png");
-        changelog2.setChangesRes(R.string.version_2_3);
-        changelog2.setImageWidth(4268);
-        changelog2.setImageHeight(3840);
+        changelog2.setImage(changelog2Image);
+        changelog2.setChangesResId(R.string.version_2_3);
 
         changelogs.add(changelog1);
         changelogs.add(changelog2);

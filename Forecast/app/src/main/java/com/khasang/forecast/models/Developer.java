@@ -6,14 +6,14 @@ import java.util.List;
 public class Developer {
 
     private String name;
-    private String description;
-    private int resId;
+    private Image image;
+    private int descriptionResId;
     private List<Link> links;
 
-    public Developer(String name, String description, int resId) {
+    public Developer(String name, Image image, int descriptionResId) {
         this.name = name;
-        this.description = description;
-        this.resId = resId;
+        this.image = image;
+        this.descriptionResId = descriptionResId;
         this.links = new ArrayList<>();
     }
 
@@ -21,12 +21,12 @@ public class Developer {
         return name;
     }
 
-    public String getDescription() {
-        return description;
+    public Image getImage() {
+        return image;
     }
 
-    public int getResId() {
-        return resId;
+    public int getDescriptionResId() {
+        return descriptionResId;
     }
 
     public List<Link> getLinks() {

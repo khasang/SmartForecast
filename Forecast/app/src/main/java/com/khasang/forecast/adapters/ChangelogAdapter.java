@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.khasang.forecast.R;
 import com.khasang.forecast.activities.FullImageActivity;
 import com.khasang.forecast.models.Changelog;
+import com.khasang.forecast.models.Image;
 import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
@@ -46,17 +47,18 @@ public class ChangelogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         String version = changelog.getVersion() +
                 " (" + DateFormat.getDateInstance().format(changelog.getDate()) + ")";
+        holder.versionView.setText(version);
 
         ViewGroup.LayoutParams params = holder.imageView.getLayoutParams();
 
-        final String url = changelog.getImageUrl();
-        final int imageWidth = changelog.getImageWidth();
-        final int imageHeight = changelog.getImageHeight();
+        Image image = changelog.getImage();
+        final String url = image.getUrl();
+        final int imageWidth = image.getWidth();
+        final int imageHeight = image.getHeight();
 
         int imageViewHeight = params.height;
         int imageViewWidth = imageViewHeight * imageWidth / imageHeight;
 
-        holder.versionView.setText(version);
         Picasso.with(context)
                 .load(url)
                 .resize(imageViewWidth, imageViewHeight)
@@ -73,7 +75,7 @@ public class ChangelogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
         });
 
-        holder.changesView.setText(changelog.getChangesRes());
+        holder.changesView.setText(changelog.getChangesResId());
     }
 
     private class ViewHolder extends RecyclerView.ViewHolder {
