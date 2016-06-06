@@ -72,6 +72,9 @@ public class WeatherChart extends LineChart {
         } else {
             setExtraBottomOffset(5);
         }
+
+        // Убираем вертикальные полоски на графике
+        getXAxis().setDrawGridLines(false);
     }
 
     public void updateForecast(Map<Calendar, Weather> forecast, boolean hourlyWeatherChart) {
