@@ -1,40 +1,30 @@
 package com.khasang.forecast.activities;
 
+import android.app.Activity;
 import android.graphics.Point;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.khasang.forecast.R;
 import com.squareup.picasso.Picasso;
 
-import butterknife.BindView;
-
 /**
  * Активити с полноразмерной картинкой из Changelog
  */
-public class FullImageActivity extends BaseActivity {
+public class FullImageActivity extends Activity {
 
     public static final String URL = "url";
     public static final String IMAGE_WIDTH = "width";
     public static final String IMAGE_HEIGHT = "height";
 
-    @BindView(R.id.image) ImageView imageView;
     private View decorView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Hide the status bar.
-        if (Build.VERSION.SDK_INT < 16) {
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        } else {
-            decorView = getWindow().getDecorView();
-        }
+        decorView = getWindow().getDecorView();
 
         setContentView(R.layout.activity_full_image);
 
@@ -51,13 +41,21 @@ public class FullImageActivity extends BaseActivity {
         int screenWidth = size.x;
         int screenHeight = size.y;
 
-        int imageViewWidth = screenWidth;
-        int imageViewHeight = imageViewWidth * imageHeight / imageWidth;
+        int imageViewWidth;
+        int imageViewHeight;
+        if (imageWidth > screenWidth) {
+            imageViewWidth = screenWidth;
+            imageViewHeight = imageViewWidth * imageHeight / imageWidth;
+        } else {
+            imageViewWidth = imageWidth;
+            imageViewHeight = imageViewWidth * imageHeight / imageWidth;
+        }
         if (imageViewHeight > screenHeight) {
             imageViewHeight = screenHeight;
             imageViewWidth = imageViewHeight * imageWidth / imageHeight;
         }
 
+        ImageView imageView = (ImageView) findViewById(R.id.image);
         Picasso.with(this)
                 .load(url)
                 .resize(imageViewWidth, imageViewHeight)

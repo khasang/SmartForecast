@@ -68,6 +68,7 @@
         <activity
             android:name=".activities.FullImageActivity"
             android:parentActivityName=".activities.AboutActivity"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
             >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
