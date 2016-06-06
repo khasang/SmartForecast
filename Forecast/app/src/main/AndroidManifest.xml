@@ -66,18 +66,9 @@
         </activity>
 
         <activity
-            android:name=".activities.ChangelogActivity"
-            android:label="@string/title_activity_changelog"
-            android:parentActivityName=".activities.AboutActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.khasang.forecast.activities.AboutActivity"/>
-        </activity>
-
-        <activity
-            android:name=".activities.TeamActivity"
-            android:label="@string/title_activity_team"
-            android:parentActivityName=".activities.AboutActivity">
+            android:name=".activities.FullImageActivity"
+            android:parentActivityName=".activities.AboutActivity"
+            >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.khasang.forecast.activities.AboutActivity"/>

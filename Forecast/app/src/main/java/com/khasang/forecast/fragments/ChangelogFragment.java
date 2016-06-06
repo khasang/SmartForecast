@@ -31,8 +31,10 @@ public class ChangelogFragment extends BaseFragment {
         Changelog changelog1 = new Changelog();
         changelog1.setVersion("Версия 2.6");
         changelog1.setDate(new GregorianCalendar(2016, 4, 25).getTime());
-        changelog1.setImage("http://khasang.github.io/SmartForecast/img/services/version-2.6.png");
-        changelog1.setChanges(R.string.version_2_6);
+        changelog1.setImageUrl("http://khasang.github.io/SmartForecast/img/services/version-2.6.png");
+        changelog1.setChangesRes(R.string.version_2_6);
+        changelog1.setImageWidth(4268);
+        changelog1.setImageHeight(3840);
 
         changelogs.add(changelog1);
     }

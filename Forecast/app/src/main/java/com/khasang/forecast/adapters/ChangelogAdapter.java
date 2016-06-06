@@ -1,6 +1,7 @@
 package com.khasang.forecast.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.khasang.forecast.R;
+import com.khasang.forecast.activities.FullImageActivity;
 import com.khasang.forecast.models.Changelog;
 import com.squareup.picasso.Picasso;
 
@@ -44,11 +46,34 @@ public class ChangelogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         String version = changelog.getVersion() +
                 " (" + DateFormat.getDateInstance().format(changelog.getDate()) + ")";
+
+        ViewGroup.LayoutParams params = holder.imageView.getLayoutParams();
+
+        final String url = changelog.getImageUrl();
+        final int imageWidth = changelog.getImageWidth();
+        final int imageHeight = changelog.getImageHeight();
+
+        int imageViewHeight = params.height;
+        int imageViewWidth = imageViewHeight * imageWidth / imageHeight;
+
         holder.versionView.setText(version);
         Picasso.with(context)
-                .load(changelog.getImageUrl())
+                .load(url)
+                .resize(imageViewWidth, imageViewHeight)
                 .into(holder.imageView);
-        holder.changesView.setText(changelog.getChanges());
+
+        holder.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, FullImageActivity.class);
+                intent.putExtra(FullImageActivity.URL, url);
+                intent.putExtra(FullImageActivity.IMAGE_WIDTH, imageWidth);
+                intent.putExtra(FullImageActivity.IMAGE_HEIGHT, imageHeight);
+                context.startActivity(intent);
+            }
+        });
+
+        holder.changesView.setText(changelog.getChangesRes());
     }
 
     private class ViewHolder extends RecyclerView.ViewHolder {

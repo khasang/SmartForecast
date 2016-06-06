@@ -6,8 +6,10 @@ public class Changelog {
 
     private String version;
     private Date date;
-    private String image;
-    private int changes;
+    private String imageUrl;
+    private int changesRes;
+    private int imageWidth;
+    private int imageHeight;
 
     public String getVersion() {
         return version;
@@ -26,18 +28,34 @@ public class Changelog {
     }
 
     public String getImageUrl() {
-        return image;
+        return imageUrl;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
-    public int getChanges() {
-        return changes;
+    public int getChangesRes() {
+        return changesRes;
     }
 
-    public void setChanges(int changes) {
-        this.changes = changes;
+    public void setChangesRes(int changesRes) {
+        this.changesRes = changesRes;
+    }
+
+    public int getImageWidth() {
+        return imageWidth;
+    }
+
+    public void setImageWidth(int imageWidth) {
+        this.imageWidth = imageWidth;
+    }
+
+    public int getImageHeight() {
+        return imageHeight;
+    }
+
+    public void setImageHeight(int imageHeight) {
+        this.imageHeight = imageHeight;
     }
 }
