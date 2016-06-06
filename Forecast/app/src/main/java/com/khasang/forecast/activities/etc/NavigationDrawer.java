@@ -6,6 +6,7 @@ import android.content.res.TypedArray;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.khasang.forecast.BuildConfig;
 import com.khasang.forecast.R;
 import com.khasang.forecast.position.PositionManager;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
@@ -100,7 +101,8 @@ public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
             .withIcon(GoogleMaterial.Icon.gmd_group)
             .withIdentifier(NAVIGATION_ABOUT);
 
-        PrimaryDrawerItem footer = new PrimaryDrawerItem().withName(R.string.app_name)
+        String name = activity.getString(R.string.app_name) + " v" + BuildConfig.VERSION_NAME;
+        PrimaryDrawerItem footer = new PrimaryDrawerItem().withName(name)
             .withEnabled(false)
             .withIdentifier(NAVIGATION_APP_NAME);
 
