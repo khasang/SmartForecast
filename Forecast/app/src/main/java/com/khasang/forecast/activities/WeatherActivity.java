@@ -37,7 +37,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.google.android.gms.appinvite.AppInviteInvitation;
+
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.Logger;
 import com.khasang.forecast.MyApplication;
@@ -557,16 +557,10 @@ public class WeatherActivity extends AppCompatActivity
             ft.show(dailyForecastFragment).hide(hourlyForecastFragment).commit();
             icon.icon(Octicons.Icon.oct_clock);
             updateWeatherChart(false);
-
-            boolean appbarVisible = chartLayout.getLayoutParams().height == 0;
-            dailyForecastFragment.scroll(appbarVisible);
         } else {
             ft.show(hourlyForecastFragment).hide(dailyForecastFragment).commit();
             icon.icon(Octicons.Icon.oct_calendar);
             updateWeatherChart(true);
-
-            boolean appbarVisible = chartLayout.getLayoutParams().height == 0;
-            hourlyForecastFragment.scroll(appbarVisible);
         }
         fab.setImageDrawable(icon);
     }
