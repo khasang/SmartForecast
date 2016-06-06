@@ -92,6 +92,12 @@
 - График изменения температуры.
     </string>
 
+    <string name="version_2_3">
+- Новая заставка приложения.\n
+- Добавлено полноценное меню настроек.\n
+- Недавно добавленные населенные пункты теперь подсвечиваются в списке.
+    </string>
+
     <string name="pref_header_general">General</string>
 
     <string name="pref_title_enable_gps">Use GPS</string>
