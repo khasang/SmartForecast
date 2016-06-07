@@ -340,11 +340,8 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 GoogleMapsGeocoding googleMapsGeocoding = new GoogleMapsGeocoding();
                 googleMapsGeocoding.requestCoordinates(city);
             } else {
-                Position position = PositionManager.getInstance().getPosition(city);
-                if (position != null) {
-                    GoogleMapsTimezone googleMapsTimezone = new GoogleMapsTimezone();
-                    googleMapsTimezone.requestCoordinates(position.getCityID(), position.getCoordinate());
-                }
+                GoogleMapsTimezone googleMapsTimezone = new GoogleMapsTimezone();
+                googleMapsTimezone.requestCoordinates(city);
             }
         } else {
             showMessageToUser(R.string.city_exist, Snackbar.LENGTH_LONG);

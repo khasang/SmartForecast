@@ -651,12 +651,21 @@ public class PositionManager {
     }
 
     public void updatePositionCoordinates(String city, Coordinate coordinate) {
-        Position position = PositionManager.getInstance().getPosition(city);
+        Position position = getPosition(city);
         if (position == null) {
             return;
         }
         position.setCoordinate(coordinate);
         dbManager.updatePositionCoordinates(position);
+    }
+
+    public void updatePositionTimeZone(String city, String timeZone) {
+        Position position = getPosition(city);
+        if (position == null) {
+            return;
+        }
+        position.setTimeZone(timeZone);
+        dbManager.updateCityTimeZone(position);
     }
 
     public void initLocationManager() {
