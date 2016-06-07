@@ -38,6 +38,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.Logger;
 import com.khasang.forecast.MyApplication;
@@ -221,6 +222,9 @@ public class WeatherActivity extends AppCompatActivity
                 Intent feedbackIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 startActivity(feedbackIntent);
                 break;
+            case NavigationDrawer.NAVIGATION_INVITE:
+                onInviteClicked();
+                break;
             case NavigationDrawer.NAVIGATION_APP_NAME:
                 break;
             default:
@@ -230,6 +234,25 @@ public class WeatherActivity extends AppCompatActivity
                 changeDisplayedCity(newCity);
         }
     }
+
+    /**
+     * User has clicked the 'Invite' button, launch the invitation UI with the proper
+     * title, message, and deep link
+     */
+
+    private static final int REQUEST_INVITE = 0;
+
+    // [START on_invite_clicked]
+    private void onInviteClicked() {
+        Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.invitation_title))
+                .setMessage(getString(R.string.invitation_message))
+                .setDeepLink(Uri.parse(getString(R.string.invitation_deep_link)))
+                .setCustomImage(Uri.parse(getString(R.string.invitation_custom_image)))
+                .setCallToActionText(getString(R.string.invitation_cta))
+                .build();
+        startActivityForResult(intent, REQUEST_INVITE);
+    }
+    // [END on_invite_clicked]
 
     private void setAnimationForWidgets() {
         /** Анимация объектов */
