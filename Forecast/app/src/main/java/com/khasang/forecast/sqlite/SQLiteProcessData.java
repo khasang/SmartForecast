@@ -66,7 +66,7 @@ public class SQLiteProcessData {
     public void updateCityTimeZone (Position position) {
         SQLiteWork.getInstance().qExec(SQLiteFields.QUERY_UPDATE_TOWN_TIME_ZONE,
                 new String[]{
-                        Integer.toString(position.getTimeZone()),
+                        position.getTimeZone(),
                         position.getLocationName()
                 });
     }
