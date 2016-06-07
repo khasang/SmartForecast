@@ -48,12 +48,14 @@ import com.khasang.forecast.adapters.CityPickerAdapter;
 import com.khasang.forecast.adapters.GooglePlacesAutocompleteAdapter;
 import com.khasang.forecast.adapters.etc.HidingScrollListener;
 import com.khasang.forecast.api.GoogleMapsGeocoding;
+import com.khasang.forecast.api.GoogleMapsTimezone;
 import com.khasang.forecast.exceptions.EmptyCurrentAddressException;
 import com.khasang.forecast.exceptions.NoAvailableAddressesException;
 import com.khasang.forecast.interfaces.IMapDataReceiver;
 import com.khasang.forecast.interfaces.IMessageProvider;
 import com.khasang.forecast.location.LocationParser;
 import com.khasang.forecast.position.Coordinate;
+import com.khasang.forecast.position.Position;
 import com.khasang.forecast.position.PositionManager;
 import com.khasang.forecast.view.DelayedAutoCompleteTextView;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
@@ -337,6 +339,12 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             if (needCoordinateRequest) {
                 GoogleMapsGeocoding googleMapsGeocoding = new GoogleMapsGeocoding();
                 googleMapsGeocoding.requestCoordinates(city);
+            } else {
+                Position position = PositionManager.getInstance().getPosition(city);
+                if (position != null) {
+                    GoogleMapsTimezone googleMapsTimezone = new GoogleMapsTimezone();
+                    googleMapsTimezone.requestCoordinates(position.getCityID(), position.getCoordinate());
+                }
             }
         } else {
             showMessageToUser(R.string.city_exist, Snackbar.LENGTH_LONG);

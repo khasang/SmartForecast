@@ -6,7 +6,6 @@ import com.crashlytics.android.Crashlytics;
 import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.R;
 import com.khasang.forecast.position.Coordinate;
-import com.khasang.forecast.position.PositionManager;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.OkHttpClient;
@@ -26,16 +25,17 @@ import io.fabric.sdk.android.Fabric;
 /**
  * Created by roman on 31.05.16.
  */
-public class GoogleMapsGeocoding {
-    private final static String TAG = GoogleMapsGeocoding.class.getSimpleName();
-    private final static String PLACE_API_BASE_URL = "https://maps.googleapis.com/maps/api/geocode/json";
-    private final static String API_KEY = MyApplication.getAppContext().getString(R.string.google_maps_geocoding);
+public class GoogleMapsTimezone {
+    private final static String TAG = GoogleMapsTimezone.class.getSimpleName();
+    private final static String PLACE_API_BASE_URL = "https://maps.googleapis.com/maps/api/timezone/json";
+    private final static String API_KEY = MyApplication.getAppContext().getString(R.string.google_maps_timezone);
 
-    public void requestCoordinates(final String input) {
+    public void requestCoordinates(final int cityID, final Coordinate coordinate) {
         try {
             final String URL = PLACE_API_BASE_URL + "?key="
-                    + API_KEY + "&address="
-                    + URLEncoder.encode(input, "utf8");
+                    + API_KEY + "&timestamp=0&location="
+                    + URLEncoder.encode(coordinate.convertToTimezoneUrlParameterString(), "utf8");
+            Log.d(TAG, URL);
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
                     .url(URL)
@@ -44,7 +44,7 @@ public class GoogleMapsGeocoding {
             call.enqueue(new Callback() {
                 @Override
                 public void onFailure(Request request, IOException e) {
-                    Log.d(TAG, "Request to Google Maps Geocoding API failure");
+                    Log.d(TAG, "Request to Google Maps Timezone API failure");
                 }
 
                 @Override
@@ -52,18 +52,15 @@ public class GoogleMapsGeocoding {
                     String jsonData = response.body().string();
                     try {
                         JSONObject jsonObject = new JSONObject(jsonData);
-                        JSONArray jsonArray = jsonObject.getJSONArray("results");
                         String status = jsonObject.getString("status");
                         if (!status.equals("OK")) {
-                            String log = "GoogleMapsGeocoding: url <" + URL + ">  response status <" + status + ">";
+                            String log = "GoogleMapsTimezone: url <" + URL + ">  response status <" + status + ">";
                             throw new JSONException(log);
                         }
-                        JSONObject jsonGeometry = new JSONObject(jsonArray.getJSONObject(0).getString("geometry"));
-                        JSONObject jsonLocation = new JSONObject(jsonGeometry.getString("location"));
-                        Coordinate coordinate = new Coordinate();
-                        coordinate.setLatitude(Double.parseDouble(jsonLocation.getString("lat")));
-                        coordinate.setLongitude(Double.parseDouble(jsonLocation.getString("lng")));
-                        PositionManager.getInstance().updatePositionCoordinates(input, coordinate);
+                        String timeZoneId = jsonObject.getString("timeZoneId");
+                        Log.d(TAG, "Status: " + status);
+                        Log.d(TAG, "TimeZone: " + timeZoneId);
+                     //   PositionManager.getInstance().updatePositionCoordinates(input, coordinate);
                     } catch (JSONException e) {
                         Log.e(TAG, e.getLocalizedMessage());
                         if (Fabric.isInitialized()) {
