@@ -4,9 +4,7 @@ package com.khasang.forecast.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
@@ -14,15 +12,17 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.R;
 import com.khasang.forecast.position.PositionManager;
 
-public class SettingsActivity extends AppCompatActivity {
+import butterknife.BindView;
+
+public class SettingsActivity extends BaseActivity {
 
     private static boolean themeChanged;
 
@@ -30,10 +30,15 @@ public class SettingsActivity extends AppCompatActivity {
         themeChanged = false;
     }
 
+    @BindView(R.id.toolbar) Toolbar toolbar;
+
+    public static void setThemeChanged(boolean changed) {
+        themeChanged = changed;
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(AppUtils.getCurrentTheme(this));
         setContentView(R.layout.activity_settings);
         setupToolbar();
         getSupportFragmentManager().beginTransaction()
@@ -42,32 +47,15 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void setupToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+        //noinspection ConstantConditions
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 leaveActivity();
             }
         });
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            onBackPressed();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
     }
 
     @Override
@@ -75,11 +63,8 @@ public class SettingsActivity extends AppCompatActivity {
         leaveActivity();
     }
 
-    public static void setThemeChanged(boolean changed) {
-        themeChanged = changed;
-    }
-
-    private void leaveActivity() {
+    @Override
+    protected void leaveActivity() {
         if (themeChanged) {
             themeChanged = false;
 
@@ -88,7 +73,7 @@ public class SettingsActivity extends AppCompatActivity {
             intent.putExtra(WeatherActivity.ACTIVE_CITY_TAG, PositionManager.getInstance().getCurrentPositionName());
             startActivity(intent);
         }
-        ActivityCompat.finishAfterTransition(this);
+        super.leaveActivity();
     }
 
     public static class GeneralPreferenceFragment extends PreferenceFragmentCompat
@@ -106,7 +91,8 @@ public class SettingsActivity extends AppCompatActivity {
             Preference preference = findPreference(getString(R.string.pref_night_mode_key));
             if (preference instanceof ListPreference) {
                 ListPreference listPreference = (ListPreference) preference;
-                int prefIndex = listPreference.findIndexOfValue(sharedPreferences.getString(getString(R.string.pref_night_mode_key), getString(R.string.pref_night_mode_off)));
+                int prefIndex = listPreference.findIndexOfValue(sharedPreferences.getString(getString(R.string
+                        .pref_night_mode_key), getString(R.string.pref_night_mode_off)));
                 if (prefIndex >= 0) {
                     preference.setSummary(listPreference.getEntries()[prefIndex]);
                 }
@@ -115,7 +101,8 @@ public class SettingsActivity extends AppCompatActivity {
             preference = findPreference(getString(R.string.pref_color_scheme_key));
             if (preference instanceof ListPreference) {
                 ListPreference listPreference = (ListPreference) preference;
-                int prefIndex = listPreference.findIndexOfValue(sharedPreferences.getString(getString(R.string.pref_color_scheme_key), getString(R.string.pref_color_scheme_teal)));
+                int prefIndex = listPreference.findIndexOfValue(sharedPreferences.getString(getString(R.string
+                        .pref_color_scheme_key), getString(R.string.pref_color_scheme_teal)));
                 if (prefIndex >= 0) {
                     preference.setSummary(listPreference.getEntries()[prefIndex]);
                 }
@@ -124,7 +111,8 @@ public class SettingsActivity extends AppCompatActivity {
             preference = findPreference(getString(R.string.pref_icons_set_key));
             if (preference instanceof ListPreference) {
                 ListPreference listPreference = (ListPreference) preference;
-                int prefIndex = listPreference.findIndexOfValue(sharedPreferences.getString(getString(R.string.pref_icons_set_key), getString(R.string.pref_icons_set_default)));
+                int prefIndex = listPreference.findIndexOfValue(sharedPreferences.getString(getString(R.string
+                        .pref_icons_set_key), getString(R.string.pref_icons_set_default)));
                 if (prefIndex >= 0) {
                     preference.setSummary(listPreference.getEntries()[prefIndex]);
                 }
@@ -133,9 +121,11 @@ public class SettingsActivity extends AppCompatActivity {
 
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if (key.equals(getString(R.string.pref_gps_key)) && sharedPreferences.getBoolean(getString(R.string.pref_gps_key), true)) {
+            if (key.equals(getString(R.string.pref_gps_key)) && sharedPreferences.getBoolean(getString(R.string
+                    .pref_gps_key), true)) {
                 Toast toast = AppUtils.showInfoMessage(getActivity(), getString(R.string.warning_message_gps));
-                toast.getView().setBackgroundColor(ContextCompat.getColor(MyApplication.getAppContext(), R.color.background_toast));
+                toast.getView().setBackgroundColor(ContextCompat.getColor(MyApplication.getAppContext(), R.color
+                        .background_toast));
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.setDuration(Toast.LENGTH_LONG);
                 toast.show();
@@ -149,7 +139,8 @@ public class SettingsActivity extends AppCompatActivity {
                     preference.setSummary(listPreference.getEntries()[prefIndex]);
                 }
                 if (key.equals(getString(R.string.pref_night_mode_key))) {
-                    String stringValue = sharedPreferences.getString(getString(R.string.pref_night_mode_key), getString(R.string.pref_night_mode_off));
+                    String stringValue = sharedPreferences.getString(getString(R.string.pref_night_mode_key),
+                            getString(R.string.pref_night_mode_off));
                     if (stringValue.equals(getString(R.string.pref_night_mode_off))) {
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                     } else if (stringValue.equals(getString(R.string.pref_night_mode_on))) {
@@ -164,7 +155,7 @@ public class SettingsActivity extends AppCompatActivity {
                 } else if (key.equals(getString(R.string.pref_color_scheme_key))) {
                     SettingsActivity.setThemeChanged(true);
                     getActivity().recreate();
-                }  else if (key.equals(getString(R.string.pref_icons_set_key))) {
+                } else if (key.equals(getString(R.string.pref_icons_set_key))) {
                     PositionManager.getInstance().generateIconSet(getActivity());
                     SettingsActivity.setThemeChanged(true);
                 }

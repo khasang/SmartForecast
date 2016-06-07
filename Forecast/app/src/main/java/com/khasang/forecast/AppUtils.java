@@ -240,22 +240,6 @@ public class AppUtils {
         snackbar.show();
     }
 
-    public static int getCurrentTheme (Context context) {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        String colorScheme = sp.getString(context.getString(R.string.pref_color_scheme_key), context.getString(R.string.pref_color_scheme_teal));
-        int themeId = R.style.AppTheme_CityPicker_Green;
-        if (colorScheme.equals(context.getString(R.string.pref_color_scheme_brown))) {
-            themeId = R.style.AppTheme_CityPicker_Brown;
-        } else if (colorScheme.equals(context.getString(R.string.pref_color_scheme_teal))) {
-            themeId = R.style.AppTheme_CityPicker_Teal;
-        } else if (colorScheme.equals(context.getString(R.string.pref_color_scheme_indigo))) {
-            themeId = R.style.AppTheme_CityPicker_Indigo;
-        } else if (colorScheme.equals(context.getString(R.string.pref_color_scheme_purple))) {
-            themeId = R.style.AppTheme_CityPicker_Purple;
-        }
-        return themeId;
-    }
-
     public static Toast showInfoMessage(Activity activity, CharSequence string) {
         LayoutInflater inflater = activity.getLayoutInflater();
         View layout = inflater.inflate(R.layout.warning_toast, ((ViewGroup) activity.findViewById(R.id.toast_layout_root)));

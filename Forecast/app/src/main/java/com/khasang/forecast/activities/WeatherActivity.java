@@ -22,7 +22,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -64,38 +63,41 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import butterknife.BindView;
+
 import static com.khasang.forecast.PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION;
 
 /**
  * Данные которые необходимо отображать в WeatherActivity (для первого релиза):
  * город, температура, давление, влажность, ветер, временная метка.
  */
-public class WeatherActivity extends AppCompatActivity
+public class WeatherActivity extends BaseActivity
         implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, IWeatherReceiver,
         IPermissionCallback, IMessageProvider, NavigationDrawer.OnNavigationItemClickListener {
 
-    private static final int CHOOSE_CITY = 1;
-    public static final String CURRENT_CITY_TAG = "CURRENT_CITY";
-    public static final String ACTIVE_CITY_TAG = "ACTIVE_CITY";
     private static final String TAG = WeatherActivity.class.getSimpleName();
 
-    private TextView temperature;
-    private TextView description;
-    private TextView wind;
-    private TextView humidity;
-    private ImageView currWeather;
+    public static final String CURRENT_CITY_TAG = "CURRENT_CITY";
+    public static final String ACTIVE_CITY_TAG = "ACTIVE_CITY";
+    private static final int CHOOSE_CITY = 1;
+
+    @BindView(R.id.temperature) TextView temperature;
+    @BindView(R.id.precipitation) TextView description;
+    @BindView(R.id.wind) TextView wind;
+    @BindView(R.id.humidity) TextView humidity;
+    @BindView(R.id.iv_curr_weather) ImageView currWeather;
+    @BindView(R.id.fab) FloatingActionButton fab;
+    @BindView(R.id.toolbar_material) Toolbar toolbar;
+    @BindView(R.id.progressbar) ProgressBar progressbar;
+    @BindView(R.id.chart) WeatherChart chart;
+    @BindView(R.id.chart_layout) FrameLayout chartLayout;
     private ImageView syncBtn;
+
     private Animation animationRotateCenter;
     private Animation animationGrow;
     private HourlyForecastFragment hourlyForecastFragment;
     private DailyForecastFragment dailyForecastFragment;
-    private FloatingActionButton fab;
-    private Toolbar toolbar;
-    private ProgressBar progressbar;
-
-    private WeatherChart chart;
     private NavigationDrawer navigationDrawer;
-    private FrameLayout chartLayout;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -103,37 +105,35 @@ public class WeatherActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         PositionManager.getInstance(this, this);
         PositionManager.getInstance().generateIconSet(this);
         Intent intent = getIntent();
-        String active_city = intent.getStringExtra(WeatherActivity.ACTIVE_CITY_TAG);
-        if (!(active_city == null || active_city.isEmpty())) {
-            PositionManager.getInstance().setCurrentPosition(active_city);
+        String activeCity = intent.getStringExtra(WeatherActivity.ACTIVE_CITY_TAG);
+        if (!(activeCity == null || activeCity.isEmpty())) {
+            PositionManager.getInstance().setCurrentPosition(activeCity);
         }
 
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        String colorScheme = sp.getString(getString(R.string.pref_color_scheme_key), getString(R.string.pref_color_scheme_teal));
-        int drawerHeaderArrayIndex = 0;
-        if (colorScheme.equals(getString(R.string.pref_color_scheme_brown))) {
-            setTheme(R.style.AppTheme_Main_Brown);
-            drawerHeaderArrayIndex = 1;
-        } else if (colorScheme.equals(getString(R.string.pref_color_scheme_teal))) {
-            setTheme(R.style.AppTheme_Main_Teal);
-            drawerHeaderArrayIndex = 2;
-        } else if (colorScheme.equals(getString(R.string.pref_color_scheme_indigo))) {
-            setTheme(R.style.AppTheme_Main_Indigo);
-            drawerHeaderArrayIndex = 3;
-        } else if (colorScheme.equals(getString(R.string.pref_color_scheme_purple))) {
-            setTheme(R.style.AppTheme_Main_Purple);
-            drawerHeaderArrayIndex = 4;
-        } else {
-            setTheme(R.style.AppTheme_Main_Green);
-        }
         setContentView(R.layout.activity_weather);
 
-        initFields();
+        int drawerHeaderArrayIndex = 0;
+        switch (themeResId) {
+            case R.style.AppTheme_Brown:
+                drawerHeaderArrayIndex = 1;
+                break;
+            case R.style.AppTheme_Teal:
+                drawerHeaderArrayIndex = 2;
+                break;
+            case R.style.AppTheme_Indigo:
+                drawerHeaderArrayIndex = 3;
+                break;
+            case R.style.AppTheme_Purple:
+                drawerHeaderArrayIndex = 4;
+                break;
+        }
+
+        init();
         initNavigationDrawer(drawerHeaderArrayIndex);
         setAnimationForWidgets();
         startAnimations();
@@ -145,30 +145,18 @@ public class WeatherActivity extends AppCompatActivity
                 PositionManager.getInstance().setCurrentPosition(savedCurrentCity);
             }
         }
-        if (findViewById(R.id.fragment_container) != null) {
-            hourlyForecastFragment = new HourlyForecastFragment();
-            dailyForecastFragment = new DailyForecastFragment();
 
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, hourlyForecastFragment)
-                    .add(R.id.fragment_container, dailyForecastFragment)
-                    .hide(dailyForecastFragment)
-                    .commit();
-        }
+        hourlyForecastFragment = new HourlyForecastFragment();
+        dailyForecastFragment = new DailyForecastFragment();
+
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragment_container, hourlyForecastFragment)
+                .add(R.id.fragment_container, dailyForecastFragment)
+                .hide(dailyForecastFragment)
+                .commit();
     }
 
-    private void initFields() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar_material);
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-        currWeather = (ImageView) findViewById(R.id.iv_curr_weather);
-        temperature = (TextView) findViewById(R.id.temperature);
-        description = (TextView) findViewById(R.id.precipitation);
-        wind = (TextView) findViewById(R.id.wind);
-        humidity = (TextView) findViewById(R.id.humidity);
-        progressbar = (ProgressBar) findViewById(R.id.progressbar);
-        chart = (WeatherChart) findViewById(R.id.chart);
-        chartLayout = (FrameLayout) findViewById(R.id.chart_layout);
-
+    private void init() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             progressbar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this, R.color.accent), PorterDuff.Mode.SRC_ATOP);
         }
@@ -186,6 +174,7 @@ public class WeatherActivity extends AppCompatActivity
         fabLayoutParams.setBehavior(new FabOnTopBehavior(chartLayout, maxChartHeight));
 
         temperature.setOnClickListener(this);
+
         setSupportActionBar(toolbar);
     }
 
@@ -442,7 +431,7 @@ public class WeatherActivity extends AppCompatActivity
                 .icon(GoogleMaterial.Icon.gmd_refresh)
                 .color(ContextCompat.getColor(this, R.color.current_weather_color));
 
-        syncBtn = (ImageView) item.getActionView().findViewById(R.id.refreshButton);
+        syncBtn = (ImageView) item.getActionView().findViewById(R.id.refresh_button);
         syncBtn.setImageDrawable(icon);
         syncBtn.setOnClickListener(new View.OnClickListener() {
             @Override

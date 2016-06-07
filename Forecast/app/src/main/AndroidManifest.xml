@@ -23,8 +23,7 @@
         <activity
             android:name=".activities.SplashScreenActivity"
             android:noHistory="true"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Splash">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -33,14 +32,12 @@
         </activity>
         <activity
             android:name=".activities.WeatherActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Main">
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".activities.CityPickerActivity"
             android:parentActivityName=".activities.WeatherActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.CityPicker">
+            android:screenOrientation="portrait">
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -49,8 +46,7 @@
         <activity
             android:name=".activities.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".activities.WeatherActivity"
-            android:theme="@style/AppTheme.Settings">
+            android:parentActivityName=".activities.WeatherActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.khasang.forecast.activities.WeatherActivity"/>

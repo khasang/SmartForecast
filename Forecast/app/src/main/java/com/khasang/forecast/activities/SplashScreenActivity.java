@@ -9,7 +9,6 @@ import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
@@ -19,7 +18,6 @@ import android.view.animation.AnimationUtils;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.firebase.crash.FirebaseCrash;
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.R;
 import com.khasang.forecast.interfaces.IMessageProvider;
@@ -31,30 +29,32 @@ import net.frakbot.jumpingbeans.JumpingBeans;
 import java.io.IOException;
 import java.util.Calendar;
 
+import butterknife.BindView;
 import pl.droidsonroids.gif.AnimationListener;
 import pl.droidsonroids.gif.GifDrawable;
 import pl.droidsonroids.gif.GifImageView;
 
 public class SplashScreenActivity
-        extends AppCompatActivity
+        extends BaseActivity
         implements Animation.AnimationListener, AnimationListener, IMessageProvider {
 
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
-    private GifDrawable gifDrawable = null;
+    @BindView(R.id.welcomeText) ShimmerTextView welcomeText;
+    @BindView(R.id.gifImageView) GifImageView gifImageView;
+
+    private GifDrawable gifDrawable;
     private Shimmer shimmer;
-    private ShimmerTextView welcomeText;
     private JumpingBeans jumpingBeans;
-    boolean isGooglePlayServicesInstalled = false;
-    boolean welcomeStringIsOff;
+    private boolean isGooglePlayServicesInstalled;
+    private boolean welcomeStringIsOff;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(AppUtils.getCurrentTheme(this));
         setContentView(R.layout.activity_splash_screen);
+
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-//        welcomeStringIsOff = sp.getString(getString(R.string.pref_welcome_key), getString(R.string.pref_welcome_default)).equals(getString(R.string.pref_welcome_off));
         welcomeStringIsOff = !sp.getBoolean(getString(R.string.pref_welcome_key_switch), true);
         if (!welcomeStringIsOff) {
             int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
@@ -67,7 +67,6 @@ public class SplashScreenActivity
             } else if (hour <= 22) {
                 text = getString(R.string.welcome_string_evening);
             }
-            welcomeText = ((ShimmerTextView) findViewById(R.id.welcomeText));
             welcomeText.setTextColor(ContextCompat.getColor(this, R.color.material_drawer_selected_text));
             welcomeText.setText(text);
             jumpingBeans = JumpingBeans
@@ -78,15 +77,16 @@ public class SplashScreenActivity
 
         if (sp.getString(getString(R.string.pref_night_mode_key), "").equals(getString(R.string.pref_night_mode_off))) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        } else if (sp.getString(getString(R.string.pref_night_mode_key), "").equals(getString(R.string.pref_night_mode_on))) {
+        } else if (sp.getString(getString(R.string.pref_night_mode_key), "").equals(getString(R.string
+                .pref_night_mode_on))) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        } else if (sp.getString(getString(R.string.pref_night_mode_key), "").equals(getString(R.string.pref_night_mode_auto))) {
+        } else if (sp.getString(getString(R.string.pref_night_mode_key), "").equals(getString(R.string
+                .pref_night_mode_auto))) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
         }
 
-        GifImageView gifImageView = ((GifImageView) findViewById(R.id.gifImageView));
         try {
             gifDrawable = new GifDrawable(getResources(), R.raw.splash_screen);
             gifDrawable.stop();
@@ -110,7 +110,8 @@ public class SplashScreenActivity
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Animation animation = AnimationUtils.loadAnimation(SplashScreenActivity.this, R.anim.welcome_string_disappear);
+                    Animation animation = AnimationUtils.loadAnimation(SplashScreenActivity.this, R.anim
+                            .welcome_string_disappear);
                     animation.setAnimationListener(SplashScreenActivity.this);
                     welcomeText.startAnimation(animation);
                     jumpingBeans.stopJumping();

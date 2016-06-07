@@ -2,6 +2,7 @@ package com.khasang.forecast.activities;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 
@@ -11,6 +12,8 @@ import butterknife.ButterKnife;
 
 public class BaseActivity extends AppCompatActivity {
 
+    protected int themeResId;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,16 +21,21 @@ public class BaseActivity extends AppCompatActivity {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         String colorScheme = sp.getString(getString(R.string.pref_color_scheme_key), getString(R.string.pref_color_scheme_teal));
         if (colorScheme.equals(getString(R.string.pref_color_scheme_brown))) {
-            setTheme(R.style.AppTheme_Brown);
+            themeResId = R.style.AppTheme_Brown;
         } else if (colorScheme.equals(getString(R.string.pref_color_scheme_teal))) {
-            setTheme(R.style.AppTheme_Teal);
+            themeResId = R.style.AppTheme_Teal;
         } else if (colorScheme.equals(getString(R.string.pref_color_scheme_indigo))) {
-            setTheme(R.style.AppTheme_Indigo);
+            themeResId = R.style.AppTheme_Indigo;
         } else if (colorScheme.equals(getString(R.string.pref_color_scheme_purple))) {
-            setTheme(R.style.AppTheme_Purple);
+            themeResId = R.style.AppTheme_Purple;
         } else {
-            setTheme(R.style.AppTheme_Green);
+            themeResId = R.style.AppTheme_Green;
         }
+        setTheme(themeResId);
+    }
+
+    protected void leaveActivity() {
+        ActivityCompat.finishAfterTransition(this);
     }
 
     @Override
