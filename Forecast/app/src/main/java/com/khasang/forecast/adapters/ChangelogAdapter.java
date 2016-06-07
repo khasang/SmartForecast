@@ -1,7 +1,7 @@
 package com.khasang.forecast.adapters;
 
 import android.content.Context;
-import android.content.Intent;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.khasang.forecast.R;
-import com.khasang.forecast.activities.FullImageActivity;
 import com.khasang.forecast.models.Changelog;
 import com.khasang.forecast.models.Image;
 import com.squareup.picasso.Picasso;
@@ -22,10 +21,15 @@ public class ChangelogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     private Context context;
     private List<Changelog> changelogs;
+    private ImageClickListener imageClickListener;
 
     public ChangelogAdapter(Context context, List<Changelog> changelogs) {
         this.context = context;
         this.changelogs = changelogs;
+    }
+
+    public void setImageClickListener(ImageClickListener imageClickListener) {
+        this.imageClickListener = imageClickListener;
     }
 
     @Override
@@ -42,7 +46,7 @@ public class ChangelogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        ViewHolder holder = (ViewHolder) viewHolder;
+        final ViewHolder holder = (ViewHolder) viewHolder;
         Changelog changelog = changelogs.get(position);
 
         String version = changelog.getVersion() +
@@ -51,7 +55,7 @@ public class ChangelogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         ViewGroup.LayoutParams params = holder.imageView.getLayoutParams();
 
-        Image image = changelog.getImage();
+        final Image image = changelog.getImage();
         final String url = image.getUrl();
         final int imageWidth = image.getWidth();
         final int imageHeight = image.getHeight();
@@ -64,18 +68,24 @@ public class ChangelogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 .resize(imageViewWidth, imageViewHeight)
                 .into(holder.imageView);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            holder.imageView.setTransitionName(context.getString(R.string.shared_image));
+        }
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, FullImageActivity.class);
-                intent.putExtra(FullImageActivity.URL, url);
-                intent.putExtra(FullImageActivity.IMAGE_WIDTH, imageWidth);
-                intent.putExtra(FullImageActivity.IMAGE_HEIGHT, imageHeight);
-                context.startActivity(intent);
+                if (imageClickListener != null) {
+                    imageClickListener.onImageClicked(holder.imageView, image);
+                }
             }
         });
 
         holder.changesView.setText(changelog.getChangesResId());
+    }
+
+    public interface ImageClickListener {
+
+        void onImageClicked(ImageView imageView, Image image);
     }
 
     private class ViewHolder extends RecyclerView.ViewHolder {

@@ -98,6 +98,8 @@
 - Недавно добавленные населенные пункты теперь подсвечиваются в списке.
     </string>
 
+    <string name="shared_image">changelogImage</string>
+
     <string name="roman_novoselov">PM, Architect, Developer</string>
     <string name="alexandr_lihovidov">Architect, Technical consultant</string>
     <string name="timofey_korotkov">UI designer, Developer</string>
