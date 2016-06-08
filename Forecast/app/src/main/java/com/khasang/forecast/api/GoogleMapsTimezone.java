@@ -33,10 +33,14 @@ public class GoogleMapsTimezone {
     private final static String API_KEY = MyApplication.getAppContext().getString(R.string.google_maps_timezone);
 
     public void requestCoordinates(final String cityName) {
-        Position position = PositionManager.getInstance().getPosition(cityName);
+        final Position position = PositionManager.getInstance().getPosition(cityName);
         if ((position == null) || (position.getCoordinate() == null) || (position.getCoordinate().getLatitude() == 0 && position.getCoordinate().getLongitude() == 0)) {
             return;
         }
+        requestCoordinates(position);
+    }
+
+    public void requestCoordinates(final Position position) {
         try {
             final String URL = PLACE_API_BASE_URL + "?key="
                     + API_KEY + "&timestamp=0&location="
@@ -63,7 +67,7 @@ public class GoogleMapsTimezone {
                             throw new JSONException(log);
                         }
                         String timeZoneId = jsonObject.getString("timeZoneId");
-                        PositionManager.getInstance().updatePositionTimeZone(cityName, timeZoneId);
+                        PositionManager.getInstance().updatePositionTimeZone(position, timeZoneId);
                     } catch (JSONException e) {
                         Log.e(TAG, e.getLocalizedMessage());
                         if (Fabric.isInitialized()) {

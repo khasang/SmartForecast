@@ -18,6 +18,7 @@ import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.PermissionChecker;
 import com.khasang.forecast.R;
 import com.khasang.forecast.api.GoogleMapsGeocoding;
+import com.khasang.forecast.api.GoogleMapsTimezone;
 import com.khasang.forecast.exceptions.AccessFineLocationNotGrantedException;
 import com.khasang.forecast.exceptions.GpsIsDisabledException;
 import com.khasang.forecast.exceptions.NoAvailableLocationServiceException;
@@ -242,6 +243,10 @@ public class PositionManager {
             if ((pos.getCoordinate() == null) || (pos.getCoordinate().getLatitude() == 0 && pos.getCoordinate().getLongitude() == 0)) {
                 GoogleMapsGeocoding googleMapsGeocoding = new GoogleMapsGeocoding();
                 googleMapsGeocoding.requestCoordinates(pos.getLocationName());
+            }
+            if (pos.getTimeZone().isEmpty()) {
+                GoogleMapsTimezone googleMapsTimezone = new GoogleMapsTimezone();
+                googleMapsTimezone.requestCoordinates(pos);
             }
         }
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MyApplication.getAppContext());
@@ -659,13 +664,9 @@ public class PositionManager {
         dbManager.updatePositionCoordinates(position);
     }
 
-    public void updatePositionTimeZone(String city, String timeZone) {
-        Position position = getPosition(city);
-        if (position == null) {
-            return;
-        }
-        position.setTimeZone(timeZone);
-        dbManager.updateCityTimeZone(position);
+    public void updatePositionTimeZone(Position city, String timeZone) {
+        city.setTimeZone(timeZone);
+        dbManager.updateCityTimeZone(city);
     }
 
     public void initLocationManager() {
