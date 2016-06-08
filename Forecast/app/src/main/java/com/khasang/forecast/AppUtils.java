@@ -34,9 +34,9 @@ import java.util.Map;
  * Вспомогательный класс, служащий для преобразования получаемых данных.
  * <p>Реализованы методы
  * <ul>
- * <li>{@link #convertToWeather(OpenWeatherMapResponse)}</li>
- * <li>{@link #convertToHourlyWeather(OpenWeatherMapResponse)}</li>
- * <li>{@link #convertToDailyWeather(DailyResponse)}</li>
+ * <li>{@link #convertToWeather(OpenWeatherMapResponse, int)}</li>
+ * <li>{@link #convertToHourlyWeather(OpenWeatherMapResponse, int)}</li>
+ * <li>{@link #convertToDailyWeather(DailyResponse, int)}</li>
  * </ul>
  */
 
@@ -240,7 +240,7 @@ public class AppUtils {
         snackbar.show();
     }
 
-    public static int getCurrentTheme (Context context) {
+    public static int getCurrentTheme(Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         String colorScheme = sp.getString(context.getString(R.string.pref_color_scheme_key), context.getString(R.string.pref_color_scheme_teal));
         int themeId = R.style.AppTheme_CityPicker_Green;
@@ -276,8 +276,9 @@ public class AppUtils {
      * для запроса текущего прогноза погоды.
      *
      * @param response объект типа {@link OpenWeatherMapResponse}, содержащий ответ от API.
+     * @param cityID
      */
-    public static Map<Calendar, Weather> convertToWeather(OpenWeatherMapResponse response) {
+    public static Map<Calendar, Weather> convertToWeather(OpenWeatherMapResponse response, int cityID) {
         Map<Calendar, Weather> map = new HashMap<>();
         Weather weather = new Weather();
         Calendar calendar = unixToCalendar(response.getDt());
@@ -304,8 +305,9 @@ public class AppUtils {
      * для запроса почасового прогноза погоды.
      *
      * @param response объект типа {@link OpenWeatherMapResponse}, содержащий ответ от API.
+     * @param cityID
      */
-    public static Map<Calendar, Weather> convertToHourlyWeather(OpenWeatherMapResponse response) {
+    public static Map<Calendar, Weather> convertToHourlyWeather(OpenWeatherMapResponse response, int cityID) {
         Map<Calendar, Weather> map = new HashMap<>();
         for (HourlyForecastList forecast : response.getList()) {
             Calendar calendar = unixToCalendar(forecast.getDt());
@@ -332,8 +334,9 @@ public class AppUtils {
      * для запроса прогноза погоды по дням.
      *
      * @param response объект типа {@link DailyResponse}, содержащий ответ от API.
+     * @param cityID
      */
-    public static Map<Calendar, Weather> convertToDailyWeather(DailyResponse response) {
+    public static Map<Calendar, Weather> convertToDailyWeather(DailyResponse response, int cityID) {
         Map<Calendar, Weather> map = new HashMap<>();
         for (DailyForecastList forecast : response.getList()) {
             Calendar calendar = unixToCalendar(forecast.getDt());

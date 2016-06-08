@@ -176,7 +176,7 @@ public class OpenWeatherMap extends WeatherStation {
                             requestQueue,
                             cityID,
                             serviceType,
-                            AppUtils.convertToWeather(response.body()));
+                            AppUtils.convertToWeather(response.body(), cityID));
                 } catch (NullPointerException e) {
                     if (Fabric.isInitialized()) {
                         Crashlytics.logException(e);
@@ -222,7 +222,7 @@ public class OpenWeatherMap extends WeatherStation {
                             requestList,
                             cityID,
                             serviceType,
-                            AppUtils.convertToHourlyWeather(response.body()));
+                            AppUtils.convertToHourlyWeather(response.body(), cityID));
                 } catch (NullPointerException e) {
                     if (Fabric.isInitialized()) {
                         Crashlytics.logException(e);
@@ -267,7 +267,7 @@ public class OpenWeatherMap extends WeatherStation {
                             requestList,
                             cityID,
                             serviceType,
-                            AppUtils.convertToDailyWeather(response.body()));
+                            AppUtils.convertToDailyWeather(response.body(), cityID));
                 } catch (NullPointerException e) {
                     if (Fabric.isInitialized()) {
                         Crashlytics.logException(e);
