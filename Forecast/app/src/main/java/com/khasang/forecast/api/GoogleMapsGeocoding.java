@@ -65,10 +65,8 @@ public class GoogleMapsGeocoding {
                         coordinate.setLongitude(Double.parseDouble(jsonLocation.getString("lng")));
                         PositionManager.getInstance().updatePositionCoordinates(input, coordinate);
 
-                        if (PositionManager.getInstance().getPosition(input).getTimeZone().isEmpty()) {
-                            GoogleMapsTimezone googleMapsTimezone = new GoogleMapsTimezone();
-                            googleMapsTimezone.requestCoordinates(input);
-                        }
+                        GoogleMapsTimezone googleMapsTimezone = new GoogleMapsTimezone();
+                        googleMapsTimezone.requestCoordinates(input);
                     } catch (JSONException e) {
                         Log.e(TAG, e.getLocalizedMessage());
                         if (Fabric.isInitialized()) {

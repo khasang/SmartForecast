@@ -240,14 +240,10 @@ public class PositionManager {
         }
         positions = positionFactory.getPositions();
         for (Position pos : positions.values()) {
-            if ((pos.getCoordinate() == null) || (pos.getCoordinate().getLatitude() == 0 && pos.getCoordinate().getLongitude() == 0)) {
+//            if ((pos.getCoordinate() == null) || (pos.getCoordinate().getLatitude() == 0 && pos.getCoordinate().getLongitude() == 0)) {
                 GoogleMapsGeocoding googleMapsGeocoding = new GoogleMapsGeocoding();
                 googleMapsGeocoding.requestCoordinates(pos.getLocationName());
-            }
-            if (pos.getTimeZone().isEmpty()) {
-                GoogleMapsTimezone googleMapsTimezone = new GoogleMapsTimezone();
-                googleMapsTimezone.requestCoordinates(pos);
-            }
+//            }
         }
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MyApplication.getAppContext());
         boolean saveCurrentLocation = sp.getString(MyApplication.getAppContext().getString(R.string.pref_location_key), MyApplication.getAppContext().getString(R.string.pref_location_current)).equals(MyApplication.getAppContext().getString(R.string.pref_location_current));
@@ -664,7 +660,7 @@ public class PositionManager {
         dbManager.updatePositionCoordinates(position);
     }
 
-    public void updatePositionTimeZone(Position city, String timeZone) {
+    public void updatePositionTimeZone(Position city, int timeZone) {
         city.setTimeZone(timeZone);
         dbManager.updateCityTimeZone(city);
     }

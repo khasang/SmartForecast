@@ -8,16 +8,16 @@ public class Position implements IPosition {
     private String name;
     private int cityID;
     private Coordinate coordinate;
-    private String timeZone = "";
+    private int timeZone = 0;
 
     public Position() {
     }
 
-    public String getTimeZone() {
+    public int getTimeZone() {
         return timeZone;
     }
 
-    public void setTimeZone(String timeZone) {
+    public void setTimeZone(int timeZone) {
         this.timeZone = timeZone;
     }
 
@@ -74,7 +74,8 @@ public class Position implements IPosition {
         return result;
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
         return "Position{name=" + name + ", cityID=" + cityID + ", coordinate=" + coordinate + "}";
     }
 }

@@ -50,7 +50,7 @@ public class SQLiteFields {
             SUNRISE + " DATETIME," +
             SUNSET + " DATETIME," +
             FAVORITE + " VARCHAR(5)," +
-            TIME_ZONE + " VARCHAR(50) )";
+            TIME_ZONE + " INTEGER )";
 
     public static final String QUERY_CREATE_TABLE_WEATHER = "CREATE TABLE " + TABLE_WEATHER + " (" +
             ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +

@@ -66,7 +66,8 @@ public class GoogleMapsTimezone {
                             String log = "GoogleMapsTimezone: url <" + URL + ">  response status <" + status + ">";
                             throw new JSONException(log);
                         }
-                        String timeZoneId = jsonObject.getString("timeZoneId");
+                        int timeZoneId = jsonObject.getInt("rawOffset");
+                        Log.d ("TimeZone", "TimeZone: " + timeZoneId);
                         PositionManager.getInstance().updatePositionTimeZone(position, timeZoneId);
                     } catch (JSONException e) {
                         Log.e(TAG, e.getLocalizedMessage());

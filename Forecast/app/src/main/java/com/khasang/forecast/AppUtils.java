@@ -17,6 +17,7 @@ import com.khasang.forecast.models.DailyForecastList;
 import com.khasang.forecast.models.DailyResponse;
 import com.khasang.forecast.models.HourlyForecastList;
 import com.khasang.forecast.models.OpenWeatherMapResponse;
+import com.khasang.forecast.position.PositionManager;
 import com.khasang.forecast.position.Precipitation;
 import com.khasang.forecast.position.Weather;
 import com.khasang.forecast.position.Wind;
@@ -281,7 +282,8 @@ public class AppUtils {
     public static Map<Calendar, Weather> convertToWeather(OpenWeatherMapResponse response, int cityID) {
         Map<Calendar, Weather> map = new HashMap<>();
         Weather weather = new Weather();
-        Calendar calendar = unixToCalendar(response.getDt());
+        int offset = PositionManager.getInstance().getPosition(cityID).getTimeZone();
+        Calendar calendar = unixToCalendar(response.getDt() + offset);
         weather.setTemperature(response.getMain().getTemp());
         weather.setHumidity(response.getMain().getHumidity());
         weather.setPressure(response.getMain().getPressure());
@@ -310,7 +312,8 @@ public class AppUtils {
     public static Map<Calendar, Weather> convertToHourlyWeather(OpenWeatherMapResponse response, int cityID) {
         Map<Calendar, Weather> map = new HashMap<>();
         for (HourlyForecastList forecast : response.getList()) {
-            Calendar calendar = unixToCalendar(forecast.getDt());
+            int offset = PositionManager.getInstance().getPosition(cityID).getTimeZone();
+            Calendar calendar = unixToCalendar(forecast.getDt() + offset);
             Weather weather = new Weather();
             weather.setTemperature(forecast.getMain().getTemp());
             weather.setHumidity(forecast.getMain().getHumidity());
@@ -339,7 +342,8 @@ public class AppUtils {
     public static Map<Calendar, Weather> convertToDailyWeather(DailyResponse response, int cityID) {
         Map<Calendar, Weather> map = new HashMap<>();
         for (DailyForecastList forecast : response.getList()) {
-            Calendar calendar = unixToCalendar(forecast.getDt());
+            int offset = PositionManager.getInstance().getPosition(cityID).getTimeZone();
+            Calendar calendar = unixToCalendar(forecast.getDt() + offset);
             Weather weather = new Weather();
             weather.setTemperature(forecast.getTemp().getDay());
             weather.setHumidity(forecast.getHumidity());
