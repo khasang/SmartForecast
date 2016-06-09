@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/toast_layout_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,14 +9,13 @@
     android:orientation="horizontal"
     android:padding="8dp">
 
-    <com.mikepenz.iconics.view.IconicsButton
+    <com.mikepenz.iconics.view.IconicsImageView
         style="@style/AppTheme.Button"
         android:layout_width="50dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:background="@null"
-        android:text="{gmd-warning}"
-        android:textSize="40dp" />
+        app:iiv_color="@color/text_primary"
+        app:iiv_icon="gmd-warning" />
 
     <TextView
         android:id="@+id/warningMessage"

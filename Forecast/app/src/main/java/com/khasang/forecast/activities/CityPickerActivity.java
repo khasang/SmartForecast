@@ -99,6 +99,11 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                leaveActivity();
+            }
+        });
         setTitle(getString(R.string.city_list));
 
         infoTV = (TextView) findViewById(R.id.infoTV);
@@ -157,6 +162,10 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
         fabBtn.startAnimation(animation);
+    }
+
+    private void leaveActivity() {
+        ActivityCompat.finishAfterTransition(this);
     }
 
     /**
@@ -595,12 +604,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 onOptionsItemSelected(item);
             }
         });
-        return true;
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
         return true;
     }
 
