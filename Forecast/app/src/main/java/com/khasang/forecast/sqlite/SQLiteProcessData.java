@@ -265,15 +265,14 @@ public class SQLiteProcessData {
     }
 
     // получение временной зоны города.
-    public String getTownTimeZone(String townName) {
+    public Integer getTownTimeZone(String townName) {
         ArrayList<HashMap<String, String>> recList = SQLiteWork.getInstance().queryOpen(SQLiteFields.QUERY_SELECT_DATA_TOWN, new String[]{townName});
         try {
-            return recList.get(0).get(SQLiteFields.TIME_ZONE);
+            return Integer.parseInt(recList.get(0).get(SQLiteFields.TIME_ZONE));
         } catch (Exception e){
             e.printStackTrace();
         }
-        // Значение по умолчанию.
-        return "";
+        return null;
     }
 
     // Загрузка списка городов.
@@ -302,7 +301,7 @@ public class SQLiteProcessData {
         try {
             for (int i = 0; i < recList.size(); i++) {
                 String townName = recList.get(i).get(SQLiteFields.TOWN);
-                String timeZone = recList.get(i).get(SQLiteFields.TIME_ZONE);
+                int timeZone = Integer.parseInt(recList.get(i).get(SQLiteFields.TIME_ZONE));
                 double townLat = Double.parseDouble(recList.get(i).get(SQLiteFields.LATITUDE));
                 double townLong = Double.parseDouble(recList.get(i).get(SQLiteFields.LONGITUDE));
 
