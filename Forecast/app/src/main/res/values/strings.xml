@@ -185,7 +185,8 @@
     <string name="invitation_title">Send App Invite</string>
     <string name="invitation_message">Share Smart Forecast with your friends!</string>
     <string name="invitation_deep_link" translatable="false">http://example.com/offer/five_dollar_offer</string>
-    <string name="invitation_custom_image" translatable="false">https://raw.githubusercontent.com/khasang/SmartForecast/main-develop/Auxiliary_files/web_icon_512_new.png</string>
+    <!--<string name="invitation_custom_image" translatable="false">https://raw.githubusercontent.com/khasang/SmartForecast/main-develop/Auxiliary_files/web_icon_512_new.png</string>-->
+    <string name="invitation_custom_image" translatable="false">https://raw.githubusercontent.com/khasang/SmartForecast/main-develop/Auxiliary_files/Google_Play/banner_final.png</string>
     <string name="invitation_cta">Install!</string>
 
     <string name="google_play_services_error">Google Play Services Error</string>
