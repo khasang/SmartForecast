@@ -198,7 +198,8 @@ public class WeatherActivity extends AppCompatActivity
                                     // ...
                                 }
                             }
-                        });
+                        }
+                );
     }
 
     @Override
@@ -288,18 +289,18 @@ public class WeatherActivity extends AppCompatActivity
      * User has clicked the 'Invite' button, launch the invitation UI with the proper
      * title, message, and deep link
      */
-
     private static final int REQUEST_INVITE = 0;
 
     // [START on_invite_clicked]
     private void onInviteClicked() {
         Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.invitation_title))
                 .setMessage(getString(R.string.invitation_message))
-                .setDeepLink(Uri.parse(getString(R.string.invitation_deep_link)))
+                //.setDeepLink(Uri.parse(getString(R.string.invitation_deep_link)))
                 .setCustomImage(Uri.parse(getString(R.string.invitation_custom_image)))
                 .setCallToActionText(getString(R.string.invitation_cta))
                 .build();
         startActivityForResult(intent, REQUEST_INVITE);
+        //startActivity(intent);
     }
     // [END on_invite_clicked]
 
@@ -396,6 +397,7 @@ public class WeatherActivity extends AppCompatActivity
         }
 
         Log.d(TAG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
+
         if (requestCode == REQUEST_INVITE) {
             if (resultCode == RESULT_OK) {
                 // Get the invitation IDs of all sent messages
@@ -405,22 +407,23 @@ public class WeatherActivity extends AppCompatActivity
                 }
             } else {
                 // Sending failed or it was canceled, show failure message to the user
-                // [START_EXCLUDE]
-                showMessage(getString(R.string.send_failed));
-                // [END_EXCLUDE]
+                // ...
             }
         }
+
     }
 
     /** App Invites Snackbar */
     private void showMessage(String msg) {
         ViewGroup container = (ViewGroup) findViewById(R.id.snackbar_layout);
-        assert container != null;
-        Snackbar snack = Snackbar.make(container, msg, Snackbar.LENGTH_LONG);
-        View view = snack.getView();
-        TextView tv = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
-        tv.setTextColor(Color.WHITE);
-        snack.show();
+        Snackbar snack;
+        if (container != null) {
+            snack = Snackbar.make(container, msg, Snackbar.LENGTH_LONG);
+            View view = snack.getView();
+            TextView tv = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
+            tv.setTextColor(Color.WHITE);
+            snack.show();
+        }
     }
 
     public void startSettingsActivity() {
