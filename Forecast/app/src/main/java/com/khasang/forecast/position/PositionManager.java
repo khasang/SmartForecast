@@ -18,7 +18,6 @@ import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.PermissionChecker;
 import com.khasang.forecast.R;
 import com.khasang.forecast.api.GoogleMapsGeocoding;
-import com.khasang.forecast.api.GoogleMapsTimezone;
 import com.khasang.forecast.exceptions.AccessFineLocationNotGrantedException;
 import com.khasang.forecast.exceptions.GpsIsDisabledException;
 import com.khasang.forecast.exceptions.NoAvailableLocationServiceException;
@@ -35,6 +34,7 @@ import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.weather_icons_typeface_library.WeatherIcons;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
@@ -221,29 +221,28 @@ public class PositionManager {
      * Метод инициализации списка местоположений, вызывается из активити
      */
     private void initPositions() {
-        HashMap<String, Coordinate> pos = dbManager.loadTownList();
+        ArrayList<Position> pos =  dbManager.loadTownListFull();
         initPositions(pos);
     }
 
     /**
      * Метод инициализации списка местоположений, которые добавлены в список городов
      *
-     * @param favorites коллекция {@link List} типа {@link String}, содержащая названия городов
      */
-    private void initPositions(HashMap<String, Coordinate> favorites) {
+    private void initPositions(ArrayList<Position> pos) {
         PositionFactory positionFactory = new PositionFactory();
 
-        if (favorites.size() != 0) {
-            for (HashMap.Entry<String, Coordinate> entry : favorites.entrySet()) {
-                positionFactory.addFavouritePosition(entry.getKey(), entry.getValue());
+        if (pos.size() != 0) {
+            for (Position entry : pos) {
+                positionFactory.addFavouritePosition(entry);
             }
         }
         positions = positionFactory.getPositions();
-        for (Position pos : positions.values()) {
-//            if ((pos.getCoordinate() == null) || (pos.getCoordinate().getLatitude() == 0 && pos.getCoordinate().getLongitude() == 0)) {
+        for (Position p : positions.values()) {
+            if ((p.getCoordinate() == null) || (p.getCoordinate().getLatitude() == 0 && p.getCoordinate().getLongitude() == 0)) {
                 GoogleMapsGeocoding googleMapsGeocoding = new GoogleMapsGeocoding();
-                googleMapsGeocoding.requestCoordinates(pos.getLocationName());
-//            }
+                googleMapsGeocoding.requestCoordinates(p.getLocationName());
+            }
         }
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MyApplication.getAppContext());
         boolean saveCurrentLocation = sp.getString(MyApplication.getAppContext().getString(R.string.pref_location_key), MyApplication.getAppContext().getString(R.string.pref_location_current)).equals(MyApplication.getAppContext().getString(R.string.pref_location_current));
