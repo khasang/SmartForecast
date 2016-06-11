@@ -15,7 +15,7 @@ import io.fabric.sdk.android.Fabric;
 public class MyApplication extends Application {
 
     private static Context context;
-    boolean debugMode = true;
+    private static boolean debugMode = true;
 
     @Override
     public void onCreate() {
@@ -26,9 +26,10 @@ public class MyApplication extends Application {
         DrawUtils.getInstance().init(this);
         MyApplication.context = getApplicationContext();
         Stetho.initializeWithDefaults(this);
+    }
 
-        //FirebaseCrash.report(new Exception("My first Android non-fatal error"));
-
+    public static  boolean isDebugMode() {
+        return debugMode;
     }
 
     public static Context getAppContext() {

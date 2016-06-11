@@ -40,6 +40,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.InviteEvent;
 import com.google.android.gms.appinvite.AppInvite;
 import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.android.gms.appinvite.AppInviteInvitationResult;
@@ -72,6 +74,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+
+import io.fabric.sdk.android.Fabric;
 
 import static com.khasang.forecast.PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION;
 
@@ -402,12 +406,22 @@ public class WeatherActivity extends AppCompatActivity
             if (resultCode == RESULT_OK) {
                 // Get the invitation IDs of all sent messages
                 String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
+                int invite_count = 0;
                 for (String id : ids) {
                     Log.d(TAG, "onActivityResult: sent invitation " + id);
-                }
+                    invite_count++;
+                    }
+                    if (!MyApplication.isDebugMode()) {
+                        Answers.getInstance().logInvite(new InviteEvent().putMethod("App Invites")
+                                        .putCustomAttribute("Invite friends", "Send to " + String.valueOf(invite_count) + " users"));
+                    }
             } else {
                 // Sending failed or it was canceled, show failure message to the user
                 // ...
+                if (!MyApplication.isDebugMode()) {
+                    Answers.getInstance().logInvite(new InviteEvent().putMethod("App Invites")
+                            .putCustomAttribute("Invite friends", "Canceled"));
+                }
             }
         }
 
