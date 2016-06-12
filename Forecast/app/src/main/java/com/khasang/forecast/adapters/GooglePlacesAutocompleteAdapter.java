@@ -63,7 +63,7 @@ public class GooglePlacesAutocompleteAdapter extends ArrayAdapter
             protected FilterResults performFiltering(CharSequence constraint) {
                 if (constraint != null) {
                     char lastSym = constraint.charAt(constraint.length() - 1);
-                    if ((constraint.length() % 3 == 0) || (lastSym == ' ') || (lastSym == '-')) {
+                    if ((constraint.length() % 2 == 0) || (lastSym == ' ') || (lastSym == '-')) {
                         List<String> predictions = mPlaceProvider.autocomplete(constraint.toString(), MAX_RESULT);
                         filterResults.values = predictions;
                         filterResults.count = predictions.size();
