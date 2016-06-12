@@ -75,6 +75,10 @@ public class Maps implements OnMapReadyCallback {
         map.setMyLocationEnabled(true);
     }
 
+    public void setCameraPosition(Coordinate coordinate, float zoom, float bearing, float tilt) {
+        setCameraPosition(coordinate.getLatitude(), coordinate.getLongitude(), zoom, bearing, tilt);
+    }
+
     public void setCameraPosition(double latitude, double longitude, float zoom, float bearing, float tilt) {
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(new LatLng(latitude, longitude))
@@ -119,6 +123,10 @@ public class Maps implements OnMapReadyCallback {
 
     public void deleteAllMarkers() {
         map.clear();
+    }
+
+    public void setNewMarker(Coordinate coordinate, String text) {
+        setNewMarker(coordinate.getLatitude(), coordinate.getLongitude(), text);
     }
 
     public void setNewMarker(double latitude, double longitude) {

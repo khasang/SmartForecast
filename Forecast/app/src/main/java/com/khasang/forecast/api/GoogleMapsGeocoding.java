@@ -3,6 +3,7 @@ package com.khasang.forecast.api;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.R;
 import com.khasang.forecast.position.Coordinate;
@@ -69,6 +70,7 @@ public class GoogleMapsGeocoding {
                         googleMapsTimezone.requestCoordinates(input);
                     } catch (JSONException e) {
                         Log.e(TAG, e.getLocalizedMessage());
+                        AppUtils.showInfoMessage(MyApplication.getAppContext().getString(R.string.invalid_lang_long_used)).show();
                         if (Fabric.isInitialized()) {
                             Crashlytics.logException(e);
                         }
@@ -76,6 +78,7 @@ public class GoogleMapsGeocoding {
                 }
             });
         } catch (UnsupportedEncodingException e) {
+            AppUtils.showInfoMessage(MyApplication.getAppContext().getString(R.string.invalid_lang_long_used)).show();
             Log.e(TAG, e.getLocalizedMessage());
         }
     }

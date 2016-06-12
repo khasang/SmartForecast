@@ -100,7 +100,8 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 leaveActivity();
             }
         });
@@ -305,7 +306,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
 
         Coordinate coordinate;
         if (city.length() <= 0) {
-            showToast(R.string.error_empty_location_name);
             return null;
         }
         Geocoder geocoder = new Geocoder(getApplicationContext());
@@ -313,7 +313,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         try {
             addresses = geocoder.getFromLocationName(city, 3);
             if (addresses.size() == 0) {
-                showToast(R.string.coordinates_not_found);
                 return null;
             }
             Address currentAddress = addresses.get(0);
@@ -321,11 +320,12 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             coordinate.setLatitude(currentAddress.getLatitude());
             coordinate.setLongitude(currentAddress.getLongitude());
         } catch (IOException e) {
-            showToast(R.string.error_geo_service_not_available);
             e.printStackTrace();
             return null;
         } catch (IllegalArgumentException | NullPointerException e) {
-            showToast(R.string.invalid_lang_long_used);
+            e.printStackTrace();
+            return null;
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
@@ -375,12 +375,11 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     private void setLocationOnMap(Maps maps, String city) {
         try {
             Coordinate coordinate = getTownCoordinates(city);
-            double latitude = coordinate != null ? coordinate.getLatitude() : 0;
-            double longitude = coordinate != null ? coordinate.getLongitude() : 0;
-
-            maps.deleteAllMarkers();
-            maps.setNewMarker(latitude, longitude, city);
-            maps.setCameraPosition(latitude, longitude, maps.getDefaultZoom(), 0, 0);
+            if (coordinate != null) {
+                maps.deleteAllMarkers();
+                maps.setNewMarker(coordinate, city);
+                maps.setCameraPosition(coordinate, maps.getDefaultZoom(), 0, 0);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -442,12 +441,10 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 try {
                     Coordinate coordinate = getTownCoordinates(chooseCity.getAdapter().getItem(i).toString());
                     if (coordinate == null) {
-                        showToast(R.string.invalid_lang_long_used);
                         return;
                     }
                     maps.setNewMarker(coordinate.getLatitude(), coordinate.getLongitude(), chooseCity.getAdapter().getItem(i).toString());
                 } catch (NullPointerException e) {
-                    showToast(R.string.invalid_lang_long_used);
                     e.printStackTrace();
                 } catch (Exception e) {
                     e.printStackTrace();
