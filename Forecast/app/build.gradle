@@ -31,7 +31,11 @@ android {
         additionalParameters "--no-version-vectors"
     }
     buildTypes {
+        debug {
+            ext.enableCrashlytics = false
+        }
         release {
+            ext.enableCrashlytics = true
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

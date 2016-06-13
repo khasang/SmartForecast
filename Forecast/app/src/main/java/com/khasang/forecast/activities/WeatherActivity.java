@@ -411,14 +411,14 @@ public class WeatherActivity extends AppCompatActivity
                     Log.d(TAG, "onActivityResult: sent invitation " + id);
                     invite_count++;
                     }
-                    if (!MyApplication.isDebugMode()) {
+                    if (Fabric.isInitialized()) {
                         Answers.getInstance().logInvite(new InviteEvent().putMethod("App Invites")
                                         .putCustomAttribute("Invite friends", "Send to " + String.valueOf(invite_count) + " users"));
                     }
             } else {
                 // Sending failed or it was canceled, show failure message to the user
                 // ...
-                if (!MyApplication.isDebugMode()) {
+                if (Fabric.isInitialized()) {
                     Answers.getInstance().logInvite(new InviteEvent().putMethod("App Invites")
                             .putCustomAttribute("Invite friends", "Canceled"));
                 }
