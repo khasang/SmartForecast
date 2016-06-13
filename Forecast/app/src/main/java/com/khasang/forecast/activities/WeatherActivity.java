@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -196,19 +195,6 @@ public class WeatherActivity extends BaseActivity
                 break;
             case NavigationDrawer.NAVIGATION_SETTINGS:
                 startSettingsActivity();
-                break;
-            case NavigationDrawer.NAVIGATION_FEEDBACK:
-                String url;
-                switch (Locale.getDefault().getLanguage()) {
-                    case "ru":
-                        url = MyApplication.getAppContext().getString(R.string.google_form_ru);
-                        break;
-                    default:
-                        url = MyApplication.getAppContext().getString(R.string.google_form_en);
-                        break;
-                }
-                Intent feedbackIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                startActivity(feedbackIntent);
                 break;
             case NavigationDrawer.NAVIGATION_ABOUT:
                 startAboutActivity();

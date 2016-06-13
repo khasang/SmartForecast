@@ -68,7 +68,7 @@
     <string name="drawer_item_settings">Einstellungen</string>
     <!-- TODO TRANSLATE -->
     <string name="drawer_item_about">О приложении</string>
-    <string name="drawer_item_feedback">Entgegengesetztes Band</string>
+    <string name="drawer_item_invite">Invite friends</string>
 
     <string name="error_service_not_available">Die Koordinaten der aktuellen Position sind nicht gefunden.</string>
     <string name="error_geo_service_not_available">Die Koordinaten der Position sind nicht gefunden.</string>

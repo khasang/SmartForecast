@@ -37,8 +37,7 @@ public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
     public static final int NAVIGATION_CITY_LIST = 1;
     public static final int NAVIGATION_FAVORITES = 2;
     public static final int NAVIGATION_SETTINGS = 3;
-    public static final int NAVIGATION_FEEDBACK = 4;
-    public static final int NAVIGATION_ABOUT = 5;
+    public static final int NAVIGATION_ABOUT = 4;
     public static final int NAVIGATION_INVITE = 5;
     public static final int NAVIGATION_APP_NAME = 6;
 
@@ -93,10 +92,6 @@ public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
             .withIcon(FontAwesome.Icon.faw_cog)
             .withIdentifier(NAVIGATION_SETTINGS);
 
-        SecondaryDrawerItem feedback = new SecondaryDrawerItem().withName(R.string.drawer_item_feedback)
-            .withIcon(GoogleMaterial.Icon.gmd_feedback)
-            .withIdentifier(NAVIGATION_FEEDBACK);
-
         SecondaryDrawerItem about = new SecondaryDrawerItem().withName(R.string.drawer_item_about)
             .withIcon(GoogleMaterial.Icon.gmd_group)
             .withIdentifier(NAVIGATION_ABOUT);
@@ -112,7 +107,7 @@ public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
             .withSelectedItem(-1)
             .withActionBarDrawerToggle(true)
             .withAccountHeader(accountHeader)
-            .addDrawerItems(currentPlace, cityList, favorites, divider, settings, feedback, about)
+            .addDrawerItems(currentPlace, cityList, favorites, divider, settings, about)
             .addStickyDrawerItems(footer)
             .withOnDrawerItemClickListener(this)
             .build();
@@ -142,7 +137,6 @@ public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
                 result.closeDrawer();
                 break;
             case NAVIGATION_SETTINGS:
-            case NAVIGATION_FEEDBACK:
             case NAVIGATION_ABOUT:
                 result.closeDrawer();
                 break;
