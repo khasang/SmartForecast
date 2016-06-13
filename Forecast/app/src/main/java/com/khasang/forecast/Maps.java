@@ -2,8 +2,8 @@ package com.khasang.forecast;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.support.v4.app.ActivityCompat;
-import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -15,6 +15,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.khasang.forecast.activities.CityPickerActivity;
+import com.khasang.forecast.api.GoogleMapsGeocoding;
 import com.khasang.forecast.exceptions.EmptyCurrentAddressException;
 import com.khasang.forecast.interfaces.IMapDataReceiver;
 import com.khasang.forecast.interfaces.IMessageProvider;
@@ -29,7 +30,6 @@ import com.khasang.forecast.position.PositionManager;
 
 public class Maps implements OnMapReadyCallback {
 
-    private final String TAG = "mapLogs";
     private double currentLatitude;
     private double currentLongitude;
     private float defaultZoom;
@@ -137,6 +137,11 @@ public class Maps implements OnMapReadyCallback {
         map.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(text).draggable(false));
     }
 
+    public void setNewMarker (String city) {
+        CoordinatedGetter coordinatedGetter = new CoordinatedGetter();
+        coordinatedGetter.execute(city);
+    }
+
     private void setMapClickListeners(final GoogleMap map) {
         // Клик на маркер
         map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
@@ -167,7 +172,6 @@ public class Maps implements OnMapReadyCallback {
                     String location = receiver.setLocationCoordinatesFromMap(currentLatitude, currentLongitude);
                     deleteAllMarkers();
                     setNewMarker(currentLatitude, currentLongitude, location);
-                    Log.d(TAG, "onMapClick: " + latLng.latitude + "," + latLng.longitude);
                 } catch (EmptyCurrentAddressException | NullPointerException e) {
                     e.printStackTrace();
                 } catch (Exception e) {
@@ -179,10 +183,29 @@ public class Maps implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Log.d(TAG, "onMapReady");
         map = googleMap;
         setMapSettings(googleMap);
         setMapClickListeners(googleMap);
         setCameraPosition(currentLatitude, currentLongitude, defaultZoom, 0, 0);
+    }
+
+    class CoordinatedGetter extends AsyncTask<String, Void, Coordinate> {
+
+
+        @Override
+        protected Coordinate doInBackground(String... params) {
+            GoogleMapsGeocoding googleMapsGeocoding = new GoogleMapsGeocoding();
+            return googleMapsGeocoding.requestCoordinatesSynch(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Coordinate coordinate) {
+            super.onPostExecute(coordinate);
+            if (coordinate != null) {
+                deleteAllMarkers();
+                setNewMarker(coordinate.getLatitude(), coordinate.getLongitude());
+                setCameraPosition(coordinate,getDefaultZoom(),0,0);
+            }
+        }
     }
 }

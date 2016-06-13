@@ -55,7 +55,6 @@ import com.khasang.forecast.interfaces.IMapDataReceiver;
 import com.khasang.forecast.interfaces.IMessageProvider;
 import com.khasang.forecast.location.LocationParser;
 import com.khasang.forecast.position.Coordinate;
-import com.khasang.forecast.position.Position;
 import com.khasang.forecast.position.PositionManager;
 import com.khasang.forecast.view.DelayedAutoCompleteTextView;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
@@ -374,7 +373,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private void setLocationOnMap(Maps maps, String city) {
+    private void setLocationOnMap(final Maps maps, final String city) {
         try {
             Coordinate coordinate = getTownCoordinates(city);
             if (coordinate != null) {
@@ -382,7 +381,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 maps.setNewMarker(coordinate, city);
                 maps.setCameraPosition(coordinate, maps.getDefaultZoom(), 0, 0);
             } else {
-                //googleMapsGeocoding.requestCoordinates(city, maps, false);
+                maps.setNewMarker(city);
             }
         } catch (Exception e) {
             e.printStackTrace();

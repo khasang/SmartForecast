@@ -22,7 +22,6 @@ import com.khasang.forecast.exceptions.AccessFineLocationNotGrantedException;
 import com.khasang.forecast.exceptions.GpsIsDisabledException;
 import com.khasang.forecast.exceptions.NoAvailableLocationServiceException;
 import com.khasang.forecast.interfaces.ICoordinateReceiver;
-import com.khasang.forecast.interfaces.IMapDataReceiver;
 import com.khasang.forecast.interfaces.IMessageProvider;
 import com.khasang.forecast.interfaces.IWeatherReceiver;
 import com.khasang.forecast.location.CurrentLocationManager;

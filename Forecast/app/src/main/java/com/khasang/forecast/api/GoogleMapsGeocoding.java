@@ -1,14 +1,11 @@
 package com.khasang.forecast.api;
 
-import android.util.Log;
-
 import com.crashlytics.android.Crashlytics;
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.R;
 import com.khasang.forecast.interfaces.ICoordinateReceiver;
 import com.khasang.forecast.position.Coordinate;
-import com.khasang.forecast.position.PositionManager;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.OkHttpClient;
@@ -46,7 +43,7 @@ public class GoogleMapsGeocoding {
             call.enqueue(new Callback() {
                 @Override
                 public void onFailure(Request request, IOException e) {
-                    Log.d(TAG, "Request to Google Maps Geocoding API failure");
+                    AppUtils.showInfoMessage(MyApplication.getAppContext().getString(R.string.invalid_lang_long_used)).show();
                 }
 
                 @Override
@@ -71,7 +68,6 @@ public class GoogleMapsGeocoding {
                             googleMapsTimezone.requestCoordinates(input);
                         }
                     } catch (JSONException e) {
-                        Log.e(TAG, e.getLocalizedMessage());
                         AppUtils.showInfoMessage(MyApplication.getAppContext().getString(R.string.invalid_lang_long_used)).show();
                         if (Fabric.isInitialized()) {
                             Crashlytics.logException(e);
@@ -81,7 +77,48 @@ public class GoogleMapsGeocoding {
             });
         } catch (UnsupportedEncodingException e) {
             AppUtils.showInfoMessage(MyApplication.getAppContext().getString(R.string.invalid_lang_long_used)).show();
-            Log.e(TAG, e.getLocalizedMessage());
         }
+    }
+
+    public Coordinate requestCoordinatesSynch(final String input) {
+        Coordinate coordinate = null;
+        try {
+            final String URL = PLACE_API_BASE_URL + "?key="
+                    + API_KEY + "&address="
+                    + URLEncoder.encode(input, "utf8");
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url(URL)
+                    .build();
+            Response response = client.newCall(request).execute();
+            String jsonData = response.body().string();
+            JSONObject jsonObject = new JSONObject(jsonData);
+            JSONArray jsonArray = jsonObject.getJSONArray("results");
+            String status = jsonObject.getString("status");
+            if (!status.equals("OK")) {
+                String log = "GoogleMapsGeocoding: url <" + URL + ">  response status <" + status + ">";
+                throw new JSONException(log);
+            }
+            JSONObject jsonGeometry = new JSONObject(jsonArray.getJSONObject(0).getString("geometry"));
+            JSONObject jsonLocation = new JSONObject(jsonGeometry.getString("location"));
+            coordinate = new Coordinate();
+            coordinate.setLatitude(Double.parseDouble(jsonLocation.getString("lat")));
+            coordinate.setLongitude(Double.parseDouble(jsonLocation.getString("lng")));
+        } catch (JSONException e) {
+            AppUtils.showInfoMessage(MyApplication.getAppContext().getString(R.string.invalid_lang_long_used)).show();
+            if (Fabric.isInitialized()) {
+                Crashlytics.logException(e);
+            }
+            return null;
+        } catch (UnsupportedEncodingException e) {
+            AppUtils.showInfoMessage(MyApplication.getAppContext().getString(R.string.invalid_lang_long_used)).show();
+            e.printStackTrace();
+            return null;
+        } catch (IOException e) {
+            AppUtils.showInfoMessage(MyApplication.getAppContext().getString(R.string.invalid_lang_long_used)).show();
+            e.printStackTrace();
+            return null;
+        }
+        return coordinate;
     }
 }
