@@ -586,14 +586,14 @@ public class PositionManager implements ICoordinateReceiver, ILocationNameReceiv
     }
 
     public void onFailureResponse(LinkedList<WeatherStation.ResponseType> requestList, int cityID, WeatherStationFactory.ServiceType sType) {
-        if (!lastResponseIsFailure) {
+/*        if (!lastResponseIsFailure) {
             try {
                 messageProvider.showToast(MyApplication.getAppContext().getString(R.string.update_error_from) + sType.toString());
             } catch (NullPointerException e) {
                 e.printStackTrace();
             }
             lastResponseIsFailure = true;
-        }
+        }*/
         WeatherStation.ResponseType rType = requestList.pollFirst();
         if (rType == null) {
             return;
