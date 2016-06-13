@@ -3,9 +3,11 @@ package com.khasang.forecast.api;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
+import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.R;
-import com.khasang.forecast.position.Coordinate;
 import com.khasang.forecast.position.Position;
 import com.khasang.forecast.position.PositionManager;
 import com.squareup.okhttp.Call;
@@ -14,7 +16,6 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -31,6 +32,7 @@ public class GoogleMapsTimezone {
     private final static String TAG = GoogleMapsTimezone.class.getSimpleName();
     private final static String PLACE_API_BASE_URL = "https://maps.googleapis.com/maps/api/timezone/json";
     private final static String API_KEY = MyApplication.getAppContext().getString(R.string.google_maps_timezone);
+    private final static String API = "Google Maps Timezone API";
 
     public void requestCoordinates(final String cityName) {
         final Position position = PositionManager.getInstance().getPosition(cityName);
@@ -59,20 +61,23 @@ public class GoogleMapsTimezone {
                 @Override
                 public void onResponse(Response response) throws IOException {
                     String jsonData = response.body().string();
+                    String status = "";
                     try {
                         JSONObject jsonObject = new JSONObject(jsonData);
-                        String status = jsonObject.getString("status");
+                        status = jsonObject.getString("status");
                         if (!status.equals("OK")) {
-                            String log = "GoogleMapsTimezone: url <" + URL + ">  response status <" + status + ">";
+                            String log = "GoogleMapsTimezone: url <" + URL + ">; response status <" + status + ">";
                             throw new JSONException(log);
                         }
                         int timeZoneId = jsonObject.getInt("rawOffset");
-                        Log.d ("TimeZone", "TimeZone: " + timeZoneId);
+                        Log.d("TimeZone", "TimeZone: " + timeZoneId);
                         PositionManager.getInstance().updatePositionTimeZone(position, timeZoneId);
                     } catch (JSONException e) {
                         Log.e(TAG, e.getLocalizedMessage());
                         if (Fabric.isInitialized()) {
                             Crashlytics.logException(e);
+                            Answers.getInstance().logCustom(new CustomEvent(AppUtils.ApiCustomEvent)
+                                    .putCustomAttribute(API, status));
                         }
                     }
                 }
