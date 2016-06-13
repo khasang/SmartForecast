@@ -41,7 +41,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.crashlytics.android.answers.InviteEvent;
+import com.crashlytics.android.answers.LoginEvent;
 import com.google.android.gms.appinvite.AppInvite;
 import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.android.gms.appinvite.AppInviteInvitationResult;
@@ -415,6 +417,16 @@ public class WeatherActivity extends AppCompatActivity
                         Answers.getInstance().logInvite(new InviteEvent().putMethod("App Invites")
                                         .putCustomAttribute("Invite friends", "Send to " + String.valueOf(invite_count) + " users"));
                     }
+
+                // Сохранение общего количества отправленных приглашений
+                SharedPreferences sPref;
+                sPref = getPreferences(MODE_PRIVATE);
+                int totalInvites = sPref.getInt("INVITES_TOTAL", 0);
+                totalInvites += invite_count;
+                SharedPreferences.Editor ed = sPref.edit();
+                ed.putInt("INVITES_TOTAL", totalInvites);
+                ed.apply();
+
             } else {
                 // Sending failed or it was canceled, show failure message to the user
                 // ...
