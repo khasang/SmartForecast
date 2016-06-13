@@ -93,6 +93,8 @@ public class TeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             descriptionView = (TextView) itemView.findViewById(R.id.description);
             imageView = (CircleImageView) itemView.findViewById(R.id.image);
             links = (LinearLayout) itemView.findViewById(R.id.links);
+
+            imageView.setBorderWidth(0);
         }
     }
 }

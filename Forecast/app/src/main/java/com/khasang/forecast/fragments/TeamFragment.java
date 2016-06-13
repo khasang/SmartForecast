@@ -64,7 +64,7 @@ public class TeamFragment extends BaseFragment {
         Developer alexandrPerfilev = new Developer(R.string.alexandr_perfilev, alexandrPerfilevImage, R.string
                 .alexandr_perfilev_desc);
         Link alexandrPerfilevLink1 = new Link("GitHub", "https://github.com/aperfilyev");
-        Link alexandrPerfilevLink2 = new Link("Mail", "alexander.perfilyev@gmail.com");
+        Link alexandrPerfilevLink2 = new Link("Mail", "mailto:alexander.perfilyev@gmail.com");
         alexandrPerfilev.addLink(alexandrPerfilevLink1);
         alexandrPerfilev.addLink(alexandrPerfilevLink2);
 
