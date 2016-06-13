@@ -33,24 +33,51 @@ public class ChangelogFragment extends BaseFragment implements ChangelogAdapter.
         super.onCreate(savedInstanceState);
         changelogs = new ArrayList<>();
 
-        Image changelog1Image = new Image("http://khasang.github.io/SmartForecast/img/services/version-2.6.png",
+        Image changelog_2_6_image = new Image("http://khasang.github.io/SmartForecast/img/services/version-2.6.png",
                 4268, 3840);
-        Changelog changelog1 = new Changelog();
-        changelog1.setVersion("Версия 2.6");
-        changelog1.setDate(new GregorianCalendar(2016, 4, 25).getTime());
-        changelog1.setImage(changelog1Image);
-        changelog1.setChangesResId(R.string.version_2_6);
+        Changelog changelog_2_6 = new Changelog();
+        changelog_2_6.setVersionResId(R.string.version_2_6);
+        changelog_2_6.setDate(new GregorianCalendar(2016, 4, 21).getTime());
+        changelog_2_6.setImage(changelog_2_6_image);
+        changelog_2_6.setChangesResId(R.string.version_2_6_changelog);
 
-        Image changelog2Image = new Image("http://khasang.github.io/SmartForecast/img/services/V.2.3_combo.png",
+        Image changelog_2_3_image = new Image("http://khasang.github.io/SmartForecast/img/services/V.2.3_combo.png",
                 4268, 3840);
-        Changelog changelog2 = new Changelog();
-        changelog2.setVersion("Версия 2.3");
-        changelog2.setDate(new GregorianCalendar(2016, 3, 22).getTime());
-        changelog2.setImage(changelog2Image);
-        changelog2.setChangesResId(R.string.version_2_3);
+        Changelog changelog_2_3 = new Changelog();
+        changelog_2_3.setVersionResId(R.string.version_2_3);
+        changelog_2_3.setDate(new GregorianCalendar(2016, 2, 18).getTime());
+        changelog_2_3.setImage(changelog_2_3_image);
+        changelog_2_3.setChangesResId(R.string.version_2_3_changelog);
 
-        changelogs.add(changelog1);
-        changelogs.add(changelog2);
+        Image changelog_2_1_image = new Image("http://khasang.github.io/SmartForecast/img/services/V.2.1_1.png",
+                4268, 3840);
+        Changelog changelog_2_1 = new Changelog();
+        changelog_2_1.setVersionResId(R.string.version_2_1);
+        changelog_2_1.setDate(new GregorianCalendar(2016, 1, 25).getTime());
+        changelog_2_1.setImage(changelog_2_1_image);
+        changelog_2_1.setChangesResId(R.string.version_2_1_changelog);
+
+        Image changelog_2_0_image = new Image("http://khasang.github.io/SmartForecast/img/services/V.2.0_combo.png",
+                4268, 3840);
+        Changelog changelog_2_0 = new Changelog();
+        changelog_2_0.setVersionResId(R.string.version_2_0);
+        changelog_2_0.setDate(new GregorianCalendar(2016, 1, 23).getTime());
+        changelog_2_0.setImage(changelog_2_0_image);
+        changelog_2_0.setChangesResId(R.string.version_2_0_changelog);
+
+        Image changelog_1_0_image = new Image("http://khasang.github.io/SmartForecast/img/services/V.1.0_combo.png",
+                4268, 3840);
+        Changelog changelog_1_0 = new Changelog();
+        changelog_1_0.setVersionResId(R.string.version_1_0);
+        changelog_1_0.setDate(new GregorianCalendar(2015, 11, 27).getTime());
+        changelog_1_0.setImage(changelog_1_0_image);
+        changelog_1_0.setChangesResId(R.string.version_1_0_changelog);
+
+        changelogs.add(changelog_2_6);
+        changelogs.add(changelog_2_3);
+        changelogs.add(changelog_2_1);
+        changelogs.add(changelog_2_0);
+        changelogs.add(changelog_1_0);
     }
 
     @Override

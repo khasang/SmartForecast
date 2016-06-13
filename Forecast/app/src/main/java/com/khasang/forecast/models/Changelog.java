@@ -4,17 +4,17 @@ import java.util.Date;
 
 public class Changelog {
 
-    private String version;
+    private int versionResId;
     private Date date;
     private Image image;
     private int changesResId;
 
-    public String getVersion() {
-        return version;
+    public int getVersionResId() {
+        return versionResId;
     }
 
-    public void setVersion(String version) {
-        this.version = version;
+    public void setVersionResId(int versionResId) {
+        this.versionResId = versionResId;
     }
 
     public Date getDate() {

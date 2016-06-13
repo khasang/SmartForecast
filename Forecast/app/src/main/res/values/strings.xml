@@ -85,19 +85,6 @@
 
     <string name="changelog">Changelog</string>
     <string name="team">Team</string>
-    <string name="version_2_6">
-- Добавлено несколько цветовых схем.\n
-- \"Ночной\" режим.\n
-- Альтернативные наборы иконок.\n
-- График изменения температуры.
-    </string>
-
-    <string name="version_2_3">
-- Новая заставка приложения.\n
-- Добавлено полноценное меню настроек.\n
-- Недавно добавленные населенные пункты теперь подсвечиваются в списке.
-    </string>
-
     <string name="shared_image">changelogImage</string>
 
     <string name="pref_header_general">General</string>

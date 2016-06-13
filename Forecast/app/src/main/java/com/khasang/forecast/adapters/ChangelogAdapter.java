@@ -49,7 +49,7 @@ public class ChangelogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         final ViewHolder holder = (ViewHolder) viewHolder;
         Changelog changelog = changelogs.get(position);
 
-        String version = changelog.getVersion() +
+        String version = context.getString(changelog.getVersionResId()) +
                 " (" + DateFormat.getDateInstance().format(changelog.getDate()) + ")";
         holder.versionView.setText(version);
 
