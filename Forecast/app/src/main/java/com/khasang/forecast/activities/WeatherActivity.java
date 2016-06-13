@@ -351,11 +351,12 @@ public class WeatherActivity extends BaseActivity
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         PositionManager.getInstance().setUseGpsModule(sp.getBoolean(getString(R.string.pref_gps_key), true));
-        if (sp.getString(getString(R.string.pref_units_key), getString(R.string.pref_units_celsius)).equals(getString(R.string.pref_units_celsius))) {
+        if (sp.getString(getString(R.string.pref_temperature_key), getString(R.string.pref_temperature_celsius)).equals
+                (getString(R.string.pref_temperature_celsius))) {
             PositionManager.getInstance().setTemperatureMetric(AppUtils.TemperatureMetrics.CELSIUS);
-        } else if (sp.getString(getString(R.string.pref_units_key), getString(R.string.pref_units_celsius)).equals(getString(R.string.pref_units_kelvin))) {
+        } else if (sp.getString(getString(R.string.pref_temperature_key), getString(R.string.pref_temperature_celsius)).equals(getString(R.string.pref_temperature_kelvin))) {
             PositionManager.getInstance().setTemperatureMetric(AppUtils.TemperatureMetrics.KELVIN);
-        } else if (sp.getString(getString(R.string.pref_units_key), getString(R.string.pref_units_celsius)).equals(getString(R.string.pref_units_fahrenheit))) {
+        } else if (sp.getString(getString(R.string.pref_temperature_key), getString(R.string.pref_temperature_celsius)).equals(getString(R.string.pref_temperature_fahrenheit))) {
             PositionManager.getInstance().setTemperatureMetric(AppUtils.TemperatureMetrics.FAHRENHEIT);
         } else {
             PositionManager.getInstance().setTemperatureMetric(AppUtils.TemperatureMetrics.CELSIUS);

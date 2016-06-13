@@ -12,7 +12,7 @@
     <string name="measure_wind_mph">mph</string>
     <string name="measure_wind_fps">fps</string>
     <string name="measure_pressure_mmHg">mmHg</string>
-    <string name="measure_pressure_hpa">HPa</string>
+    <string name="measure_pressure_hpa">hPa</string>
     <string name="measure_temperature_celsius">°C</string>
     <string name="measure_temperature_fahrenheit">°F</string>
     <string name="measure_temperature_kelvin">" K"</string>
@@ -76,16 +76,86 @@
 
     <string name="pref_header_general">General</string>
 
-    <string name="pref_title_enable_gps">Use GPS</string>
-    <string name="pref_description_enable_gps">Use GPS to determine your location</string>
+    <string name="pref_category_general">General</string>
+    <string name="pref_category_start">Parameters of start</string>
+    <string name="pref_category_location">Search of location</string>
+    <string name="pref_category_personalization">Personalization</string>
+
+    <string name="pref_temperature_key" translatable="false">units</string>
+    <string name="pref_temperature_title">Temperature Units</string>
+    <string name="pref_temperature_celsius" translatable="false">celsius</string>
+    <string name="pref_temperature_kelvin" translatable="false">kelvin</string>
+    <string name="pref_temperature_fahrenheit" translatable="false">fahrenheit</string>
+    <string name="pref_temperature_celsius_label">Celsius degree (°C)</string>
+    <string name="pref_temperature_kelvin_label">Kelvin degree (K)</string>
+    <string name="pref_temperature_fahrenheit_label">Fahrenheit degree (°F)</string>
+
+    <string name="pref_speed_key" translatable="false">speed</string>
+    <string name="pref_speed_title">Units of wind speed measure</string>
+    <string name="pref_speed_meter_sec" translatable="false">meter_sec</string>
+    <string name="pref_speed_foot_sec" translatable="false">foot_sec</string>
+    <string name="pref_speed_km_hour" translatable="false">km_hour</string>
+    <string name="pref_speed_mile_hour" translatable="false">mile_hour</string>
+    <string name="pref_speed_meter_sec_label">Meter per second (m/s)</string>
+    <string name="pref_speed_foot_sec_label">Foot per second (f/s)</string>
+    <string name="pref_speed_km_hour_label">Kilometers per hour (km/h)</string>
+    <string name="pref_speed_mile_hour_label">Miles per hour (Mph)</string>
+
+    <string name="pref_pressure_key" translatable="false">pressure</string>
+    <string name="pref_pressure_title">Units of pressure measure</string>
+    <string name="pref_pressure_hpa" translatable="false">hpa</string>
+    <string name="pref_pressure_mm_hg" translatable="false">mm_hg</string>
+    <string name="pref_pressure_hpa_label">Hecto Pascal (hPa)</string>
+    <string name="pref_pressure_mm_hg_label">Millimetre of mercury (mmHG)</string>
+
+    <string name="pref_welcome_default_switch" translatable="false">true</string>
+    <string name="pref_welcome_key_switch" translatable="false">welcome_string_switch</string>
+    <string name="pref_welcome_key" translatable="false">welcome_string</string>
+    <string name="pref_welcome_title">Greeting line</string>
+    <string name="pref_welcome_summary">To show the greeting line at the start of the program</string>
+
+    <string name="pref_location_key" translatable="false">default_location</string>
+    <string name="pref_location_title">At a start to show a weather for</string>
+    <string name="pref_location_current" translatable="false">current_location</string>
+    <string name="pref_location_last" translatable="false">last_location</string>
+    <string name="pref_location_current_label">The Current location</string>
+    <string name="pref_location_last_label">The Last active location</string>
+
     <string name="pref_gps_key" translatable="false">gps_switch</string>
     <string name="pref_gps_default" translatable="false">true</string>
+    <string name="pref_gps_title">Use GPS</string>
+    <string name="pref_gps_description">Use GPS to determine your location</string>
 
-    <string name="pref_title_units">Temperature Units</string>
-    <string name="pref_units_key" translatable="false">units</string>
-    <string name="pref_units_celsius" translatable="false">celsius</string>
-    <string name="pref_units_kelvin" translatable="false">kelvin</string>
-    <string name="pref_units_fahrenheit" translatable="false">fahrenheit</string>
+    <string name="pref_color_scheme_key" translatable="false">color_scheme</string>
+    <string name="pref_color_scheme_title">Color scheme</string>
+    <string name="pref_color_scheme_green" translatable="false">color_scheme_green</string>
+    <string name="pref_color_scheme_brown" translatable="false">color_scheme_brown</string>
+    <string name="pref_color_scheme_teal" translatable="false">color_scheme_teal</string>
+    <string name="pref_color_scheme_indigo" translatable="false">color_scheme_indigo</string>
+    <string name="pref_color_scheme_purple" translatable="false">color_scheme_purple</string>
+    <string name="pref_color_scheme_green_label">Green</string>
+    <string name="pref_color_scheme_brown_label">Brown</string>
+    <string name="pref_color_scheme_teal_label">Turquoise</string>
+    <string name="pref_color_scheme_indigo_label">Dark blue</string>
+    <string name="pref_color_scheme_purple_label">Purple</string>
+
+    <string name="pref_night_mode_key" translatable="false">night_mode</string>
+    <string name="pref_night_mode_title">The theme</string>
+    <string name="pref_night_mode_off" translatable="false">night_mode_off</string>
+    <string name="pref_night_mode_on" translatable="false">night_mode_on</string>
+    <string name="pref_night_mode_auto" translatable="false">night_mode_auto</string>
+    <string name="pref_night_mode_off_label">Day theme</string>
+    <string name="pref_night_mode_on_label">Night theme</string>
+    <string name="pref_night_mode_auto_label">Based on the time of day</string>
+
+    <string name="pref_icons_set_key" translatable="false">icons_set</string>
+    <string name="pref_icons_set_title">Set of icons</string>
+    <string name="pref_icons_set_default" translatable="false">icon_set_default</string>
+    <string name="pref_icons_set_mike_color" translatable="false">icons_set_mike_color</string>
+    <string name="pref_icons_set_mike_bw" translatable="false">icons_set_mike_bw</string>
+    <string name="pref_icons_set_default_label">Standard set</string>
+    <string name="pref_icons_set_mike_color_label">Set the color scheme</string>
+    <string name="pref_icons_set_mike_bw_label">Black and white set</string>
 
     <string name="error_gps_permission">Out of the rights to use the gps and resources service provider</string>
     <string name="clear_new_location_name">Clear the input field</string>
@@ -103,78 +173,11 @@
     <string name="welcome_string_evening">"Good evening "</string>
     <string name="activate_geographical_service">Check tuning of telephone and program. There is no available services for obtaining of coordinates.\n\nTo open phone settings to activate services of location determination?</string>
 
-    <string name="pref_title_location">At a start to show a weather for</string>
-    <string name="pref_location_key" translatable="false">default_location</string>
-    <string name="pref_location_current" translatable="false">current_location</string>
-    <string name="pref_location_last" translatable="false">last_location</string>
-    <string name="pref_location_label_current">The Current location</string>
-    <string name="pref_location_label_last">The Last active location</string>
-
-    <string name="pref_title_welcome_string">Greeting line</string>
-    <string name="pref_welcome_key" translatable="false">welcome_string</string>
-    <string name="pref_welcome_off" translatable="false">welcome_off</string>
-    <string name="pref_welcome_default" translatable="false">welcome_default</string>
-    <string name="pref_welcome_off_label">The greeting is disabled</string>
-    <string name="pref_welcome_default_label">The greeting is enabled</string>
-
-    <string name="pref_units_label_celsius">Celsius degree (°C)</string>
-    <string name="pref_units_label_kelvin">Kelvin degree (K)</string>
-    <string name="pref_units_label_fahrenheit">Fahrenheit degree (°F)</string>
-
-    <string name="pref_title_speed">Units of wind speed measure</string>
-    <string name="pref_speed_key" translatable="false">wind_speed</string>
-    <string name="pref_speed_meter_sec" translatable="false">meter_sec</string>
-    <string name="pref_speed_foot_sec" translatable="false">foot_sec</string>
-    <string name="pref_speed_km_hour" translatable="false">km_hour</string>
-    <string name="pref_speed_mile_hour" translatable="false">mile_hour</string>
-    <string name="pref_speed_meter_sec_label">Meter per second (m/s)</string>
-    <string name="pref_speed_foot_sec_label">Foot per second (f/s)</string>
-    <string name="pref_speed_km_hour_label">Kilometers per hour (km/h)</string>
-    <string name="pref_speed_mile_hour_label">Miles per hour (Mph)</string>
-
-    <string name="pref_welcome_summary">To show the greeting line at the start of the program</string>
-    <string name="pref_welcome_key_switch" translatable="false">welcome_string_switch</string>
-    <string name="pref_welcome_default_switch" translatable="false">true</string>
-    <string name="pref_category_location">Search of location</string>
-    <string name="pref_category_start">Parameters of start</string>
-    <string name="pref_category_general">General</string>
     <string name="warning_message_gps">The use of GPS can increase the speed of discharge of the battery, however, will certainly increase the location accuracy</string>
 
     <string name="error_get_coordinates">Can\'t determine the coordinates of the requested location</string>
     <string name="shared_last_active_position_name" translatable="false">last_active_position_name</string>
     <string name="forecast_unavailable">Forecast unavailable</string>
-
-    <string name="pref_header_personalization">Personalization</string>
-    <string name="pref_night_mode_key" translatable="false">night_mode</string>
-    <string name="pref_night_mode_title">The theme</string>
-    <string name="pref_night_mode_off_label">Day theme</string>
-    <string name="pref_night_mode_on_label">Night theme</string>
-    <string name="pref_night_mode_auto_label">Based on the time of day</string>
-    <string name="pref_night_mode_off" translatable="false">night_mode_off</string>
-    <string name="pref_night_mode_on" translatable="false">night_mode_on</string>
-    <string name="pref_night_mode_auto" translatable="false">night_mode_auto</string>
-
-    <string name="pref_color_scheme_key" translatable="false">color_scheme</string>
-    <string name="pref_color_scheme_title">Color scheme</string>
-    <string name="pref_color_scheme_green_label">Green</string>
-    <string name="pref_color_scheme_brown_label">Brown</string>
-    <string name="pref_color_scheme_teal_label">Turquoise</string>
-    <string name="pref_color_scheme_indigo_label">Dark blue</string>
-    <string name="pref_color_scheme_purple_label">Purple</string>
-    <string name="pref_color_scheme_green" translatable="false">color_scheme_green</string>
-    <string name="pref_color_scheme_brown" translatable="false">color_scheme_brown</string>
-    <string name="pref_color_scheme_teal" translatable="false">color_scheme_teal</string>
-    <string name="pref_color_scheme_indigo" translatable="false">color_scheme_indigo</string>
-    <string name="pref_color_scheme_purple" translatable="false">color_scheme_purple</string>
-
-    <string name="pref_icons_set_key" translatable="false">icons_set</string>
-    <string name="pref_icons_set_title">Set of icons</string>
-    <string name="pref_icons_set_default_label">Standard set</string>
-    <string name="pref_icons_set_mike_color_label">Set the color scheme</string>
-    <string name="pref_icons_set_mike_bw_label">Black and white set</string>
-    <string name="pref_icons_set_default" translatable="false">icon_set_default</string>
-    <string name="pref_icons_set_mike_color" translatable="false">icons_set_mike_color</string>
-    <string name="pref_icons_set_mike_bw" translatable="false">icons_set_mike_bw</string>
 
     <string name="invitation_title">Send App Invite Quickstart Invitation</string>
     <string name="invitation_message">This app is terrific, give it a try and get $5 off!</string>

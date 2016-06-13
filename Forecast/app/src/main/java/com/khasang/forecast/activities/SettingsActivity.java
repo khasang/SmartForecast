@@ -26,13 +26,10 @@ public class SettingsActivity extends BaseActivity {
 
     private static boolean themeChanged;
 
-    static {
-        themeChanged = false;
-    }
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
-    @BindView(R.id.toolbar) Toolbar toolbar;
-
-    public static void setThemeChanged(boolean changed) {
+    private static void setThemeChanged(boolean changed) {
         themeChanged = changed;
     }
 
@@ -83,7 +80,7 @@ public class SettingsActivity extends BaseActivity {
         public void onCreatePreferences(Bundle bundle, String s) {
             addPreferencesFromResource(R.xml.pref_general);
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            onSharedPreferenceChanged(sharedPreferences, getString(R.string.pref_units_key));
+            onSharedPreferenceChanged(sharedPreferences, getString(R.string.pref_temperature_key));
             onSharedPreferenceChanged(sharedPreferences, getString(R.string.pref_location_key));
             onSharedPreferenceChanged(sharedPreferences, getString(R.string.pref_welcome_key));
             onSharedPreferenceChanged(sharedPreferences, getString(R.string.pref_speed_key));
