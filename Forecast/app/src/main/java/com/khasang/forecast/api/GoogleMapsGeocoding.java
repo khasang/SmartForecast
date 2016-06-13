@@ -1,13 +1,12 @@
 package com.khasang.forecast.api;
 
-import android.util.Log;
-
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.maps.model.LatLng;
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.R;
 import com.khasang.forecast.interfaces.ICoordinateReceiver;
+import com.khasang.forecast.interfaces.ILocationNameReceiver;
 import com.khasang.forecast.position.Coordinate;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
@@ -81,6 +80,52 @@ public class GoogleMapsGeocoding {
             });
         } catch (UnsupportedEncodingException e) {
             AppUtils.showInfoMessage(MyApplication.getAppContext().getString(R.string.invalid_lang_long_used)).show();
+        }
+    }
+
+    public void requestLocationName(final double latitude, final double longitude, final ILocationNameReceiver receiver) {
+        try {
+            final String systemLanguage = Locale.getDefault().getLanguage();
+            final String locationCoordinate = String.valueOf(latitude) + "," + String.valueOf(longitude);
+            final String resultType = URLEncoder.encode("administrative_area_level_2|administrative_area_level_1|country", "utf8");
+            final String URL = PLACE_API_BASE_URL
+                    + "?key=" + API_KEY
+                    + "&language=" + systemLanguage
+                    + "&result_type=" + resultType
+                    + "&latlng=" + URLEncoder.encode(locationCoordinate, "utf8");
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url(URL)
+                    .build();
+            Call call = client.newCall(request);
+            call.enqueue(new Callback() {
+                @Override
+                public void onFailure(Request request, IOException e) {
+                    AppUtils.showInfoMessage(MyApplication.getAppContext().getString(R.string.no_address_found)).show();
+                }
+
+                @Override
+                public void onResponse(Response response) throws IOException {
+                    String jsonData = response.body().string();
+                    try {
+                        JSONObject jsonObject = new JSONObject(jsonData);
+                        JSONArray jsonArray = jsonObject.getJSONArray("results");
+                        String status = jsonObject.getString("status");
+                        if (!status.equals("OK")) {
+                            String log = "GoogleMapsReverseGeocoding: url <" + URL + ">  response status <" + status + ">";
+                            throw new JSONException(log);
+                        }
+                        receiver.updateLocation(jsonArray.getJSONObject(0).getString("formatted_address"), new Coordinate(latitude, longitude));
+                    } catch (JSONException e) {
+                        AppUtils.showInfoMessage(MyApplication.getAppContext().getString(R.string.no_address_found)).show();
+                        if (Fabric.isInitialized()) {
+                            Crashlytics.logException(e);
+                        }
+                    }
+                }
+            });
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
     }
 
@@ -161,5 +206,4 @@ public class GoogleMapsGeocoding {
             return null;
         }
     }
-
 }

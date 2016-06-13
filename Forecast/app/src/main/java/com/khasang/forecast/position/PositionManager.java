@@ -22,6 +22,7 @@ import com.khasang.forecast.exceptions.AccessFineLocationNotGrantedException;
 import com.khasang.forecast.exceptions.GpsIsDisabledException;
 import com.khasang.forecast.exceptions.NoAvailableLocationServiceException;
 import com.khasang.forecast.interfaces.ICoordinateReceiver;
+import com.khasang.forecast.interfaces.ILocationNameReceiver;
 import com.khasang.forecast.interfaces.IMessageProvider;
 import com.khasang.forecast.interfaces.IWeatherReceiver;
 import com.khasang.forecast.location.CurrentLocationManager;
@@ -48,7 +49,7 @@ import java.util.Set;
  * Created by Роман on 26.11.2015.
  */
 
-public class PositionManager implements ICoordinateReceiver {
+public class PositionManager implements ICoordinateReceiver, ILocationNameReceiver {
 
     AppUtils.TemperatureMetrics temperatureMetric;
     AppUtils.SpeedMetrics speedMetric;
@@ -222,13 +223,12 @@ public class PositionManager implements ICoordinateReceiver {
      * Метод инициализации списка местоположений, вызывается из активити
      */
     private void initPositions() {
-        ArrayList<Position> pos =  dbManager.loadTownListFull();
+        ArrayList<Position> pos = dbManager.loadTownListFull();
         initPositions(pos);
     }
 
     /**
      * Метод инициализации списка местоположений, которые добавлены в список городов
-     *
      */
     private void initPositions(ArrayList<Position> pos) {
         PositionFactory positionFactory = new PositionFactory();
@@ -661,6 +661,15 @@ public class PositionManager implements ICoordinateReceiver {
         dbManager.updatePositionCoordinates(position);
     }
 
+    @Override
+    public void updateLocation(String city, Coordinate coordinate) {
+        currentLocation.setLocationName(city);
+        currentLocation.setCoordinate(coordinate);
+        if (activePosition == currentLocation) {
+            sendRequest();
+        }
+    }
+
     public void updatePositionTimeZone(Position city, int timeZone) {
         city.setTimeZone(timeZone);
         dbManager.updateCityTimeZone(city);
@@ -710,13 +719,17 @@ public class PositionManager implements ICoordinateReceiver {
     }
 
     public void setCurrentLocationCoordinates(Location location) {
-        if (updateCurrentLocation(location) && activePosition == currentLocation) {
+        boolean coordinatesUpdated = updateCurrentLocation(location);
+        if (coordinatesUpdated && activePosition == currentLocation) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     sendRequest();
                 }
             }, 3000);
+        } else if (!coordinatesUpdated) {
+            GoogleMapsGeocoding googleMapsGeocoding = new GoogleMapsGeocoding();
+            googleMapsGeocoding.requestLocationName(location.getLatitude(), location.getLongitude(), this);
         }
     }
 
@@ -730,18 +743,14 @@ public class PositionManager implements ICoordinateReceiver {
             List<Address> list = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 3);
             currentLocation.setLocationName(new LocationParser(list).parseList().getAddressLine());
             currentLocation.setCoordinate(new Coordinate(location.getLatitude(), location.getLongitude()));
-            return true;
-        } catch (IOException e) {
-            sendMessage(R.string.error_service_not_available, Snackbar.LENGTH_LONG);
+        } catch (IOException | IllegalArgumentException | EmptyCurrentAddressException | NoAvailableAddressesException | NullPointerException e) {
             e.printStackTrace();
-        } catch (IllegalArgumentException e) {
-            sendMessage(R.string.invalid_lang_long_used, Snackbar.LENGTH_LONG);
+            return false;
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (EmptyCurrentAddressException | NoAvailableAddressesException | NullPointerException e) {
-            sendMessage(R.string.no_address_found, Snackbar.LENGTH_LONG);
-            e.printStackTrace();
+            return false;
         }
-        return false;
+        return true;
     }
 
     private synchronized void sendMessage(CharSequence string, int length) {

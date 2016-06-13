@@ -313,7 +313,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         List<Address> addresses;
         try {
             addresses = geocoder.getFromLocationName(city, 3);
-            addresses = null;
             if (addresses.size() == 0) {
                 return null;
             }
@@ -393,7 +392,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         Geocoder geoCoder = new Geocoder(getBaseContext(), Locale.getDefault());
         try {
             List<Address> addresses = geoCoder.getFromLocation(latitude, longitude, 3);
-            addresses = null;
             address = new LocationParser(addresses).parseList().getAddressLine();
         } catch (IOException | IllegalArgumentException | EmptyCurrentAddressException | NoAvailableAddressesException e) {
             e.printStackTrace();
