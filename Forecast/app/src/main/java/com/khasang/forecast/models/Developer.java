@@ -5,20 +5,20 @@ import java.util.List;
 
 public class Developer {
 
-    private String name;
+    private int nameResId;
     private Image image;
     private int descriptionResId;
     private List<Link> links;
 
-    public Developer(String name, Image image, int descriptionResId) {
-        this.name = name;
+    public Developer(int nameResId, Image image, int descriptionResId) {
+        this.nameResId = nameResId;
         this.image = image;
         this.descriptionResId = descriptionResId;
         this.links = new ArrayList<>();
     }
 
-    public String getName() {
-        return name;
+    public int getNameResId() {
+        return nameResId;
     }
 
     public Image getImage() {

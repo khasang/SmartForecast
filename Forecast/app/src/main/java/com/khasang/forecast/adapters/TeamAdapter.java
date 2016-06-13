@@ -48,7 +48,7 @@ public class TeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         Developer developer = developers.get(position);
 
-        holder.nameView.setText(developer.getName());
+        holder.nameView.setText(developer.getNameResId());
         holder.descriptionView.setText(developer.getDescriptionResId());
 
         ViewGroup.LayoutParams layoutParams = holder.imageView.getLayoutParams();
@@ -61,6 +61,7 @@ public class TeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         List<Link> links = developer.getLinks();
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.weight = 1;
+        holder.links.removeAllViews();
         for (final Link link : links) {
             TextView textView = new TextView(context);
             textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
