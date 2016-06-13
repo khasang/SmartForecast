@@ -22,6 +22,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Locale;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -124,10 +125,12 @@ public class GoogleMapsGeocoding {
 
     public String requestLocationNameSynch(final LatLng coordinates) {
         try {
+            final String systemLanguage = Locale.getDefault().getLanguage();
             final String locationCoordinate = String.valueOf(coordinates.latitude) + "," + String.valueOf(coordinates.longitude);
             final String resultType = URLEncoder.encode("administrative_area_level_2|administrative_area_level_1|country", "utf8");
             final String URL = PLACE_API_BASE_URL
                     + "?key=" + API_KEY
+                    + "&language=" + systemLanguage
                     + "&result_type=" + resultType
                     + "&latlng=" + URLEncoder.encode(locationCoordinate, "utf8");
             OkHttpClient client = new OkHttpClient();
