@@ -395,14 +395,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             List<Address> addresses = geoCoder.getFromLocation(latitude, longitude, 3);
             addresses = null;
             address = new LocationParser(addresses).parseList().getAddressLine();
-        } catch (IOException e) {
-            showToast(R.string.error_service_not_available);
-            e.printStackTrace();
-        } catch (IllegalArgumentException e) {
-            showToast(R.string.invalid_lang_long_used);
-            e.printStackTrace();
-        } catch (EmptyCurrentAddressException | NoAvailableAddressesException e) {
-            showToast(R.string.no_address_found);
+        } catch (IOException | IllegalArgumentException | EmptyCurrentAddressException | NoAvailableAddressesException e) {
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
@@ -424,6 +417,15 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         }
         chooseCity.setText(location);
         return location;
+    }
+
+    @Override
+    public void setLocation(String city) {
+        if (city == null) {
+            showToast(R.string.no_address_found);
+        } else {
+            chooseCity.setText(city);
+        }
     }
 
     private void setBtnClear(View view) {
@@ -465,7 +467,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void showChooseCityDialog() {
-        final Pattern pattern = Pattern.compile("^[\\w\\s,`'()-]+$");
+        final Pattern pattern = Pattern.compile("^[\\w\\s,`'().-]+$");
         final View view = getLayoutInflater().inflate(R.layout.dialog_pick_location, (ViewGroup) null);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         setBtnClear(view);

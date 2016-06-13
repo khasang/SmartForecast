@@ -9,4 +9,6 @@ public interface IMapDataReceiver {
     void setLocationNameFromMap(String name);
 
     String setLocationCoordinatesFromMap(double latitude, double longitude) throws EmptyCurrentAddressException;
+
+    void setLocation(String city);
 }
