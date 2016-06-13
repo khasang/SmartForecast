@@ -88,6 +88,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
     private Toolbar toolbar;
     private volatile FloatingActionButton fabBtn;
     private DelayedAutoCompleteTextView chooseCity;
+    GoogleMapsGeocoding googleMapsGeocoding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +114,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         cityPickerAdapter = new CityPickerAdapter(cityList, this);
         recyclerView.setAdapter(cityPickerAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        googleMapsGeocoding = new GoogleMapsGeocoding();
 
         swapVisibilityTextOrList();
 
@@ -312,6 +314,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         List<Address> addresses;
         try {
             addresses = geocoder.getFromLocationName(city, 3);
+            addresses = null;
             if (addresses.size() == 0) {
                 return null;
             }
@@ -346,8 +349,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
             Collections.sort(cityList);
             cityPickerAdapter.notifyDataSetChanged();
             if (needCoordinateRequest) {
-                GoogleMapsGeocoding googleMapsGeocoding = new GoogleMapsGeocoding();
-                googleMapsGeocoding.requestCoordinates(city);
+                googleMapsGeocoding.requestCoordinates(city, PositionManager.getInstance(), true);
             } else {
                 GoogleMapsTimezone googleMapsTimezone = new GoogleMapsTimezone();
                 googleMapsTimezone.requestCoordinates(city);
@@ -379,6 +381,8 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
                 maps.deleteAllMarkers();
                 maps.setNewMarker(coordinate, city);
                 maps.setCameraPosition(coordinate, maps.getDefaultZoom(), 0, 0);
+            } else {
+                //googleMapsGeocoding.requestCoordinates(city, maps, false);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -390,6 +394,7 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         Geocoder geoCoder = new Geocoder(getBaseContext(), Locale.getDefault());
         try {
             List<Address> addresses = geoCoder.getFromLocation(latitude, longitude, 3);
+            addresses = null;
             address = new LocationParser(addresses).parseList().getAddressLine();
         } catch (IOException e) {
             showToast(R.string.error_service_not_available);
@@ -421,7 +426,6 @@ public class CityPickerActivity extends AppCompatActivity implements View.OnClic
         chooseCity.setText(location);
         return location;
     }
-
 
     private void setBtnClear(View view) {
         view.findViewById(R.id.btnClear).setOnClickListener(new View.OnClickListener() {

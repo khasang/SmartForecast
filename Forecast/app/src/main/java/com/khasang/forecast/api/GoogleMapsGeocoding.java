@@ -6,6 +6,7 @@ import com.crashlytics.android.Crashlytics;
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.R;
+import com.khasang.forecast.interfaces.ICoordinateReceiver;
 import com.khasang.forecast.position.Coordinate;
 import com.khasang.forecast.position.PositionManager;
 import com.squareup.okhttp.Call;
@@ -32,7 +33,7 @@ public class GoogleMapsGeocoding {
     private final static String PLACE_API_BASE_URL = "https://maps.googleapis.com/maps/api/geocode/json";
     private final static String API_KEY = MyApplication.getAppContext().getString(R.string.google_maps_geocoding);
 
-    public void requestCoordinates(final String input) {
+    public void requestCoordinates(final String input, final ICoordinateReceiver receiver, final boolean updateTimezone) {
         try {
             final String URL = PLACE_API_BASE_URL + "?key="
                     + API_KEY + "&address="
@@ -64,10 +65,11 @@ public class GoogleMapsGeocoding {
                         Coordinate coordinate = new Coordinate();
                         coordinate.setLatitude(Double.parseDouble(jsonLocation.getString("lat")));
                         coordinate.setLongitude(Double.parseDouble(jsonLocation.getString("lng")));
-                        PositionManager.getInstance().updatePositionCoordinates(input, coordinate);
-
-                        GoogleMapsTimezone googleMapsTimezone = new GoogleMapsTimezone();
-                        googleMapsTimezone.requestCoordinates(input);
+                        receiver.updatePositionCoordinate(input, coordinate);
+                        if (updateTimezone) {
+                            GoogleMapsTimezone googleMapsTimezone = new GoogleMapsTimezone();
+                            googleMapsTimezone.requestCoordinates(input);
+                        }
                     } catch (JSONException e) {
                         Log.e(TAG, e.getLocalizedMessage());
                         AppUtils.showInfoMessage(MyApplication.getAppContext().getString(R.string.invalid_lang_long_used)).show();

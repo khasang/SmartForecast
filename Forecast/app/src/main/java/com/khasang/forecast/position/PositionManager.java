@@ -21,6 +21,8 @@ import com.khasang.forecast.api.GoogleMapsGeocoding;
 import com.khasang.forecast.exceptions.AccessFineLocationNotGrantedException;
 import com.khasang.forecast.exceptions.GpsIsDisabledException;
 import com.khasang.forecast.exceptions.NoAvailableLocationServiceException;
+import com.khasang.forecast.interfaces.ICoordinateReceiver;
+import com.khasang.forecast.interfaces.IMapDataReceiver;
 import com.khasang.forecast.interfaces.IMessageProvider;
 import com.khasang.forecast.interfaces.IWeatherReceiver;
 import com.khasang.forecast.location.CurrentLocationManager;
@@ -47,7 +49,7 @@ import java.util.Set;
  * Created by Роман on 26.11.2015.
  */
 
-public class PositionManager {
+public class PositionManager implements ICoordinateReceiver {
 
     AppUtils.TemperatureMetrics temperatureMetric;
     AppUtils.SpeedMetrics speedMetric;
@@ -241,7 +243,7 @@ public class PositionManager {
         for (Position p : positions.values()) {
             if ((p.getCoordinate() == null) || (p.getCoordinate().getLatitude() == 0 && p.getCoordinate().getLongitude() == 0)) {
                 GoogleMapsGeocoding googleMapsGeocoding = new GoogleMapsGeocoding();
-                googleMapsGeocoding.requestCoordinates(p.getLocationName());
+                googleMapsGeocoding.requestCoordinates(p.getLocationName(), this, true);
             }
         }
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MyApplication.getAppContext());
@@ -650,7 +652,8 @@ public class PositionManager {
         return forecast;
     }
 
-    public void updatePositionCoordinates(String city, Coordinate coordinate) {
+    @Override
+    public void updatePositionCoordinate(String city, Coordinate coordinate) {
         Position position = getPosition(city);
         if (position == null) {
             return;
