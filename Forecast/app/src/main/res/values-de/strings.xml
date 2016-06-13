@@ -1,5 +1,8 @@
 <resources>
-    <string name="city_list">Die Liste der Städte</string>
+    <string name="title_activity_city_picker">Die Liste der Städte</string>
+    <string name="title_activity_settings">Einstellungen</string>
+    <!-- TODO TRANSLATE -->
+    <string name="title_activity_about">О приложении</string>
 
     <string name="pressure">der Atmosphärendruck</string>
     <string name="wind">der Wind</string>
@@ -56,8 +59,6 @@
     <string name="W">W</string>
     <string name="NW">NW</string>
 
-    <string name="action_settings">Einstellungen</string>
-
     <string name="today">Heute</string>
     <string name="tomorrow">Morgen</string>
 
@@ -65,6 +66,8 @@
     <string name="drawer_item_city_list">Liste der Städte</string>
     <string name="drawer_item_favorites">Favorites</string>
     <string name="drawer_item_settings">Einstellungen</string>
+    <!-- TODO TRANSLATE -->
+    <string name="drawer_item_about">О приложении</string>
     <string name="drawer_item_feedback">Entgegengesetztes Band</string>
 
     <string name="error_service_not_available">Die Koordinaten der aktuellen Position sind nicht gefunden.</string>
@@ -72,7 +75,6 @@
     <string name="invalid_lang_long_used">Das Fehler der Erkennung Koordinaten für einen Standort</string>
     <string name="no_address_found">Die Adresse von aktuellen Standort ist nicht gefunden</string>
     <string name="location_manager">Standort Manager</string>
-    <string name="title_activity_settings">Einstellungen</string>
 
     <string name="pref_header_general">Haupt</string>
 
@@ -141,4 +143,46 @@
     <string name="pref_icons_set_default_label">Standard Set</string>
     <string name="pref_icons_set_mike_color_label">Farbschema Set</string>
     <string name="pref_icons_set_mike_bw_label">Schwarz-weiß-Set</string>
+
+    <!-- TODO TRANSLATE -->
+    <string name="changelog">Развитие проекта</string>
+    <string name="team">Команда</string>
+
+    <string name="version_2_6">Версия 2.6</string>
+    <string name="version_2_6_changelog">
+- Добавлено несколько цветовых схем.\n
+- \"Ночной\" режим.\n
+- Альтернативные наборы иконок.\n
+- График изменения температуры.
+    </string>
+
+    <string name="version_2_3">Версия 2.3</string>
+    <string name="version_2_3_changelog">
+- Новая заставка приложения.\n
+- Добавлено полноценное меню настроек.\n
+- Недавно добавленные населенные пункты теперь подсвечиваются в списке.
+    </string>
+
+    <string name="version_2_1">Версия 2.1</string>
+    <string name="version_2_1_changelog">
+В приложение добавлена функциональность картографического сервиса Google Maps:\n
+- Добавление населенного пункта, используя \"тап\" по географической карте.\n
+- При вводе названия, над подходящими населенными пунктами появляются маркеры.
+    </string>
+
+    <string name="version_2_0">Версия 2.0</string>
+    <string name="version_2_0_changelog">
+- Полностью переработан дизайн приложения.\n
+- Отображение погодных условий для \"текущего\" местоположения пользователя.\n
+- Выбор едениц измерения вынесен в меню настроек.\n
+- Ведение списка \"избранных\" населенных пунктов.
+    </string>
+
+    <string name="version_1_0">Версия 1.0</string>
+    <string name="version_1_0_changelog">
+- Реализован минимальный интерфейс и базовая логика приложения.\n
+- Получение погодных данных от сервиса OpenWeatherMap.\n
+- Ведение списка городов, интеллектуальное добавление города по нескольким буквам.\n
+- Выбор единицы измерения температуры.
+    </string>
 </resources>

@@ -36,6 +36,7 @@
         </activity>
         <activity
             android:name=".activities.CityPickerActivity"
+            android:label="@string/title_activity_city_picker"
             android:parentActivityName=".activities.WeatherActivity"
             android:screenOrientation="portrait">
 

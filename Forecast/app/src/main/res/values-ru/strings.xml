@@ -1,5 +1,7 @@
 <resources>
-    <string name="city_list">Список городов</string>
+    <string name="title_activity_city_picker">Список городов</string>
+    <string name="title_activity_settings">Настройки</string>
+    <string name="title_activity_about">О приложении</string>
 
     <string name="pressure">Давление</string>
     <string name="wind">Ветер</string>
@@ -56,7 +58,6 @@
     <string name="W">З</string>
     <string name="NW">СЗ</string>
 
-    <string name="action_settings">Настройки</string>
     <string name="location_manager">Служба определения местоположения</string>
     <string name="today">Сегодня</string>
     <string name="tomorrow">Завтра</string>
@@ -65,14 +66,13 @@
     <string name="drawer_item_city_list">Список городов</string>
     <string name="drawer_item_favorites">Избранное</string>
     <string name="drawer_item_settings">Настройки</string>
+    <string name="drawer_item_about">О приложении</string>
     <string name="drawer_item_feedback">Обратная связь</string>
 
     <string name="error_service_not_available">Координаты текущего местоположения не обнаружены.</string>
     <string name="error_geo_service_not_available">Координаты местоположения не обнаружены.</string>
     <string name="invalid_lang_long_used">Ошибка распознавания координат для местоположения</string>
     <string name="no_address_found">Адрес текущего местоположения не обнаружен</string>
-
-    <string name="title_activity_settings">Настройки</string>
 
     <string name="pref_header_general">Главные</string>
 
@@ -141,6 +141,9 @@
     <string name="pref_icons_set_default_label">Стандартный набор</string>
     <string name="pref_icons_set_mike_color_label">Набор цветовой схемы</string>
     <string name="pref_icons_set_mike_bw_label">Чёрно-белый набор</string>
+
+    <string name="changelog">Развитие проекта</string>
+    <string name="team">Команда</string>
 
     <string name="version_2_6">Версия 2.6</string>
     <string name="version_2_6_changelog">

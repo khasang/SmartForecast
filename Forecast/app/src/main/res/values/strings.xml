@@ -1,8 +1,11 @@
 <resources>
     <string name="app_name" translatable="false">Smart Forecast</string>
     <string name="service_name_open_weather_map" translatable="false">OpenWeatherMap</string>
+    <string name="shared_image" translatable="false">changelogImage</string>
 
-    <string name="city_list">List of cities</string>
+    <string name="title_activity_city_picker">List of cities</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_about">About</string>
 
     <string name="pressure">Pressure</string>
     <string name="wind">Wind</string>
@@ -59,8 +62,6 @@
     <string name="W">W</string>
     <string name="NW">NW</string>
 
-    <string name="action_settings">Settings</string>
-
     <string name="today">Today</string>
     <string name="tomorrow">Tomorrow</string>
 
@@ -77,15 +78,6 @@
     <string name="invalid_lang_long_used">Error of detection coordinates for a location</string>
     <string name="no_address_found">Address of current location is not found</string>
     <string name="location_manager">Location Manager</string>
-
-    <string name="title_activity_settings">Settings</string>
-    <string name="title_activity_about">About</string>
-    <string name="title_activity_changelog">Changelog</string>
-    <string name="title_activity_team">Team</string>
-
-    <string name="changelog">Changelog</string>
-    <string name="team">Team</string>
-    <string name="shared_image">changelogImage</string>
 
     <string name="pref_header_general">General</string>
 
@@ -194,6 +186,48 @@
     <string name="invitation_deep_link">http://example.com/offer/five_dollar_offer</string>
     <string name="invitation_custom_image">https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png</string>
     <string name="invitation_cta">Install!</string>
+
+    <string name="changelog">Changelog</string>
+    <string name="team">Team</string>
+
+    <!-- TODO TRANSLATE -->
+    <string name="version_2_6">Версия 2.6</string>
+    <string name="version_2_6_changelog">
+- Добавлено несколько цветовых схем.\n
+- \"Ночной\" режим.\n
+- Альтернативные наборы иконок.\n
+- График изменения температуры.
+    </string>
+
+    <string name="version_2_3">Версия 2.3</string>
+    <string name="version_2_3_changelog">
+- Новая заставка приложения.\n
+- Добавлено полноценное меню настроек.\n
+- Недавно добавленные населенные пункты теперь подсвечиваются в списке.
+    </string>
+
+    <string name="version_2_1">Версия 2.1</string>
+    <string name="version_2_1_changelog">
+В приложение добавлена функциональность картографического сервиса Google Maps:\n
+- Добавление населенного пункта, используя \"тап\" по географической карте.\n
+- При вводе названия, над подходящими населенными пунктами появляются маркеры.
+    </string>
+
+    <string name="version_2_0">Версия 2.0</string>
+    <string name="version_2_0_changelog">
+- Полностью переработан дизайн приложения.\n
+- Отображение погодных условий для \"текущего\" местоположения пользователя.\n
+- Выбор едениц измерения вынесен в меню настроек.\n
+- Ведение списка \"избранных\" населенных пунктов.
+    </string>
+
+    <string name="version_1_0">Версия 1.0</string>
+    <string name="version_1_0_changelog">
+- Реализован минимальный интерфейс и базовая логика приложения.\n
+- Получение погодных данных от сервиса OpenWeatherMap.\n
+- Ведение списка городов, интеллектуальное добавление города по нескольким буквам.\n
+- Выбор единицы измерения температуры.
+    </string>
 
     <string name="roman_novoselov">Roman Novoselov</string>
     <string name="alexandr_lihovidov">Alexandr Livodinov</string>

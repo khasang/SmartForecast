@@ -103,8 +103,6 @@ public class CityPickerActivity extends BaseActivity implements View.OnClickList
             }
         });
 
-        setTitle(getString(R.string.city_list));
-
         cityList = new ArrayList<>();
         cityPickerAdapter = new CityPickerAdapter(cityList, this);
         recyclerView.setAdapter(cityPickerAdapter);
