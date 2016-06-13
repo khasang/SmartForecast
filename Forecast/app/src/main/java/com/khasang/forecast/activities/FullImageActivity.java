@@ -3,11 +3,15 @@ package com.khasang.forecast.activities;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.widget.Toolbar;
 import android.view.Display;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.khasang.forecast.R;
 import com.squareup.picasso.Picasso;
+
+import butterknife.BindView;
 
 /**
  * Активити с полноразмерной картинкой из Changelog
@@ -18,10 +22,23 @@ public class FullImageActivity extends BaseActivity {
     public static final String IMAGE_WIDTH = "width";
     public static final String IMAGE_HEIGHT = "height";
 
+    @BindView(R.id.toolbar) Toolbar toolbar;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_full_image);
+
+        setSupportActionBar(toolbar);
+        //noinspection ConstantConditions
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                leaveActivity();
+            }
+        });
+        getSupportActionBar().setTitle("");
 
         String url = getIntent().getStringExtra(URL);
         int imageWidth = getIntent().getIntExtra(IMAGE_WIDTH, 0);
