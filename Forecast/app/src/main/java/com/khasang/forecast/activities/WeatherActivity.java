@@ -82,8 +82,9 @@ public class WeatherActivity extends BaseActivity
 
     @BindView(R.id.temperature) TextView temperature;
     @BindView(R.id.precipitation) TextView description;
-    @BindView(R.id.wind) TextView wind;
-    @BindView(R.id.humidity) TextView humidity;
+    @BindView(R.id.wind_text) TextView wind;
+    @BindView(R.id.humidity_text) TextView humidity;
+    @BindView(R.id.pressure_text) TextView pressure;
     @BindView(R.id.iv_curr_weather) ImageView currWeather;
     @BindView(R.id.fab) FloatingActionButton fab;
     @BindView(R.id.toolbar_material) Toolbar toolbar;
@@ -506,6 +507,9 @@ public class WeatherActivity extends BaseActivity
                         PositionManager.getInstance().getSpeedMetric().toStringValue())));
 
         humidity.setText(String.format("%s%%", wCurrent.getHumidity()));
+
+        pressure.setText(String.format("%s %s", wCurrent.getPressure(), PositionManager.getInstance()
+                .getPressureMetric().toStringValue()));
     }
 
     /**

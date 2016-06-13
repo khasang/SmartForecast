@@ -150,7 +150,7 @@ public class AppUtils {
             }
 
             public String toStringValue() {
-                return MyApplication.getAppContext().getString(R.string.KELVIN);
+                return MyApplication.getAppContext().getString(R.string.measure_temperature_kelvin);
             }
         },
         CELSIUS {
@@ -159,7 +159,7 @@ public class AppUtils {
             }
 
             public String toStringValue() {
-                return MyApplication.getAppContext().getString(R.string.CELSIUS);
+                return MyApplication.getAppContext().getString(R.string.measure_temperature_celsius);
             }
 
         },
@@ -169,7 +169,7 @@ public class AppUtils {
             }
 
             public String toStringValue() {
-                return MyApplication.getAppContext().getString(R.string.FAHRENHEIT);
+                return MyApplication.getAppContext().getString(R.string.measure_temperature_fahrenheit);
             }
         };
 
@@ -182,25 +182,25 @@ public class AppUtils {
         METER_PER_SECOND {
             @Override
             public String toStringValue() {
-                return MyApplication.getAppContext().getString(R.string.wind_measure_m_s);
+                return MyApplication.getAppContext().getString(R.string.measure_wind_m_s);
             }
         },
         FOOT_PER_SECOND {
             @Override
             public String toStringValue() {
-                return MyApplication.getAppContext().getString(R.string.wind_measure_fps);
+                return MyApplication.getAppContext().getString(R.string.measure_wind_fps);
             }
         },
         KM_PER_HOURS {
             @Override
             public String toStringValue() {
-                return MyApplication.getAppContext().getString(R.string.wind_measure_km_h);
+                return MyApplication.getAppContext().getString(R.string.measure_wind_km_h);
             }
         },
         MILES_PER_HOURS {
             @Override
             public String toStringValue() {
-                return MyApplication.getAppContext().getString(R.string.wind_measure_mph);
+                return MyApplication.getAppContext().getString(R.string.measure_wind_mph);
             }
         };
 
@@ -212,14 +212,26 @@ public class AppUtils {
             public PressureMetrics change() {
                 return MM_HG;
             }
+
+            @Override
+            public String toStringValue() {
+                return MyApplication.getAppContext().getString(R.string.measure_pressure_hpa);
+            }
         },
         MM_HG {
             public PressureMetrics change() {
                 return HPA;
             }
+
+            @Override
+            public String toStringValue() {
+                return MyApplication.getAppContext().getString(R.string.measure_pressure_mmHg);
+            }
         };
 
         public abstract PressureMetrics change();
+
+        public abstract String toStringValue();
     }
 
     public static void showSnackBar(Activity activity, View view, CharSequence string, int length) {

@@ -407,6 +407,14 @@ public class PositionManager {
         return null;
     }
 
+    public void setSpeedMetric(AppUtils.SpeedMetrics sm) {
+        speedMetric = sm;
+    }
+
+    public AppUtils.SpeedMetrics getSpeedMetric() {
+        return speedMetric;
+    }
+
     public AppUtils.PressureMetrics getPressureMetric() {
         return pressureMetric;
     }
@@ -414,14 +422,6 @@ public class PositionManager {
     public AppUtils.PressureMetrics changePressureMetric() {
         pressureMetric = pressureMetric.change();
         return pressureMetric;
-    }
-
-    public void setSpeedMetric(AppUtils.SpeedMetrics sm) {
-        speedMetric = sm;
-    }
-
-    public AppUtils.SpeedMetrics getSpeedMetric() {
-        return speedMetric;
     }
 
     public AppUtils.TemperatureMetrics getTemperatureMetric() {

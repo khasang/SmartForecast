@@ -109,7 +109,7 @@ public class SQLiteOpen extends SQLiteOpenHelper {
                         db.execSQL(SQLiteFields.QUERY_UPDATE_SETTINGS_v4, new String[]{
                                 settingsMap.get(SQLiteFields.CURRENT_STATION),
                                 settingsMap.get(SQLiteFields.CURRENT_TOWN),
-                                settingsMap.get(SQLiteFields.CURRENT_TEMPIRATURE_METRICS),
+                                settingsMap.get(SQLiteFields.CURRENT_TEMPERATURE_METRICS),
                                 settingsMap.get(SQLiteFields.CURRENT_SPEED_METRICS),
                                 settingsMap.get(SQLiteFields.CURRENT_PRESSURE_METRICS)
                         });
@@ -119,7 +119,7 @@ public class SQLiteOpen extends SQLiteOpenHelper {
                         db.execSQL(SQLiteFields.QUERY_UPDATE_SETTINGS_v5, new String[]{
                                 settingsMap.get(SQLiteFields.CURRENT_STATION),
                                 settingsMap.get(SQLiteFields.CURRENT_TOWN),
-                                settingsMap.get(SQLiteFields.CURRENT_TEMPIRATURE_METRICS),
+                                settingsMap.get(SQLiteFields.CURRENT_TEMPERATURE_METRICS),
                                 settingsMap.get(SQLiteFields.CURRENT_SPEED_METRICS),
                                 settingsMap.get(SQLiteFields.CURRENT_PRESSURE_METRICS),
                                 settingsMap.get(SQLiteFields.CURRENT_LATITUDE),
@@ -143,7 +143,7 @@ public class SQLiteOpen extends SQLiteOpenHelper {
                         case 4:
                             settingsMap.put(SQLiteFields.CURRENT_STATION, dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_STATION)));
                             settingsMap.put(SQLiteFields.CURRENT_TOWN, dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_TOWN)));
-                            settingsMap.put(SQLiteFields.CURRENT_TEMPIRATURE_METRICS, dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_TEMPIRATURE_METRICS)));
+                            settingsMap.put(SQLiteFields.CURRENT_TEMPERATURE_METRICS, dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_TEMPERATURE_METRICS)));
                             settingsMap.put(SQLiteFields.CURRENT_SPEED_METRICS, dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_SPEED_METRICS)));
                             settingsMap.put(SQLiteFields.CURRENT_PRESSURE_METRICS, dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_PRESSURE_METRICS)));
                             break;
@@ -151,7 +151,7 @@ public class SQLiteOpen extends SQLiteOpenHelper {
                         default:
                             settingsMap.put(SQLiteFields.CURRENT_STATION, dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_STATION)));
                             settingsMap.put(SQLiteFields.CURRENT_TOWN, dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_TOWN)));
-                            settingsMap.put(SQLiteFields.CURRENT_TEMPIRATURE_METRICS, dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_TEMPIRATURE_METRICS)));
+                            settingsMap.put(SQLiteFields.CURRENT_TEMPERATURE_METRICS, dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_TEMPERATURE_METRICS)));
                             settingsMap.put(SQLiteFields.CURRENT_SPEED_METRICS, dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_SPEED_METRICS)));
                             settingsMap.put(SQLiteFields.CURRENT_PRESSURE_METRICS, dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_PRESSURE_METRICS)));
                             settingsMap.put(SQLiteFields.CURRENT_LATITUDE, dataset.getString(dataset.getColumnIndex(SQLiteFields.CURRENT_LATITUDE)));

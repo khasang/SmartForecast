@@ -3,16 +3,15 @@
     <string name="title_activity_settings">Настройки</string>
     <string name="title_activity_about">О приложении</string>
 
-    <string name="pressure">Давление</string>
-    <string name="wind">Ветер</string>
-    <string name="humidity">Влажность</string>
-    <string name="timeStamp">Обновлено</string>
-    <string name="pressure_measure">мм рт.ст.</string>
-    <string name="pressure_measure_hpa">HPa</string>
-    <string name="wind_measure_m_s"><![CDATA[<sup><small>м</small></sup>/<small>c</small>]]></string>
-    <string name="wind_measure_km_h"><![CDATA[<sup><small>км</small></sup>/<small>ч</small>]]></string>
-    <string name="wind_measure_mph"><![CDATA[<sup><small>миль</small></sup>/<small>ч</small>]]></string>
-    <string name="wind_measure_fps"><![CDATA[<sup><small>фут</small></sup>/<small>с</small>]]></string>
+    <string name="measure_wind_m_s"><![CDATA[<sup><small>м</small></sup>/<small>c</small>]]></string>
+    <string name="measure_wind_km_h"><![CDATA[<sup><small>км</small></sup>/<small>ч</small>]]></string>
+    <string name="measure_wind_mph"><![CDATA[<sup><small>миль</small></sup>/<small>ч</small>]]></string>
+    <string name="measure_wind_fps"><![CDATA[<sup><small>фут</small></sup>/<small>с</small>]]></string>
+    <string name="measure_pressure_mmHg">мм рт.ст.</string>
+    <string name="measure_pressure_hpa">HPa</string>
+    <string name="measure_temperature_celsius">°C</string>
+    <string name="measure_temperature_fahrenheit">°F</string>
+    <string name="measure_temperature_kelvin">" K"</string>
 
     <string name="clear_sky">Ясно</string> 
     <string name="few_clouds">Небольшая облачность</string>
@@ -43,9 +42,6 @@
     <string name="btn_clear">Очистить</string>
     <string name="btn_cancel">Отмена</string>
     <string name="error_empty_location_name">Необходимо ввести название местоположения</string>
-    <string name="CELSIUS">°C</string>
-    <string name="FAHRENHEIT">°F</string>
-    <string name="KELVIN">" K"</string>
     <string name="infoTV">Добавьте город, \nдля отображения прогноза погоды.</string>
     <string name="incorrect_city_error">Некорректное название города</string>
     <string name="about_gps">Ваш GPS отключен, Вы хотите включить его?</string>
