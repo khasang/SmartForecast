@@ -1,6 +1,8 @@
 package com.khasang.forecast.api;
 
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.google.android.gms.maps.model.LatLng;
 import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.MyApplication;
@@ -32,6 +34,7 @@ public class GoogleMapsGeocoding {
     private final static String TAG = GoogleMapsGeocoding.class.getSimpleName();
     private final static String PLACE_API_BASE_URL = "https://maps.googleapis.com/maps/api/geocode/json";
     private final static String API_KEY = MyApplication.getAppContext().getString(R.string.google_maps_geocoding);
+    private final static String API = "Google Maps Geocoding API";
 
     public void requestCoordinates(final String input, final ICoordinateReceiver receiver, final boolean updateTimezone) {
         try {
@@ -52,12 +55,13 @@ public class GoogleMapsGeocoding {
                 @Override
                 public void onResponse(Response response) throws IOException {
                     String jsonData = response.body().string();
+                    String status = "";
                     try {
                         JSONObject jsonObject = new JSONObject(jsonData);
                         JSONArray jsonArray = jsonObject.getJSONArray("results");
-                        String status = jsonObject.getString("status");
+                        status = jsonObject.getString("status");
                         if (!status.equals("OK")) {
-                            String log = "GoogleMapsGeocoding: url <" + URL + ">  response status <" + status + ">";
+                            String log = "GoogleMapsGeocoding Async: url <" + URL + ">; response status: <" + status + ">";
                             throw new JSONException(log);
                         }
                         JSONObject jsonGeometry = new JSONObject(jsonArray.getJSONObject(0).getString("geometry"));
@@ -74,6 +78,8 @@ public class GoogleMapsGeocoding {
                         AppUtils.showInfoMessage(MyApplication.getAppContext().getString(R.string.invalid_lang_long_used)).show();
                         if (Fabric.isInitialized()) {
                             Crashlytics.logException(e);
+                            Answers.getInstance().logCustom(new CustomEvent(AppUtils.ApiCustomEvent)
+                                    .putCustomAttribute(API, status));
                         }
                     }
                 }
@@ -107,12 +113,13 @@ public class GoogleMapsGeocoding {
                 @Override
                 public void onResponse(Response response) throws IOException {
                     String jsonData = response.body().string();
+                    String status = "";
                     try {
                         JSONObject jsonObject = new JSONObject(jsonData);
                         JSONArray jsonArray = jsonObject.getJSONArray("results");
-                        String status = jsonObject.getString("status");
+                        status = jsonObject.getString("status");
                         if (!status.equals("OK")) {
-                            String log = "GoogleMapsReverseGeocoding: url <" + URL + ">  response status <" + status + ">";
+                            String log = "GoogleMapsReverseGeocoding Async: url <" + URL + ">; response status: <" + status + ">";
                             throw new JSONException(log);
                         }
                         receiver.updateLocation(jsonArray.getJSONObject(0).getString("formatted_address"), new Coordinate(latitude, longitude));
@@ -120,6 +127,8 @@ public class GoogleMapsGeocoding {
                         AppUtils.showInfoMessage(MyApplication.getAppContext().getString(R.string.no_address_found)).show();
                         if (Fabric.isInitialized()) {
                             Crashlytics.logException(e);
+                            Answers.getInstance().logCustom(new CustomEvent(AppUtils.ApiCustomEvent)
+                                    .putCustomAttribute(API, status));
                         }
                     }
                 }
@@ -131,6 +140,7 @@ public class GoogleMapsGeocoding {
 
     public Coordinate requestCoordinatesSynch(final String input) {
         Coordinate coordinate = null;
+        String status = "";
         try {
             final String URL = PLACE_API_BASE_URL + "?key="
                     + API_KEY + "&address="
@@ -143,9 +153,9 @@ public class GoogleMapsGeocoding {
             String jsonData = response.body().string();
             JSONObject jsonObject = new JSONObject(jsonData);
             JSONArray jsonArray = jsonObject.getJSONArray("results");
-            String status = jsonObject.getString("status");
+            status = jsonObject.getString("status");
             if (!status.equals("OK")) {
-                String log = "GoogleMapsGeocoding: url <" + URL + ">  response status <" + status + ">";
+                String log = "GoogleMapsGeocoding: url <" + URL + ">; response status <" + status + ">";
                 throw new JSONException(log);
             }
             JSONObject jsonGeometry = new JSONObject(jsonArray.getJSONObject(0).getString("geometry"));
@@ -156,6 +166,8 @@ public class GoogleMapsGeocoding {
         } catch (JSONException e) {
             if (Fabric.isInitialized()) {
                 Crashlytics.logException(e);
+                Answers.getInstance().logCustom(new CustomEvent(AppUtils.ApiCustomEvent)
+                        .putCustomAttribute(API, status));
             }
             return null;
         } catch (UnsupportedEncodingException e) {
@@ -169,6 +181,7 @@ public class GoogleMapsGeocoding {
     }
 
     public String requestLocationNameSynch(final LatLng coordinates) {
+        String status = "";
         try {
             final String systemLanguage = Locale.getDefault().getLanguage();
             final String locationCoordinate = String.valueOf(coordinates.latitude) + "," + String.valueOf(coordinates.longitude);
@@ -187,15 +200,17 @@ public class GoogleMapsGeocoding {
 
             JSONObject jsonObject = new JSONObject(jsonData);
             JSONArray jsonArray = jsonObject.getJSONArray("results");
-            String status = jsonObject.getString("status");
+            status = jsonObject.getString("status");
             if (!status.equals("OK")) {
-                String log = "GoogleMapsReverseGeocoding: url <" + URL + ">  response status <" + status + ">";
+                String log = "GoogleMapsReverseGeocoding: url <" + URL + ">; response status <" + status + ">";
                 throw new JSONException(log);
             }
             return jsonArray.getJSONObject(0).getString("formatted_address");
         } catch (JSONException e) {
             if (Fabric.isInitialized()) {
                 Crashlytics.logException(e);
+                Answers.getInstance().logCustom(new CustomEvent(AppUtils.ApiCustomEvent)
+                        .putCustomAttribute(API, status));
             }
             return null;
         } catch (UnsupportedEncodingException e) {
