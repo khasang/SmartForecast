@@ -4,15 +4,15 @@
     <!-- TODO TRANSLATE -->
     <string name="title_activity_about">О приложении</string>
 
-    <string name="measure_wind_m_s"><![CDATA[<sup><small>m</small></sup>/<small>s</small>]]></string>
-    <string name="measure_wind_km_h"><![CDATA[<sup><small>km</small></sup>/<small>h</small>]]></string>
-    <string name="measure_wind_mph">mph</string>
-    <string name="measure_wind_fps">fps</string>
-    <string name="measure_pressure_mmHg">mmHg</string>
-    <string name="measure_pressure_hpa">HPa</string>
     <string name="measure_temperature_celsius">°C</string>
     <string name="measure_temperature_fahrenheit">°F</string>
     <string name="measure_temperature_kelvin">" K"</string>
+    <string name="measure_speed_m_s"><![CDATA[<sup><small>m</small></sup>/<small>s</small>]]></string>
+    <string name="measure_speed_km_h"><![CDATA[<sup><small>km</small></sup>/<small>h</small>]]></string>
+    <string name="measure_speed_mph">mph</string>
+    <string name="measure_speed_fps">fps</string>
+    <string name="measure_pressure_hpa">hPa</string>
+    <string name="measure_pressure_mmHg">mmHg</string>
 
     <string name="clear_sky">Klar</string> 
     <string name="few_clouds">Die kleine Bewölktheit</string>
@@ -87,8 +87,6 @@
     <string name="welcome_string_day">"Guten Tag "</string>
     <string name="welcome_string_evening">"Guten Abend "</string>
     <string name="activate_geographical_service">Überprüfen Sie Ihre Programme und Telefoneinstellungen. Es gibt keine Dienstleistungen um geografische Koordinaten zu bekommen.\n\nDie Einstellungen des Telefons zu Standortdienstaktivierung öffnen?</string>
-
-    <string name="warning_message_gps">Die Benutzung von GPS kann die Geschwindigkeit der Entladung der Batterie erhöhen, jedoch wird sicherlich auch die Genauigkeit der Positionsbestimmung erhöhen</string>
 
     <string name="error_get_coordinates">Kann nicht die Koordinaten der angeforderten Standort bestimmen</string>
     <string name="forecast_unavailable">Forecast unavailable</string>

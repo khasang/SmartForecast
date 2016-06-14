@@ -70,6 +70,10 @@ public class Weather {
         return pressure;
     }
 
+    public int getIntPressure() {
+        return (int) Math.round(pressure);
+    }
+
     public void setPressure(double pressure) {
         this.pressure = pressure;
     }

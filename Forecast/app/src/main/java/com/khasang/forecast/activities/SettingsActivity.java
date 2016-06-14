@@ -81,25 +81,26 @@ public class SettingsActivity extends BaseActivity {
             addPreferencesFromResource(R.xml.pref_general);
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
             onSharedPreferenceChanged(sharedPreferences, getString(R.string.pref_temperature_key));
-            onSharedPreferenceChanged(sharedPreferences, getString(R.string.pref_location_key));
-            onSharedPreferenceChanged(sharedPreferences, getString(R.string.pref_welcome_key));
             onSharedPreferenceChanged(sharedPreferences, getString(R.string.pref_speed_key));
+            onSharedPreferenceChanged(sharedPreferences, getString(R.string.pref_pressure_key));
+            onSharedPreferenceChanged(sharedPreferences, getString(R.string.pref_welcome_key));
+            onSharedPreferenceChanged(sharedPreferences, getString(R.string.pref_location_key));
 
-            Preference preference = findPreference(getString(R.string.pref_night_mode_key));
+            Preference preference = findPreference(getString(R.string.pref_color_scheme_key));
             if (preference instanceof ListPreference) {
                 ListPreference listPreference = (ListPreference) preference;
                 int prefIndex = listPreference.findIndexOfValue(sharedPreferences.getString(getString(R.string
-                        .pref_night_mode_key), getString(R.string.pref_night_mode_off)));
+                        .pref_color_scheme_key), getString(R.string.pref_color_scheme_teal)));
                 if (prefIndex >= 0) {
                     preference.setSummary(listPreference.getEntries()[prefIndex]);
                 }
             }
 
-            preference = findPreference(getString(R.string.pref_color_scheme_key));
+            preference = findPreference(getString(R.string.pref_night_mode_key));
             if (preference instanceof ListPreference) {
                 ListPreference listPreference = (ListPreference) preference;
                 int prefIndex = listPreference.findIndexOfValue(sharedPreferences.getString(getString(R.string
-                        .pref_color_scheme_key), getString(R.string.pref_color_scheme_teal)));
+                        .pref_night_mode_key), getString(R.string.pref_night_mode_off)));
                 if (prefIndex >= 0) {
                     preference.setSummary(listPreference.getEntries()[prefIndex]);
                 }
@@ -135,7 +136,10 @@ public class SettingsActivity extends BaseActivity {
                 if (prefIndex >= 0) {
                     preference.setSummary(listPreference.getEntries()[prefIndex]);
                 }
-                if (key.equals(getString(R.string.pref_night_mode_key))) {
+                if (key.equals(getString(R.string.pref_color_scheme_key))) {
+                    SettingsActivity.setThemeChanged(true);
+                    getActivity().recreate();
+                } else if (key.equals(getString(R.string.pref_night_mode_key))) {
                     String stringValue = sharedPreferences.getString(getString(R.string.pref_night_mode_key),
                             getString(R.string.pref_night_mode_off));
                     if (stringValue.equals(getString(R.string.pref_night_mode_off))) {
@@ -149,9 +153,6 @@ public class SettingsActivity extends BaseActivity {
                     }
                     SettingsActivity.setThemeChanged(true);
                     getActivity().recreate();
-                } else if (key.equals(getString(R.string.pref_color_scheme_key))) {
-                    SettingsActivity.setThemeChanged(true);
-                    getActivity().recreate();
                 } else if (key.equals(getString(R.string.pref_icons_set_key))) {
                     PositionManager.getInstance().generateIconSet(getActivity());
                     SettingsActivity.setThemeChanged(true);
@@ -162,15 +163,13 @@ public class SettingsActivity extends BaseActivity {
         @Override
         public void onResume() {
             super.onResume();
-            getPreferenceScreen().getSharedPreferences()
-                    .registerOnSharedPreferenceChangeListener(this);
+            getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
         }
 
         @Override
         public void onPause() {
             super.onPause();
-            getPreferenceScreen().getSharedPreferences()
-                    .unregisterOnSharedPreferenceChangeListener(this);
+            getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
         }
     }
 }

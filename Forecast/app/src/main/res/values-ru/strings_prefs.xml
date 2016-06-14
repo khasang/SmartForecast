@@ -48,4 +48,6 @@
     <string name="pref_icons_set_default_label">Стандартный набор</string>
     <string name="pref_icons_set_mike_color_label">Набор цветовой схемы</string>
     <string name="pref_icons_set_mike_bw_label">Чёрно-белый набор</string>
+
+    <string name="warning_message_gps">Использование GPS может увеличить скорость рязряда батареи, однако, несомненно, увеличит точность определения местоположения</string>
 </resources>

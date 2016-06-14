@@ -3,15 +3,15 @@
     <string name="title_activity_settings">Настройки</string>
     <string name="title_activity_about">О приложении</string>
 
-    <string name="measure_wind_m_s"><![CDATA[<sup><small>м</small></sup>/<small>c</small>]]></string>
-    <string name="measure_wind_km_h"><![CDATA[<sup><small>км</small></sup>/<small>ч</small>]]></string>
-    <string name="measure_wind_mph"><![CDATA[<sup><small>миль</small></sup>/<small>ч</small>]]></string>
-    <string name="measure_wind_fps"><![CDATA[<sup><small>фут</small></sup>/<small>с</small>]]></string>
-    <string name="measure_pressure_mmHg">мм рт.ст.</string>
-    <string name="measure_pressure_hpa">HPa</string>
     <string name="measure_temperature_celsius">°C</string>
     <string name="measure_temperature_fahrenheit">°F</string>
     <string name="measure_temperature_kelvin">" K"</string>
+    <string name="measure_speed_m_s"><![CDATA[<sup><small>м</small></sup>/<small>c</small>]]></string>
+    <string name="measure_speed_km_h"><![CDATA[<sup><small>км</small></sup>/<small>ч</small>]]></string>
+    <string name="measure_speed_mph"><![CDATA[<sup><small>миль</small></sup>/<small>ч</small>]]></string>
+    <string name="measure_speed_fps"><![CDATA[<sup><small>фут</small></sup>/<small>с</small>]]></string>
+    <string name="measure_pressure_hpa">гПа</string>
+    <string name="measure_pressure_mmHg">мм рт.ст.</string>
 
     <string name="clear_sky">Ясно</string> 
     <string name="few_clouds">Небольшая облачность</string>
@@ -86,8 +86,6 @@
     <string name="welcome_string_day">"Добрый день "</string>
     <string name="welcome_string_evening">"Добрый вечер "</string>
     <string name="activate_geographical_service">Проверьте настройки телефона и программы. Нет доступных сервисов для получения гографических координат.\n\nОткрыть настройки телефона для активации сервисов определния местоположения?</string>
-
-    <string name="warning_message_gps">Использование GPS может увеличить скорость рязряда батареи, однако, несомненно, увеличит точность определения местоположения</string>
 
     <string name="error_get_coordinates">Не могу определить координаты запрашиваемого местоположения</string>
     <string name="forecast_unavailable">Прогноз погоды недоступен</string>

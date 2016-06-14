@@ -182,25 +182,25 @@ public class AppUtils {
         METER_PER_SECOND {
             @Override
             public String toStringValue() {
-                return MyApplication.getAppContext().getString(R.string.measure_wind_m_s);
+                return MyApplication.getAppContext().getString(R.string.measure_speed_m_s);
             }
         },
         FOOT_PER_SECOND {
             @Override
             public String toStringValue() {
-                return MyApplication.getAppContext().getString(R.string.measure_wind_fps);
+                return MyApplication.getAppContext().getString(R.string.measure_speed_fps);
             }
         },
         KM_PER_HOURS {
             @Override
             public String toStringValue() {
-                return MyApplication.getAppContext().getString(R.string.measure_wind_km_h);
+                return MyApplication.getAppContext().getString(R.string.measure_speed_km_h);
             }
         },
         MILES_PER_HOURS {
             @Override
             public String toStringValue() {
-                return MyApplication.getAppContext().getString(R.string.measure_wind_mph);
+                return MyApplication.getAppContext().getString(R.string.measure_speed_mph);
             }
         };
 
@@ -951,8 +951,7 @@ public class AppUtils {
      * @return температура в Цельсиях
      */
     public static double kelvinToCelsius(double temperature) {
-        double celsiusTemperature = temperature - KELVIN_CELSIUS_DELTA;
-        return celsiusTemperature;
+        return temperature - KELVIN_CELSIUS_DELTA;
     }
 
     /**
@@ -962,8 +961,7 @@ public class AppUtils {
      * @return температура в Фаренгейтах
      */
     public static double kelvinToFahrenheit(double temperature) {
-        double fahrenheitTemperature = (kelvinToCelsius(temperature) * 9 / 5) + 32;
-        return fahrenheitTemperature;
+        return (kelvinToCelsius(temperature) * 9 / 5) + 32;
     }
 
     /**
@@ -973,8 +971,7 @@ public class AppUtils {
      * @return скорость ветра в футах в секунду
      */
     public static double meterInSecondToFootInSecond(double speed) {
-        double footInSecond = speed * METER_TO_FOOT;
-        return footInSecond;
+        return speed * METER_TO_FOOT;
     }
 
     /**
@@ -984,8 +981,7 @@ public class AppUtils {
      * @return скорость ветра в километрах в час
      */
     public static double meterInSecondToKmInHours(double speed) {
-        double kmInHours = speed * 3.6;
-        return kmInHours;
+        return speed * 3.6;
     }
 
     /**
@@ -995,8 +991,7 @@ public class AppUtils {
      * @return скорость ветра в милях в час
      */
     public static double meterInSecondToMilesInHour(double speed) {
-        double milesInHours = meterInSecondToKmInHours(speed) * KM_TO_MILES;
-        return milesInHours;
+        return meterInSecondToKmInHours(speed) * KM_TO_MILES;
     }
 
     /**
@@ -1006,8 +1001,7 @@ public class AppUtils {
      * @return давление в мм.рт.ст.
      */
     public static double hpaToMmHg(double pressure) {
-        double mmHg = pressure / HPA_TO_MM_HG;
-        return mmHg;
+        return pressure / HPA_TO_MM_HG;
     }
 
     /**
@@ -1017,8 +1011,7 @@ public class AppUtils {
         timeString = timeString.substring(0, 2);
         try {
             int time = Integer.parseInt(timeString);
-            if (time >= 21 || time < 6) return false;
-            return true;
+            return !(time >= 21 || time < 6);
         } catch (NumberFormatException nfe) {
             return true;
         }
@@ -1028,11 +1021,11 @@ public class AppUtils {
      * Получение дня
      **/
     public static String getDayName(Context context, Calendar calendar) {
-        int rightnow = Calendar.getInstance(Locale.getDefault()).get(Calendar.DAY_OF_MONTH);
+        int rightNow = Calendar.getInstance(Locale.getDefault()).get(Calendar.DAY_OF_MONTH);
         int today = calendar.get(Calendar.DAY_OF_MONTH);
-        if (rightnow == today) {
+        if (rightNow == today) {
             return context.getString(R.string.today);
-        } else if (today == rightnow + 1) {
+        } else if (today == rightNow + 1) {
             return context.getString(R.string.tomorrow);
         } else {
             SimpleDateFormat dayFormat = new SimpleDateFormat("EEE, d MMMM", Locale.getDefault());

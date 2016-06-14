@@ -74,23 +74,33 @@ public class WeatherActivity extends BaseActivity
         implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, IWeatherReceiver,
         IPermissionCallback, IMessageProvider, NavigationDrawer.OnNavigationItemClickListener {
 
-    private static final String TAG = WeatherActivity.class.getSimpleName();
-
     public static final String CURRENT_CITY_TAG = "CURRENT_CITY";
     public static final String ACTIVE_CITY_TAG = "ACTIVE_CITY";
+    private static final String TAG = WeatherActivity.class.getSimpleName();
     private static final int CHOOSE_CITY = 1;
 
-    @BindView(R.id.temperature) TextView temperature;
-    @BindView(R.id.precipitation) TextView description;
-    @BindView(R.id.wind_text) TextView wind;
-    @BindView(R.id.humidity_text) TextView humidity;
-    @BindView(R.id.pressure_text) TextView pressure;
-    @BindView(R.id.iv_curr_weather) ImageView currWeather;
-    @BindView(R.id.fab) FloatingActionButton fab;
-    @BindView(R.id.toolbar_material) Toolbar toolbar;
-    @BindView(R.id.progressbar) ProgressBar progressbar;
-    @BindView(R.id.chart) WeatherChart chart;
-    @BindView(R.id.chart_layout) FrameLayout chartLayout;
+    @BindView(R.id.temperature)
+    TextView temperature;
+    @BindView(R.id.precipitation)
+    TextView description;
+    @BindView(R.id.wind_text)
+    TextView wind;
+    @BindView(R.id.humidity_text)
+    TextView humidity;
+    @BindView(R.id.pressure_text)
+    TextView pressure;
+    @BindView(R.id.iv_curr_weather)
+    ImageView currWeather;
+    @BindView(R.id.fab)
+    FloatingActionButton fab;
+    @BindView(R.id.toolbar_material)
+    Toolbar toolbar;
+    @BindView(R.id.progressbar)
+    ProgressBar progressbar;
+    @BindView(R.id.chart)
+    WeatherChart chart;
+    @BindView(R.id.chart_layout)
+    FrameLayout chartLayout;
     private ImageView syncBtn;
 
     private Animation animationRotateCenter;
@@ -158,7 +168,8 @@ public class WeatherActivity extends BaseActivity
 
     private void init() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            progressbar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this, R.color.accent), PorterDuff.Mode.SRC_ATOP);
+            progressbar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this, R.color.accent),
+                    PorterDuff.Mode.SRC_ATOP);
         }
 
         /** Слушатели нажатий объектов */
@@ -170,7 +181,7 @@ public class WeatherActivity extends BaseActivity
 
         /** Behavior для FAB */
         CoordinatorLayout.LayoutParams fabLayoutParams = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
-        int maxChartHeight = (int)  getResources().getDimension(R.dimen.chart_height);
+        int maxChartHeight = (int) getResources().getDimension(R.dimen.chart_height);
         fabLayoutParams.setBehavior(new FabOnTopBehavior(chartLayout, maxChartHeight));
 
         temperature.setOnClickListener(this);
@@ -296,7 +307,8 @@ public class WeatherActivity extends BaseActivity
                 Logger.println(TAG, newCity);
                 PositionManager.getInstance().setCurrentPosition(newCity);
             } else {
-                if (!PositionManager.getInstance().positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {
+                if (!PositionManager.getInstance().positionIsPresent(PositionManager.getInstance()
+                        .getCurrentPositionName())) {
                     showProgress(false);
                 }
             }
@@ -350,29 +362,42 @@ public class WeatherActivity extends BaseActivity
         navigationDrawer.updateBadges(isLocationPermissionGranted);
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+
+        // Получаем GPS флаг из памяти
         PositionManager.getInstance().setUseGpsModule(sp.getBoolean(getString(R.string.pref_gps_key), true));
-        if (sp.getString(getString(R.string.pref_temperature_key), getString(R.string.pref_temperature_celsius)).equals
-                (getString(R.string.pref_temperature_celsius))) {
-            PositionManager.getInstance().setTemperatureMetric(AppUtils.TemperatureMetrics.CELSIUS);
-        } else if (sp.getString(getString(R.string.pref_temperature_key), getString(R.string.pref_temperature_celsius)).equals(getString(R.string.pref_temperature_kelvin))) {
+
+        // Получаем единицы измерения температуры из памяти
+        String temperature = sp.getString(getString(R.string.pref_temperature_key), getString(R.string
+                .pref_temperature_celsius));
+        if (temperature.equals(getString(R.string.pref_temperature_kelvin))) {
             PositionManager.getInstance().setTemperatureMetric(AppUtils.TemperatureMetrics.KELVIN);
-        } else if (sp.getString(getString(R.string.pref_temperature_key), getString(R.string.pref_temperature_celsius)).equals(getString(R.string.pref_temperature_fahrenheit))) {
+        } else if (temperature.equals(getString(R.string.pref_temperature_fahrenheit))) {
             PositionManager.getInstance().setTemperatureMetric(AppUtils.TemperatureMetrics.FAHRENHEIT);
         } else {
             PositionManager.getInstance().setTemperatureMetric(AppUtils.TemperatureMetrics.CELSIUS);
         }
 
-        if (sp.getString(getString(R.string.pref_speed_key), getString(R.string.pref_speed_meter_sec)).equals(getString(R.string.pref_speed_meter_sec))) {
-            PositionManager.getInstance().setSpeedMetric(AppUtils.SpeedMetrics.METER_PER_SECOND);
-        } else if (sp.getString(getString(R.string.pref_speed_key), getString(R.string.pref_speed_meter_sec)).equals(getString(R.string.pref_speed_foot_sec))) {
+        // Получаем единицы измерения скорости ветра из памяти
+        String speed = sp.getString(getString(R.string.pref_speed_key), getString(R.string.pref_speed_meter_sec));
+        if (speed.equals(getString(R.string.pref_speed_foot_sec))) {
             PositionManager.getInstance().setSpeedMetric(AppUtils.SpeedMetrics.FOOT_PER_SECOND);
-        } else if (sp.getString(getString(R.string.pref_speed_key), getString(R.string.pref_speed_meter_sec)).equals(getString(R.string.pref_speed_km_hour))) {
+        } else if (speed.equals(getString(R.string.pref_speed_km_hour))) {
             PositionManager.getInstance().setSpeedMetric(AppUtils.SpeedMetrics.KM_PER_HOURS);
-        } else if (sp.getString(getString(R.string.pref_speed_key), getString(R.string.pref_speed_meter_sec)).equals(getString(R.string.pref_speed_mile_hour))) {
+        } else if (speed.equals(getString(R.string.pref_speed_mile_hour))) {
             PositionManager.getInstance().setSpeedMetric(AppUtils.SpeedMetrics.MILES_PER_HOURS);
         } else {
             PositionManager.getInstance().setSpeedMetric(AppUtils.SpeedMetrics.METER_PER_SECOND);
         }
+
+        // Получаем единицы измерения давления из памяти
+        String pressure = sp.getString(getString(R.string.pref_pressure_key), getString(R.string.pref_pressure_hpa));
+        if (pressure.equals(getString(R.string.pref_pressure_mm_hg))) {
+            PositionManager.getInstance().setPressureMetric(AppUtils.PressureMetrics.MM_HG);
+        } else {
+            PositionManager.getInstance().setPressureMetric(AppUtils.PressureMetrics.HPA);
+        }
+
+
 
         PositionManager.getInstance().updateWeatherFromDB();
         onRefresh();
@@ -509,7 +534,7 @@ public class WeatherActivity extends BaseActivity
 
         humidity.setText(String.format("%s%%", wCurrent.getHumidity()));
 
-        pressure.setText(String.format("%s %s", wCurrent.getPressure(), PositionManager.getInstance()
+        pressure.setText(String.format("%s %s", wCurrent.getIntPressure(), PositionManager.getInstance()
                 .getPressureMetric().toStringValue()));
     }
 

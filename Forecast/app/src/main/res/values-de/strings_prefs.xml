@@ -48,4 +48,6 @@
     <string name="pref_icons_set_default_label">Standard Set</string>
     <string name="pref_icons_set_mike_color_label">Farbschema Set</string>
     <string name="pref_icons_set_mike_bw_label">Schwarz-weiß-Set</string>
+
+    <string name="warning_message_gps">Die Benutzung von GPS kann die Geschwindigkeit der Entladung der Batterie erhöhen, jedoch wird sicherlich auch die Genauigkeit der Positionsbestimmung erhöhen</string>
 </resources>
