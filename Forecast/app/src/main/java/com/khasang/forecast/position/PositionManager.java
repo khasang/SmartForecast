@@ -18,6 +18,7 @@ import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.PermissionChecker;
 import com.khasang.forecast.R;
 import com.khasang.forecast.api.GoogleMapsGeocoding;
+import com.khasang.forecast.api.GoogleMapsTimezone;
 import com.khasang.forecast.exceptions.AccessFineLocationNotGrantedException;
 import com.khasang.forecast.exceptions.GpsIsDisabledException;
 import com.khasang.forecast.exceptions.NoAvailableLocationServiceException;
@@ -242,7 +243,11 @@ public class PositionManager implements ICoordinateReceiver, ILocationNameReceiv
         for (Position p : positions.values()) {
             if ((p.getCoordinate() == null) || (p.getCoordinate().getLatitude() == 0 && p.getCoordinate().getLongitude() == 0)) {
                 GoogleMapsGeocoding googleMapsGeocoding = new GoogleMapsGeocoding();
-                googleMapsGeocoding.requestCoordinates(p.getLocationName(), this, true);
+                googleMapsGeocoding.requestCoordinates(p.getLocationName(), this, false);
+            }
+            if (!p.timeZoneIsDefined()) {
+                GoogleMapsTimezone googleMapsTimezone = new GoogleMapsTimezone();
+                googleMapsTimezone.requestCoordinates(p);
             }
         }
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MyApplication.getAppContext());

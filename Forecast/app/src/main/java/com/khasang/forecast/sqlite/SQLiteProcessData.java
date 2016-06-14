@@ -300,13 +300,13 @@ public class SQLiteProcessData {
         ArrayList<HashMap<String, String>> recList = SQLiteWork.getInstance().queryOpen(SQLiteFields.QUERY_SELECT_TOWNS, null);
         try {
             for (int i = 0; i < recList.size(); i++) {
-                int timeZone;
+                Integer timeZone;
                 double townLat, townLong;
                 String townName = recList.get(i).get(SQLiteFields.TOWN);
                 try {
                     timeZone = Integer.parseInt(recList.get(i).get(SQLiteFields.TIME_ZONE));
                 } catch (NumberFormatException e) {
-                    timeZone = 0;
+                    timeZone = null;
                 }
                 try {
                     townLat = Double.parseDouble(recList.get(i).get(SQLiteFields.LATITUDE));
