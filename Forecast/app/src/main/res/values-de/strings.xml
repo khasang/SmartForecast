@@ -88,55 +88,6 @@
     <string name="welcome_string_evening">"Guten Abend "</string>
     <string name="activate_geographical_service">Überprüfen Sie Ihre Programme und Telefoneinstellungen. Es gibt keine Dienstleistungen um geografische Koordinaten zu bekommen.\n\nDie Einstellungen des Telefons zu Standortdienstaktivierung öffnen?</string>
 
-    <string name="pref_header_general">Haupt</string>
-
-    <string name="pref_category_general">Gemeinsam</string>
-    <string name="pref_category_start">Startoptionen</string>
-    <string name="pref_category_location">Suche nach Standort</string>
-    <string name="pref_category_personalization">Personalisierung</string>
-
-    <string name="pref_temperature_title">Temperatureinheiten</string>
-    <string name="pref_temperature_celsius_label">Celsius Grad (°C)</string>
-    <string name="pref_temperature_kelvin_label">Kelvin Grad (K)</string>
-    <string name="pref_temperature_fahrenheit_label">Fahrenheit Grad (°F)</string>
-
-    <string name="pref_speed_title">Maßeinheiten der Windgeschwindigkeit</string>
-    <string name="pref_speed_meter_sec_label">Meter pro Sekunde (m/s)</string>
-    <string name="pref_speed_foot_sec_label">Fuß pro Sekunde (f/s)</string>
-    <string name="pref_speed_km_hour_label">Kilometer pro Stunde (km/h)</string>
-    <string name="pref_speed_mile_hour_label">Meilen pro Stunde (Meile/h)</string>
-
-    <string name="pref_pressure_title">Einheiten für Druckmessungen</string>
-    <string name="pref_pressure_hpa_label">Hecto Pascal (hPa)</string>
-    <string name="pref_pressure_mm_hg_label">Millimetre of mercury (mmHG)</string>
-
-    <string name="pref_welcome_title">Zeile der Begrüßung</string>
-    <string name="pref_welcome_summary">Die Begrüßungzeile beim Start des Programms zeigen</string>
-
-    <string name="pref_location_title">Beim starten zeigen das Wetter für</string>
-    <string name="pref_location_current_label">Aktuellen Standort</string>
-    <string name="pref_location_last_label">Für den Letzten aktiven Standort</string>
-
-    <string name="pref_gps_title">GPS verwenden</string>
-    <string name="pref_gps_description">GPS verwenden um Ihren Standort zu bestimmen</string>
-
-    <string name="pref_color_scheme_title">Farbschema</string>
-    <string name="pref_color_scheme_green_label">Grün</string>
-    <string name="pref_color_scheme_brown_label">Braun</string>
-    <string name="pref_color_scheme_teal_label">Türkis</string>
-    <string name="pref_color_scheme_indigo_label">Dunkel-blau</string>
-    <string name="pref_color_scheme_purple_label">Lila</string>
-
-    <string name="pref_night_mode_title">Thema</string>
-    <string name="pref_night_mode_off_label">Tagthema</string>
-    <string name="pref_night_mode_on_label">Nachtthema</string>
-    <string name="pref_night_mode_auto_label">Auf der Tageszeit basiert</string>
-
-    <string name="pref_icons_set_title">Icon Set</string>
-    <string name="pref_icons_set_default_label">Standard Set</string>
-    <string name="pref_icons_set_mike_color_label">Farbschema Set</string>
-    <string name="pref_icons_set_mike_bw_label">Schwarz-weiß-Set</string>
-
     <string name="warning_message_gps">Die Benutzung von GPS kann die Geschwindigkeit der Entladung der Batterie erhöhen, jedoch wird sicherlich auch die Genauigkeit der Positionsbestimmung erhöhen</string>
 
     <string name="error_get_coordinates">Kann nicht die Koordinaten der angeforderten Standort bestimmen</string>
