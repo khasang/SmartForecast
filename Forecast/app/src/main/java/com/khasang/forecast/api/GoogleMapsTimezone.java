@@ -1,7 +1,5 @@
 package com.khasang.forecast.api;
 
-import android.util.Log;
-
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
@@ -44,8 +42,9 @@ public class GoogleMapsTimezone {
 
     public void requestCoordinates(final Position position) {
         try {
-            final String URL = PLACE_API_BASE_URL + "?key="
-                    + API_KEY + "&timestamp=0&location="
+            final String URL = PLACE_API_BASE_URL
+                    + "?key=" + API_KEY
+                    + "&timestamp=0&location="
                     + URLEncoder.encode(position.getCoordinate().convertToTimezoneUrlParameterString(), "utf8");
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
@@ -55,7 +54,7 @@ public class GoogleMapsTimezone {
             call.enqueue(new Callback() {
                 @Override
                 public void onFailure(Request request, IOException e) {
-                    Log.d(TAG, "Request to Google Maps Timezone API failure");
+                    e.printStackTrace();
                 }
 
                 @Override
@@ -70,10 +69,9 @@ public class GoogleMapsTimezone {
                             throw new JSONException(log);
                         }
                         int timeZoneId = jsonObject.getInt("rawOffset");
-                        Log.d("TimeZone", "TimeZone: " + timeZoneId);
                         PositionManager.getInstance().updatePositionTimeZone(position, timeZoneId);
                     } catch (JSONException e) {
-                        Log.e(TAG, e.getLocalizedMessage());
+                        e.printStackTrace();
                         if (Fabric.isInitialized()) {
                             Crashlytics.logException(e);
                             Answers.getInstance().logCustom(new CustomEvent(AppUtils.ApiCustomEvent)
@@ -83,7 +81,7 @@ public class GoogleMapsTimezone {
                 }
             });
         } catch (UnsupportedEncodingException e) {
-            Log.e(TAG, e.getLocalizedMessage());
+            e.printStackTrace();
         }
     }
 }
