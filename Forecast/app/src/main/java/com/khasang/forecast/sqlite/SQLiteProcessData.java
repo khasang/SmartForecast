@@ -53,7 +53,7 @@ public class SQLiteProcessData {
     }
 
     // Обновление координат города
-    public void updatePositionCoordinates (Position position) {
+    public void updatePositionCoordinates(Position position) {
         SQLiteWork.getInstance().qExec(SQLiteFields.QUERY_UPDATE_TOWN_POSITION,
                 new String[]{
                         Double.toString(position.getCoordinate().getLatitude()),
@@ -63,7 +63,7 @@ public class SQLiteProcessData {
     }
 
     // Обновление временно
-    public void updateCityTimeZone (Position position) {
+    public void updateCityTimeZone(Position position) {
         SQLiteWork.getInstance().qExec(SQLiteFields.QUERY_UPDATE_TOWN_TIME_ZONE,
                 new String[]{
                         String.valueOf(position.getTimeZone()),
@@ -99,7 +99,7 @@ public class SQLiteProcessData {
         ArrayList<HashMap<String, String>> recList = SQLiteWork.getInstance().queryOpen(SQLiteFields.QUERY_SELECT_SETTINGS, null);
         try {
             return recList.get(0).get(SQLiteFields.CURRENT_TOWN);
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return "";
@@ -113,21 +113,21 @@ public class SQLiteProcessData {
         double longitude;
         try {
             String stringLatitude = recList.get(0).get(SQLiteFields.CURRENT_LATITUDE);
-            if(stringLatitude.equals("")){
+            if (stringLatitude.equals("")) {
                 latitude = 0;
             } else {
                 latitude = Double.parseDouble(stringLatitude);
             }
 
             String stringLongitude = recList.get(0).get(SQLiteFields.CURRENT_LONGITUDE);
-            if(stringLongitude.equals("")){
+            if (stringLongitude.equals("")) {
                 longitude = 0;
             } else {
                 longitude = Double.parseDouble(stringLongitude);
             }
 
             return new Coordinate(latitude, longitude);
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -138,7 +138,7 @@ public class SQLiteProcessData {
         ArrayList<HashMap<String, String>> recList = SQLiteWork.getInstance().queryOpen(SQLiteFields.QUERY_SELECT_SETTINGS, null);
         try {
             return AppUtils.TemperatureMetrics.valueOf(recList.get(0).get(SQLiteFields.CURRENT_TEMPIRATURE_METRICS));
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         // Значение по умолчанию.
@@ -150,7 +150,7 @@ public class SQLiteProcessData {
         ArrayList<HashMap<String, String>> recList = SQLiteWork.getInstance().queryOpen(SQLiteFields.QUERY_SELECT_SETTINGS, null);
         try {
             return AppUtils.SpeedMetrics.valueOf(recList.get(0).get(SQLiteFields.CURRENT_SPEED_METRICS));
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         // Значение по умолчанию.
@@ -162,7 +162,7 @@ public class SQLiteProcessData {
         ArrayList<HashMap<String, String>> recList = SQLiteWork.getInstance().queryOpen(SQLiteFields.QUERY_SELECT_SETTINGS, null);
         try {
             return AppUtils.PressureMetrics.valueOf(recList.get(0).get(SQLiteFields.CURRENT_PRESSURE_METRICS));
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         // Значение по умолчанию.
@@ -174,7 +174,7 @@ public class SQLiteProcessData {
         ArrayList<HashMap<String, String>> recList = SQLiteWork.getInstance().queryOpen(SQLiteFields.QUERY_SELECT_SETTINGS, null);
         try {
             return WeatherStationFactory.ServiceType.valueOf(recList.get(0).get(SQLiteFields.CURRENT_STATION));
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         // Значение по умолчанию.
@@ -220,7 +220,7 @@ public class SQLiteProcessData {
         try {
             weatherDate = Calendar.getInstance();
             weatherDate.setTime(dtFormat.parse(recList.get(0).get(SQLiteFields.SUNSET)));
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         // Значение по умолчанию.
@@ -234,7 +234,7 @@ public class SQLiteProcessData {
         try {
             weatherDate = Calendar.getInstance();
             weatherDate.setTime(dtFormat.parse(recList.get(0).get(SQLiteFields.SUNRISE)));
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         // Значение по умолчанию.
@@ -257,7 +257,7 @@ public class SQLiteProcessData {
             if (recList.get(0).get(SQLiteFields.FAVORITE).equals("1")) {
                 return true;
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         // Значение по умолчанию.
@@ -269,7 +269,7 @@ public class SQLiteProcessData {
         ArrayList<HashMap<String, String>> recList = SQLiteWork.getInstance().queryOpen(SQLiteFields.QUERY_SELECT_DATA_TOWN, new String[]{townName});
         try {
             return Integer.parseInt(recList.get(0).get(SQLiteFields.TIME_ZONE));
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -288,7 +288,7 @@ public class SQLiteProcessData {
                 Coordinate coordinate = new Coordinate(townLat, townLong);
                 hashMap.put(townName, coordinate);
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return hashMap;
@@ -296,15 +296,25 @@ public class SQLiteProcessData {
 
     // Загрузка списка городов
     public ArrayList<Position> loadTownListFull() {
-        ArrayList<Position> list = new ArrayList<Position>();
+        ArrayList<Position> list = new ArrayList<>();
         ArrayList<HashMap<String, String>> recList = SQLiteWork.getInstance().queryOpen(SQLiteFields.QUERY_SELECT_TOWNS, null);
         try {
             for (int i = 0; i < recList.size(); i++) {
+                int timeZone;
+                double townLat, townLong;
                 String townName = recList.get(i).get(SQLiteFields.TOWN);
-                int timeZone = Integer.parseInt(recList.get(i).get(SQLiteFields.TIME_ZONE));
-                double townLat = Double.parseDouble(recList.get(i).get(SQLiteFields.LATITUDE));
-                double townLong = Double.parseDouble(recList.get(i).get(SQLiteFields.LONGITUDE));
-
+                try {
+                    timeZone = Integer.parseInt(recList.get(i).get(SQLiteFields.TIME_ZONE));
+                } catch (NumberFormatException e) {
+                    timeZone = 0;
+                }
+                try {
+                    townLat = Double.parseDouble(recList.get(i).get(SQLiteFields.LATITUDE));
+                    townLong = Double.parseDouble(recList.get(i).get(SQLiteFields.LONGITUDE));
+                } catch (NumberFormatException e) {
+                    townLat = 0;
+                    townLong = 0;
+                }
                 Position position = new Position();
                 position.setLocationName(townName);
                 position.setCoordinate(new Coordinate(townLat, townLong));
@@ -312,7 +322,7 @@ public class SQLiteProcessData {
 
                 list.add(position);
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return list;
@@ -326,7 +336,7 @@ public class SQLiteProcessData {
             for (int i = 0; i < recList.size(); i++) {
                 list.add(recList.get(i).get(SQLiteFields.TOWN));
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return list;
@@ -368,7 +378,7 @@ public class SQLiteProcessData {
 
                 weather = new Weather(tempirature, tempirature_min, tempirature_max, pressure, humidity, wind, precipitation, description);
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
