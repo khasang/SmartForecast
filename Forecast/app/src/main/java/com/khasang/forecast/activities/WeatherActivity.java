@@ -1,5 +1,6 @@
 package com.khasang.forecast.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -79,28 +80,17 @@ public class WeatherActivity extends BaseActivity
     private static final String TAG = WeatherActivity.class.getSimpleName();
     private static final int CHOOSE_CITY = 1;
 
-    @BindView(R.id.temperature)
-    TextView temperature;
-    @BindView(R.id.precipitation)
-    TextView description;
-    @BindView(R.id.wind_text)
-    TextView wind;
-    @BindView(R.id.humidity_text)
-    TextView humidity;
-    @BindView(R.id.pressure_text)
-    TextView pressure;
-    @BindView(R.id.iv_curr_weather)
-    ImageView currWeather;
-    @BindView(R.id.fab)
-    FloatingActionButton fab;
-    @BindView(R.id.toolbar_material)
-    Toolbar toolbar;
-    @BindView(R.id.progressbar)
-    ProgressBar progressbar;
-    @BindView(R.id.chart)
-    WeatherChart chart;
-    @BindView(R.id.chart_layout)
-    FrameLayout chartLayout;
+    @BindView(R.id.temperature_text) TextView temperatureView;
+    @BindView(R.id.precipitation) TextView precipitationView;
+    @BindView(R.id.wind_text) TextView windView;
+    @BindView(R.id.humidity_text) TextView humidityView;
+    @BindView(R.id.pressure_text) TextView pressureView;
+    @BindView(R.id.current_weather_icon) ImageView currentWeatherView;
+    @BindView(R.id.fab) FloatingActionButton fab;
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.progressbar) ProgressBar progressbar;
+    @BindView(R.id.chart) WeatherChart chart;
+    @BindView(R.id.chart_layout) FrameLayout chartLayout;
     private ImageView syncBtn;
 
     private Animation animationRotateCenter;
@@ -184,7 +174,7 @@ public class WeatherActivity extends BaseActivity
         int maxChartHeight = (int) getResources().getDimension(R.dimen.chart_height);
         fabLayoutParams.setBehavior(new FabOnTopBehavior(chartLayout, maxChartHeight));
 
-        temperature.setOnClickListener(this);
+        temperatureView.setOnClickListener(this);
 
         setSupportActionBar(toolbar);
     }
@@ -288,6 +278,7 @@ public class WeatherActivity extends BaseActivity
     public void permissionDenied(PermissionChecker.RuntimePermissions permission) {
     }
 
+    @SuppressWarnings("unchecked")
     public void startCityPickerActivity() {
         Intent intent = new Intent(this, CityPickerActivity.class);
         Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle();
@@ -301,26 +292,26 @@ public class WeatherActivity extends BaseActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CHOOSE_CITY) {
+            PositionManager pm = PositionManager.getInstance();
             if (resultCode == RESULT_OK) {
                 String newCity = data.getStringExtra(CityPickerActivity.CITY_PICKER_TAG);
                 toolbar.setTitle(newCity.split(",")[0]);
                 Logger.println(TAG, newCity);
-                PositionManager.getInstance().setCurrentPosition(newCity);
-            } else {
-                if (!PositionManager.getInstance().positionIsPresent(PositionManager.getInstance()
-                        .getCurrentPositionName())) {
-                    showProgress(false);
-                }
+                pm.setCurrentPosition(newCity);
+            } else if (!pm.positionIsPresent(pm.getCurrentPositionName())) {
+                showProgress(false);
             }
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void startSettingsActivity() {
         Intent intent = new Intent(this, SettingsActivity.class);
         Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle();
         startActivity(intent, bundle);
     }
 
+    @SuppressWarnings("unchecked")
     public void startAboutActivity() {
         Intent intent = new Intent(this, AboutActivity.class);
         Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle();
@@ -396,8 +387,6 @@ public class WeatherActivity extends BaseActivity
         } else {
             PositionManager.getInstance().setPressureMetric(AppUtils.PressureMetrics.HPA);
         }
-
-
 
         PositionManager.getInstance().updateWeatherFromDB();
         onRefresh();
@@ -512,30 +501,38 @@ public class WeatherActivity extends BaseActivity
         }, 1250);
     }
 
-    public void updateCurrentWeather(Calendar date, Weather wCurrent) {
-        if (wCurrent == null) {
+    @SuppressLint("DefaultLocale")
+    public void updateCurrentWeather(Calendar date, Weather weather) {
+        if (weather == null) {
             Log.i(TAG, "Weather is null!");
             return;
         }
-        toolbar.setTitle(PositionManager.getInstance().getCurrentPositionName().split(",")[0]);
-        temperature.setText(String.format("%.0f%s", wCurrent.getTemperature(),
-                PositionManager.getInstance().getTemperatureMetric().toStringValue()));
-        description.setText(String.format("%s",
-                wCurrent.getDescription().substring(0, 1).toUpperCase() + wCurrent.getDescription()
-                        .substring(1)));
-        Drawable weatherIcon = PositionManager.getInstance().getWeatherIcon(wCurrent.getPrecipitation()
-                .getIconIndex(AppUtils.isDayFromString(String.format(Locale.getDefault(), "%tR", date))), true);
-        currWeather.setImageDrawable(weatherIcon);
+        PositionManager pm = PositionManager.getInstance();
 
-        wind.setText(Html.fromHtml(
-                String.format("%s %.0f%s", wCurrent.getWindDirection().getDirectionString(),
-                        wCurrent.getWindPower(),
-                        PositionManager.getInstance().getSpeedMetric().toStringValue())));
+        toolbar.setTitle(pm.getCurrentPositionName().split(",")[0]);
 
-        humidity.setText(String.format("%s%%", wCurrent.getHumidity()));
+        double temperature = weather.getTemperature();
+        String temperatureMetrics = pm.getTemperatureMetric().toStringValue();
+        temperatureView.setText(String.format("%.0f%s", temperature, temperatureMetrics));
 
-        pressure.setText(String.format("%s %s", wCurrent.getIntPressure(), PositionManager.getInstance()
-                .getPressureMetric().toStringValue()));
+        String precipitation1 = weather.getDescription().substring(0, 1).toUpperCase();
+        String precipitation2 = weather.getDescription().substring(1);
+        precipitationView.setText(String.format("%s", precipitation1 + precipitation2));
+
+        boolean isDay = AppUtils.isDayFromString(String.format(Locale.getDefault(), "%tR", date));
+        Drawable weatherIcon = pm.getWeatherIcon(weather.getPrecipitation().getIconIndex(isDay), true);
+        currentWeatherView.setImageDrawable(weatherIcon);
+
+        String directionString = weather.getWindDirection().getDirectionString();
+        double windPower = weather.getWindPower();
+        String speedMetrics = PositionManager.getInstance().getSpeedMetric().toStringValue();
+        windView.setText(Html.fromHtml(String.format("%s %.0f%s", directionString, windPower, speedMetrics)));
+
+        humidityView.setText(String.format("%s%%", weather.getHumidity()));
+
+        int pressure = weather.getIntPressure();
+        String pressureMetrics = pm.getPressureMetric().toStringValue();
+        pressureView.setText(String.format("%s %s", pressure, pressureMetrics));
     }
 
     /**
@@ -547,7 +544,7 @@ public class WeatherActivity extends BaseActivity
             case R.id.fab:
                 switchDisplayMode();
                 break;
-            case R.id.temperature:
+            case R.id.temperature_text:
                 PositionManager.getInstance().changeTemperatureMetric();
                 PositionManager.getInstance().updateWeatherFromDB();
                 break;
@@ -629,5 +626,4 @@ public class WeatherActivity extends BaseActivity
         }
         chart.updateForecast(forecast, isHourFragmentVisible);
     }
-
 }

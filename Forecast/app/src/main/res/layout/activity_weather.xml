@@ -16,7 +16,7 @@
         app:elevation="@dimen/appbar_elevation">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar_material"
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
@@ -40,7 +40,7 @@
                 app:layout_columnWeight="1">
 
                 <ImageView
-                    android:id="@+id/iv_curr_weather"
+                    android:id="@+id/current_weather_icon"
                     android:layout_width="96dp"
                     android:layout_height="96dp"
                     android:src="@drawable/ic_cloud" />
@@ -135,13 +135,14 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/temperature"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:gravity="center"
                 app:layout_columnWeight="1">
 
                 <TextView
-                    android:id="@+id/temperature"
+                    android:id="@+id/temperature_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/current_weather_color"
@@ -152,8 +153,8 @@
                     android:id="@+id/precipitation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/temperature"
-                    android:layout_below="@+id/temperature"
+                    android:layout_alignLeft="@+id/temperature_text"
+                    android:layout_below="@+id/temperature_text"
                     android:maxLines="2"
                     android:textColor="@color/current_weather_color"
                     android:textSize="20sp"
