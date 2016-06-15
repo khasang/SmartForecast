@@ -1,6 +1,6 @@
 package com.khasang.forecast.sqlite;
 
-import com.khasang.forecast.AppUtils;
+import com.khasang.forecast.utils.AppUtils;
 import com.khasang.forecast.position.Coordinate;
 import com.khasang.forecast.position.Precipitation;
 import com.khasang.forecast.position.Weather;

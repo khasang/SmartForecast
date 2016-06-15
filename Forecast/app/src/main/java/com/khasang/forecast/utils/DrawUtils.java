@@ -1,4 +1,4 @@
-package com.khasang.forecast;
+package com.khasang.forecast.utils;
 
 import android.content.Context;
 import android.util.DisplayMetrics;

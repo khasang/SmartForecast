@@ -9,7 +9,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
-import com.khasang.forecast.PlaceProvider;
+import com.khasang.forecast.utils.PlaceProvider;
 import com.khasang.forecast.R;
 
 import java.util.ArrayList;

@@ -13,22 +13,22 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.PreferenceManager;
 
-import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.MyApplication;
-import com.khasang.forecast.PermissionChecker;
 import com.khasang.forecast.R;
 import com.khasang.forecast.exceptions.AccessFineLocationNotGrantedException;
+import com.khasang.forecast.exceptions.EmptyCurrentAddressException;
 import com.khasang.forecast.exceptions.GpsIsDisabledException;
+import com.khasang.forecast.exceptions.NoAvailableAddressesException;
 import com.khasang.forecast.exceptions.NoAvailableLocationServiceException;
 import com.khasang.forecast.interfaces.IMessageProvider;
 import com.khasang.forecast.interfaces.IWeatherReceiver;
 import com.khasang.forecast.location.CurrentLocationManager;
-import com.khasang.forecast.exceptions.EmptyCurrentAddressException;
 import com.khasang.forecast.location.LocationParser;
-import com.khasang.forecast.exceptions.NoAvailableAddressesException;
 import com.khasang.forecast.sqlite.SQLiteProcessData;
 import com.khasang.forecast.stations.WeatherStation;
 import com.khasang.forecast.stations.WeatherStationFactory;
+import com.khasang.forecast.utils.AppUtils;
+import com.khasang.forecast.utils.PermissionChecker;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.weather_icons_typeface_library.WeatherIcons;
 
@@ -769,7 +769,7 @@ public class PositionManager {
     }
 
     public Drawable getWeatherIcon(int iconNumber, boolean isCurrentWeatherIcon) {
-        Drawable icon = null;
+        Drawable icon;
         try {
             if (iconsSet[iconNumber] != null) {
                 icon = iconsSet[iconNumber];

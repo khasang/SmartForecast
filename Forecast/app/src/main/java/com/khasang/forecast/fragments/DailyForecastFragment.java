@@ -1,6 +1,6 @@
 package com.khasang.forecast.fragments;
 
-import com.khasang.forecast.AppUtils;
+import com.khasang.forecast.utils.AppUtils;
 import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.position.Weather;
 

@@ -32,13 +32,13 @@ public class FullImageActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("");
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 leaveActivity();
             }
         });
-        getSupportActionBar().setTitle("");
 
         String url = getIntent().getStringExtra(URL);
         int imageWidth = getIntent().getIntExtra(IMAGE_WIDTH, 0);

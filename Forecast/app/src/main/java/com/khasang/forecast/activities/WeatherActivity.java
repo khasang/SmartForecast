@@ -37,10 +37,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.khasang.forecast.AppUtils;
-import com.khasang.forecast.Logger;
+import com.khasang.forecast.utils.AppUtils;
+import com.khasang.forecast.utils.Logger;
 import com.khasang.forecast.MyApplication;
-import com.khasang.forecast.PermissionChecker;
+import com.khasang.forecast.utils.PermissionChecker;
 import com.khasang.forecast.R;
 import com.khasang.forecast.activities.etc.NavigationDrawer;
 import com.khasang.forecast.behaviors.FabOnTopBehavior;
@@ -65,7 +65,7 @@ import java.util.Map;
 
 import butterknife.BindView;
 
-import static com.khasang.forecast.PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION;
+import static com.khasang.forecast.utils.PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION;
 
 /**
  * Данные которые необходимо отображать в WeatherActivity (для первого релиза):

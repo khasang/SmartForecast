@@ -15,22 +15,24 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Toast;
 
-import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.R;
 import com.khasang.forecast.position.PositionManager;
+import com.khasang.forecast.utils.AppUtils;
+import com.khasang.forecast.utils.LocaleUtils;
+
+import java.util.Locale;
 
 import butterknife.BindView;
 
 public class SettingsActivity extends BaseActivity {
 
-    private static boolean themeChanged;
+    private static boolean configurationChanged;
 
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
+    @BindView(R.id.toolbar) Toolbar toolbar;
 
-    private static void setThemeChanged(boolean changed) {
-        themeChanged = changed;
+    private static void setConfigurationChanged(boolean changed) {
+        configurationChanged = changed;
     }
 
     @Override
@@ -53,6 +55,7 @@ public class SettingsActivity extends BaseActivity {
                 leaveActivity();
             }
         });
+        getSupportActionBar().setTitle(R.string.title_activity_settings);
     }
 
     @Override
@@ -62,8 +65,8 @@ public class SettingsActivity extends BaseActivity {
 
     @Override
     protected void leaveActivity() {
-        if (themeChanged) {
-            themeChanged = false;
+        if (configurationChanged) {
+            configurationChanged = false;
 
             Intent intent = new Intent(this, WeatherActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -86,7 +89,30 @@ public class SettingsActivity extends BaseActivity {
             onSharedPreferenceChanged(sharedPreferences, getString(R.string.pref_pressure_key));
             onSharedPreferenceChanged(sharedPreferences, getString(R.string.pref_location_key));
 
-            Preference preference = findPreference(getString(R.string.pref_color_scheme_key));
+            Preference preference = findPreference(getString(R.string.pref_language_key));
+            if (preference instanceof ListPreference) {
+                ListPreference listPreference = (ListPreference) preference;
+
+                int prefIndex = listPreference.findIndexOfValue(sharedPreferences.getString(getString(R.string
+                        .pref_language_key), null));
+                if (prefIndex >= 0) {
+                    preference.setSummary(listPreference.getEntries()[prefIndex]);
+                } else {
+                    String languageCode = Locale.getDefault().getLanguage();
+                    if (getString(R.string.pref_language_deutsch).equals(languageCode)) {
+                        preference.setSummary(getString(R.string.pref_language_deutsch_label));
+                        listPreference.setValue(getString(R.string.pref_language_deutsch));
+                    } else if (getString(R.string.pref_language_russian).equals(languageCode)) {
+                        preference.setSummary(getString(R.string.pref_language_russian_label));
+                        listPreference.setValue(getString(R.string.pref_language_russian));
+                    } else {
+                        preference.setSummary(getString(R.string.pref_language_english_label));
+                        listPreference.setValue(getString(R.string.pref_language_english));
+                    }
+                }
+            }
+
+            preference = findPreference(getString(R.string.pref_color_scheme_key));
             if (preference instanceof ListPreference) {
                 ListPreference listPreference = (ListPreference) preference;
                 int prefIndex = listPreference.findIndexOfValue(sharedPreferences.getString(getString(R.string
@@ -149,8 +175,14 @@ public class SettingsActivity extends BaseActivity {
                 if (prefIndex >= 0) {
                     preference.setSummary(listPreference.getEntries()[prefIndex]);
                 }
-                if (key.equals(getString(R.string.pref_color_scheme_key))) {
-                    SettingsActivity.setThemeChanged(true);
+                if (key.equals(getString(R.string.pref_language_key))) {
+                    String languageCode = listPreference.getEntryValues()[prefIndex].toString();
+                    LocaleUtils.updateResources(getContext(), languageCode);
+
+                    setConfigurationChanged(true);
+                    getActivity().recreate();
+                } else if (key.equals(getString(R.string.pref_color_scheme_key))) {
+                    SettingsActivity.setConfigurationChanged(true);
                     getActivity().recreate();
                 } else if (key.equals(getString(R.string.pref_night_mode_key))) {
                     String stringValue = sharedPreferences.getString(getString(R.string.pref_night_mode_key),
@@ -164,11 +196,11 @@ public class SettingsActivity extends BaseActivity {
                     } else {
                         // неподдерживаемая функциональность
                     }
-                    SettingsActivity.setThemeChanged(true);
+                    SettingsActivity.setConfigurationChanged(true);
                     getActivity().recreate();
                 } else if (key.equals(getString(R.string.pref_icons_set_key))) {
                     PositionManager.getInstance().generateIconSet(getActivity());
-                    SettingsActivity.setThemeChanged(true);
+                    SettingsActivity.setConfigurationChanged(true);
                 }
             }
         }

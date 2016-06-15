@@ -10,9 +10,7 @@ import java.util.LinkedList;
 
 public abstract class WeatherStation {
 
-    public enum ResponseType {CURRENT, HOURLY, DAILY}
-
-    ;
+    public enum ResponseType {CURRENT, HOURLY, DAILY};
 
     WeatherStationFactory.ServiceType serviceType;
 
