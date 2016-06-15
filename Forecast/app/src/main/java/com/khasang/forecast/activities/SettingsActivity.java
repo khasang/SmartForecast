@@ -1,9 +1,9 @@
 package com.khasang.forecast.activities;
 
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v14.preference.SwitchPreference;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.preference.ListPreference;
@@ -79,11 +79,11 @@ public class SettingsActivity extends BaseActivity {
         @Override
         public void onCreatePreferences(Bundle bundle, String s) {
             addPreferencesFromResource(R.xml.pref_general);
+
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
             onSharedPreferenceChanged(sharedPreferences, getString(R.string.pref_temperature_key));
             onSharedPreferenceChanged(sharedPreferences, getString(R.string.pref_speed_key));
             onSharedPreferenceChanged(sharedPreferences, getString(R.string.pref_pressure_key));
-            onSharedPreferenceChanged(sharedPreferences, getString(R.string.pref_welcome_key));
             onSharedPreferenceChanged(sharedPreferences, getString(R.string.pref_location_key));
 
             Preference preference = findPreference(getString(R.string.pref_color_scheme_key));
@@ -119,16 +119,29 @@ public class SettingsActivity extends BaseActivity {
 
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if (key.equals(getString(R.string.pref_gps_key)) && sharedPreferences.getBoolean(getString(R.string
-                    .pref_gps_key), true)) {
-                Toast toast = AppUtils.showInfoMessage(getActivity(), getString(R.string.warning_message_gps));
-                toast.getView().setBackgroundColor(ContextCompat.getColor(MyApplication.getAppContext(), R.color
-                        .background_toast));
-                toast.setGravity(Gravity.CENTER, 0, 0);
-                toast.setDuration(Toast.LENGTH_LONG);
-                toast.show();
+            if (key.equals(getString(R.string.pref_welcome_key))) {
+                if (!sharedPreferences.getBoolean(getString(R.string.pref_welcome_key), true)) {
+                    sharedPreferences.edit().putBoolean(getString(R.string.pref_welcome_text_key), false).apply();
+
+                    SwitchPreference welcomeTextSwitchPreference = (SwitchPreference) findPreference(getString(R
+                            .string.pref_welcome_text_key));
+                    welcomeTextSwitchPreference.setChecked(false);
+                }
                 return;
             }
+
+            if (key.equals(getString(R.string.pref_gps_key))) {
+                if (sharedPreferences.getBoolean(getString(R.string.pref_gps_key), true)) {
+                    Toast toast = AppUtils.showInfoMessage(getActivity(), getString(R.string.warning_message_gps));
+                    toast.getView().setBackgroundColor(ContextCompat.getColor(MyApplication.getAppContext(), R.color
+                            .background_toast));
+                    toast.setGravity(Gravity.CENTER, 0, 0);
+                    toast.setDuration(Toast.LENGTH_LONG);
+                    toast.show();
+                }
+                return;
+            }
+
             Preference preference = findPreference(key);
             if (preference instanceof ListPreference) {
                 ListPreference listPreference = (ListPreference) preference;

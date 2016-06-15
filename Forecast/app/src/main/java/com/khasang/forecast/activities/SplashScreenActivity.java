@@ -18,9 +18,7 @@ import android.view.animation.AnimationUtils;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.R;
-import com.khasang.forecast.interfaces.IMessageProvider;
 import com.romainpiel.shimmer.Shimmer;
 import com.romainpiel.shimmer.ShimmerTextView;
 
@@ -34,79 +32,95 @@ import pl.droidsonroids.gif.AnimationListener;
 import pl.droidsonroids.gif.GifDrawable;
 import pl.droidsonroids.gif.GifImageView;
 
-public class SplashScreenActivity
-        extends BaseActivity
-        implements Animation.AnimationListener, AnimationListener, IMessageProvider {
+public class SplashScreenActivity extends BaseActivity implements Animation.AnimationListener, AnimationListener {
 
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
-    @BindView(R.id.welcomeText) ShimmerTextView welcomeText;
-    @BindView(R.id.gifImageView) GifImageView gifImageView;
+    @BindView(R.id.welcomeText)
+    ShimmerTextView welcomeText;
+    @BindView(R.id.gifImageView)
+    GifImageView gifImageView;
+    @BindView(R.id.root)
+    View rootView;
 
     private GifDrawable gifDrawable;
     private Shimmer shimmer;
     private JumpingBeans jumpingBeans;
-    private boolean isGooglePlayServicesInstalled;
-    private boolean welcomeStringIsOff;
+    private boolean showWelcomeString;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        welcomeStringIsOff = !sp.getBoolean(getString(R.string.pref_welcome_key_switch), true);
-        if (!welcomeStringIsOff) {
-            int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-            String text = getString(R.string.welcome_def_str);
-            if (hour < 4) {
-            } else if (hour >= 4 && hour <= 9) {
-                text = getString(R.string.welcome_string_morning);
-            } else if (hour <= 17) {
-                text = getString(R.string.welcome_string_day);
-            } else if (hour <= 22) {
-                text = getString(R.string.welcome_string_evening);
-            }
-            welcomeText.setTextColor(ContextCompat.getColor(this, R.color.material_drawer_selected_text));
-            welcomeText.setText(text);
-            jumpingBeans = JumpingBeans
-                    .with(welcomeText)
-                    .appendJumpingDots()
-                    .build();
-        }
+        boolean isGooglePlayServicesInstalled = checkPlayServices();
+        if (isGooglePlayServicesInstalled) {
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+            defineNightMode(sp);
 
-        if (sp.getString(getString(R.string.pref_night_mode_key), "").equals(getString(R.string.pref_night_mode_off))) {
+            boolean showWelcome = sp.getBoolean(getString(R.string.pref_welcome_key), true);
+            if (!showWelcome) {
+                startWeatherActivityWithoutTransition();
+            } else {
+                showWelcomeString = sp.getBoolean(getString(R.string.pref_welcome_text_key), true);
+                if (showWelcomeString) {
+                    setWelcomeString();
+                }
+
+                try {
+                    gifDrawable = new GifDrawable(getResources(), R.raw.splash_screen);
+                    gifDrawable.addAnimationListener(this);
+                    gifImageView.setImageDrawable(gifDrawable);
+                    gifDrawable.start();
+                    gifImageView.setVisibility(View.VISIBLE);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    startWeatherActivityWithoutTransition();
+                }
+            }
+        }
+    }
+
+    private void defineNightMode(SharedPreferences sp) {
+        String nightMode = sp.getString(getString(R.string.pref_night_mode_key), null);
+        String nightModeOff = getString(R.string.pref_night_mode_off);
+        String nightModeOn = getString(R.string.pref_night_mode_on);
+        String nightModeAuto = getString(R.string.pref_night_mode_auto);
+        if (nightModeOff.equals(nightMode)) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        } else if (sp.getString(getString(R.string.pref_night_mode_key), "").equals(getString(R.string
-                .pref_night_mode_on))) {
+        } else if (nightModeOn.equals(nightMode)) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        } else if (sp.getString(getString(R.string.pref_night_mode_key), "").equals(getString(R.string
-                .pref_night_mode_auto))) {
+        } else if (nightModeAuto.equals(nightMode)) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
         }
+    }
 
-        try {
-            gifDrawable = new GifDrawable(getResources(), R.raw.splash_screen);
-            gifDrawable.stop();
-        } catch (IOException e) {
-            e.printStackTrace();
+    private void setWelcomeString() {
+        int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        String text;
+        if (hour >= 4 && hour <= 9) {
+            text = getString(R.string.welcome_string_morning);
+        } else if (hour <= 17) {
+            text = getString(R.string.welcome_string_day);
+        } else if (hour <= 22) {
+            text = getString(R.string.welcome_string_evening);
+        } else {
+            text = getString(R.string.welcome_string_default);
         }
-        gifDrawable.addAnimationListener(this);
-        if (gifImageView != null) {
-            gifImageView.setImageDrawable(gifDrawable);
-        }
-        gifDrawable.start();
-        if (gifImageView != null) {
-            gifImageView.setVisibility(View.VISIBLE);
-        }
+        welcomeText.setTextColor(ContextCompat.getColor(this, R.color.material_drawer_selected_text));
+        welcomeText.setText(text);
+        jumpingBeans = JumpingBeans
+                .with(welcomeText)
+                .appendJumpingDots()
+                .build();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        if (!welcomeStringIsOff) {
+        if (showWelcomeString) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -130,19 +144,7 @@ public class SplashScreenActivity
     @Override
     protected void onResume() {
         super.onResume();
-        if (checkPlayServices()) {
-            isGooglePlayServicesInstalled = true;
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
+        checkPlayServices();
     }
 
     private boolean checkPlayServices() {
@@ -167,16 +169,28 @@ public class SplashScreenActivity
         return true;
     }
 
+    @SuppressWarnings("unchecked")
     private void startWeatherActivity() {
-        Intent intent = new Intent(SplashScreenActivity.this, WeatherActivity.class);
+        Intent intent = new Intent(this, WeatherActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(SplashScreenActivity.this).toBundle();
-        ActivityCompat.startActivity(SplashScreenActivity.this, intent, bundle);
+        Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle();
+        ActivityCompat.startActivity(this, intent, bundle);
+    }
+
+    /**
+     * Создал отдельный метод, потому что на API 21+ анимация запуска WeatherActivity не работает, падает ошибка
+     * java.lang.NullPointerException: Attempt to invoke virtual method 'void android.view.ViewRootImpl.setPausedForTransition(boolean)' on a null object reference
+     *
+     * Видимо view не успевают инициализоваться
+     */
+    private void startWeatherActivityWithoutTransition() {
+        Intent intent = new Intent(this, WeatherActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        ActivityCompat.startActivity(this, intent, null);
     }
 
     @Override
     public void onAnimationStart(Animation animation) {
-
     }
 
     @Override
@@ -186,34 +200,11 @@ public class SplashScreenActivity
 
     @Override
     public void onAnimationRepeat(Animation animation) {
-
     }
 
     @Override
     public void onAnimationCompleted() {
         gifDrawable.stop();
-        if (isGooglePlayServicesInstalled) {
-            startWeatherActivity();
-        }
-    }
-
-    @Override
-    public void showMessageToUser(CharSequence string, int length) {
-        AppUtils.showSnackBar(this, findViewById(R.id.coordinatorLayout), string, length);
-    }
-
-    @Override
-    public void showMessageToUser(int stringId, int length) {
-        showMessageToUser(getString(stringId), length);
-    }
-
-    @Override
-    public void showToast(int stringId) {
-        showToast(getString(stringId));
-    }
-
-    @Override
-    public void showToast(CharSequence string) {
-        AppUtils.showInfoMessage(this, string).show();
+        startWeatherActivity();
     }
 }

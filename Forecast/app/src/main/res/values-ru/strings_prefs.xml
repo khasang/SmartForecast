@@ -22,8 +22,11 @@
     <string name="pref_pressure_hpa_label">Гекто Паскать (гПа)</string>
     <string name="pref_pressure_mm_hg_label">Миллиметр ртутного столба (мм рт.ст.)</string>
 
-    <string name="pref_welcome_title">Строка приветствия</string>
-    <string name="pref_welcome_summary">Показывать строку приветствия при запуске программы</string>
+    <string name="pref_welcome_title">Окно приветствия</string>
+    <string name="pref_welcome_summary">Показывать окно приветствия при запуске программы</string>
+
+    <string name="pref_welcome_text_title">Строка приветствия</string>
+    <string name="pref_welcome_text_summary">Показывать строку приветствия при запуске программы</string>
 
     <string name="pref_location_title">При запуске показывать погоду для</string>
     <string name="pref_location_current_label">Текущего местоположения</string>

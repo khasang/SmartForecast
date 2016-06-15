@@ -81,7 +81,7 @@
     <string name="info_message_about_request_permission_fine_location">Die Anwendung erfordert Berechtigungen für die Bestimmung der aktuellen Position</string>
     <string name="button_permission_granted">Lassen</string>
     <string name="button_permission_not_granted">Verweigern</string>
-    <string name="welcome_def_str">"Hallo "</string>
+    <string name="welcome_string_default">"Hallo "</string>
     <string name="welcome_string_hello">"Froh, Sie zu sehen "</string>
     <string name="welcome_string_morning">"Guten morgen "</string>
     <string name="welcome_string_day">"Guten Tag "</string>
