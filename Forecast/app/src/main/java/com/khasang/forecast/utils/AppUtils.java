@@ -1,4 +1,4 @@
-package com.khasang.forecast;
+package com.khasang.forecast.utils;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.khasang.forecast.MyApplication;
+import com.khasang.forecast.R;
 import com.khasang.forecast.models.DailyForecastList;
 import com.khasang.forecast.models.DailyResponse;
 import com.khasang.forecast.models.HourlyForecastList;

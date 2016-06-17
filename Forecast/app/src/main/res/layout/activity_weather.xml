@@ -16,7 +16,7 @@
         app:elevation="@dimen/appbar_elevation">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar_material"
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
@@ -26,7 +26,7 @@
         <android.support.v7.widget.GridLayout
             android:id="@+id/currentWeather"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="120dp"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:paddingBottom="@dimen/activity_vertical_margin"
@@ -36,14 +36,26 @@
             <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:gravity="center"
                 app:layout_columnWeight="1">
 
                 <ImageView
-                    android:id="@+id/iv_curr_weather"
-                    android:layout_width="96dp"
-                    android:layout_height="96dp"
+                    android:id="@+id/current_weather_icon"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_centerHorizontal="true"
                     android:src="@drawable/ic_cloud" />
+
+                <TextView
+                    android:id="@+id/precipitation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/current_weather_icon"
+                    android:maxLines="2"
+                    android:layout_centerHorizontal="true"
+                    android:textColor="@color/current_weather_color"
+                    android:textSize="20sp"
+                    tools:text="Облачно" />
+
             </RelativeLayout>
 
             <RelativeLayout
@@ -75,7 +87,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="16dp"
                         android:textColor="@color/current_weather_color"
-                        tools:text="--/--" />
+                        tools:text="32 м/с" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -102,7 +114,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="16dp"
                         android:textColor="@color/current_weather_color"
-                        tools:text="--/--" />
+                        tools:text="67%" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -129,35 +141,25 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="16dp"
                         android:textColor="@color/current_weather_color"
-                        tools:text="--/--" />
+                        tools:text="1008 гПа" />
                 </LinearLayout>
 
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/temperature"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:gravity="center"
                 app:layout_columnWeight="1">
 
                 <TextView
-                    android:id="@+id/temperature"
+                    android:id="@+id/temperature_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/current_weather_color"
                     android:textSize="48sp"
-                    tools:text="--/--" />
-
-                <TextView
-                    android:id="@+id/precipitation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/temperature"
-                    android:layout_below="@+id/temperature"
-                    android:maxLines="2"
-                    android:textColor="@color/current_weather_color"
-                    android:textSize="20sp"
-                    tools:text="--/--" />
+                    tools:text="30 °C" />
 
             </RelativeLayout>
 

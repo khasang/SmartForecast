@@ -21,7 +21,6 @@ import retrofit.http.Query;
  * <li>{@link #getDaily(String, int)}</li>
  * </ul>
  */
-
 public interface OpenWeatherMapService {
 
     /**

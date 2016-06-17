@@ -1,4 +1,4 @@
-package com.khasang.forecast;
+package com.khasang.forecast.utils;
 
 import android.util.Log;
 

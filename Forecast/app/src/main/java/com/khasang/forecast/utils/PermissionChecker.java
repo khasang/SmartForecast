@@ -1,4 +1,4 @@
-package com.khasang.forecast;
+package com.khasang.forecast.utils;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,6 +9,8 @@ import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
 import android.widget.Toast;
 
+import com.khasang.forecast.MyApplication;
+import com.khasang.forecast.R;
 import com.khasang.forecast.interfaces.IPermissionCallback;
 
 /**

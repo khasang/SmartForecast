@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string-array name="pref_language_values">
+        <item>@string/pref_language_english</item>
+        <item>@string/pref_language_deutsch</item>
+        <item>@string/pref_language_russian</item>
+    </string-array>
+
+    <string-array name="pref_language_options">
+        <item>@string/pref_language_english_label</item>
+        <item>@string/pref_language_deutsch_label</item>
+        <item>@string/pref_language_russian_label</item>
+    </string-array>
+
     <string-array name="pref_temperature_values">
         <item>@string/pref_temperature_celsius</item>
         <item>@string/pref_temperature_kelvin</item>

@@ -7,6 +7,8 @@
     <string name="pref_category_location">Suche nach Standort</string>
     <string name="pref_category_personalization">Personalisierung</string>
 
+    <string name="pref_language_title">Sprache</string>
+
     <string name="pref_temperature_title">Temperatureinheiten</string>
     <string name="pref_temperature_celsius_label">Celsius Grad (°C)</string>
     <string name="pref_temperature_kelvin_label">Kelvin Grad (K)</string>
@@ -22,8 +24,11 @@
     <string name="pref_pressure_hpa_label">Hecto Pascal (hPa)</string>
     <string name="pref_pressure_mm_hg_label">Millimetre of mercury (mmHG)</string>
 
-    <string name="pref_welcome_title">Zeile der Begrüßung</string>
-    <string name="pref_welcome_summary">Die Begrüßungzeile beim Start des Programms zeigen</string>
+    <string name="pref_welcome_title">Begrüßungsbildschirm</string>
+    <string name="pref_welcome_summary">Begrüßungsbildschirm beim Start des Programms anzeigen</string>
+
+    <string name="pref_welcome_text_title">Zeile der Begrüßung</string>
+    <string name="pref_welcome_text_summary">Die Begrüßungszeile beim Start des Programms anzeigen</string>
 
     <string name="pref_location_title">Beim starten zeigen das Wetter für</string>
     <string name="pref_location_current_label">Aktuellen Standort</string>

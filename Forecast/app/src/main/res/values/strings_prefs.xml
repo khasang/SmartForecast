@@ -7,6 +7,16 @@
     <string name="pref_category_location">Search of location</string>
     <string name="pref_category_personalization">Personalization</string>
 
+    <string name="pref_language_key" translatable="false">language</string>
+    <string name="pref_language_title">Language</string>
+    <string name="pref_language_system" translatable="false">system</string>
+    <string name="pref_language_english" translatable="false">en</string>
+    <string name="pref_language_deutsch" translatable="false">de</string>
+    <string name="pref_language_russian" translatable="false">ru</string>
+    <string name="pref_language_english_label" translatable="false">English</string>
+    <string name="pref_language_deutsch_label" translatable="false">Deutsch</string>
+    <string name="pref_language_russian_label" translatable="false">Русский</string>
+
     <string name="pref_temperature_key" translatable="false">units</string>
     <string name="pref_temperature_title">Temperature Units</string>
     <string name="pref_temperature_celsius" translatable="false">celsius</string>
@@ -34,11 +44,15 @@
     <string name="pref_pressure_hpa_label">Hecto Pascal (hPa)</string>
     <string name="pref_pressure_mm_hg_label">Millimetre of mercury (mmHG)</string>
 
-    <string name="pref_welcome_default_switch" translatable="false">true</string>
-    <string name="pref_welcome_key_switch" translatable="false">welcome_string_switch</string>
-    <string name="pref_welcome_key" translatable="false">welcome_string</string>
-    <string name="pref_welcome_title">Greeting line</string>
-    <string name="pref_welcome_summary">To show the greeting line at the start of the program</string>
+    <string name="pref_welcome_key" translatable="false">welcome</string>
+    <string name="pref_welcome_default" translatable="false">true</string>
+    <string name="pref_welcome_title">Greeting splash screen</string>
+    <string name="pref_welcome_summary">To show the greeting splash screen at the start of the program</string>
+
+    <string name="pref_welcome_text_key" translatable="false">welcome_string_switch</string>
+    <string name="pref_welcome_text_default" translatable="false">true</string>
+    <string name="pref_welcome_text_title">Greeting line</string>
+    <string name="pref_welcome_text_summary">To show the greeting line at the start of the program</string>
 
     <string name="pref_location_key" translatable="false">default_location</string>
     <string name="pref_location_title">At a start to show a weather for</string>

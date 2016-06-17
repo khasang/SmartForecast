@@ -38,7 +38,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.khasang.forecast.AppUtils;
+import com.khasang.forecast.utils.AppUtils;
 import com.khasang.forecast.Maps;
 import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.R;
@@ -96,6 +96,7 @@ public class CityPickerActivity extends BaseActivity implements View.OnClickList
         setSupportActionBar(toolbar);
         //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(R.string.title_activity_city_picker);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

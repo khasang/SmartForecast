@@ -3,6 +3,15 @@
     <PreferenceCategory android:title="@string/pref_category_general">
 
         <ListPreference
+            android:defaultValue="@string/pref_language_system"
+            android:entries="@array/pref_language_options"
+            android:entryValues="@array/pref_language_values"
+            android:key="@string/pref_language_key"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="@string/pref_language_title"/>
+
+        <ListPreference
             android:defaultValue="@string/pref_temperature_celsius"
             android:entries="@array/pref_temperature_options"
             android:entryValues="@array/pref_temperature_values"
@@ -33,10 +42,17 @@
 
     <PreferenceCategory android:title="@string/pref_category_start">
         <SwitchPreference
-            android:defaultValue="@string/pref_welcome_default_switch"
-            android:key="@string/pref_welcome_key_switch"
+            android:defaultValue="@string/pref_welcome_default"
+            android:key="@string/pref_welcome_key"
             android:summary="@string/pref_welcome_summary"
             android:title="@string/pref_welcome_title"/>
+
+        <SwitchPreference
+            android:defaultValue="@string/pref_welcome_text_default"
+            android:dependency="@string/pref_welcome_key"
+            android:key="@string/pref_welcome_text_key"
+            android:summary="@string/pref_welcome_text_summary"
+            android:title="@string/pref_welcome_text_title"/>
 
         <ListPreference
             android:defaultValue="@string/pref_location_current"

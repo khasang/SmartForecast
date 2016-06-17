@@ -1,16 +1,18 @@
 package com.khasang.forecast.stations;
 
+import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
+import android.support.v7.preference.PreferenceManager;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.stetho.okhttp.StethoInterceptor;
-import com.khasang.forecast.AppUtils;
-import com.khasang.forecast.R;
-import com.khasang.forecast.position.Coordinate;
 import com.khasang.forecast.MyApplication;
-import com.khasang.forecast.position.PositionManager;
+import com.khasang.forecast.R;
 import com.khasang.forecast.models.DailyResponse;
 import com.khasang.forecast.models.OpenWeatherMapResponse;
+import com.khasang.forecast.position.Coordinate;
+import com.khasang.forecast.position.PositionManager;
+import com.khasang.forecast.utils.AppUtils;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.Interceptor;
@@ -34,7 +36,6 @@ import retrofit.Retrofit;
  * Этот класс скачивает и парсит данные с API в фоновом потоке, после чего отправляет их
  * на UI поток через методы onResponse или onFailure.
  */
-
 public class OpenWeatherMap extends WeatherStation {
 
     /**
@@ -68,12 +69,6 @@ public class OpenWeatherMap extends WeatherStation {
     final
     @Nullable
     File baseDir = MyApplication.getAppContext().getCacheDir();
-
-    /**
-     * Выбранные пользователем языковые настройки устройства для того, чтобы получить
-     * локализованный ответ от API.
-     */
-    private String systemLanguage = Locale.getDefault().getLanguage();
 
     /**
      * Нам необходимо вручную создать экземпляр объекта HttpLoggingInterceptor и OkHttpClient,
@@ -117,9 +112,17 @@ public class OpenWeatherMap extends WeatherStation {
         client.interceptors().add(new Interceptor() {
             @Override
             public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MyApplication
+                        .getAppContext());
+                String key = MyApplication.getAppContext().getString(R.string.pref_language_key);
+                String languageCode = sharedPreferences.getString(key, null);
+                if (languageCode == null) {
+                    languageCode = Locale.getDefault().getLanguage();
+                }
+
                 Request request = chain.request();
                 HttpUrl httpUrl = request.httpUrl().newBuilder()
-                        .addQueryParameter("lang", systemLanguage)
+                        .addQueryParameter("lang", languageCode)
                         .addQueryParameter("appid", APP_ID)
                         .build();
                 request = request.newBuilder()
@@ -150,12 +153,15 @@ public class OpenWeatherMap extends WeatherStation {
     /**
      * Метод для асинхронного получения текущего прогноза погоды.
      *
-     * @param requestQueue коллекция типа {@link LinkedList}, содержащая элементы {@link com.khasang.forecast.stations.WeatherStation.ResponseType}, хранит очередность запросов (текущий прогноз, прогноз на день или неделю)
+     * @param requestQueue коллекция типа
+     * {@link LinkedList}, содержащая элементы {@link com.khasang.forecast.stations.WeatherStation.ResponseType},
+     *                     хранит очередность запросов (текущий прогноз, прогноз на день или неделю)
      * @param cityID       внутренний идентификатор города.
      * @param coordinate   объект типа {@link Coordinate}, содержащий географические координаты
      */
     @Override
-    public void updateWeather(final LinkedList<ResponseType> requestQueue, final int cityID, final Coordinate coordinate) {
+    public void updateWeather(final LinkedList<ResponseType> requestQueue, final int cityID, final Coordinate
+            coordinate) {
         Call<OpenWeatherMapResponse> call;
         if (coordinate == null || (coordinate.getLongitude() == 0 && coordinate.getLatitude() == 0)) {
             String positionName = PositionManager.getInstance().getPosition(cityID).getLocationName();
@@ -193,7 +199,9 @@ public class OpenWeatherMap extends WeatherStation {
      * Метод для асинхронного получения прогноза погоды с заданым количеством 3-х часовых
      * интервалов.
      *
-     * @param requestList коллекция типа {@link LinkedList}, содержащая элементы {@link com.khasang.forecast.stations.WeatherStation.ResponseType}, хранит очередность запросов (текущий прогноз, прогноз на день или неделю)
+     * @param requestList коллекция типа
+     * {@link LinkedList}, содержащая элементы {@link com.khasang.forecast.stations.WeatherStation.ResponseType},
+     *                    хранит очередность запросов (текущий прогноз, прогноз на день или неделю)
      * @param cityID      внутренний идентификатор города.
      * @param coordinate  объект типа {@link Coordinate}, содержащий географические координаты
      */
@@ -236,7 +244,9 @@ public class OpenWeatherMap extends WeatherStation {
     /**
      * Метод для асинхронного получения прогноза погоды с заданным количеством дней.
      *
-     * @param requestList коллекция типа {@link LinkedList}, содержащая элементы {@link com.khasang.forecast.stations.WeatherStation.ResponseType}, хранит очередность запросов (текущий прогноз, прогноз на день или неделю)
+     * @param requestList коллекция типа
+     * {@link LinkedList}, содержащая элементы {@link com.khasang.forecast.stations.WeatherStation.ResponseType},
+     *                    хранит очередность запросов (текущий прогноз, прогноз на день или неделю)
      * @param cityID      внутренний идентификатор города.
      * @param coordinate  объект типа {@link Coordinate}, содержащий географические координаты
      */

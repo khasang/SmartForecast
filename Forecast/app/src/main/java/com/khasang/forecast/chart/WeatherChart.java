@@ -12,7 +12,7 @@ import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.khasang.forecast.AppUtils;
+import com.khasang.forecast.utils.AppUtils;
 import com.khasang.forecast.R;
 import com.khasang.forecast.position.Weather;
 

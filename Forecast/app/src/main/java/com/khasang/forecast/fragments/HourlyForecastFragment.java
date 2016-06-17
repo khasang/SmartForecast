@@ -1,6 +1,6 @@
 package com.khasang.forecast.fragments;
 
-import com.khasang.forecast.AppUtils;
+import com.khasang.forecast.utils.AppUtils;
 import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.position.Weather;
 
@@ -11,7 +11,6 @@ import java.util.Map;
  * Created by CopyPasteStd on 01.12.15.
  * Фрагмент для отображения погоды по часам
  */
-
 public class HourlyForecastFragment extends CommonForecastFragment {
 
     @Override

@@ -83,7 +83,7 @@
     <string name="info_message_about_request_permission_fine_location">Application need rights for determining the current location</string>
     <string name="button_permission_granted">Allowed</string>
     <string name="button_permission_not_granted">Denied</string>
-    <string name="welcome_def_str">"Hello "</string>
+    <string name="welcome_string_default">"Hello "</string>
     <string name="welcome_string_hello">"Glad to see you "</string>
     <string name="welcome_string_morning">"Good morning "</string>
     <string name="welcome_string_day">"Good afternoon "</string>

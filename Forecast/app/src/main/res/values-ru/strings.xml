@@ -80,7 +80,7 @@
     <string name="button_permission_granted">Разрешить</string>
     <string name="button_permission_not_granted">Отказать</string>
 
-    <string name="welcome_def_str">"Привет "</string>
+    <string name="welcome_string_default">"Привет "</string>
     <string name="welcome_string_hello">"Рад Вас видеть "</string>
     <string name="welcome_string_morning">"Доброе утро "</string>
     <string name="welcome_string_day">"Добрый день "</string>
