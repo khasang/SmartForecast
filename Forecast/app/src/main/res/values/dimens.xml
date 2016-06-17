@@ -1,9 +1,11 @@
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="appbar_horizontal_padding">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="appbar_elevation">4dp</dimen>
-    <dimen name="appbar_height">220dp</dimen>
+    <dimen name="current_weather_height">90dp</dimen>
+    <dimen name="current_weather_icon_size">60dp</dimen>
+    <dimen name="current_weather_icon_horizontal_margin">10dp</dimen>
     <dimen name="fab_elevation">6dp</dimen>
 
     <dimen name="chart_line_width">0.8dp</dimen>

@@ -26,21 +26,36 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingLeft="@dimen/appbar_horizontal_padding"
+            android:paddingRight="@dimen/appbar_horizontal_padding"
             app:layout_scrollFlags="scroll|enterAlways">
 
-            <android.support.v7.widget.GridLayout
+            <LinearLayout
                 android:id="@+id/currentWeather"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
-                app:columnCount="3">
+                android:layout_height="@dimen/current_weather_height"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/temperature_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/current_weather_color"
+                    android:textSize="56sp"
+                    tools:text="30 °C"/>
+
+                <ImageView
+                    android:id="@+id/current_weather_icon"
+                    android:layout_width="@dimen/current_weather_icon_size"
+                    android:layout_height="@dimen/current_weather_icon_size"
+                    android:layout_marginLeft="@dimen/current_weather_icon_horizontal_margin"
+                    android:layout_marginRight="@dimen/current_weather_icon_horizontal_margin"
+                    android:src="@drawable/ic_cloud"/>
 
                 <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    app:layout_columnWeight="1">
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    >
 
                     <LinearLayout
                         android:id="@+id/wind"
@@ -124,38 +139,7 @@
 
                 </RelativeLayout>
 
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    app:layout_columnWeight="1">
-
-                    <ImageView
-                        android:id="@+id/current_weather_icon"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:src="@drawable/ic_cloud"/>
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/temperature"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    app:layout_columnWeight="1">
-
-                    <TextView
-                        android:id="@+id/temperature_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/current_weather_color"
-                        android:textSize="48sp"
-                        tools:text="30 °C"/>
-
-                </RelativeLayout>
-
-            </android.support.v7.widget.GridLayout>
+            </LinearLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -167,9 +151,8 @@
                     android:id="@+id/precipitation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="10dp"
                     android:maxLines="2"
                     android:textColor="@color/current_weather_color"
                     android:textSize="20sp"

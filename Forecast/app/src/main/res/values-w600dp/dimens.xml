@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="appbar_horizontal_padding">32dp</dimen>
+    <dimen name="current_weather_height">100dp</dimen>
+    <dimen name="current_weather_icon_size">96dp</dimen>
+    <dimen name="current_weather_icon_horizontal_margin">30dp</dimen>
+
     <dimen name="chart_value_size">15dp</dimen>
     <dimen name="chart_xaxis_size">13dp</dimen>
     <dimen name="chart_y_offset">7dp</dimen>
