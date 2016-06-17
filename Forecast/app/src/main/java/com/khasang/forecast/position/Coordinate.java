@@ -44,8 +44,13 @@ public class Coordinate implements Comparable<Coordinate> {
         return 1;
     }
 
-    @Override public String toString() {
-        return "Coordinate{latitude=" + latitude + ", longitude=" + longitude +"}";
+    @Override
+    public String toString() {
+        return "Coordinate{latitude=" + latitude + ", longitude=" + longitude + "}";
+    }
+
+    public String convertToTimezoneUrlParameterString() {
+        return String.valueOf(latitude) + "," + String.valueOf(longitude);
     }
 }
 

@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Locale;
 
+import io.fabric.sdk.android.Fabric;
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.GsonConverterFactory;
@@ -175,9 +176,11 @@ public class OpenWeatherMap extends WeatherStation {
                             requestQueue,
                             cityID,
                             serviceType,
-                            AppUtils.convertToWeather(response.body()));
+                            AppUtils.convertToWeather(response.body(), cityID));
                 } catch (NullPointerException e) {
-                    Crashlytics.logException(e);
+                    if (Fabric.isInitialized()) {
+                        Crashlytics.logException(e);
+                    }
                     PositionManager.getInstance().onFailureResponse(requestQueue, cityID, getServiceType());
                 }
             }
@@ -219,9 +222,11 @@ public class OpenWeatherMap extends WeatherStation {
                             requestList,
                             cityID,
                             serviceType,
-                            AppUtils.convertToHourlyWeather(response.body()));
+                            AppUtils.convertToHourlyWeather(response.body(), cityID));
                 } catch (NullPointerException e) {
-                    Crashlytics.logException(e);
+                    if (Fabric.isInitialized()) {
+                        Crashlytics.logException(e);
+                    }
                     PositionManager.getInstance().onFailureResponse(requestList, cityID, getServiceType());
                 }
             }
@@ -262,9 +267,11 @@ public class OpenWeatherMap extends WeatherStation {
                             requestList,
                             cityID,
                             serviceType,
-                            AppUtils.convertToDailyWeather(response.body()));
+                            AppUtils.convertToDailyWeather(response.body(), cityID));
                 } catch (NullPointerException e) {
-                    Crashlytics.logException(e);
+                    if (Fabric.isInitialized()) {
+                        Crashlytics.logException(e);
+                    }
                     PositionManager.getInstance().onFailureResponse(requestList, cityID, getServiceType());
                 }
             }

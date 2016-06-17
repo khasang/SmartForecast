@@ -17,9 +17,13 @@ import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.PermissionChecker;
 import com.khasang.forecast.R;
+import com.khasang.forecast.api.GoogleMapsGeocoding;
+import com.khasang.forecast.api.GoogleMapsTimezone;
 import com.khasang.forecast.exceptions.AccessFineLocationNotGrantedException;
 import com.khasang.forecast.exceptions.GpsIsDisabledException;
 import com.khasang.forecast.exceptions.NoAvailableLocationServiceException;
+import com.khasang.forecast.interfaces.ICoordinateReceiver;
+import com.khasang.forecast.interfaces.ILocationNameReceiver;
 import com.khasang.forecast.interfaces.IMessageProvider;
 import com.khasang.forecast.interfaces.IWeatherReceiver;
 import com.khasang.forecast.location.CurrentLocationManager;
@@ -33,6 +37,7 @@ import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.weather_icons_typeface_library.WeatherIcons;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
@@ -45,7 +50,7 @@ import java.util.Set;
  * Created by Роман on 26.11.2015.
  */
 
-public class PositionManager {
+public class PositionManager implements ICoordinateReceiver, ILocationNameReceiver {
 
     AppUtils.TemperatureMetrics temperatureMetric;
     AppUtils.SpeedMetrics speedMetric;
@@ -219,24 +224,32 @@ public class PositionManager {
      * Метод инициализации списка местоположений, вызывается из активити
      */
     private void initPositions() {
-        HashMap<String, Coordinate> pos = dbManager.loadTownList();
+        ArrayList<Position> pos = dbManager.loadTownListFull();
         initPositions(pos);
     }
 
     /**
      * Метод инициализации списка местоположений, которые добавлены в список городов
-     *
-     * @param favorites коллекция {@link List} типа {@link String}, содержащая названия городов
      */
-    private void initPositions(HashMap<String, Coordinate> favorites) {
+    private void initPositions(ArrayList<Position> pos) {
         PositionFactory positionFactory = new PositionFactory();
 
-        if (favorites.size() != 0) {
-            for (HashMap.Entry<String, Coordinate> entry : favorites.entrySet()) {
-                positionFactory.addFavouritePosition(entry.getKey(), entry.getValue());
+        if (pos.size() != 0) {
+            for (Position entry : pos) {
+                positionFactory.addFavouritePosition(entry);
             }
         }
         positions = positionFactory.getPositions();
+        for (Position p : positions.values()) {
+            if ((p.getCoordinate() == null) || (p.getCoordinate().getLatitude() == 0 && p.getCoordinate().getLongitude() == 0)) {
+                GoogleMapsGeocoding googleMapsGeocoding = new GoogleMapsGeocoding();
+                googleMapsGeocoding.requestCoordinates(p.getLocationName(), this, false);
+            }
+            if (!p.timeZoneIsDefined()) {
+                GoogleMapsTimezone googleMapsTimezone = new GoogleMapsTimezone();
+                googleMapsTimezone.requestCoordinates(p);
+            }
+        }
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MyApplication.getAppContext());
         boolean saveCurrentLocation = sp.getString(MyApplication.getAppContext().getString(R.string.pref_location_key), MyApplication.getAppContext().getString(R.string.pref_location_current)).equals(MyApplication.getAppContext().getString(R.string.pref_location_current));
         String lastActivePositionName = sp.getString(MyApplication.getAppContext().getString(R.string.shared_last_active_position_name), "");
@@ -578,14 +591,14 @@ public class PositionManager {
     }
 
     public void onFailureResponse(LinkedList<WeatherStation.ResponseType> requestList, int cityID, WeatherStationFactory.ServiceType sType) {
-        if (!lastResponseIsFailure) {
+/*        if (!lastResponseIsFailure) {
             try {
                 messageProvider.showToast(MyApplication.getAppContext().getString(R.string.update_error_from) + sType.toString());
             } catch (NullPointerException e) {
                 e.printStackTrace();
             }
             lastResponseIsFailure = true;
-        }
+        }*/
         WeatherStation.ResponseType rType = requestList.pollFirst();
         if (rType == null) {
             return;
@@ -643,6 +656,30 @@ public class PositionManager {
         return forecast;
     }
 
+    @Override
+    public void updatePositionCoordinate(String city, Coordinate coordinate) {
+        Position position = getPosition(city);
+        if (position == null) {
+            return;
+        }
+        position.setCoordinate(coordinate);
+        dbManager.updatePositionCoordinates(position);
+    }
+
+    @Override
+    public void updateLocation(String city, Coordinate coordinate) {
+        currentLocation.setLocationName(city);
+        currentLocation.setCoordinate(coordinate);
+        if (activePosition == currentLocation) {
+            sendRequest();
+        }
+    }
+
+    public void updatePositionTimeZone(Position city, int timeZone) {
+        city.setTimeZone(timeZone);
+        dbManager.updateCityTimeZone(city);
+    }
+
     public void initLocationManager() {
         locationManager = new CurrentLocationManager();
         locationManager.giveGpsAccess(true);
@@ -687,13 +724,17 @@ public class PositionManager {
     }
 
     public void setCurrentLocationCoordinates(Location location) {
-        if (updateCurrentLocation(location) && activePosition == currentLocation) {
+        boolean coordinatesUpdated = updateCurrentLocation(location);
+        if (coordinatesUpdated && activePosition == currentLocation) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     sendRequest();
                 }
             }, 3000);
+        } else if (!coordinatesUpdated) {
+            GoogleMapsGeocoding googleMapsGeocoding = new GoogleMapsGeocoding();
+            googleMapsGeocoding.requestLocationName(location.getLatitude(), location.getLongitude(), this);
         }
     }
 
@@ -707,18 +748,14 @@ public class PositionManager {
             List<Address> list = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 3);
             currentLocation.setLocationName(new LocationParser(list).parseList().getAddressLine());
             currentLocation.setCoordinate(new Coordinate(location.getLatitude(), location.getLongitude()));
-            return true;
-        } catch (IOException e) {
-            sendMessage(R.string.error_service_not_available, Snackbar.LENGTH_LONG);
+        } catch (IOException | IllegalArgumentException | EmptyCurrentAddressException | NoAvailableAddressesException | NullPointerException e) {
             e.printStackTrace();
-        } catch (IllegalArgumentException e) {
-            sendMessage(R.string.invalid_lang_long_used, Snackbar.LENGTH_LONG);
+            return false;
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (EmptyCurrentAddressException | NoAvailableAddressesException | NullPointerException e) {
-            sendMessage(R.string.no_address_found, Snackbar.LENGTH_LONG);
-            e.printStackTrace();
+            return false;
         }
-        return false;
+        return true;
     }
 
     private synchronized void sendMessage(CharSequence string, int length) {
