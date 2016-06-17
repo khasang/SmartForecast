@@ -44,7 +44,6 @@ import java.util.Set;
 /**
  * Created by Роман on 26.11.2015.
  */
-
 public class PositionManager {
 
     AppUtils.TemperatureMetrics temperatureMetric;

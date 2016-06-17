@@ -7,7 +7,6 @@ import java.util.LinkedList;
 /**
  * Created by novoselov on 24.11.2015.
  */
-
 public abstract class WeatherStation {
 
     public enum ResponseType {CURRENT, HOURLY, DAILY};

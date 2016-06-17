@@ -11,7 +11,6 @@ import java.util.Map;
  * Created by CopyPasteStd on 01.12.15.
  * Фрагмент для отображения погоды по часам
  */
-
 public class HourlyForecastFragment extends CommonForecastFragment {
 
     @Override

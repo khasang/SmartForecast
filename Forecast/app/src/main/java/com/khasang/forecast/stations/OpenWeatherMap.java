@@ -36,7 +36,6 @@ import retrofit.Retrofit;
  * Этот класс скачивает и парсит данные с API в фоновом потоке, после чего отправляет их
  * на UI поток через методы onResponse или onFailure.
  */
-
 public class OpenWeatherMap extends WeatherStation {
 
     /**
@@ -120,7 +119,7 @@ public class OpenWeatherMap extends WeatherStation {
                 if (languageCode == null) {
                     languageCode = Locale.getDefault().getLanguage();
                 }
-                
+
                 Request request = chain.request();
                 HttpUrl httpUrl = request.httpUrl().newBuilder()
                         .addQueryParameter("lang", languageCode)
