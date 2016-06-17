@@ -65,7 +65,7 @@
     <string name="drawer_item_city_list">Список міст</string>
     <string name="drawer_item_favorites">Вибране</string>
     <string name="drawer_item_settings">Налаштування</string>
-    <string name="drawer_item_feedback">Зворотній зв'язок</string>
+    <string name="drawer_item_feedback">Зворотній зв\'язок</string>
 
     <string name="error_service_not_available">Координати Вашого поточного місцезнаходження не виявлені.</string>
     <string name="error_geo_service_not_available">Координати розташування не виявлені.</string>
@@ -80,7 +80,7 @@
     <string name="pref_description_enable_gps">Використовувати GPS для визначення свого розташування</string>
 
     <string name="pref_title_units">Одиниці виміру температури</string>
-    <string name="error_gps_permission">Відсутні права на використання GPS і ресурси оператора зв'язку</string>
+    <string name="error_gps_permission">Відсутні права на використання GPS і ресурси оператора зв\'язку</string>
     <string name="clear_new_location_name">Очистити поле вводу</string>
     <string name="coordinates_error">Некоректні координати місця розташування</string>
     <string name="error_gps_disabled">У налаштуваннях програми відключено отримання координат від GPS</string>
