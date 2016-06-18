@@ -30,11 +30,12 @@
             android:paddingRight="@dimen/appbar_horizontal_padding"
             app:layout_scrollFlags="scroll|enterAlways">
 
-            <TableRow
+            <LinearLayout
                 android:id="@+id/currentWeather"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/current_weather_height"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <ImageView
                     android:id="@+id/current_weather_icon"
@@ -47,7 +48,7 @@
 
                 <TextView
                     android:id="@+id/temperature_text"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="1"
@@ -143,7 +144,7 @@
 
                 </RelativeLayout>
 
-            </TableRow>
+            </LinearLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
