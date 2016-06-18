@@ -20,6 +20,7 @@ public class SQLiteFields {
     public static final String SUNRISE = "Sunrise";
     public static final String SUNSET = "Sunset";
     public static final String FAVORITE = "Favorite";
+    public static final String TIME_ZONE = "TimeZone";
 
     public static final String STATION_NAME = "StationName";
     public static final String DATE = "Date";
@@ -48,7 +49,8 @@ public class SQLiteFields {
             LONGITUDE + " VARCHAR(30)," +
             SUNRISE + " DATETIME," +
             SUNSET + " DATETIME," +
-            FAVORITE + " VARCHAR(5))";
+            FAVORITE + " VARCHAR(5)," +
+            TIME_ZONE + " INTEGER )";
 
     public static final String QUERY_CREATE_TABLE_WEATHER = "CREATE TABLE " + TABLE_WEATHER + " (" +
             ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -104,7 +106,7 @@ public class SQLiteFields {
 
     public static final String QUERY_OBJECTS_COUNT = "SELECT COUNT(*) FROM SQLITE_MASTER WHERE TYPE = ? AND NAME = ? ";
     public static final String QUERY_SELECT_TOWNS = "SELECT * FROM " + TABLE_TOWNS;
-    public static final String QUERY_SELECT_FAVORITE_TOWN = "SELECT * FROM " + TABLE_TOWNS + " WHERE " + FAVORITE + " = ? ";
+    public static final String QUERY_SELECT_FAVORITE_TOWN = "SELECT DISTINCT " + TOWN + " FROM " + TABLE_TOWNS + " WHERE " + FAVORITE + " = ? ";
     public static final String QUERY_SELECT_DATA_TOWN = "SELECT * FROM " + TABLE_TOWNS + " WHERE " + TOWN + " = ? ";
 
     /*
@@ -132,14 +134,30 @@ public class SQLiteFields {
             FAVORITE + ") " +
             " VALUES ( ? , ? , ? , ? )";
 
+    public static final String QUERY_INSERT_TOWN_v6 = "INSERT INTO " + TABLE_TOWNS + " (" +
+            TOWN + "," +
+            LATITUDE + "," +
+            LONGITUDE + "," +
+            FAVORITE + "," +
+            TIME_ZONE + ") " +
+            " VALUES ( ? , ? , ? , ? , ? )";
 
     public static final String QUERY_UPDATE_TOWN_SUNTIME = "UPDATE " + TABLE_TOWNS + " SET " +
             SUNRISE + " = ? , " +
             SUNSET + " = ? " +
             " WHERE " + TOWN + " = ? ";
 
+    public static final String QUERY_UPDATE_TOWN_POSITION = "UPDATE " + TABLE_TOWNS + " SET " +
+            LATITUDE + " = ?, " +
+            LONGITUDE + " = ? " +
+            " WHERE " + TOWN + " = ? ";
+
     public static final String QUERY_UPDATE_TOWN_FAVORITE = "UPDATE " + TABLE_TOWNS + " SET " +
             FAVORITE + " = ? " +
+            " WHERE " + TOWN + " = ? ";
+
+    public static final String QUERY_UPDATE_TOWN_TIME_ZONE = "UPDATE " + TABLE_TOWNS + " SET " +
+            TIME_ZONE + " = ? " +
             " WHERE " + TOWN + " = ? ";
 
     public static final String QUERY_INSERT_WEATHER = "INSERT INTO " + TABLE_WEATHER + " (" +

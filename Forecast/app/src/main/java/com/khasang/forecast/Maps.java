@@ -2,8 +2,8 @@ package com.khasang.forecast;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.support.v4.app.ActivityCompat;
-import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -15,10 +15,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.khasang.forecast.activities.CityPickerActivity;
+import com.khasang.forecast.api.GoogleMapsGeocoding;
 import com.khasang.forecast.exceptions.EmptyCurrentAddressException;
 import com.khasang.forecast.interfaces.IMapDataReceiver;
 import com.khasang.forecast.interfaces.IMessageProvider;
 import com.khasang.forecast.position.Coordinate;
+import com.khasang.forecast.position.Position;
 import com.khasang.forecast.position.PositionManager;
 
 /**
@@ -29,7 +31,6 @@ import com.khasang.forecast.position.PositionManager;
 
 public class Maps implements OnMapReadyCallback {
 
-    private final String TAG = "mapLogs";
     private double currentLatitude;
     private double currentLongitude;
     private float defaultZoom;
@@ -73,6 +74,10 @@ public class Maps implements OnMapReadyCallback {
             return;
         }
         map.setMyLocationEnabled(true);
+    }
+
+    public void setCameraPosition(Coordinate coordinate, float zoom, float bearing, float tilt) {
+        setCameraPosition(coordinate.getLatitude(), coordinate.getLongitude(), zoom, bearing, tilt);
     }
 
     public void setCameraPosition(double latitude, double longitude, float zoom, float bearing, float tilt) {
@@ -121,12 +126,21 @@ public class Maps implements OnMapReadyCallback {
         map.clear();
     }
 
+    public void setNewMarker(Coordinate coordinate, String text) {
+        setNewMarker(coordinate.getLatitude(), coordinate.getLongitude(), text);
+    }
+
     public void setNewMarker(double latitude, double longitude) {
         map.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).draggable(false));
     }
 
     public void setNewMarker(double latitude, double longitude, String text) {
         map.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(text).draggable(false));
+    }
+
+    public void setNewMarker (String city) {
+        CoordinateGetter coordinatedGetter = new CoordinateGetter();
+        coordinatedGetter.execute(city);
     }
 
     private void setMapClickListeners(final GoogleMap map) {
@@ -159,9 +173,10 @@ public class Maps implements OnMapReadyCallback {
                     String location = receiver.setLocationCoordinatesFromMap(currentLatitude, currentLongitude);
                     deleteAllMarkers();
                     setNewMarker(currentLatitude, currentLongitude, location);
-                    Log.d(TAG, "onMapClick: " + latLng.latitude + "," + latLng.longitude);
                 } catch (EmptyCurrentAddressException | NullPointerException e) {
                     e.printStackTrace();
+                    LocationNameGetter locationNameGetter = new LocationNameGetter();
+                    locationNameGetter.execute(latLng);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -171,10 +186,59 @@ public class Maps implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Log.d(TAG, "onMapReady");
         map = googleMap;
         setMapSettings(googleMap);
         setMapClickListeners(googleMap);
         setCameraPosition(currentLatitude, currentLongitude, defaultZoom, 0, 0);
+    }
+
+    class CoordinateGetter extends AsyncTask<String, Void, Position> {
+
+
+        @Override
+        protected Position doInBackground(String... params) {
+            GoogleMapsGeocoding googleMapsGeocoding = new GoogleMapsGeocoding();
+            Coordinate coordinate = googleMapsGeocoding.requestCoordinatesSynch(params[0]);
+            Position position = new Position();
+            position.setLocationName(params[0]);
+            position.setCoordinate(coordinate);
+            return position;
+        }
+
+        @Override
+        protected void onPostExecute(Position position) {
+            super.onPostExecute(position);
+            if (position.getCoordinate() != null) {
+                deleteAllMarkers();
+                setNewMarker(position.getCoordinate().getLatitude(), position.getCoordinate().getLongitude(),position.getLocationName());
+                setCameraPosition(position.getCoordinate(),getDefaultZoom(),0,0);
+            } else {
+                messageProvider.showToast(R.string.invalid_lang_long_used);
+            }
+        }
+    }
+
+    class LocationNameGetter extends AsyncTask<LatLng, Void, Position> {
+
+
+        @Override
+        protected Position doInBackground(LatLng... params) {
+            GoogleMapsGeocoding googleMapsGeocoding = new GoogleMapsGeocoding();
+            String city = googleMapsGeocoding.requestLocationNameSynch(params[0]);
+            Position position = new Position();
+            position.setLocationName(city);
+            Coordinate coordinate = new Coordinate(params[0].latitude, params[0].longitude);
+            position.setCoordinate(coordinate);
+            return position;
+        }
+
+        @Override
+        protected void onPostExecute(Position position) {
+            super.onPostExecute(position);
+            receiver.setLocation(position.getLocationName());
+            deleteAllMarkers();
+            setNewMarker(position.getCoordinate().getLatitude(), position.getCoordinate().getLongitude());
+            setCameraPosition(position.getCoordinate(),getDefaultZoom(),0,0);
+        }
     }
 }

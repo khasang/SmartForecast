@@ -6,8 +6,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,6 +31,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
@@ -37,10 +40,16 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.khasang.forecast.utils.AppUtils;
-import com.khasang.forecast.utils.Logger;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.InviteEvent;
+import com.google.android.gms.appinvite.AppInvite;
+import com.google.android.gms.appinvite.AppInviteInvitation;
+import com.google.android.gms.appinvite.AppInviteInvitationResult;
+import com.google.android.gms.appinvite.AppInviteReferral;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
 import com.khasang.forecast.MyApplication;
-import com.khasang.forecast.utils.PermissionChecker;
 import com.khasang.forecast.R;
 import com.khasang.forecast.activities.etc.NavigationDrawer;
 import com.khasang.forecast.behaviors.FabOnTopBehavior;
@@ -53,6 +62,9 @@ import com.khasang.forecast.interfaces.IWeatherReceiver;
 import com.khasang.forecast.position.PositionManager;
 import com.khasang.forecast.position.Weather;
 import com.khasang.forecast.stations.WeatherStation;
+import com.khasang.forecast.utils.AppUtils;
+import com.khasang.forecast.utils.Logger;
+import com.khasang.forecast.utils.PermissionChecker;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.iconics.context.IconicsContextWrapper;
@@ -64,6 +76,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import butterknife.BindView;
+import io.fabric.sdk.android.Fabric;
 
 import static com.khasang.forecast.utils.PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION;
 
@@ -73,12 +86,18 @@ import static com.khasang.forecast.utils.PermissionChecker.RuntimePermissions.PE
  */
 public class WeatherActivity extends BaseActivity
         implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, IWeatherReceiver,
-        IPermissionCallback, IMessageProvider, NavigationDrawer.OnNavigationItemClickListener {
+        IPermissionCallback, IMessageProvider, NavigationDrawer.OnNavigationItemClickListener, GoogleApiClient
+                .OnConnectionFailedListener {
 
     public static final String CURRENT_CITY_TAG = "CURRENT_CITY";
     public static final String ACTIVE_CITY_TAG = "ACTIVE_CITY";
     private static final String TAG = WeatherActivity.class.getSimpleName();
     private static final int CHOOSE_CITY = 1;
+    /**
+     * User has clicked the 'Invite' button, launch the invitation UI with the proper
+     * title, message, and deep link
+     */
+    private static final int REQUEST_INVITE = 0;
 
     @BindView(R.id.temperature_text) TextView temperatureView;
     @BindView(R.id.precipitation) TextView precipitationView;
@@ -91,13 +110,16 @@ public class WeatherActivity extends BaseActivity
     @BindView(R.id.progressbar) ProgressBar progressbar;
     @BindView(R.id.chart) WeatherChart chart;
     @BindView(R.id.chart_layout) FrameLayout chartLayout;
-    private ImageView syncBtn;
 
+    private ImageView syncBtn;
     private Animation animationRotateCenter;
     private Animation animationGrow;
     private HourlyForecastFragment hourlyForecastFragment;
     private DailyForecastFragment dailyForecastFragment;
     private NavigationDrawer navigationDrawer;
+    // [END define_variables]
+    // [START define_variables]
+    private GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -154,6 +176,44 @@ public class WeatherActivity extends BaseActivity
                 .add(R.id.fragment_container, dailyForecastFragment)
                 .hide(dailyForecastFragment)
                 .commit();
+
+
+        // Create an auto-managed GoogleApiClient with access to App Invites.
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(AppInvite.API)
+                .enableAutoManage(this, this)
+                .build();
+
+        // Check for App Invite invitations and launch deep-link activity if possible.
+        // Requires that an Activity is registered in AndroidManifest.xml to handle
+        // deep-link URLs.
+        boolean autoLaunchDeepLink = true;
+        AppInvite.AppInviteApi.getInvitation(mGoogleApiClient, this, autoLaunchDeepLink)
+                .setResultCallback(
+                        new ResultCallback<AppInviteInvitationResult>() {
+                            @Override
+                            public void onResult(AppInviteInvitationResult result) {
+                                Log.d(TAG, "getInvitation:onResult:" + result.getStatus());
+                                if (result.getStatus().isSuccess()) {
+                                    // Extract information from the intent
+                                    Intent intent = result.getInvitationIntent();
+                                    String deepLink = AppInviteReferral.getDeepLink(intent);
+                                    String invitationId = AppInviteReferral.getInvitationId(intent);
+
+                                    // Because autoLaunchDeepLink = true we don't have to do anything
+                                    // here, but we could set that to false and manually choose
+                                    // an Activity to launch to handle the deep link here.
+                                    // ...
+                                }
+                            }
+                        }
+                );
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Log.d(TAG, "onConnectionFailed:" + connectionResult);
+        showMessage(getString(R.string.google_play_services_error));
     }
 
     private void init() {
@@ -201,6 +261,9 @@ public class WeatherActivity extends BaseActivity
             case NavigationDrawer.NAVIGATION_ABOUT:
                 startAboutActivity();
                 break;
+            case NavigationDrawer.NAVIGATION_INVITE:
+                onInviteClicked();
+                break;
             case NavigationDrawer.NAVIGATION_APP_NAME:
                 break;
             default:
@@ -210,6 +273,19 @@ public class WeatherActivity extends BaseActivity
                 changeDisplayedCity(newCity);
         }
     }
+
+    // [START on_invite_clicked]
+    private void onInviteClicked() {
+        Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.invitation_title))
+                .setMessage(getString(R.string.invitation_message))
+                //.setDeepLink(Uri.parse(getString(R.string.invitation_deep_link)))
+                .setCustomImage(Uri.parse(getString(R.string.invitation_custom_image)))
+                .setCallToActionText(getString(R.string.invitation_cta))
+                .build();
+        startActivityForResult(intent, REQUEST_INVITE);
+        //startActivity(intent);
+    }
+    // [END on_invite_clicked]
 
     private void setAnimationForWidgets() {
         /** Анимация объектов */
@@ -301,6 +377,58 @@ public class WeatherActivity extends BaseActivity
             } else if (!pm.positionIsPresent(pm.getCurrentPositionName())) {
                 showProgress(false);
             }
+        }
+
+        Log.d(TAG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
+
+        if (requestCode == REQUEST_INVITE) {
+            if (resultCode == RESULT_OK) {
+                // Get the invitation IDs of all sent messages
+                String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
+                int invite_count = 0;
+                for (String id : ids) {
+                    Log.d(TAG, "onActivityResult: sent invitation " + id);
+                    invite_count++;
+                }
+                if (Fabric.isInitialized()) {
+                    Answers.getInstance().logInvite(new InviteEvent().putMethod("App Invites")
+                            .putCustomAttribute("Invite friends", "Send to " + String.valueOf(invite_count) + " " +
+                                    "users"));
+                }
+
+                // Сохранение общего количества отправленных приглашений
+                SharedPreferences sPref;
+                sPref = getPreferences(MODE_PRIVATE);
+                int totalInvites = sPref.getInt("INVITES_TOTAL", 0);
+                totalInvites += invite_count;
+                SharedPreferences.Editor ed = sPref.edit();
+                ed.putInt("INVITES_TOTAL", totalInvites);
+                ed.apply();
+
+            } else {
+                // Sending failed or it was canceled, show failure message to the user
+                // ...
+                if (Fabric.isInitialized()) {
+                    Answers.getInstance().logInvite(new InviteEvent().putMethod("App Invites")
+                            .putCustomAttribute("Invite friends", "Canceled"));
+                }
+            }
+        }
+
+    }
+
+    /**
+     * App Invites Snackbar
+     */
+    private void showMessage(String msg) {
+        ViewGroup container = (ViewGroup) findViewById(R.id.snackbar_layout);
+        Snackbar snack;
+        if (container != null) {
+            snack = Snackbar.make(container, msg, Snackbar.LENGTH_LONG);
+            View view = snack.getView();
+            TextView tv = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
+            tv.setTextColor(Color.WHITE);
+            snack.show();
         }
     }
 

@@ -94,12 +94,6 @@
     <string name="shared_last_active_position_name" translatable="false">last_active_position_name</string>
     <string name="forecast_unavailable">Forecast unavailable</string>
 
-    <string name="invitation_title">Send App Invite Quickstart Invitation</string>
-    <string name="invitation_message">This app is terrific, give it a try and get $5 off!</string>
-    <string name="invitation_deep_link">http://example.com/offer/five_dollar_offer</string>
-    <string name="invitation_custom_image">https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png</string>
-    <string name="invitation_cta">Install!</string>
-
     <string name="changelog">Changelog</string>
     <string name="team">Team</string>
 
@@ -154,5 +148,14 @@
     <string name="erdeni_erdyneev_desc">UX Designer, Developer</string>
     <string name="airat_hairulin_desc">Translator</string>
     <string name="dmitry_ryabushkin_desc">Translator</string>
+
+    <!-- App Invites -->
+    <string name="invitation_title">Send App Invite</string>
+    <string name="invitation_message">Share Smart Forecast with your friends!</string>
+    <string name="invitation_deep_link" translatable="false">http://example.com/offer/five_dollar_offer</string>
+    <string name="invitation_custom_image" translatable="false">https://raw.githubusercontent.com/khasang/SmartForecast/main-develop/Auxiliary_files/Google_Play/app_invite.png</string>
+    <string name="invitation_cta">Install!</string>
+
+    <string name="google_play_services_error">Google Play Services Error</string>
 
 </resources>

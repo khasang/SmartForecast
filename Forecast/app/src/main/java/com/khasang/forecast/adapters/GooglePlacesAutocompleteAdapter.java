@@ -29,7 +29,7 @@ public class GooglePlacesAutocompleteAdapter extends ArrayAdapter
     public GooglePlacesAutocompleteAdapter(Context context, int textViewResourceId) {
         super(context, textViewResourceId);
         mContext = context;
-        resultList = new ArrayList<String>();
+        resultList = new ArrayList<>();
         mPlaceProvider = new PlaceProvider();
     }
 
@@ -57,13 +57,13 @@ public class GooglePlacesAutocompleteAdapter extends ArrayAdapter
     @Override
     public Filter getFilter() {
         return new Filter() {
-            FilterResults filterResults = new FilterResults();
 
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
+                FilterResults filterResults = new FilterResults();
                 if (constraint != null) {
                     char lastSym = constraint.charAt(constraint.length() - 1);
-                    if ((constraint.length() % 3 == 0) || (lastSym == ' ') || (lastSym == '-')) {
+                    if ((constraint.length() % 2 == 0) || (lastSym == ' ') || (lastSym == '-')) {
                         List<String> predictions = mPlaceProvider.autocomplete(constraint.toString(), MAX_RESULT);
                         filterResults.values = predictions;
                         filterResults.count = predictions.size();

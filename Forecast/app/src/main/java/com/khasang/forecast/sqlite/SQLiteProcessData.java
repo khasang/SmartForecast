@@ -2,6 +2,7 @@ package com.khasang.forecast.sqlite;
 
 import com.khasang.forecast.utils.AppUtils;
 import com.khasang.forecast.position.Coordinate;
+import com.khasang.forecast.position.Position;
 import com.khasang.forecast.position.Precipitation;
 import com.khasang.forecast.position.Weather;
 import com.khasang.forecast.position.Wind;
@@ -18,7 +19,6 @@ import java.util.HashMap;
  *
  * @author maxim.kulikov
  */
-
 public class SQLiteProcessData {
 
     public SimpleDateFormat dtFormat;
@@ -53,6 +53,25 @@ public class SQLiteProcessData {
                         Double.toString(weather.getWindPower()), weather.getPrecipitation().name()
                 }
         );
+    }
+
+    // Обновление координат города
+    public void updatePositionCoordinates(Position position) {
+        SQLiteWork.getInstance().qExec(SQLiteFields.QUERY_UPDATE_TOWN_POSITION,
+                new String[]{
+                        Double.toString(position.getCoordinate().getLatitude()),
+                        Double.toString(position.getCoordinate().getLongitude()),
+                        position.getLocationName()
+                });
+    }
+
+    // Обновление временно
+    public void updateCityTimeZone(Position position) {
+        SQLiteWork.getInstance().qExec(SQLiteFields.QUERY_UPDATE_TOWN_TIME_ZONE,
+                new String[]{
+                        String.valueOf(position.getTimeZone()),
+                        position.getLocationName()
+                });
     }
 
     // Сохранение настроек
@@ -264,6 +283,17 @@ public class SQLiteProcessData {
         return false;
     }
 
+    // получение временной зоны города.
+    public Integer getTownTimeZone(String townName) {
+        ArrayList<HashMap<String, String>> recList = SQLiteWork.getInstance().queryOpen(SQLiteFields.QUERY_SELECT_DATA_TOWN, new String[]{townName});
+        try {
+            return Integer.parseInt(recList.get(0).get(SQLiteFields.TIME_ZONE));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     // Загрузка списка городов.
     public HashMap<String, Coordinate> loadTownList() {
         HashMap<String, Coordinate> hashMap = new HashMap<>();
@@ -282,6 +312,40 @@ public class SQLiteProcessData {
             e.printStackTrace();
         }
         return hashMap;
+    }
+
+    // Загрузка списка городов
+    public ArrayList<Position> loadTownListFull() {
+        ArrayList<Position> list = new ArrayList<>();
+        ArrayList<HashMap<String, String>> recList = SQLiteWork.getInstance().queryOpen(SQLiteFields.QUERY_SELECT_TOWNS, null);
+        try {
+            for (int i = 0; i < recList.size(); i++) {
+                Integer timeZone;
+                double townLat, townLong;
+                String townName = recList.get(i).get(SQLiteFields.TOWN);
+                try {
+                    timeZone = Integer.parseInt(recList.get(i).get(SQLiteFields.TIME_ZONE));
+                } catch (NumberFormatException e) {
+                    timeZone = null;
+                }
+                try {
+                    townLat = Double.parseDouble(recList.get(i).get(SQLiteFields.LATITUDE));
+                    townLong = Double.parseDouble(recList.get(i).get(SQLiteFields.LONGITUDE));
+                } catch (NumberFormatException e) {
+                    townLat = 0;
+                    townLong = 0;
+                }
+                Position position = new Position();
+                position.setLocationName(townName);
+                position.setCoordinate(new Coordinate(townLat, townLong));
+                position.setTimeZone(timeZone);
+
+                list.add(position);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 
     // Загрузка списка избранных городов.

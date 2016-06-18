@@ -45,6 +45,8 @@ import com.khasang.forecast.R;
 import com.khasang.forecast.adapters.CityPickerAdapter;
 import com.khasang.forecast.adapters.GooglePlacesAutocompleteAdapter;
 import com.khasang.forecast.adapters.etc.HidingScrollListener;
+import com.khasang.forecast.api.GoogleMapsGeocoding;
+import com.khasang.forecast.api.GoogleMapsTimezone;
 import com.khasang.forecast.exceptions.EmptyCurrentAddressException;
 import com.khasang.forecast.exceptions.NoAvailableAddressesException;
 import com.khasang.forecast.interfaces.IMapDataReceiver;
@@ -72,7 +74,6 @@ import butterknife.BindView;
  * <p>
  * Activity для выбора местоположения
  */
-
 public class CityPickerActivity extends BaseActivity implements View.OnClickListener, IMapDataReceiver,
         IMessageProvider {
 
@@ -86,7 +87,9 @@ public class CityPickerActivity extends BaseActivity implements View.OnClickList
 
     private CityPickerAdapter cityPickerAdapter;
     private List<String> cityList;
+
     private DelayedAutoCompleteTextView chooseCity;
+    GoogleMapsGeocoding googleMapsGeocoding;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -108,6 +111,7 @@ public class CityPickerActivity extends BaseActivity implements View.OnClickList
         cityPickerAdapter = new CityPickerAdapter(cityList, this);
         recyclerView.setAdapter(cityPickerAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        googleMapsGeocoding = new GoogleMapsGeocoding();
 
         swapVisibilityTextOrList();
 
@@ -297,7 +301,6 @@ public class CityPickerActivity extends BaseActivity implements View.OnClickList
     private Coordinate getTownCoordinates(String city) {
         Coordinate coordinate;
         if (city.length() <= 0) {
-            showToast(R.string.error_empty_location_name);
             return null;
         }
         Geocoder geocoder = new Geocoder(getApplicationContext());
@@ -305,7 +308,6 @@ public class CityPickerActivity extends BaseActivity implements View.OnClickList
         try {
             addresses = geocoder.getFromLocationName(city, 3);
             if (addresses.size() == 0) {
-                showToast(R.string.coordinates_not_found);
                 return null;
             }
             Address currentAddress = addresses.get(0);
@@ -313,11 +315,12 @@ public class CityPickerActivity extends BaseActivity implements View.OnClickList
             coordinate.setLatitude(currentAddress.getLatitude());
             coordinate.setLongitude(currentAddress.getLongitude());
         } catch (IOException e) {
-            showToast(R.string.error_geo_service_not_available);
             e.printStackTrace();
             return null;
         } catch (IllegalArgumentException | NullPointerException e) {
-            showToast(R.string.invalid_lang_long_used);
+            e.printStackTrace();
+            return null;
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
@@ -326,8 +329,10 @@ public class CityPickerActivity extends BaseActivity implements View.OnClickList
 
     // Вспомогательный метод для добавления города в список
     private void addItem(String city, Coordinate coordinate) {
+        boolean needCoordinateRequest = false;
         if (coordinate == null) {
             coordinate = new Coordinate(0, 0);
+            needCoordinateRequest = true;
         }
         if (!PositionManager.getInstance().positionInListPresent(city)) {
             PositionManager.getInstance().addPosition(city, coordinate);
@@ -335,6 +340,12 @@ public class CityPickerActivity extends BaseActivity implements View.OnClickList
             cityList.add(city);
             Collections.sort(cityList);
             cityPickerAdapter.notifyDataSetChanged();
+            if (needCoordinateRequest) {
+                googleMapsGeocoding.requestCoordinates(city, PositionManager.getInstance(), true);
+            } else {
+                GoogleMapsTimezone googleMapsTimezone = new GoogleMapsTimezone();
+                googleMapsTimezone.requestCoordinates(city);
+            }
         } else {
             showMessageToUser(R.string.city_exist, Snackbar.LENGTH_LONG);
         }
@@ -356,15 +367,16 @@ public class CityPickerActivity extends BaseActivity implements View.OnClickList
         }
     }
 
-    private void setLocationOnMap(Maps maps, String city) {
+    private void setLocationOnMap(final Maps maps, final String city) {
         try {
             Coordinate coordinate = getTownCoordinates(city);
-            double latitude = coordinate != null ? coordinate.getLatitude() : 0;
-            double longitude = coordinate != null ? coordinate.getLongitude() : 0;
-
-            maps.deleteAllMarkers();
-            maps.setNewMarker(latitude, longitude, city);
-            maps.setCameraPosition(latitude, longitude, maps.getDefaultZoom(), 0, 0);
+            if (coordinate != null) {
+                maps.deleteAllMarkers();
+                maps.setNewMarker(coordinate, city);
+                maps.setCameraPosition(coordinate, maps.getDefaultZoom(), 0, 0);
+            } else {
+                maps.setNewMarker(city);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -376,14 +388,7 @@ public class CityPickerActivity extends BaseActivity implements View.OnClickList
         try {
             List<Address> addresses = geoCoder.getFromLocation(latitude, longitude, 3);
             address = new LocationParser(addresses).parseList().getAddressLine();
-        } catch (IOException e) {
-            showToast(R.string.error_service_not_available);
-            e.printStackTrace();
-        } catch (IllegalArgumentException e) {
-            showToast(R.string.invalid_lang_long_used);
-            e.printStackTrace();
-        } catch (EmptyCurrentAddressException | NoAvailableAddressesException e) {
-            showToast(R.string.no_address_found);
+        } catch (IOException | IllegalArgumentException | EmptyCurrentAddressException | NoAvailableAddressesException e) {
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
@@ -407,6 +412,14 @@ public class CityPickerActivity extends BaseActivity implements View.OnClickList
         return location;
     }
 
+    @Override
+    public void setLocation(String city) {
+        if (city == null) {
+            showToast(R.string.no_address_found);
+        } else {
+            chooseCity.setText(city);
+        }
+    }
 
     private void setBtnClear(View view) {
         view.findViewById(R.id.btnClear).setOnClickListener(new View.OnClickListener() {
@@ -426,13 +439,11 @@ public class CityPickerActivity extends BaseActivity implements View.OnClickList
                 try {
                     Coordinate coordinate = getTownCoordinates(chooseCity.getAdapter().getItem(i).toString());
                     if (coordinate == null) {
-                        showToast(R.string.invalid_lang_long_used);
                         return;
                     }
                     maps.setNewMarker(coordinate.getLatitude(), coordinate.getLongitude(), chooseCity.getAdapter()
                             .getItem(i).toString());
                 } catch (NullPointerException e) {
-                    showToast(R.string.invalid_lang_long_used);
                     e.printStackTrace();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -453,6 +464,7 @@ public class CityPickerActivity extends BaseActivity implements View.OnClickList
     private void showChooseCityDialog() {
         final Pattern pattern = Pattern.compile("^[\\w\\s,`'()-]+$");
         final View view = getLayoutInflater().inflate(R.layout.dialog_pick_location, null);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         setBtnClear(view);
         final GooglePlacesAutocompleteAdapter googlePlacesAutocompleteAdapter = new GooglePlacesAutocompleteAdapter

@@ -19,6 +19,7 @@ import com.khasang.forecast.models.DailyForecastList;
 import com.khasang.forecast.models.DailyResponse;
 import com.khasang.forecast.models.HourlyForecastList;
 import com.khasang.forecast.models.OpenWeatherMapResponse;
+import com.khasang.forecast.position.PositionManager;
 import com.khasang.forecast.position.Precipitation;
 import com.khasang.forecast.position.Weather;
 import com.khasang.forecast.position.Wind;
@@ -36,13 +37,15 @@ import java.util.Map;
  * Вспомогательный класс, служащий для преобразования получаемых данных.
  * <p>Реализованы методы
  * <ul>
- * <li>{@link #convertToWeather(OpenWeatherMapResponse)}</li>
- * <li>{@link #convertToHourlyWeather(OpenWeatherMapResponse)}</li>
- * <li>{@link #convertToDailyWeather(DailyResponse)}</li>
+ * <li>{@link #convertToWeather(OpenWeatherMapResponse, int)}</li>
+ * <li>{@link #convertToHourlyWeather(OpenWeatherMapResponse, int)}</li>
+ * <li>{@link #convertToDailyWeather(DailyResponse, int)}</li>
  * </ul>
  */
-
 public class AppUtils {
+
+    public static final String ApiCustomEvent = "Error";
+
     public static final double KELVIN_CELSIUS_DELTA = 273.15;
     public static final double HPA_TO_MM_HG = 1.33322;
     public static final double KM_TO_MILES = 0.62137;
@@ -274,11 +277,13 @@ public class AppUtils {
      * для запроса текущего прогноза погоды.
      *
      * @param response объект типа {@link OpenWeatherMapResponse}, содержащий ответ от API.
+     * @param cityID
      */
-    public static Map<Calendar, Weather> convertToWeather(OpenWeatherMapResponse response) {
+    public static Map<Calendar, Weather> convertToWeather(OpenWeatherMapResponse response, int cityID) {
         Map<Calendar, Weather> map = new HashMap<>();
         Weather weather = new Weather();
-        Calendar calendar = unixToCalendar(response.getDt());
+        int offset = PositionManager.getInstance().getPosition(cityID).getTimeZone();
+        Calendar calendar = unixToCalendar(response.getDt() + offset);
         weather.setTemperature(response.getMain().getTemp());
         weather.setHumidity(response.getMain().getHumidity());
         weather.setPressure(response.getMain().getPressure());
@@ -302,11 +307,13 @@ public class AppUtils {
      * для запроса почасового прогноза погоды.
      *
      * @param response объект типа {@link OpenWeatherMapResponse}, содержащий ответ от API.
+     * @param cityID
      */
-    public static Map<Calendar, Weather> convertToHourlyWeather(OpenWeatherMapResponse response) {
+    public static Map<Calendar, Weather> convertToHourlyWeather(OpenWeatherMapResponse response, int cityID) {
         Map<Calendar, Weather> map = new HashMap<>();
         for (HourlyForecastList forecast : response.getList()) {
-            Calendar calendar = unixToCalendar(forecast.getDt());
+            int offset = PositionManager.getInstance().getPosition(cityID).getTimeZone();
+            Calendar calendar = unixToCalendar(forecast.getDt() + offset);
             Weather weather = new Weather();
             weather.setTemperature(forecast.getMain().getTemp());
             weather.setHumidity(forecast.getMain().getHumidity());
@@ -330,11 +337,13 @@ public class AppUtils {
      * для запроса прогноза погоды по дням.
      *
      * @param response объект типа {@link DailyResponse}, содержащий ответ от API.
+     * @param cityID
      */
-    public static Map<Calendar, Weather> convertToDailyWeather(DailyResponse response) {
+    public static Map<Calendar, Weather> convertToDailyWeather(DailyResponse response, int cityID) {
         Map<Calendar, Weather> map = new HashMap<>();
         for (DailyForecastList forecast : response.getList()) {
-            Calendar calendar = unixToCalendar(forecast.getDt());
+            int offset = PositionManager.getInstance().getPosition(cityID).getTimeZone();
+            Calendar calendar = unixToCalendar(forecast.getDt() + offset);
             Weather weather = new Weather();
             weather.setTemperature(forecast.getTemp().getDay());
             weather.setHumidity(forecast.getHumidity());

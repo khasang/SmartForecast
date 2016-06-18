@@ -39,6 +39,11 @@ public class PositionFactory {
         }
     }
 
+    public void addFavouritePosition(Position position) {
+        position.setCityID(cityIdentificationCounter++);
+        mPositions.put(position.getLocationName(), position);
+    }
+
     public void addFavouritePosition(String name, Coordinate coordinates) {
         Position position = new Position();
         position.setLocationName(name);

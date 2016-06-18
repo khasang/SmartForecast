@@ -1,0 +1,144 @@
+<resources>
+    <string name="city_list">Список Міст</string>
+
+    <string name="pressure">Тиск</string>
+    <string name="wind">Вітер</string>
+    <string name="humidity">Вологість</string>
+    <string name="timeStamp">Оновлено</string>
+    <string name="pressure_measure">мм рт.ст.</string>
+    <string name="pressure_measure_hpa">HPa</string>
+    <string name="wind_measure_m_s"><![CDATA[<sup><small>м</small></sup>/<small>c</small>]]></string>
+    <string name="wind_measure_km_h"><![CDATA[<sup><small>км</small></sup>/<small>ч</small>]]></string>
+    <string name="wind_measure_mph"><![CDATA[<sup><small>миль</small></sup>/<small>ч</small>]]></string>
+    <string name="wind_measure_fps"><![CDATA[<sup><small>фут</small></sup>/<small>с</small>]]></string>
+
+    <string name="clear_sky">Ясно</string> 
+    <string name="few_clouds">Невелика хмарність</string>
+    <string name="scattered_clouds">Хмарно</string> 
+    <string name="broken_clouds">Хмарно з проясненнями</string> 
+    <string name="shower_rain">Ливень</string> 
+    <string name="rain">Дощ</string> 
+    <string name="thunderstorm">Гроза</string> 
+    <string name="snow">Сніг</string> 
+    <string name="mist">Туман</string>
+
+    <string name="clear_favorite">Видалити всі міста</string>
+    <string name="refresh">Оновити</string>
+    <string name="change_location">Змінити локацію</string>
+    <string name="city_exist">Місто вже присутнє у списку.</string>
+    <string name="update_error_location_not_found">Місто відсутнє у списку локацій.</string>
+    <string name="update_error_net_not_availble">Помилка оновлення! Мережа недоступна.</string>
+    <string name="update_error_from">"Помилка оновлення погоди зі станції"</string>
+    <string name="coordinates_not_found">Координати розташування %1$s не виявлені.\n Локація не додана</string>
+    <string name="msg_add_city">Для продовження роботи необхідно додати місто.</string>
+    <string name="msg_choose_city">Для продовження роботи необхідно вибрати місто.</string>
+    <string name="msg_no_city">Місто відсутнє у списку локацій.</string>
+    <string name="msg_clear_city_list">Ви дійсно хочете очистити список міст?</string>
+    <string name="btn_yes">Так</string>
+    <string name="btn_no">Ні</string>
+    <string name="title_choose_city">Введіть назву міста</string>
+    <string name="btn_ok">OK</string>
+    <string name="btn_clear">Очистити</string>
+    <string name="btn_cancel">Відміна</string>
+    <string name="error_empty_location_name">Необхідно ввести назву місця розташування</string>
+    <string name="CELSIUS">°C</string>
+    <string name="FAHRENHEIT">°F</string>
+    <string name="KELVIN">" K"</string>
+    <string name="infoTV">Додайте місто, \n для відображення прогнозу погоди.</string>
+    <string name="incorrect_city_error">Некоректна назва міста</string>
+    <string name="about_gps">Ваш GPS відключений, Ви хочете включити його?</string>
+    <string name="N">С</string>
+    <string name="NE">СВ</string>
+    <string name="E">В</string>
+    <string name="SE">ЮВ</string>
+    <string name="S">Ю</string>
+    <string name="SW">ЮЗ</string>
+    <string name="W">З</string>
+    <string name="NW">СЗ</string>
+
+    <string name="action_settings">Налаштування</string>
+    <string name="location_manager">Служба визначення місцезнаходження</string>
+    <string name="today">Сьогодні</string>
+    <string name="tomorrow">Завтра</string>
+
+    <string name="drawer_item_current_place">Поточне місце</string>
+    <string name="drawer_item_city_list">Список міст</string>
+    <string name="drawer_item_favorites">Вибране</string>
+    <string name="drawer_item_settings">Налаштування</string>
+    <string name="drawer_item_feedback">Зворотній зв\'язок</string>
+
+    <string name="error_service_not_available">Координати Вашого поточного місцезнаходження не виявлені.</string>
+    <string name="error_geo_service_not_available">Координати розташування не виявлені.</string>
+    <string name="invalid_lang_long_used">Помилка розпізнавання координат для розташування</string>
+    <string name="no_address_found">Адреса поточного місцезнаходження невиявлений</string>
+
+    <string name="title_activity_settings">Налаштування</string>
+
+    <string name="pref_header_general">Головні</string>
+
+    <string name="pref_title_enable_gps">Використовувати GPS</string>
+    <string name="pref_description_enable_gps">Використовувати GPS для визначення свого розташування</string>
+
+    <string name="pref_title_units">Одиниці виміру температури</string>
+    <string name="error_gps_permission">Відсутні права на використання GPS і ресурси оператора зв\'язку</string>
+    <string name="clear_new_location_name">Очистити поле вводу</string>
+    <string name="coordinates_error">Некоректні координати місця розташування</string>
+    <string name="error_gps_disabled">У налаштуваннях програми відключено отримання координат від GPS</string>
+
+    <string name="error_location_services_are_not_active">Служби отримання координат не активні</string>
+    <string name="info_message_about_request_permission_fine_location">До Додатку необхідні права для визначення поточного місцезнаходження</string>
+    <string name="button_permission_granted">Дозволити</string>
+    <string name="button_permission_not_granted">Відмовити</string>
+    <string name="welcome_def_str">"Привіт "</string>
+    <string name="welcome_string_hello">"Радий вас бачити"</string>
+    <string name="welcome_string_morning">"Доброго ранку "</string>
+    <string name="welcome_string_day">"Доброго дня"</string>
+    <string name="welcome_string_evening">"Добрий вечір"</string>
+    <string name="activate_geographical_service">Перевірте налаштування телефону і програми. Немає доступних сервісів для отримання географічних координат.\n\nВідкрити параметри телефону для активації сервісів визначення місця розташування?</string>
+
+    <string name="pref_title_location">При запуску показувати погоду для</string>
+    <string name="pref_location_label_current">Поточне місцезнаходження</string>
+    <string name="pref_location_label_last">Останнього активного розташування</string>
+
+    <string name="pref_title_welcome_string">Стрічка вітання</string>
+    <string name="pref_welcome_off_label">Привітання відключено</string>
+    <string name="pref_welcome_default_label">Привітання включено</string>
+
+    <string name="pref_units_label_celsius">Градус Цельсія (°C)</string>
+    <string name="pref_units_label_kelvin">Кельвін (K)</string>
+    <string name="pref_units_label_fahrenheit">Градус Фаренгейта (°F)</string>
+
+    <string name="pref_title_speed">Одиниці виміру швидкості вітру</string>
+    <string name="pref_speed_meter_sec_label">Метр у секунду (м/с)</string>
+    <string name="pref_speed_foot_sec_label">Фут у секунду (ф/с)</string>
+    <string name="pref_speed_km_hour_label">Кілометри на годину (км/ч)</string>
+    <string name="pref_speed_mile_hour_label">Милі на годину (миля/ч)</string>
+
+    <string name="pref_welcome_summary">Показувати привітання при запуску програми</string>
+    <string name="pref_category_location">Пошук розташування</string>
+    <string name="pref_category_start">Параметри запуску</string>
+    <string name="pref_category_general">Загальні</string>
+    <string name="warning_message_gps">Використання GPS може збільшити швидкість рязрядов батареї, проте, безсумнівно, збільшить точність визначення місця розташування</string>
+
+    <string name="error_get_coordinates">Не можу визначити координати запитуваного розташування</string>
+    <string name="forecast_unavailable">Прогноз погоди недоступний</string>
+
+    <!-- TODO TRANSLATE -->
+    <string name="pref_header_personalization">Персоналізація</string>
+    <string name="pref_night_mode_title">Тема</string>
+    <string name="pref_night_mode_off_label">Денна тема</string>
+    <string name="pref_night_mode_on_label">Нічна тема</string>
+    <string name="pref_night_mode_auto_label">Заснована на часу доби</string>
+
+    <string name="pref_color_scheme_title">Схема кольорів</string>
+    <string name="pref_color_scheme_green_label">Зелена</string>
+    <string name="pref_color_scheme_brown_label">Коричнева</string>
+    <string name="pref_color_scheme_teal_label">Бірюзова</string>
+    <string name="pref_color_scheme_indigo_label">Темно синя</string>
+    <string name="pref_color_scheme_purple_label">Фіолетова</string>
+
+    <string name="pref_icons_set_title">Набір іконок</string>
+    <string name="pref_icons_set_default_label">Стандартний набір</string>
+    <string name="pref_icons_set_mike_color_label">Набір колірної схеми</string>
+    <string name="pref_icons_set_mike_bw_label">Чорно-білий набір</string>
+</resources>

@@ -90,7 +90,6 @@
     <string name="error_get_coordinates">Не могу определить координаты запрашиваемого местоположения</string>
     <string name="forecast_unavailable">Прогноз погоды недоступен</string>
 
-
     <string name="changelog">Развитие проекта</string>
     <string name="team">Команда</string>
 
@@ -135,4 +134,12 @@
     <string name="erdeni_erdyneev">Эрдэни Эрдынеев</string>
     <string name="airat_hairulin">Айрат Хайруллин</string>
     <string name="dmitry_ryabushkin">Дмитрий Рябушкин</string>
+
+    <!-- TODO TRANSLATE -->
+    <!-- App Invites -->
+    <string name="invitation_title">Отправить приглашение</string>
+    <string name="invitation_message">Поделись Smart Forecast с друзьями!</string>
+    <string name="invitation_cta">Установить!</string>
+
+    <string name="google_play_services_error">Ошибка сервиса Google Play</string>
 </resources>

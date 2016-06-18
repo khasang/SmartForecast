@@ -92,6 +92,10 @@ public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
             .withIcon(FontAwesome.Icon.faw_cog)
             .withIdentifier(NAVIGATION_SETTINGS);
 
+        SecondaryDrawerItem invite = new SecondaryDrawerItem().withName(R.string.drawer_item_invite)
+                .withIcon(GoogleMaterial.Icon.gmd_message)
+                .withIdentifier(NAVIGATION_INVITE);
+
         SecondaryDrawerItem about = new SecondaryDrawerItem().withName(R.string.drawer_item_about)
             .withIcon(GoogleMaterial.Icon.gmd_group)
             .withIdentifier(NAVIGATION_ABOUT);
@@ -107,7 +111,7 @@ public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
             .withSelectedItem(-1)
             .withActionBarDrawerToggle(true)
             .withAccountHeader(accountHeader)
-            .addDrawerItems(currentPlace, cityList, favorites, divider, settings, about)
+            .addDrawerItems(currentPlace, cityList, favorites, divider, settings, invite, about)
             .addStickyDrawerItems(footer)
             .withOnDrawerItemClickListener(this)
             .build();
@@ -143,6 +147,8 @@ public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
             case NAVIGATION_FAVORITES:
                 favoritesExposed = !favoritesExposed;
                 updateFavorites();
+                break;
+            case NAVIGATION_INVITE:
                 break;
             case NAVIGATION_APP_NAME:
                 break;
