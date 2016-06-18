@@ -45,7 +45,8 @@
         </activity>
         <activity
             android:name=".activities.SettingsActivity"
-            android:parentActivityName=".activities.WeatherActivity">
+            android:parentActivityName=".activities.WeatherActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.khasang.forecast.activities.WeatherActivity"/>
@@ -53,7 +54,8 @@
 
         <activity
             android:name=".activities.AboutActivity"
-            android:parentActivityName=".activities.WeatherActivity">
+            android:parentActivityName=".activities.WeatherActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.khasang.forecast.activities.WeatherActivity"/>
@@ -62,6 +64,7 @@
         <activity
             android:name=".activities.FullImageActivity"
             android:parentActivityName=".activities.AboutActivity"
+            android:screenOrientation="portrait"
             >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
