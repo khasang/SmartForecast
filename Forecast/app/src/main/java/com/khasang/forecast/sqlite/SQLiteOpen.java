@@ -95,7 +95,7 @@ public class SQLiteOpen extends SQLiteOpenHelper {
                                 map.put(SQLiteFields.LATITUDE, dataset.getString(dataset.getColumnIndex(SQLiteFields.LATITUDE)));
                                 map.put(SQLiteFields.LONGITUDE, dataset.getString(dataset.getColumnIndex(SQLiteFields.LONGITUDE)));
                                 map.put(SQLiteFields.FAVORITE, dataset.getString(dataset.getColumnIndex(SQLiteFields.FAVORITE)));
-                                map.put(SQLiteFields.FAVORITE, dataset.getString(dataset.getColumnIndex(SQLiteFields.TIME_ZONE)));
+                                map.put(SQLiteFields.TIME_ZONE, dataset.getString(dataset.getColumnIndex(SQLiteFields.TIME_ZONE)));
                                 break;
                         }
                         townList.add(map);
