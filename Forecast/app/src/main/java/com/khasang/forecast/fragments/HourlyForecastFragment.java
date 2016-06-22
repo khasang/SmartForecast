@@ -13,14 +13,19 @@ import java.util.Map;
  */
 public class HourlyForecastFragment extends CommonForecastFragment {
 
+    private int timeZone;
+
     @Override
     protected void updateForecasts() {
         for (Map.Entry<Calendar, Weather> entry : forecasts.entrySet()) {
             Calendar calendar = entry.getKey();
-            String sTime = AppUtils.getTime(MyApplication.getAppContext(), calendar);
+            String sTime = AppUtils.getTime(MyApplication.getAppContext(), calendar, timeZone);
             sDate.add(sTime);
             weathers.add(entry.getValue());
         }
     }
 
+    public void setTimeZone(int timeZone) {
+        this.timeZone = timeZone;
+    }
 }

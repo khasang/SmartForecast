@@ -606,6 +606,7 @@ public class WeatherActivity extends BaseActivity
                 break;
             case HOURLY:
                 Logger.println(TAG, "Принят HOURLY прогноз");
+                hourlyForecastFragment.setTimeZone(PositionManager.getInstance().getActivePosition().getTimeZone());
                 hourlyForecastFragment.setDatasAndAnimate(forecast);
                 if (hourlyForecastFragment.isVisible()) {
                     updateWeatherChart(true);

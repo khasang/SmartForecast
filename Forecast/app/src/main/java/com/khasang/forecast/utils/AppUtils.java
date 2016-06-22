@@ -1056,17 +1056,15 @@ public class AppUtils {
     /**
      * Получение времени
      **/
-    public static String getTime(Context context, Calendar calendar) {
-        int rightnow = Calendar.getInstance(Locale.getDefault()).get(Calendar.DAY_OF_MONTH);
-        int today = calendar.get(Calendar.DAY_OF_MONTH);
+    public static String getTime(Context context, Calendar calendar, int timeZone) {
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        if (rightnow == today) {
-            return timeFormat.format(calendar.getTime());
-        } else {
-            return timeFormat.format(calendar.getTime())
-                    + ", "
-                    + context.getString(R.string.tomorrow).toLowerCase();
+        String time = timeFormat.format(calendar.getTime()) +  ", (UTC";
+        int timeZoneOffset = timeZone / 3600;
+        if (timeZoneOffset >= 0) {
+            time += "+";
         }
+        time += timeZoneOffset + ")";
+        return time;
     }
 
     /**

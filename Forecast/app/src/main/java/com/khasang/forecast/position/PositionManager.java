@@ -316,6 +316,10 @@ public class PositionManager implements ICoordinateReceiver, ILocationNameReceiv
         return activePosition.getLocationName();
     }
 
+    public Position getActivePosition() {
+        return activePosition;
+    }
+
     /**
      * Метод, с помощью которого удаляем локацию в списка "Избранных"
      * Вызывается, когда пользователь удяляет город из списка
