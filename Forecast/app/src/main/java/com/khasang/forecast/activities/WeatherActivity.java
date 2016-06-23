@@ -316,9 +316,8 @@ public class WeatherActivity extends BaseActivity
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PERMISSION_REQUEST_FINE_LOCATION.VALUE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                PositionManager.getInstance().setReceiver(null);
-                PositionManager.getInstance().removeInstance();
                 PositionManager.getInstance().setReceiver(this);
+                PositionManager.getInstance().setMessageProvider(this);
                 PositionManager.getInstance().updateWeatherFromDB();
                 PositionManager.getInstance().updateWeather();
                 permissionGranted(PERMISSION_REQUEST_FINE_LOCATION);
@@ -359,8 +358,8 @@ public class WeatherActivity extends BaseActivity
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d(TAG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
         super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
         PositionManager.getInstance().setMessageProvider(this);
         PositionManager.getInstance().setReceiver(this);
         switch (requestCode) {
@@ -448,7 +447,6 @@ public class WeatherActivity extends BaseActivity
 
     @Override
     protected void onResume() {
-        Log.d(TAG, "onResume");
         super.onResume();
         PositionManager.getInstance().setReceiver(this);
         PositionManager.getInstance().setMessageProvider(this);
