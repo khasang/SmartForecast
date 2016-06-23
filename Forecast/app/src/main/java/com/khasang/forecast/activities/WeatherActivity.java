@@ -359,17 +359,19 @@ public class WeatherActivity extends BaseActivity
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         Log.d(TAG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
-
+        super.onActivityResult(requestCode, resultCode, data);
+        PositionManager.getInstance().setMessageProvider(this);
+        PositionManager.getInstance().setReceiver(this);
         switch (requestCode) {
             case CHOOSE_CITY:
                 PositionManager pm = PositionManager.getInstance();
                 if (resultCode == RESULT_OK) {
                     String newCity = data.getStringExtra(CityPickerActivity.CITY_PICKER_TAG);
-                    setCityInToolbar(newCity);
                     Logger.println(TAG, newCity);
+                    setCityInToolbar(newCity);
                     pm.setActivePosition(newCity);
+                    onRefresh();
                 } else if (!pm.positionIsPresent(pm.getActivePositionCity())) {
                     showProgress(false);
                 }
@@ -446,6 +448,7 @@ public class WeatherActivity extends BaseActivity
 
     @Override
     protected void onResume() {
+        Log.d(TAG, "onResume");
         super.onResume();
         PositionManager.getInstance().setReceiver(this);
         PositionManager.getInstance().setMessageProvider(this);

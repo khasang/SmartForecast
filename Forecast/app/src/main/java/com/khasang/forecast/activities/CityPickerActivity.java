@@ -38,9 +38,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.khasang.forecast.utils.AppUtils;
 import com.khasang.forecast.Maps;
-import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.R;
 import com.khasang.forecast.adapters.CityPickerAdapter;
 import com.khasang.forecast.adapters.GooglePlacesAutocompleteAdapter;
@@ -54,6 +52,7 @@ import com.khasang.forecast.interfaces.IMessageProvider;
 import com.khasang.forecast.location.LocationParser;
 import com.khasang.forecast.position.Coordinate;
 import com.khasang.forecast.position.PositionManager;
+import com.khasang.forecast.utils.AppUtils;
 import com.khasang.forecast.view.DelayedAutoCompleteTextView;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
@@ -608,13 +607,13 @@ public class CityPickerActivity extends BaseActivity implements View.OnClickList
     }
 
     @Override
-    public void showSnackbar(CharSequence string, int length) {
-        AppUtils.showSnackBar(this, findViewById(R.id.fabBtn), string, length);
+    public void showSnackbar(int stringId, int length) {
+        showSnackbar(getString(stringId), length);
     }
 
     @Override
-    public void showSnackbar(int stringId, int length) {
-        showSnackbar(getString(stringId), length);
+    public void showSnackbar(CharSequence string, int length) {
+        AppUtils.showSnackBar(this, findViewById(R.id.fabBtn), string, length);
     }
 
     @Override
@@ -625,8 +624,7 @@ public class CityPickerActivity extends BaseActivity implements View.OnClickList
     @Override
     public void showToast(CharSequence string) {
         Toast toast = AppUtils.showInfoMessage(this, string);
-        toast.getView().setBackgroundColor(ContextCompat.getColor(MyApplication.getAppContext(), R.color
-                .background_toast));
+        toast.getView().setBackgroundColor(ContextCompat.getColor(this, R.color.background_toast));
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
     }
