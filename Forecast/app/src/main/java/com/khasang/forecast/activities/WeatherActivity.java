@@ -99,17 +99,28 @@ public class WeatherActivity extends BaseActivity
      */
     private static final int REQUEST_INVITE = 0;
 
-    @BindView(R.id.temperature_text) TextView temperatureView;
-    @BindView(R.id.precipitation) TextView precipitationView;
-    @BindView(R.id.wind_text) TextView windView;
-    @BindView(R.id.humidity_text) TextView humidityView;
-    @BindView(R.id.pressure_text) TextView pressureView;
-    @BindView(R.id.current_weather_icon) ImageView currentWeatherView;
-    @BindView(R.id.fab) FloatingActionButton fab;
-    @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.progressbar) ProgressBar progressbar;
-    @BindView(R.id.chart) WeatherChart chart;
-    @BindView(R.id.chart_layout) FrameLayout chartLayout;
+    @BindView(R.id.temperature_text)
+    TextView temperatureView;
+    @BindView(R.id.precipitation)
+    TextView precipitationView;
+    @BindView(R.id.wind_text)
+    TextView windView;
+    @BindView(R.id.humidity_text)
+    TextView humidityView;
+    @BindView(R.id.pressure_text)
+    TextView pressureView;
+    @BindView(R.id.current_weather_icon)
+    ImageView currentWeatherView;
+    @BindView(R.id.fab)
+    FloatingActionButton fab;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.progressbar)
+    ProgressBar progressbar;
+    @BindView(R.id.chart)
+    WeatherChart chart;
+    @BindView(R.id.chart_layout)
+    FrameLayout chartLayout;
 
     private ImageView syncBtn;
     private Animation animationRotateCenter;
@@ -117,9 +128,6 @@ public class WeatherActivity extends BaseActivity
     private HourlyForecastFragment hourlyForecastFragment;
     private DailyForecastFragment dailyForecastFragment;
     private NavigationDrawer navigationDrawer;
-    // [END define_variables]
-    // [START define_variables]
-    private GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -179,7 +187,7 @@ public class WeatherActivity extends BaseActivity
 
 
         // Create an auto-managed GoogleApiClient with access to App Invites.
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
+        GoogleApiClient googleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(AppInvite.API)
                 .enableAutoManage(this, this)
                 .build();
@@ -188,7 +196,7 @@ public class WeatherActivity extends BaseActivity
         // Requires that an Activity is registered in AndroidManifest.xml to handle
         // deep-link URLs.
         boolean autoLaunchDeepLink = true;
-        AppInvite.AppInviteApi.getInvitation(mGoogleApiClient, this, autoLaunchDeepLink)
+        AppInvite.AppInviteApi.getInvitation(googleApiClient, this, autoLaunchDeepLink)
                 .setResultCallback(
                         new ResultCallback<AppInviteInvitationResult>() {
                             @Override
@@ -208,11 +216,14 @@ public class WeatherActivity extends BaseActivity
                             }
                         }
                 );
+
+        PositionManager.getInstance().updateWeatherFromDB();
+        onRefresh();
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.d(TAG, "onConnectionFailed:" + connectionResult);
+        Log.d(TAG, "onConnectionFailed: " + connectionResult);
         showMessage(getString(R.string.google_play_services_error));
     }
 
@@ -274,7 +285,6 @@ public class WeatherActivity extends BaseActivity
         }
     }
 
-    // [START on_invite_clicked]
     private void onInviteClicked() {
         Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.invitation_title))
                 .setMessage(getString(R.string.invitation_message))
@@ -283,9 +293,7 @@ public class WeatherActivity extends BaseActivity
                 .setCallToActionText(getString(R.string.invitation_cta))
                 .build();
         startActivityForResult(intent, REQUEST_INVITE);
-        //startActivity(intent);
     }
-    // [END on_invite_clicked]
 
     private void setAnimationForWidgets() {
         /** Анимация объектов */
@@ -367,54 +375,50 @@ public class WeatherActivity extends BaseActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CHOOSE_CITY) {
-            PositionManager pm = PositionManager.getInstance();
-            if (resultCode == RESULT_OK) {
-                String newCity = data.getStringExtra(CityPickerActivity.CITY_PICKER_TAG);
-                toolbar.setTitle(newCity.split(",")[0]);
-                Logger.println(TAG, newCity);
-                pm.setCurrentPosition(newCity);
-            } else if (!pm.positionIsPresent(pm.getCurrentPositionName())) {
-                showProgress(false);
-            }
-        }
-
         Log.d(TAG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
 
-        if (requestCode == REQUEST_INVITE) {
-            if (resultCode == RESULT_OK) {
-                // Get the invitation IDs of all sent messages
-                String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
-                int invite_count = 0;
-                for (String id : ids) {
-                    Log.d(TAG, "onActivityResult: sent invitation " + id);
-                    invite_count++;
+        switch (requestCode) {
+            case CHOOSE_CITY:
+                PositionManager pm = PositionManager.getInstance();
+                if (resultCode == RESULT_OK) {
+                    String newCity = data.getStringExtra(CityPickerActivity.CITY_PICKER_TAG);
+                    toolbar.setTitle(newCity.split(",")[0]);
+                    Logger.println(TAG, newCity);
+                    pm.setCurrentPosition(newCity);
+                } else if (!pm.positionIsPresent(pm.getCurrentPositionName())) {
+                    showProgress(false);
                 }
-                if (Fabric.isInitialized()) {
-                    Answers.getInstance().logInvite(new InviteEvent().putMethod("App Invites")
-                            .putCustomAttribute("Invite friends", "Send to " + String.valueOf(invite_count) + " " +
-                                    "users"));
-                }
+                break;
+            case REQUEST_INVITE:
+                if (resultCode == RESULT_OK) {
+                    // Get the invitation IDs of all sent messages
+                    String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
+                    int invitesCount = 0;
+                    for (String id : ids) {
+                        Log.d(TAG, "onActivityResult: sent invitation " + id);
+                        invitesCount++;
+                    }
+                    if (Fabric.isInitialized()) {
+                        Answers.getInstance().logInvite(new InviteEvent().putMethod("App Invites")
+                                .putCustomAttribute("Invite friends", "Send to " + String.valueOf(invitesCount) + " " +
+                                        "users"));
+                    }
 
-                // Сохранение общего количества отправленных приглашений
-                SharedPreferences sPref;
-                sPref = getPreferences(MODE_PRIVATE);
-                int totalInvites = sPref.getInt("INVITES_TOTAL", 0);
-                totalInvites += invite_count;
-                SharedPreferences.Editor ed = sPref.edit();
-                ed.putInt("INVITES_TOTAL", totalInvites);
-                ed.apply();
+                    // Сохранение общего количества отправленных приглашений
+                    SharedPreferences sPref = getPreferences(MODE_PRIVATE);
+                    int totalInvites = sPref.getInt("INVITES_TOTAL", 0);
+                    totalInvites += invitesCount;
+                    sPref.edit().putInt("INVITES_TOTAL", totalInvites).apply();
 
-            } else {
-                // Sending failed or it was canceled, show failure message to the user
-                // ...
-                if (Fabric.isInitialized()) {
-                    Answers.getInstance().logInvite(new InviteEvent().putMethod("App Invites")
-                            .putCustomAttribute("Invite friends", "Canceled"));
+                } else {
+                    // Sending failed or it was canceled, show failure message to the user
+                    if (Fabric.isInitialized()) {
+                        Answers.getInstance().logInvite(new InviteEvent().putMethod("App Invites")
+                                .putCustomAttribute("Invite friends", "Canceled"));
+                    }
                 }
-            }
+                break;
         }
-
     }
 
     /**
@@ -422,9 +426,8 @@ public class WeatherActivity extends BaseActivity
      */
     private void showMessage(String msg) {
         ViewGroup container = (ViewGroup) findViewById(R.id.snackbar_layout);
-        Snackbar snack;
         if (container != null) {
-            snack = Snackbar.make(container, msg, Snackbar.LENGTH_LONG);
+            Snackbar snack = Snackbar.make(container, msg, Snackbar.LENGTH_LONG);
             View view = snack.getView();
             TextView tv = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
             tv.setTextColor(Color.WHITE);
@@ -458,11 +461,6 @@ public class WeatherActivity extends BaseActivity
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
     public void onBackPressed() {
         if (!navigationDrawer.closeDrawer()) {
             super.onBackPressed();
@@ -475,9 +473,8 @@ public class WeatherActivity extends BaseActivity
         PositionManager.getInstance().setReceiver(this);
         PositionManager.getInstance().setMessageProvider(this);
 
-        PermissionChecker permissionChecker = new PermissionChecker();
         boolean isLocationPermissionGranted =
-                permissionChecker.isPermissionGranted(this, PERMISSION_REQUEST_FINE_LOCATION);
+                new PermissionChecker().isPermissionGranted(this, PERMISSION_REQUEST_FINE_LOCATION);
         navigationDrawer.updateBadges(isLocationPermissionGranted);
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
@@ -515,9 +512,6 @@ public class WeatherActivity extends BaseActivity
         } else {
             PositionManager.getInstance().setPressureMetric(AppUtils.PressureMetrics.HPA);
         }
-
-        PositionManager.getInstance().updateWeatherFromDB();
-        onRefresh();
     }
 
     @Override
@@ -530,10 +524,9 @@ public class WeatherActivity extends BaseActivity
     protected void onPause() {
         super.onPause();
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putString(getString(R.string.shared_last_active_position_name),
-                PositionManager.getInstance().getCurrentPositionName());
-        editor.apply();
+        String currentPositionName = PositionManager.getInstance().getCurrentPositionName();
+        sp.edit().putString(getString(R.string.last_active_position_name), currentPositionName).apply();
+
         PositionManager.getInstance().setMessageProvider(null);
         PositionManager.getInstance().setReceiver(null);
     }
@@ -576,15 +569,11 @@ public class WeatherActivity extends BaseActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_item_refresh:
-                startAnimation();
+                syncBtn.startAnimation(animationRotateCenter);
                 onRefresh();
                 return true;
         }
         return false;
-    }
-
-    private void startAnimation() {
-        syncBtn.startAnimation(animationRotateCenter);
     }
 
     /**

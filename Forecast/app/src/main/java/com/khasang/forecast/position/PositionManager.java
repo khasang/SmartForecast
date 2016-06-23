@@ -251,7 +251,7 @@ public class PositionManager implements ICoordinateReceiver, ILocationNameReceiv
         }
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MyApplication.getAppContext());
         boolean saveCurrentLocation = sp.getString(MyApplication.getAppContext().getString(R.string.pref_location_key), MyApplication.getAppContext().getString(R.string.pref_location_current)).equals(MyApplication.getAppContext().getString(R.string.pref_location_current));
-        String lastActivePositionName = sp.getString(MyApplication.getAppContext().getString(R.string.shared_last_active_position_name), "");
+        String lastActivePositionName = sp.getString(MyApplication.getAppContext().getString(R.string.last_active_position_name), "");
         currentLocation.setLocationName(dbManager.loadСurrentTown());
         currentLocation.setCoordinate(dbManager.loadLastPositionCoordinates());
         if (saveCurrentLocation) {
