@@ -9,6 +9,7 @@ import android.support.v7.preference.PreferenceManager;
 import com.khasang.forecast.R;
 
 import butterknife.ButterKnife;
+import icepick.Icepick;
 
 public class BaseActivity extends AppCompatActivity {
 
@@ -32,15 +33,22 @@ public class BaseActivity extends AppCompatActivity {
             themeResId = R.style.AppTheme_Green;
         }
         setTheme(themeResId);
+
+        Icepick.restoreInstanceState(this, savedInstanceState);
     }
 
-    protected void leaveActivity() {
-        ActivityCompat.finishAfterTransition(this);
+    @Override protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Icepick.saveInstanceState(this, outState);
     }
 
     @Override
     public void onContentChanged() {
         super.onContentChanged();
         ButterKnife.bind(this);
+    }
+
+    protected void leaveActivity() {
+        ActivityCompat.finishAfterTransition(this);
     }
 }

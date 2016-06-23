@@ -138,8 +138,8 @@ public class OpenWeatherMap extends WeatherStation {
             @Override
             public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
                 Request originalRequest = chain.request();
-                String cacheHeaderValue = PositionManager.getInstance()
-                        .isNetworkAvailable(MyApplication.getAppContext())
+                String cacheHeaderValue =
+                        AppUtils.isNetworkAvailable(MyApplication.getAppContext())
                         ? "public, max-age=900"
                         : "public, only-if-cached, max-stale=14400";
                 Request request = originalRequest.newBuilder().build();

@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -31,7 +30,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
@@ -76,6 +74,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import butterknife.BindView;
+import icepick.State;
 import io.fabric.sdk.android.Fabric;
 
 import static com.khasang.forecast.utils.PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION;
@@ -89,7 +88,6 @@ public class WeatherActivity extends BaseActivity
         IPermissionCallback, IMessageProvider, NavigationDrawer.OnNavigationItemClickListener, GoogleApiClient
                 .OnConnectionFailedListener {
 
-    public static final String CURRENT_CITY_TAG = "CURRENT_CITY";
     public static final String ACTIVE_CITY_TAG = "ACTIVE_CITY";
     private static final String TAG = WeatherActivity.class.getSimpleName();
     private static final int CHOOSE_CITY = 1;
@@ -122,6 +120,9 @@ public class WeatherActivity extends BaseActivity
     @BindView(R.id.chart_layout)
     FrameLayout chartLayout;
 
+    @State
+    String activeCity;
+
     private ImageView syncBtn;
     private Animation animationRotateCenter;
     private Animation animationGrow;
@@ -139,11 +140,6 @@ public class WeatherActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         PositionManager.getInstance(this, this);
         PositionManager.getInstance().generateIconSet(this);
-        Intent intent = getIntent();
-        String activeCity = intent.getStringExtra(WeatherActivity.ACTIVE_CITY_TAG);
-        if (!(activeCity == null || activeCity.isEmpty())) {
-            PositionManager.getInstance().setCurrentPosition(activeCity);
-        }
 
         setContentView(R.layout.activity_weather);
 
@@ -163,18 +159,13 @@ public class WeatherActivity extends BaseActivity
                 break;
         }
 
+        setActivePosition();
         init();
         initNavigationDrawer(drawerHeaderArrayIndex);
         setAnimationForWidgets();
         startAnimations();
         checkPermissions();
 
-        if (savedInstanceState != null) {
-            String savedCurrentCity = savedInstanceState.getString(CURRENT_CITY_TAG, "");
-            if (!savedCurrentCity.isEmpty()) {
-                PositionManager.getInstance().setCurrentPosition(savedCurrentCity);
-            }
-        }
 
         hourlyForecastFragment = new HourlyForecastFragment();
         dailyForecastFragment = new DailyForecastFragment();
@@ -221,10 +212,21 @@ public class WeatherActivity extends BaseActivity
         onRefresh();
     }
 
+    private void setActivePosition() {
+        String intentActiveCity = getIntent().getStringExtra(ACTIVE_CITY_TAG);
+        if (intentActiveCity != null) {
+            activeCity = intentActiveCity;
+        }
+        if (activeCity != null) {
+            PositionManager.getInstance().setActivePosition(activeCity);
+            setCityInToolbar(activeCity);
+        }
+    }
+
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         Log.d(TAG, "onConnectionFailed: " + connectionResult);
-        showMessage(getString(R.string.google_play_services_error));
+        showSnackbar(R.string.google_play_services_error, Snackbar.LENGTH_SHORT);
     }
 
     private void init() {
@@ -382,10 +384,10 @@ public class WeatherActivity extends BaseActivity
                 PositionManager pm = PositionManager.getInstance();
                 if (resultCode == RESULT_OK) {
                     String newCity = data.getStringExtra(CityPickerActivity.CITY_PICKER_TAG);
-                    toolbar.setTitle(newCity.split(",")[0]);
+                    setCityInToolbar(newCity);
                     Logger.println(TAG, newCity);
-                    pm.setCurrentPosition(newCity);
-                } else if (!pm.positionIsPresent(pm.getCurrentPositionName())) {
+                    pm.setActivePosition(newCity);
+                } else if (!pm.positionIsPresent(pm.getActivePositionCity())) {
                     showProgress(false);
                 }
                 break;
@@ -421,20 +423,6 @@ public class WeatherActivity extends BaseActivity
         }
     }
 
-    /**
-     * App Invites Snackbar
-     */
-    private void showMessage(String msg) {
-        ViewGroup container = (ViewGroup) findViewById(R.id.snackbar_layout);
-        if (container != null) {
-            Snackbar snack = Snackbar.make(container, msg, Snackbar.LENGTH_LONG);
-            View view = snack.getView();
-            TextView tv = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
-            tv.setTextColor(Color.WHITE);
-            snack.show();
-        }
-    }
-
     @SuppressWarnings("unchecked")
     public void startSettingsActivity() {
         Intent intent = new Intent(this, SettingsActivity.class);
@@ -455,7 +443,7 @@ public class WeatherActivity extends BaseActivity
     public void changeDisplayedCity(String newCity) {
         PositionManager.getInstance().setMessageProvider(this);
         PositionManager.getInstance().setReceiver(this);
-        PositionManager.getInstance().setCurrentPosition(newCity);
+        PositionManager.getInstance().setActivePosition(newCity);
         PositionManager.getInstance().updateWeatherFromDB();
         onRefresh();
     }
@@ -515,16 +503,10 @@ public class WeatherActivity extends BaseActivity
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString(CURRENT_CITY_TAG, PositionManager.getInstance().getCurrentPositionName());
-    }
-
-    @Override
     protected void onPause() {
         super.onPause();
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        String currentPositionName = PositionManager.getInstance().getCurrentPositionName();
+        String currentPositionName = PositionManager.getInstance().getActivePositionCity();
         sp.edit().putString(getString(R.string.last_active_position_name), currentPositionName).apply();
 
         PositionManager.getInstance().setMessageProvider(null);
@@ -582,7 +564,6 @@ public class WeatherActivity extends BaseActivity
     @Override
     public void updateInterface(WeatherStation.ResponseType responseType,
                                 Map<Calendar, Weather> forecast) {
-        toolbar.setTitle(PositionManager.getInstance().getCurrentPositionName().split(",")[0]);
         if (forecast == null || forecast.size() == 0) {
             Logger.println(TAG, "Weather is null!");
             return;
@@ -627,7 +608,7 @@ public class WeatherActivity extends BaseActivity
         }
         PositionManager pm = PositionManager.getInstance();
 
-        toolbar.setTitle(pm.getCurrentPositionName().split(",")[0]);
+        setCityInToolbar(pm.getActivePositionCity());
 
         double temperature = weather.getTemperature();
         String temperatureMetrics = pm.getTemperatureMetric().toStringValue();
@@ -692,9 +673,9 @@ public class WeatherActivity extends BaseActivity
     public void onRefresh() {
         showProgress(true);
         if (!PositionManager.getInstance()
-                .positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {
+                .positionIsPresent(PositionManager.getInstance().getActivePositionCity())) {
             Logger.println(TAG, "There is nothing to refresh");
-            showMessageToUser(getString(R.string.msg_no_city), Snackbar.LENGTH_LONG);
+            showSnackbar(R.string.msg_no_city, Snackbar.LENGTH_LONG);
             showProgress(false);
             return;
         }
@@ -711,13 +692,13 @@ public class WeatherActivity extends BaseActivity
     }
 
     @Override
-    public void showMessageToUser(CharSequence string, int length) {
-        AppUtils.showSnackBar(this, findViewById(R.id.coordinatorLayout), string, length);
+    public void showSnackbar(int stringId, int length) {
+        showSnackbar(getString(stringId), length);
     }
 
     @Override
-    public void showMessageToUser(int stringId, int length) {
-        showMessageToUser(getString(stringId), length);
+    public void showSnackbar(CharSequence string, int length) {
+        AppUtils.showSnackBar(this, findViewById(R.id.coordinatorLayout), string, length);
     }
 
     @Override
@@ -743,5 +724,12 @@ public class WeatherActivity extends BaseActivity
             forecast = dailyForecastFragment.getForecasts();
         }
         chart.updateForecast(forecast, isHourFragmentVisible);
+    }
+
+    private void setCityInToolbar(String city) {
+        activeCity = city;
+        if (city != null) {
+            toolbar.setTitle(city.split(",")[0]);
+        }
     }
 }

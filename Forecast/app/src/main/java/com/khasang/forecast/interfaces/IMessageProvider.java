@@ -7,9 +7,9 @@ import android.support.annotation.StringRes;
  */
 public interface IMessageProvider {
 
-    void showMessageToUser (@StringRes int stringId, int length);
+    void showSnackbar(@StringRes int stringId, int length);
 
-    void showMessageToUser (CharSequence string, int length);
+    void showSnackbar(CharSequence string, int length);
 
     void showToast (@StringRes int stringId);
 

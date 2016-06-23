@@ -347,7 +347,7 @@ public class CityPickerActivity extends BaseActivity implements View.OnClickList
                 googleMapsTimezone.requestCoordinates(city);
             }
         } else {
-            showMessageToUser(R.string.city_exist, Snackbar.LENGTH_LONG);
+            showSnackbar(R.string.city_exist, Snackbar.LENGTH_LONG);
         }
         swapVisibilityTextOrList();
     }
@@ -608,13 +608,13 @@ public class CityPickerActivity extends BaseActivity implements View.OnClickList
     }
 
     @Override
-    public void showMessageToUser(CharSequence string, int length) {
+    public void showSnackbar(CharSequence string, int length) {
         AppUtils.showSnackBar(this, findViewById(R.id.fabBtn), string, length);
     }
 
     @Override
-    public void showMessageToUser(int stringId, int length) {
-        showMessageToUser(getString(stringId), length);
+    public void showSnackbar(int stringId, int length) {
+        showSnackbar(getString(stringId), length);
     }
 
     @Override

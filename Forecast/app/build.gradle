@@ -99,6 +99,10 @@ dependencies {
     compile 'com.google.firebase:firebase-crash:9.0.0';
     compile 'com.google.firebase:firebase-invites:9.0.0'
 
+    /* Icepick */
+    compile 'frankiesardo:icepick:3.2.0'
+    apt 'frankiesardo:icepick-processor:3.2.0'
+
     /* Others */
     compile 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
     compile 'com.squareup.okhttp:logging-interceptor:2.6.0'
