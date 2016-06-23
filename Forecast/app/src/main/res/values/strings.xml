@@ -91,8 +91,10 @@
     <string name="activate_geographical_service">Check tuning of telephone and program. There is no available services for obtaining of coordinates.\n\nTo open phone settings to activate services of location determination?</string>
 
     <string name="error_get_coordinates">Can\'t determine the coordinates of the requested location</string>
-    <string name="last_active_position_name" translatable="false">last_active_position_name</string>
     <string name="forecast_unavailable">Forecast unavailable</string>
+
+    <string name="last_active_position_name" translatable="false">last_active_position_name</string>
+    <string name="total_app_invites" translatable="false">total_app_invites</string>
 
     <string name="changelog">Changelog</string>
     <string name="team">Team</string>

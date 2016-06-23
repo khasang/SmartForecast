@@ -47,7 +47,6 @@ import com.google.android.gms.appinvite.AppInviteReferral;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
-import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.R;
 import com.khasang.forecast.activities.etc.NavigationDrawer;
 import com.khasang.forecast.behaviors.FabOnTopBehavior;
@@ -90,12 +89,8 @@ public class WeatherActivity extends BaseActivity
 
     public static final String ACTIVE_CITY_TAG = "ACTIVE_CITY";
     private static final String TAG = WeatherActivity.class.getSimpleName();
-    private static final int CHOOSE_CITY = 1;
-    /**
-     * User has clicked the 'Invite' button, launch the invitation UI with the proper
-     * title, message, and deep link
-     */
     private static final int REQUEST_INVITE = 0;
+    private static final int CHOOSE_CITY = 1;
 
     @BindView(R.id.temperature_text)
     TextView temperatureView;
@@ -165,7 +160,7 @@ public class WeatherActivity extends BaseActivity
         setAnimationForWidgets();
         startAnimations();
         checkPermissions();
-
+        initAppInvite();
 
         hourlyForecastFragment = new HourlyForecastFragment();
         dailyForecastFragment = new DailyForecastFragment();
@@ -176,7 +171,11 @@ public class WeatherActivity extends BaseActivity
                 .hide(dailyForecastFragment)
                 .commit();
 
+        PositionManager.getInstance().updateWeatherFromDB();
+        onRefresh();
+    }
 
+    private void initAppInvite() {
         // Create an auto-managed GoogleApiClient with access to App Invites.
         GoogleApiClient googleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(AppInvite.API)
@@ -207,9 +206,6 @@ public class WeatherActivity extends BaseActivity
                             }
                         }
                 );
-
-        PositionManager.getInstance().updateWeatherFromDB();
-        onRefresh();
     }
 
     private void setActivePosition() {
@@ -264,15 +260,15 @@ public class WeatherActivity extends BaseActivity
                 changeDisplayedCity("");
                 break;
             case NavigationDrawer.NAVIGATION_CITY_LIST:
-                startCityPickerActivity();
+                launchCityPickerActivity();
                 break;
             case NavigationDrawer.NAVIGATION_FAVORITES:
                 break;
             case NavigationDrawer.NAVIGATION_SETTINGS:
-                startSettingsActivity();
+                launchSettingsActivity();
                 break;
             case NavigationDrawer.NAVIGATION_ABOUT:
-                startAboutActivity();
+                launchAboutActivity();
                 break;
             case NavigationDrawer.NAVIGATION_INVITE:
                 onInviteClicked();
@@ -311,8 +307,7 @@ public class WeatherActivity extends BaseActivity
     }
 
     private void checkPermissions() {
-        PermissionChecker permissionChecker = new PermissionChecker();
-        permissionChecker.checkForPermissions(this, PERMISSION_REQUEST_FINE_LOCATION, this);
+        new PermissionChecker().checkForPermissions(this, PERMISSION_REQUEST_FINE_LOCATION, this);
     }
 
     @Override
@@ -335,40 +330,28 @@ public class WeatherActivity extends BaseActivity
 
     @Override
     public void permissionGranted(PermissionChecker.RuntimePermissions permission) {
-        checkCoordinatesServices();
-    }
-
-    private void checkCoordinatesServices() {
         if (!PositionManager.getInstance().isSomeLocationProviderAvailable()) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle(R.string.location_manager);
-            builder.setMessage(R.string.activate_geographical_service);
-            builder.setPositiveButton(R.string.btn_yes, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    startActivity(i);
-                }
-            });
-            builder.setNegativeButton(R.string.btn_no, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            });
-            builder.create().show();
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.location_manager)
+                    .setMessage(R.string.activate_geographical_service)
+                    .setPositiveButton(R.string.btn_yes, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                        }
+                    })
+                    .setNegativeButton(R.string.btn_no, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    })
+                    .create().show();
         }
     }
 
     @Override
     public void permissionDenied(PermissionChecker.RuntimePermissions permission) {
-    }
-
-    @SuppressWarnings("unchecked")
-    public void startCityPickerActivity() {
-        Intent intent = new Intent(this, CityPickerActivity.class);
-        Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle();
-        ActivityCompat.startActivityForResult(this, intent, CHOOSE_CITY, bundle);
     }
 
     /**
@@ -407,11 +390,10 @@ public class WeatherActivity extends BaseActivity
                     }
 
                     // Сохранение общего количества отправленных приглашений
-                    SharedPreferences sPref = getPreferences(MODE_PRIVATE);
-                    int totalInvites = sPref.getInt("INVITES_TOTAL", 0);
+                    SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+                    int totalInvites = sp.getInt(getString(R.string.total_app_invites), 0);
                     totalInvites += invitesCount;
-                    sPref.edit().putInt("INVITES_TOTAL", totalInvites).apply();
-
+                    sp.edit().putInt(getString(R.string.total_app_invites), totalInvites).apply();
                 } else {
                     // Sending failed or it was canceled, show failure message to the user
                     if (Fabric.isInitialized()) {
@@ -424,14 +406,21 @@ public class WeatherActivity extends BaseActivity
     }
 
     @SuppressWarnings("unchecked")
-    public void startSettingsActivity() {
+    public void launchCityPickerActivity() {
+        Intent intent = new Intent(this, CityPickerActivity.class);
+        Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle();
+        ActivityCompat.startActivityForResult(this, intent, CHOOSE_CITY, bundle);
+    }
+
+    @SuppressWarnings("unchecked")
+    public void launchSettingsActivity() {
         Intent intent = new Intent(this, SettingsActivity.class);
         Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle();
         startActivity(intent, bundle);
     }
 
     @SuppressWarnings("unchecked")
-    public void startAboutActivity() {
+    public void launchAboutActivity() {
         Intent intent = new Intent(this, AboutActivity.class);
         Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle();
         startActivity(intent, bundle);
@@ -634,9 +623,6 @@ public class WeatherActivity extends BaseActivity
         pressureView.setText(String.format("%s %s", pressure, pressureMetrics));
     }
 
-    /**
-     * Обработчик нажатия объектов
-     */
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -651,7 +637,7 @@ public class WeatherActivity extends BaseActivity
     }
 
     private void switchDisplayMode() {
-        final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         IconicsDrawable icon = new IconicsDrawable(this)
                 .color(ContextCompat.getColor(this, R.color.current_weather_color));
         if (dailyForecastFragment.isHidden()) {
@@ -709,9 +695,7 @@ public class WeatherActivity extends BaseActivity
     @Override
     public void showToast(CharSequence string) {
         Toast toast = AppUtils.showInfoMessage(this, string);
-        toast.getView()
-                .setBackgroundColor(
-                        ContextCompat.getColor(MyApplication.getAppContext(), R.color.background_toast));
+        toast.getView().setBackgroundColor(ContextCompat.getColor(this, R.color.background_toast));
         toast.setDuration(Toast.LENGTH_LONG);
         toast.show();
     }
