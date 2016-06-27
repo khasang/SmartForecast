@@ -1059,12 +1059,7 @@ public class AppUtils {
      **/
     public static String getTime(Context context, Calendar calendar, int timeZone) {
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        String time = timeFormat.format(calendar.getTime()) +  ", (UTC";
-        int timeZoneOffset = timeZone / 3600;
-        if (timeZoneOffset >= 0) {
-            time += "+";
-        }
-        time += timeZoneOffset + ")";
+        String time = timeFormat.format(calendar.getTime());
         return time;
     }
 
