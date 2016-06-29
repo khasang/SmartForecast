@@ -85,6 +85,14 @@ public class TeamFragment extends BaseFragment {
         erdeniErdyneev.addLink(erdeniErdyneevLink1);
         erdeniErdyneev.addLink(erdeniErdyneevLink2);
 
+        Image OlegGrigorievImage = new Image("http://khasang.github.io/SmartForecast/img/team/oleg.png", 225, 225);
+        Developer olegGrigoriev = new Developer(R.string.oleg_grigoriev, OlegGrigorievImage, R.string
+                .oleg_grigoriev_desc);
+        Link olegGrigorievLink1 = new Link("GitHub", "https://github.com/baradist");
+        Link olegGrigorievLink2 = new Link("LinkedIn", "https://www.linkedin.com/in/baradist");
+        olegGrigoriev.addLink(olegGrigorievLink1);
+        olegGrigoriev.addLink(olegGrigorievLink2);
+
         Image airatHairulinImage = new Image("http://khasang.github.io/SmartForecast/img/team/airat.png", 225, 225);
         Developer airatHairulin = new Developer(R.string.airat_hairulin, airatHairulinImage, R.string
                 .airat_hairulin_desc);
@@ -101,14 +109,26 @@ public class TeamFragment extends BaseFragment {
         Link dmitryRyabushkinLink1 = new Link("VK", "https://vk.com/ryabos");
         dmitryRyabushkin.addLink(dmitryRyabushkinLink1);
 
+        Image evgenRivkinImage = new Image("http://khasang.github.io/SmartForecast/img/team/evgen.png", 300, 300);
+        Developer evgenRivkin = new Developer(R.string.evgeny_rivkin, evgenRivkinImage, R.string
+                .evgeny_rivkin_desc);
+        Link evgenRivkinLink1 = new Link("Mail", "mailto:evgeny.rivkin@gmail.com");
+        Link evgenRivkinLink2 = new Link("Twitter", "https://twitter.com/Evgorion");
+        Link evgenRivkinLink3 = new Link("LinkedIn", "https://www.linkedin.com/in/evgenyrivkin");
+        evgenRivkin.addLink(evgenRivkinLink1);
+        evgenRivkin.addLink(evgenRivkinLink2);
+        evgenRivkin.addLink(evgenRivkinLink3);
+
         developers.add(romanNovoselov);
         developers.add(alexandrLivodinov);
         developers.add(timofeyKorotkov);
         developers.add(alexandrPerfilev);
         developers.add(maximKulikov);
         developers.add(erdeniErdyneev);
+        developers.add(olegGrigoriev);
         developers.add(airatHairulin);
         developers.add(dmitryRyabushkin);
+        developers.add(evgenRivkin);
     }
 
     @Override
