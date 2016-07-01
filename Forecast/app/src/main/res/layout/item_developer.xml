@@ -12,7 +12,7 @@
     <RelativeLayout
         android:id="@+id/wallpaper"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="210dp"
         android:padding="10dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
@@ -45,13 +45,13 @@
             android:textSize="12sp"
             tools:text="Developer 1 description"/>
 
-
         <LinearLayout
             android:id="@+id/links"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/description"
-            android:layout_marginTop="15dp"
+            android:layout_alignParentBottom="true"
+            android:gravity="bottom"
             android:orientation="horizontal">
 
         </LinearLayout>
