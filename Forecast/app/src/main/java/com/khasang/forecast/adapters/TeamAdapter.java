@@ -2,7 +2,6 @@ package com.khasang.forecast.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.support.v4.content.ContextCompat;
@@ -10,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -19,7 +17,6 @@ import com.khasang.forecast.R;
 import com.khasang.forecast.models.Developer;
 import com.khasang.forecast.models.Link;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import java.util.List;
 
@@ -52,6 +49,7 @@ public class TeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         Developer developer = developers.get(position);
 
+        holder.wallpaper.setBackgroundResource(R.drawable.header_day_green);
         holder.nameView.setText(developer.getNameResId());
         holder.descriptionView.setText(developer.getDescriptionResId());
 
@@ -61,9 +59,6 @@ public class TeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 .load(url)
                 .resize(layoutParams.width, layoutParams.height)
                 .into(holder.imageView);
-        Picasso.with(context)
-                .load(R.drawable.header_night_brown)
-                .into((Target)holder.wallpaper);
 
         List<Link> links = developer.getLinks();
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -97,7 +92,6 @@ public class TeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         public ViewHolder(View itemView) {
             super(itemView);
             wallpaper = (RelativeLayout) itemView.findViewById(R.id.wallpaper);
-            //wallpaper.setBackgroundResource(R.drawable.header_night_indigo);
             nameView = (TextView) itemView.findViewById(R.id.name);
             descriptionView = (TextView) itemView.findViewById(R.id.description);
             imageView = (CircleImageView) itemView.findViewById(R.id.image);
