@@ -50,6 +50,7 @@ public class TeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         Developer developer = developers.get(position);
 
         holder.wallpaper.setBackgroundResource(R.drawable.header_day_green);
+        Picasso.with(context).load("")
         holder.nameView.setText(developer.getNameResId());
         holder.descriptionView.setText(developer.getDescriptionResId());
 
