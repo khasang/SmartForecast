@@ -33,6 +33,15 @@ public class TeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
     private List<Developer> developers;
 
+    private String[] wallpapers = {
+        "https://github.com/khasang/SmartForecast/blob/feature/AboutActivity/Auxiliary_files/Wallpapers/field" +
+                ".jpg?raw=true",
+        "https://github.com/khasang/SmartForecast/blob/feature/AboutActivity/Auxiliary_files/Wallpapers/fog" +
+                    ".jpg?raw=true",
+        "https://github.com/khasang/SmartForecast/blob/feature/AboutActivity/Auxiliary_files/Wallpapers/green_field.jpg?raw=true",
+        "https://github.com/khasang/SmartForecast/blob/feature/AboutActivity/Auxiliary_files/Wallpapers/rain.jpg?raw=true"
+    };
+
     public TeamAdapter(Context context, List<Developer> developers) {
         this.context = context;
         this.developers = developers;
@@ -51,41 +60,38 @@ public class TeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder viewHolder, int position) {
-        ViewHolder holder = (ViewHolder) viewHolder;
+        final ViewHolder holder = (ViewHolder) viewHolder;
 
         Developer developer = developers.get(position);
 
-<<<<<<< HEAD
-        holder.wallpaper.setBackgroundResource(R.drawable.header_day_green);
-        Picasso.with(context).load("")
-=======
+        holder.nameView.setText(developer.getNameResId());
+        holder.descriptionView.setText(developer.getDescriptionResId());
+        ViewGroup.LayoutParams imageLp = holder.imageView.getLayoutParams();
+        ViewGroup.LayoutParams wallpaperLp = holder.wallpaper.getLayoutParams();
+        String url = developer.getImage().getUrl();
+
         Picasso.with(context)
-                .load("https://raw.githubusercontent.com/khasang/SmartForecast/feature/AboutActivity/Auxiliary_files/Wallpapers/rain.jpg")
+                .load(wallpapers[position % wallpapers.length])
                 .into(new Target() {
                     @Override
                     public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                        ((ViewHolder) viewHolder).wallpaper.setBackground(new BitmapDrawable(context.getResources(), bitmap));
+                        holder.wallpaper.setBackground(new BitmapDrawable(context.getResources(), bitmap));
                     }
 
                     @Override
-                    public void onBitmapFailed(Drawable errorDrawable) {
-                        Log.d("Picasso", "onBitmapFailed: FAILED");
+                    public void onBitmapFailed(final Drawable errorDrawable) {
+                        Log.d("TAG", "FAILED");
                     }
 
                     @Override
-                    public void onPrepareLoad(Drawable placeHolderDrawable) {
-                        Log.d("Picasso", "Prepare Load");
+                    public void onPrepareLoad(final Drawable placeHolderDrawable) {
+                        Log.d("TAG", "Prepare Load");
                     }
                 });
 
->>>>>>> fd888ec28853b89e6274d488138603bc7a711b9a
-        holder.nameView.setText(developer.getNameResId());
-        holder.descriptionView.setText(developer.getDescriptionResId());
-        ViewGroup.LayoutParams layoutParams = holder.imageView.getLayoutParams();
-        String url = developer.getImage().getUrl();
         Picasso.with(context)
                 .load(url)
-                .resize(layoutParams.width, layoutParams.height)
+                .resize(imageLp.width, imageLp.height)
                 .into(holder.imageView);
 
         List<Link> links = developer.getLinks();
