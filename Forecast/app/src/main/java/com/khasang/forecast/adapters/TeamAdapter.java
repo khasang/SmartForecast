@@ -2,10 +2,15 @@ package com.khasang.forecast.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +22,7 @@ import com.khasang.forecast.R;
 import com.khasang.forecast.models.Developer;
 import com.khasang.forecast.models.Link;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.List;
 
@@ -44,16 +50,37 @@ public class TeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder viewHolder, int position) {
         ViewHolder holder = (ViewHolder) viewHolder;
 
         Developer developer = developers.get(position);
 
+<<<<<<< HEAD
         holder.wallpaper.setBackgroundResource(R.drawable.header_day_green);
         Picasso.with(context).load("")
+=======
+        Picasso.with(context)
+                .load("https://raw.githubusercontent.com/khasang/SmartForecast/feature/AboutActivity/Auxiliary_files/Wallpapers/rain.jpg")
+                .into(new Target() {
+                    @Override
+                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                        ((ViewHolder) viewHolder).wallpaper.setBackground(new BitmapDrawable(context.getResources(), bitmap));
+                    }
+
+                    @Override
+                    public void onBitmapFailed(Drawable errorDrawable) {
+                        Log.d("Picasso", "onBitmapFailed: FAILED");
+                    }
+
+                    @Override
+                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+                        Log.d("Picasso", "Prepare Load");
+                    }
+                });
+
+>>>>>>> fd888ec28853b89e6274d488138603bc7a711b9a
         holder.nameView.setText(developer.getNameResId());
         holder.descriptionView.setText(developer.getDescriptionResId());
-
         ViewGroup.LayoutParams layoutParams = holder.imageView.getLayoutParams();
         String url = developer.getImage().getUrl();
         Picasso.with(context)
@@ -67,7 +94,9 @@ public class TeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         holder.links.removeAllViews();
         for (final Link link : links) {
             TextView textView = new TextView(context);
-            textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            }
             textView.setLayoutParams(params);
             textView.setText(link.getTitle());
             textView.setTypeface(null, Typeface.BOLD);
