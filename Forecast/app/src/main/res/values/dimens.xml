@@ -8,6 +8,8 @@
     <dimen name="current_weather_icon_horizontal_margin">10dp</dimen>
     <dimen name="fab_elevation">6dp</dimen>
 
+    <dimen name="social_button_padding">16dp</dimen>
+
     <dimen name="chart_line_width">0.8dp</dimen>
     <dimen name="chart_circle_radius">3dp</dimen>
     <dimen name="chart_value_size">8dp</dimen>

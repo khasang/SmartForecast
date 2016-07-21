@@ -2,27 +2,24 @@ package com.khasang.forecast.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.khasang.forecast.R;
 import com.khasang.forecast.models.Developer;
 import com.khasang.forecast.models.Link;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import java.util.List;
 
@@ -34,12 +31,12 @@ public class TeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<Developer> developers;
 
     private String[] wallpapers = {
-        "https://github.com/khasang/SmartForecast/blob/feature/AboutActivity/Auxiliary_files/Wallpapers/field" +
-                ".jpg?raw=true",
-        "https://github.com/khasang/SmartForecast/blob/feature/AboutActivity/Auxiliary_files/Wallpapers/fog" +
+            "https://github.com/khasang/SmartForecast/blob/feature/AboutActivity/Auxiliary_files/Wallpapers/field" +
                     ".jpg?raw=true",
-        "https://github.com/khasang/SmartForecast/blob/feature/AboutActivity/Auxiliary_files/Wallpapers/green_field.jpg?raw=true",
-        "https://github.com/khasang/SmartForecast/blob/feature/AboutActivity/Auxiliary_files/Wallpapers/rain.jpg?raw=true"
+            "https://github.com/khasang/SmartForecast/blob/feature/AboutActivity/Auxiliary_files/Wallpapers/fog" +
+                    ".jpg?raw=true",
+            "https://github.com/khasang/SmartForecast/blob/feature/AboutActivity/Auxiliary_files/Wallpapers/green_field.jpg?raw=true",
+            "https://github.com/khasang/SmartForecast/blob/feature/AboutActivity/Auxiliary_files/Wallpapers/rain.jpg?raw=true"
     };
 
     public TeamAdapter(Context context, List<Developer> developers) {
@@ -67,53 +64,55 @@ public class TeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         holder.nameView.setText(developer.getNameResId());
         holder.descriptionView.setText(developer.getDescriptionResId());
         ViewGroup.LayoutParams imageLp = holder.imageView.getLayoutParams();
-        ViewGroup.LayoutParams wallpaperLp = holder.wallpaper.getLayoutParams();
+//        ViewGroup.LayoutParams wallpaperLp = holder.wallpaper.getLayoutParams();
         String url = developer.getImage().getUrl();
 
         Picasso.with(context)
                 .load(wallpapers[position % wallpapers.length])
-                .into(new Target() {
-                    @Override
-                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                        holder.wallpaper.setBackground(new BitmapDrawable(context.getResources(), bitmap));
-                    }
+                .error(R.drawable.field)
+                .placeholder(R.drawable.field)
+                .fit()
 
-                    @Override
-                    public void onBitmapFailed(final Drawable errorDrawable) {
-                        Log.d("TAG", "FAILED");
-                    }
-
-                    @Override
-                    public void onPrepareLoad(final Drawable placeHolderDrawable) {
-                        Log.d("TAG", "Prepare Load");
-                    }
-                });
+                .into(holder.wallpaper);
 
         Picasso.with(context)
                 .load(url)
+                .placeholder(R.drawable.ic_perm_identity_black_24dp)
+                .error(R.drawable.ic_perm_identity_black_24dp)
                 .resize(imageLp.width, imageLp.height)
                 .into(holder.imageView);
 
         List<Link> links = developer.getLinks();
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.weight = 1;
+        params.width = 0;
         holder.links.removeAllViews();
+        Typeface typeface = Typeface.create("sans-serif-regular", Typeface.BOLD);
+        int buttonPadding = context.getResources().getDimensionPixelSize(R.dimen.social_button_padding);
         for (final Link link : links) {
-            TextView textView = new TextView(context);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+
+            Button socialButton;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                socialButton = new Button(context, null, 0, R.style.social_button_style);
+            } else {
+                socialButton = new Button(context);
+                socialButton.setBackgroundColor(Color.WHITE);
             }
-            textView.setLayoutParams(params);
-            textView.setText(link.getTitle());
-            textView.setTypeface(null, Typeface.BOLD);
-            textView.setTextColor(ContextCompat.getColor(context, R.color.accent));
-            textView.setOnClickListener(new View.OnClickListener() {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                socialButton.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            }
+            socialButton.setLayoutParams(params);
+            socialButton.setText(link.getTitle());
+            socialButton.setPadding(buttonPadding, 0, buttonPadding, 0);
+            socialButton.setTypeface(typeface);
+            socialButton.setTextColor(ContextCompat.getColor(context, R.color.accent));
+            socialButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(link.getUrl())));
                 }
             });
-            holder.links.addView(textView);
+            holder.links.addView(socialButton);
         }
     }
 
@@ -123,17 +122,15 @@ public class TeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private TextView descriptionView;
         private CircleImageView imageView;
         private LinearLayout links;
-        private RelativeLayout wallpaper;
+        private ImageView wallpaper;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            wallpaper = (RelativeLayout) itemView.findViewById(R.id.wallpaper);
+            wallpaper = (ImageView) itemView.findViewById(R.id.wallpaper);
             nameView = (TextView) itemView.findViewById(R.id.name);
             descriptionView = (TextView) itemView.findViewById(R.id.description);
             imageView = (CircleImageView) itemView.findViewById(R.id.image);
             links = (LinearLayout) itemView.findViewById(R.id.links);
-
-            imageView.setBorderWidth(0);
         }
     }
 }
