@@ -53,6 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/name"
                 android:layout_centerHorizontal="true"
+                android:layout_marginBottom="12dp"
                 android:layout_marginTop="12dp"
                 android:fontFamily="sans-serif-regular"
                 android:textColor="#FFFFFF"
