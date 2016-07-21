@@ -77,8 +77,8 @@ public class TeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         Picasso.with(context)
                 .load(url)
-                .placeholder(R.drawable.ic_perm_identity_black_24dp)
-                .error(R.drawable.ic_perm_identity_black_24dp)
+                .placeholder(R.drawable.ic_person)
+                .error(R.drawable.ic_person)
                 .resize(imageLp.width, imageLp.height)
                 .into(holder.imageView);
 
