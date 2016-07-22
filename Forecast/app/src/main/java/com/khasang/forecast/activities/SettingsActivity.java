@@ -146,13 +146,12 @@ public class SettingsActivity extends BaseActivity {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             if (key.equals(getString(R.string.pref_welcome_key))) {
-                if (!sharedPreferences.getBoolean(getString(R.string.pref_welcome_key), true)) {
-                    sharedPreferences.edit().putBoolean(getString(R.string.pref_welcome_text_key), false).apply();
+                boolean welcome = sharedPreferences.getBoolean(getString(R.string.pref_welcome_key), true);
+                sharedPreferences.edit().putBoolean(getString(R.string.pref_welcome_text_key), welcome).apply();
 
-                    SwitchPreference welcomeTextSwitchPreference = (SwitchPreference) findPreference(getString(R
-                            .string.pref_welcome_text_key));
-                    welcomeTextSwitchPreference.setChecked(false);
-                }
+                SwitchPreference welcomeTextSwitchPreference = (SwitchPreference) findPreference(getString(R
+                        .string.pref_welcome_text_key));
+                welcomeTextSwitchPreference.setChecked(welcome);
                 return;
             }
 
