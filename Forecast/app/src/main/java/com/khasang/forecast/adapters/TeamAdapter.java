@@ -34,15 +34,15 @@ public class TeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private String[] wallpapers = {
             "https://raw.githubusercontent.com/khasang/SmartForecast/main-develop/Auxiliary_files/Wallpapers/cloudy_day.jpg",
             "https://raw.githubusercontent.com/khasang/SmartForecast/main-develop/Auxiliary_files/Wallpapers/5657821.jpg",
+            "https://raw.githubusercontent.com/khasang/SmartForecast/main-develop/Auxiliary_files/Wallpapers/odinokoe-derevo.jpg",
             "https://raw.githubusercontent.com/khasang/SmartForecast/main-develop/Auxiliary_files/Wallpapers/gardex.jpg",
-            "https://raw.githubusercontent.com/khasang/SmartForecast/main-develop/Auxiliary_files/Wallpapers/tornado.jpg",
             "https://raw.githubusercontent.com/khasang/SmartForecast/main-develop/Auxiliary_files/Wallpapers/cloudy-sea.jpg",
             "https://raw.githubusercontent.com/khasang/SmartForecast/main-develop/Auxiliary_files/Wallpapers/forest.jpg",
-            "https://raw.githubusercontent.com/khasang/SmartForecast/main-develop/Auxiliary_files/Wallpapers/odinokoe-derevo.jpg",
+            "https://raw.githubusercontent.com/khasang/SmartForecast/main-develop/Auxiliary_files/Wallpapers/tornado.jpg",
             "https://raw.githubusercontent.com/khasang/SmartForecast/main-develop/Auxiliary_files/Wallpapers/rain.jpg",
+            "https://raw.githubusercontent.com/khasang/SmartForecast/main-develop/Auxiliary_files/Wallpapers/field.jpg",
             "https://raw.githubusercontent.com/khasang/SmartForecast/main-develop/Auxiliary_files/Wallpapers/fog.jpg",
 
-            "https://raw.githubusercontent.com/khasang/SmartForecast/main-develop/Auxiliary_files/Wallpapers/field.jpg",
             "https://raw.githubusercontent.com/khasang/SmartForecast/main-develop/Auxiliary_files/Wallpapers/green_field.jpg",
             "https://raw.githubusercontent.com/khasang/SmartForecast/main-develop/Auxiliary_files/Wallpapers/pole_leto.jpg",
             "https://raw.githubusercontent.com/khasang/SmartForecast/main-develop/Auxiliary_files/Wallpapers/summer-day.jpg",
