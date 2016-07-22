@@ -139,8 +139,10 @@
     <string name="alexandr_perfilev">Alexandr Perfilev</string>
     <string name="maxim_kulikov">Maxim Kulikov</string>
     <string name="erdeni_erdyneev">Erdeni Erdyneev</string>
+    <string name="oleg_grigoriev">Oleg Grigoriev</string>
     <string name="airat_hairulin">Airat Hairulin</string>
     <string name="dmitry_ryabushkin">Dmitry Ryabushkin</string>
+    <string name="evgeny_rivkin">Evgeny Rivkin</string>
 
     <string name="roman_novoselov_desc">PM, Architect, Developer</string>
     <string name="alexandr_lihovidov_desc">Architect, Technical consultant</string>
@@ -148,8 +150,10 @@
     <string name="alexandr_perfilev_desc">UI designer, Developer</string>
     <string name="maxim_kulikov_desc">Product Owner, Developer</string>
     <string name="erdeni_erdyneev_desc">UX Designer, Developer</string>
+    <string name="oleg_grigoriev_desc">Developer</string>
     <string name="airat_hairulin_desc">Translator</string>
     <string name="dmitry_ryabushkin_desc">Translator</string>
+    <string name="evgeny_rivkin_desc">Translator</string>
 
     <!-- App Invites -->
     <string name="invitation_title">Send App Invite</string>

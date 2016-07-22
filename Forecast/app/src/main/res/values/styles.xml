@@ -62,4 +62,8 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="social_button_style" parent="Widget.AppCompat.Button.Borderless">
+
+    </style>
+
 </resources>
