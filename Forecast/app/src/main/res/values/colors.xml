@@ -43,4 +43,7 @@
     <color name="chart_text">@color/current_weather_color</color>
 
     <color name="divider">#000000</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="grey">#5D5D5D</color>
 </resources>

@@ -19,11 +19,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
+            <com.khasang.forecast.view.AspectRatioImageView
                 android:id="@+id/wallpaper"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop" />
+                android:layout_height="wrap_content"
+                app:aspect_ratio="1.78" />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/image"
@@ -43,7 +43,7 @@
                 android:layout_below="@id/image"
                 android:layout_centerHorizontal="true"
                 android:fontFamily="sans-serif-medium"
-                android:textColor="#FFFFFF"
+                android:textColor="#5D5D5D"
                 android:textSize="20sp"
                 tools:text="Developer 1" />
 
@@ -56,7 +56,7 @@
                 android:layout_marginBottom="12dp"
                 android:layout_marginTop="12dp"
                 android:fontFamily="sans-serif-regular"
-                android:textColor="#FFFFFF"
+                android:textColor="#5D5D5D"
                 android:textSize="16sp"
                 tools:text="Developer 1 description" />
         </RelativeLayout>
