@@ -12,13 +12,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.khasang.forecast.R;
 import com.khasang.forecast.models.Developer;
 import com.khasang.forecast.models.Link;
+import com.khasang.forecast.view.AspectRatioImageView;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -31,12 +32,23 @@ public class TeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<Developer> developers;
 
     private String[] wallpapers = {
-            "https://github.com/khasang/SmartForecast/blob/feature/AboutActivity/Auxiliary_files/Wallpapers/field" +
-                    ".jpg?raw=true",
-            "https://github.com/khasang/SmartForecast/blob/feature/AboutActivity/Auxiliary_files/Wallpapers/fog" +
-                    ".jpg?raw=true",
-            "https://github.com/khasang/SmartForecast/blob/feature/AboutActivity/Auxiliary_files/Wallpapers/green_field.jpg?raw=true",
-            "https://github.com/khasang/SmartForecast/blob/feature/AboutActivity/Auxiliary_files/Wallpapers/rain.jpg?raw=true"
+            "https://raw.githubusercontent.com/khasang/SmartForecast/main-develop/Auxiliary_files/Wallpapers/cloudy_day.jpg",
+            "https://raw.githubusercontent.com/khasang/SmartForecast/main-develop/Auxiliary_files/Wallpapers/5657821.jpg",
+            "https://raw.githubusercontent.com/khasang/SmartForecast/main-develop/Auxiliary_files/Wallpapers/gardex.jpg",
+            "https://raw.githubusercontent.com/khasang/SmartForecast/main-develop/Auxiliary_files/Wallpapers/tornado.jpg",
+            "https://raw.githubusercontent.com/khasang/SmartForecast/main-develop/Auxiliary_files/Wallpapers/cloudy-sea.jpg",
+            "https://raw.githubusercontent.com/khasang/SmartForecast/main-develop/Auxiliary_files/Wallpapers/forest.jpg",
+            "https://raw.githubusercontent.com/khasang/SmartForecast/main-develop/Auxiliary_files/Wallpapers/odinokoe-derevo.jpg",
+            "https://raw.githubusercontent.com/khasang/SmartForecast/main-develop/Auxiliary_files/Wallpapers/rain.jpg",
+            "https://raw.githubusercontent.com/khasang/SmartForecast/main-develop/Auxiliary_files/Wallpapers/fog.jpg",
+
+            "https://raw.githubusercontent.com/khasang/SmartForecast/main-develop/Auxiliary_files/Wallpapers/field.jpg",
+            "https://raw.githubusercontent.com/khasang/SmartForecast/main-develop/Auxiliary_files/Wallpapers/green_field.jpg",
+            "https://raw.githubusercontent.com/khasang/SmartForecast/main-develop/Auxiliary_files/Wallpapers/pole_leto.jpg",
+            "https://raw.githubusercontent.com/khasang/SmartForecast/main-develop/Auxiliary_files/Wallpapers/summer-day.jpg",
+            "https://raw.githubusercontent.com/khasang/SmartForecast/main-develop/Auxiliary_files/Wallpapers/sun_flowers.jpg",
+            "https://raw.githubusercontent.com/khasang/SmartForecast/main-develop/Auxiliary_files/Wallpapers/unnamed.jpg",
+            "https://raw.githubusercontent.com/khasang/SmartForecast/main-develop/Auxiliary_files/Wallpapers/917797.jpg"
     };
 
     public TeamAdapter(Context context, List<Developer> developers) {
@@ -64,16 +76,7 @@ public class TeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         holder.nameView.setText(developer.getNameResId());
         holder.descriptionView.setText(developer.getDescriptionResId());
         ViewGroup.LayoutParams imageLp = holder.imageView.getLayoutParams();
-//        ViewGroup.LayoutParams wallpaperLp = holder.wallpaper.getLayoutParams();
         String url = developer.getImage().getUrl();
-
-        Picasso.with(context)
-                .load(wallpapers[position % wallpapers.length])
-                .error(R.drawable.field)
-                .placeholder(R.drawable.field)
-                .fit()
-
-                .into(holder.wallpaper);
 
         Picasso.with(context)
                 .load(url)
@@ -81,6 +84,24 @@ public class TeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 .error(R.drawable.ic_person)
                 .resize(imageLp.width, imageLp.height)
                 .into(holder.imageView);
+
+        Picasso.with(context)
+                .load(wallpapers[position % wallpapers.length])
+                .fit()
+                .centerCrop()
+                .into(holder.wallpaper, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        holder.nameView.setTextColor(ContextCompat.getColor(context, R.color.white));
+                        holder.descriptionView.setTextColor(ContextCompat.getColor(context, R.color.white));
+                    }
+
+                    @Override
+                    public void onError() {
+                        holder.nameView.setTextColor(ContextCompat.getColor(context, R.color.grey));
+                        holder.descriptionView.setTextColor(ContextCompat.getColor(context, R.color.grey));
+                    }
+                });
 
         List<Link> links = developer.getLinks();
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -122,11 +143,11 @@ public class TeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private TextView descriptionView;
         private CircleImageView imageView;
         private LinearLayout links;
-        private ImageView wallpaper;
+        private AspectRatioImageView wallpaper;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            wallpaper = (ImageView) itemView.findViewById(R.id.wallpaper);
+            wallpaper = (AspectRatioImageView) itemView.findViewById(R.id.wallpaper);
             nameView = (TextView) itemView.findViewById(R.id.name);
             descriptionView = (TextView) itemView.findViewById(R.id.description);
             imageView = (CircleImageView) itemView.findViewById(R.id.image);
