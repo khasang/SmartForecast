@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pref_header_general">Главные</string>
+
+    <string name="pref_category_general">Общие</string>
+    <string name="pref_category_start">Параметры запуска</string>
+    <string name="pref_category_location">Поиск местоположения</string>
+    <string name="pref_category_personalization">Персонализация</string>
+
+    <string name="pref_language_title">Язык</string>
+
+    <string name="pref_temperature_title">Единицы измерения температуры</string>
+    <string name="pref_temperature_celsius_label">Градус Цельсия (°C)</string>
+    <string name="pref_temperature_kelvin_label">Кельвин (K)</string>
+    <string name="pref_temperature_fahrenheit_label">Градус Фаренгейта (°F)</string>
+
+    <string name="pref_speed_title">Единицы измерения скорости ветра</string>
+    <string name="pref_speed_meter_sec_label">Метр в секунду (м/с)</string>
+    <string name="pref_speed_foot_sec_label">Фут в секунду (ф/с)</string>
+    <string name="pref_speed_km_hour_label">Километры в час (км/ч)</string>
+    <string name="pref_speed_mile_hour_label">Мили в час (миля/ч)</string>
+
+    <string name="pref_pressure_title">Единицы измерения давления</string>
+    <string name="pref_pressure_hpa_label">Гекто Паскать (гПа)</string>
+    <string name="pref_pressure_mm_hg_label">Миллиметр ртутного столба (мм рт.ст.)</string>
+
+    <string name="pref_welcome_title">Окно приветствия</string>
+    <string name="pref_welcome_summary">Показывать окно приветствия при запуске программы</string>
+
+    <string name="pref_welcome_text_title">Строка приветствия</string>
+    <string name="pref_welcome_text_summary">Показывать строку приветствия при запуске программы</string>
+
+    <string name="pref_location_title">При запуске показывать погоду для</string>
+    <string name="pref_location_current_label">Текущего местоположения</string>
+    <string name="pref_location_last_label">Последнего активного местоположения</string>
+
+    <string name="pref_gps_title">Использовать GPS</string>
+    <string name="pref_gps_description">Использовать GPS для определения Вашего местоположения</string>
+
+    <string name="pref_color_scheme_title">Цветовая схема</string>
+    <string name="pref_color_scheme_green_label">Зеленая</string>
+    <string name="pref_color_scheme_brown_label">Коричневая</string>
+    <string name="pref_color_scheme_teal_label">Бирюзовая</string>
+    <string name="pref_color_scheme_indigo_label">Темно-синяя</string>
+    <string name="pref_color_scheme_purple_label">Фиолетовая</string>
+
+    <string name="pref_night_mode_title">Тема</string>
+    <string name="pref_night_mode_off_label">Дневная тема</string>
+    <string name="pref_night_mode_on_label">Ночная тема</string>
+    <string name="pref_night_mode_auto_label">Основана на времени суток</string>
+
+    <string name="pref_icons_set_title">Набор иконок</string>
+    <string name="pref_icons_set_default_label">Стандартный набор</string>
+    <string name="pref_icons_set_mike_color_label">Набор цветовой схемы</string>
+    <string name="pref_icons_set_mike_bw_label">Чёрно-белый набор</string>
+
+    <string name="warning_message_gps">Использование GPS может увеличить скорость рязряда батареи, однако, несомненно, увеличит точность определения местоположения</string>
+</resources>
