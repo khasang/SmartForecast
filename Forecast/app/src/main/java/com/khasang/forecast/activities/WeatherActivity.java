@@ -1,5 +1,6 @@
 package com.khasang.forecast.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -22,7 +23,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -37,11 +37,16 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.InviteEvent;
+import com.google.android.gms.appinvite.AppInvite;
 import com.google.android.gms.appinvite.AppInviteInvitation;
-import com.khasang.forecast.AppUtils;
-import com.khasang.forecast.Logger;
-import com.khasang.forecast.MyApplication;
-import com.khasang.forecast.PermissionChecker;
+import com.google.android.gms.appinvite.AppInviteInvitationResult;
+import com.google.android.gms.appinvite.AppInviteReferral;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
 import com.khasang.forecast.R;
 import com.khasang.forecast.activities.etc.NavigationDrawer;
 import com.khasang.forecast.behaviors.FabOnTopBehavior;
@@ -54,6 +59,9 @@ import com.khasang.forecast.interfaces.IWeatherReceiver;
 import com.khasang.forecast.position.PositionManager;
 import com.khasang.forecast.position.Weather;
 import com.khasang.forecast.stations.WeatherStation;
+import com.khasang.forecast.utils.AppUtils;
+import com.khasang.forecast.utils.Logger;
+import com.khasang.forecast.utils.PermissionChecker;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.iconics.context.IconicsContextWrapper;
@@ -64,38 +72,58 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import static com.khasang.forecast.PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION;
+import butterknife.BindView;
+import icepick.State;
+import io.fabric.sdk.android.Fabric;
+
+import static com.khasang.forecast.utils.PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION;
 
 /**
  * Данные которые необходимо отображать в WeatherActivity (для первого релиза):
  * город, температура, давление, влажность, ветер, временная метка.
  */
-public class WeatherActivity extends AppCompatActivity
+public class WeatherActivity extends BaseActivity
         implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, IWeatherReceiver,
-        IPermissionCallback, IMessageProvider, NavigationDrawer.OnNavigationItemClickListener {
+        IPermissionCallback, IMessageProvider, NavigationDrawer.OnNavigationItemClickListener, GoogleApiClient
+                .OnConnectionFailedListener {
 
-    private static final int CHOOSE_CITY = 1;
-    public static final String CURRENT_CITY_TAG = "CURRENT_CITY";
     public static final String ACTIVE_CITY_TAG = "ACTIVE_CITY";
     private static final String TAG = WeatherActivity.class.getSimpleName();
+    private static final int REQUEST_INVITE = 0;
+    private static final int CHOOSE_CITY = 1;
 
-    private TextView temperature;
-    private TextView description;
-    private TextView wind;
-    private TextView humidity;
-    private ImageView currWeather;
+    @BindView(R.id.temperature_text)
+    TextView temperatureView;
+    @BindView(R.id.precipitation)
+    TextView precipitationView;
+    @BindView(R.id.wind_text)
+    TextView windView;
+    @BindView(R.id.humidity_text)
+    TextView humidityView;
+    @BindView(R.id.pressure_text)
+    TextView pressureView;
+    @BindView(R.id.current_weather_icon)
+    ImageView currentWeatherView;
+    @BindView(R.id.fab)
+    FloatingActionButton fab;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.progressbar)
+    ProgressBar progressbar;
+    @BindView(R.id.chart)
+    WeatherChart chart;
+    @BindView(R.id.chart_layout)
+    FrameLayout chartLayout;
+
+    @State
+    String activeCity;
+
     private ImageView syncBtn;
     private Animation animationRotateCenter;
     private Animation animationGrow;
     private HourlyForecastFragment hourlyForecastFragment;
     private DailyForecastFragment dailyForecastFragment;
-    private FloatingActionButton fab;
-    private Toolbar toolbar;
-    private ProgressBar progressbar;
-
-    private WeatherChart chart;
     private NavigationDrawer navigationDrawer;
-    private FrameLayout chartLayout;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -103,74 +131,104 @@ public class WeatherActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         PositionManager.getInstance(this, this);
         PositionManager.getInstance().generateIconSet(this);
-        Intent intent = getIntent();
-        String active_city = intent.getStringExtra(WeatherActivity.ACTIVE_CITY_TAG);
-        if (!(active_city == null || active_city.isEmpty())) {
-            PositionManager.getInstance().setCurrentPosition(active_city);
-        }
 
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        String colorScheme = sp.getString(getString(R.string.pref_color_scheme_key), getString(R.string.pref_color_scheme_teal));
-        int drawerHeaderArrayIndex = 0;
-        if (colorScheme.equals(getString(R.string.pref_color_scheme_brown))) {
-            setTheme(R.style.AppTheme_Main_Brown);
-            drawerHeaderArrayIndex = 1;
-        } else if (colorScheme.equals(getString(R.string.pref_color_scheme_teal))) {
-            setTheme(R.style.AppTheme_Main_Teal);
-            drawerHeaderArrayIndex = 2;
-        } else if (colorScheme.equals(getString(R.string.pref_color_scheme_indigo))) {
-            setTheme(R.style.AppTheme_Main_Indigo);
-            drawerHeaderArrayIndex = 3;
-        } else if (colorScheme.equals(getString(R.string.pref_color_scheme_purple))) {
-            setTheme(R.style.AppTheme_Main_Purple);
-            drawerHeaderArrayIndex = 4;
-        } else {
-            setTheme(R.style.AppTheme_Main_Green);
-        }
         setContentView(R.layout.activity_weather);
 
-        initFields();
+        int drawerHeaderArrayIndex = 0;
+        switch (themeResId) {
+            case R.style.AppTheme_Brown:
+                drawerHeaderArrayIndex = 1;
+                break;
+            case R.style.AppTheme_Teal:
+                drawerHeaderArrayIndex = 2;
+                break;
+            case R.style.AppTheme_Indigo:
+                drawerHeaderArrayIndex = 3;
+                break;
+            case R.style.AppTheme_Purple:
+                drawerHeaderArrayIndex = 4;
+                break;
+        }
+
+        setActivePosition();
+        init();
         initNavigationDrawer(drawerHeaderArrayIndex);
         setAnimationForWidgets();
         startAnimations();
         checkPermissions();
+        initAppInvite();
 
-        if (savedInstanceState != null) {
-            String savedCurrentCity = savedInstanceState.getString(CURRENT_CITY_TAG, "");
-            if (!savedCurrentCity.isEmpty()) {
-                PositionManager.getInstance().setCurrentPosition(savedCurrentCity);
-            }
+        hourlyForecastFragment = new HourlyForecastFragment();
+        dailyForecastFragment = new DailyForecastFragment();
+
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragment_container, hourlyForecastFragment)
+                .add(R.id.fragment_container, dailyForecastFragment)
+                .hide(dailyForecastFragment)
+                .commit();
+
+        PositionManager.getInstance().updateWeatherFromDB();
+        onRefresh();
+    }
+
+    private void initAppInvite() {
+        // Create an auto-managed GoogleApiClient with access to App Invites.
+        GoogleApiClient googleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(AppInvite.API)
+                .enableAutoManage(this, this)
+                .build();
+
+        // Check for App Invite invitations and launch deep-link activity if possible.
+        // Requires that an Activity is registered in AndroidManifest.xml to handle
+        // deep-link URLs.
+        boolean autoLaunchDeepLink = true;
+        AppInvite.AppInviteApi.getInvitation(googleApiClient, this, autoLaunchDeepLink)
+                .setResultCallback(
+                        new ResultCallback<AppInviteInvitationResult>() {
+                            @Override
+                            public void onResult(AppInviteInvitationResult result) {
+                                Log.d(TAG, "getInvitation:onResult:" + result.getStatus());
+                                if (result.getStatus().isSuccess()) {
+                                    // Extract information from the intent
+                                    Intent intent = result.getInvitationIntent();
+                                    String deepLink = AppInviteReferral.getDeepLink(intent);
+                                    String invitationId = AppInviteReferral.getInvitationId(intent);
+
+                                    // Because autoLaunchDeepLink = true we don't have to do anything
+                                    // here, but we could set that to false and manually choose
+                                    // an Activity to launch to handle the deep link here.
+                                    // ...
+                                }
+                            }
+                        }
+                );
+    }
+
+    private void setActivePosition() {
+        String intentActiveCity = getIntent().getStringExtra(ACTIVE_CITY_TAG);
+        if (intentActiveCity != null) {
+            activeCity = intentActiveCity;
         }
-        if (findViewById(R.id.fragment_container) != null) {
-            hourlyForecastFragment = new HourlyForecastFragment();
-            dailyForecastFragment = new DailyForecastFragment();
-
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, hourlyForecastFragment)
-                    .add(R.id.fragment_container, dailyForecastFragment)
-                    .hide(dailyForecastFragment)
-                    .commit();
+        if (activeCity != null) {
+            PositionManager.getInstance().setActivePosition(activeCity);
+            setCityInToolbar(activeCity);
         }
     }
 
-    private void initFields() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar_material);
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-        currWeather = (ImageView) findViewById(R.id.iv_curr_weather);
-        temperature = (TextView) findViewById(R.id.temperature);
-        description = (TextView) findViewById(R.id.precipitation);
-        wind = (TextView) findViewById(R.id.wind);
-        humidity = (TextView) findViewById(R.id.humidity);
-        progressbar = (ProgressBar) findViewById(R.id.progressbar);
-        chart = (WeatherChart) findViewById(R.id.chart);
-        chartLayout = (FrameLayout) findViewById(R.id.chart_layout);
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Log.d(TAG, "onConnectionFailed: " + connectionResult);
+        showSnackbar(R.string.google_play_services_error, Snackbar.LENGTH_SHORT);
+    }
 
+    private void init() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            progressbar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this, R.color.accent), PorterDuff.Mode.SRC_ATOP);
+            progressbar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(this, R.color.accent),
+                    PorterDuff.Mode.SRC_ATOP);
         }
 
         /** Слушатели нажатий объектов */
@@ -182,10 +240,11 @@ public class WeatherActivity extends AppCompatActivity
 
         /** Behavior для FAB */
         CoordinatorLayout.LayoutParams fabLayoutParams = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
-        int maxChartHeight = (int)  getResources().getDimension(R.dimen.chart_height);
+        int maxChartHeight = (int) getResources().getDimension(R.dimen.chart_height);
         fabLayoutParams.setBehavior(new FabOnTopBehavior(chartLayout, maxChartHeight));
 
-        temperature.setOnClickListener(this);
+        temperatureView.setOnClickListener(this);
+
         setSupportActionBar(toolbar);
     }
 
@@ -201,25 +260,18 @@ public class WeatherActivity extends AppCompatActivity
                 changeDisplayedCity("");
                 break;
             case NavigationDrawer.NAVIGATION_CITY_LIST:
-                startCityPickerActivity();
+                launchCityPickerActivity();
                 break;
             case NavigationDrawer.NAVIGATION_FAVORITES:
                 break;
             case NavigationDrawer.NAVIGATION_SETTINGS:
-                startSettingsActivity();
+                launchSettingsActivity();
                 break;
-            case NavigationDrawer.NAVIGATION_FEEDBACK:
-                String url;
-                switch (Locale.getDefault().getLanguage()) {
-                    case "ru":
-                        url = MyApplication.getAppContext().getString(R.string.google_form_ru);
-                        break;
-                    default:
-                        url = MyApplication.getAppContext().getString(R.string.google_form_en);
-                        break;
-                }
-                Intent feedbackIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                startActivity(feedbackIntent);
+            case NavigationDrawer.NAVIGATION_ABOUT:
+                launchAboutActivity();
+                break;
+            case NavigationDrawer.NAVIGATION_INVITE:
+                onInviteClicked();
                 break;
             case NavigationDrawer.NAVIGATION_APP_NAME:
                 break;
@@ -229,6 +281,16 @@ public class WeatherActivity extends AppCompatActivity
                         .get(identifier - NavigationDrawer.SUB_ITEMS_BASE_INDEX);
                 changeDisplayedCity(newCity);
         }
+    }
+
+    private void onInviteClicked() {
+        Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.invitation_title))
+                .setMessage(getString(R.string.invitation_message))
+                //.setDeepLink(Uri.parse(getString(R.string.invitation_deep_link)))
+                .setCustomImage(Uri.parse(getString(R.string.invitation_custom_image)))
+                .setCallToActionText(getString(R.string.invitation_cta))
+                .build();
+        startActivityForResult(intent, REQUEST_INVITE);
     }
 
     private void setAnimationForWidgets() {
@@ -245,8 +307,7 @@ public class WeatherActivity extends AppCompatActivity
     }
 
     private void checkPermissions() {
-        PermissionChecker permissionChecker = new PermissionChecker();
-        permissionChecker.checkForPermissions(this, PERMISSION_REQUEST_FINE_LOCATION, this);
+        new PermissionChecker().checkForPermissions(this, PERMISSION_REQUEST_FINE_LOCATION, this);
     }
 
     @Override
@@ -255,9 +316,8 @@ public class WeatherActivity extends AppCompatActivity
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PERMISSION_REQUEST_FINE_LOCATION.VALUE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                PositionManager.getInstance().setReceiver(null);
-                PositionManager.getInstance().removeInstance();
                 PositionManager.getInstance().setReceiver(this);
+                PositionManager.getInstance().setMessageProvider(this);
                 PositionManager.getInstance().updateWeatherFromDB();
                 PositionManager.getInstance().updateWeather();
                 permissionGranted(PERMISSION_REQUEST_FINE_LOCATION);
@@ -269,39 +329,28 @@ public class WeatherActivity extends AppCompatActivity
 
     @Override
     public void permissionGranted(PermissionChecker.RuntimePermissions permission) {
-        checkCoordinatesServices();
-    }
-
-    private void checkCoordinatesServices() {
         if (!PositionManager.getInstance().isSomeLocationProviderAvailable()) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle(R.string.location_manager);
-            builder.setMessage(R.string.activate_geographical_service);
-            builder.setPositiveButton(R.string.btn_yes, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    startActivity(i);
-                }
-            });
-            builder.setNegativeButton(R.string.btn_no, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            });
-            builder.create().show();
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.location_manager)
+                    .setMessage(R.string.activate_geographical_service)
+                    .setPositiveButton(R.string.btn_yes, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                        }
+                    })
+                    .setNegativeButton(R.string.btn_no, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    })
+                    .create().show();
         }
     }
 
     @Override
     public void permissionDenied(PermissionChecker.RuntimePermissions permission) {
-    }
-
-    public void startCityPickerActivity() {
-        Intent intent = new Intent(this, CityPickerActivity.class);
-        Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle();
-        ActivityCompat.startActivityForResult(this, intent, CHOOSE_CITY, bundle);
     }
 
     /**
@@ -310,22 +359,70 @@ public class WeatherActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CHOOSE_CITY) {
-            if (resultCode == RESULT_OK) {
-                String newCity = data.getStringExtra(CityPickerActivity.CITY_PICKER_TAG);
-                toolbar.setTitle(newCity.split(",")[0]);
-                Logger.println(TAG, newCity);
-                changeDisplayedCity(newCity);
-            } else {
-                if (!PositionManager.getInstance().positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {
+        Log.d(TAG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
+        PositionManager.getInstance().setMessageProvider(this);
+        PositionManager.getInstance().setReceiver(this);
+        switch (requestCode) {
+            case CHOOSE_CITY:
+                PositionManager pm = PositionManager.getInstance();
+                if (resultCode == RESULT_OK) {
+                    String newCity = data.getStringExtra(CityPickerActivity.CITY_PICKER_TAG);
+                    Logger.println(TAG, newCity);
+                    setCityInToolbar(newCity);
+                    pm.setActivePosition(newCity);
+                    onRefresh();
+                } else if (!pm.positionIsPresent(pm.getActivePositionCity())) {
                     showProgress(false);
                 }
-            }
+                break;
+            case REQUEST_INVITE:
+                if (resultCode == RESULT_OK) {
+                    // Get the invitation IDs of all sent messages
+                    String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
+                    int invitesCount = 0;
+                    for (String id : ids) {
+                        Log.d(TAG, "onActivityResult: sent invitation " + id);
+                        invitesCount++;
+                    }
+                    if (Fabric.isInitialized()) {
+                        Answers.getInstance().logInvite(new InviteEvent().putMethod("App Invites")
+                                .putCustomAttribute("Invite friends", "Send to " + String.valueOf(invitesCount) + " " +
+                                        "users"));
+                    }
+
+                    // Сохранение общего количества отправленных приглашений
+                    SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+                    int totalInvites = sp.getInt(getString(R.string.total_app_invites), 0);
+                    totalInvites += invitesCount;
+                    sp.edit().putInt(getString(R.string.total_app_invites), totalInvites).apply();
+                } else {
+                    // Sending failed or it was canceled, show failure message to the user
+                    if (Fabric.isInitialized()) {
+                        Answers.getInstance().logInvite(new InviteEvent().putMethod("App Invites")
+                                .putCustomAttribute("Invite friends", "Canceled"));
+                    }
+                }
+                break;
         }
     }
 
-    public void startSettingsActivity() {
+    @SuppressWarnings("unchecked")
+    public void launchCityPickerActivity() {
+        Intent intent = new Intent(this, CityPickerActivity.class);
+        Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle();
+        ActivityCompat.startActivityForResult(this, intent, CHOOSE_CITY, bundle);
+    }
+
+    @SuppressWarnings("unchecked")
+    public void launchSettingsActivity() {
         Intent intent = new Intent(this, SettingsActivity.class);
+        Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle();
+        startActivity(intent, bundle);
+    }
+
+    @SuppressWarnings("unchecked")
+    public void launchAboutActivity() {
+        Intent intent = new Intent(this, AboutActivity.class);
         Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle();
         startActivity(intent, bundle);
     }
@@ -336,14 +433,9 @@ public class WeatherActivity extends AppCompatActivity
     public void changeDisplayedCity(String newCity) {
         PositionManager.getInstance().setMessageProvider(this);
         PositionManager.getInstance().setReceiver(this);
-        PositionManager.getInstance().setCurrentPosition(newCity);
+        PositionManager.getInstance().setActivePosition(newCity);
         PositionManager.getInstance().updateWeatherFromDB();
         onRefresh();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
     }
 
     @Override
@@ -359,53 +451,54 @@ public class WeatherActivity extends AppCompatActivity
         PositionManager.getInstance().setReceiver(this);
         PositionManager.getInstance().setMessageProvider(this);
 
-        PermissionChecker permissionChecker = new PermissionChecker();
         boolean isLocationPermissionGranted =
-                permissionChecker.isPermissionGranted(this, PERMISSION_REQUEST_FINE_LOCATION);
+                new PermissionChecker().isPermissionGranted(this, PERMISSION_REQUEST_FINE_LOCATION);
         navigationDrawer.updateBadges(isLocationPermissionGranted);
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+
+        // Получаем GPS флаг из памяти
         PositionManager.getInstance().setUseGpsModule(sp.getBoolean(getString(R.string.pref_gps_key), true));
-        if (sp.getString(getString(R.string.pref_units_key), getString(R.string.pref_units_celsius)).equals(getString(R.string.pref_units_celsius))) {
-            PositionManager.getInstance().setTemperatureMetric(AppUtils.TemperatureMetrics.CELSIUS);
-        } else if (sp.getString(getString(R.string.pref_units_key), getString(R.string.pref_units_celsius)).equals(getString(R.string.pref_units_kelvin))) {
+
+        // Получаем единицы измерения температуры из памяти
+        String temperature = sp.getString(getString(R.string.pref_temperature_key), getString(R.string
+                .pref_temperature_celsius));
+        if (temperature.equals(getString(R.string.pref_temperature_kelvin))) {
             PositionManager.getInstance().setTemperatureMetric(AppUtils.TemperatureMetrics.KELVIN);
-        } else if (sp.getString(getString(R.string.pref_units_key), getString(R.string.pref_units_celsius)).equals(getString(R.string.pref_units_fahrenheit))) {
+        } else if (temperature.equals(getString(R.string.pref_temperature_fahrenheit))) {
             PositionManager.getInstance().setTemperatureMetric(AppUtils.TemperatureMetrics.FAHRENHEIT);
         } else {
             PositionManager.getInstance().setTemperatureMetric(AppUtils.TemperatureMetrics.CELSIUS);
         }
 
-        if (sp.getString(getString(R.string.pref_speed_key), getString(R.string.pref_speed_meter_sec)).equals(getString(R.string.pref_speed_meter_sec))) {
-            PositionManager.getInstance().setSpeedMetric(AppUtils.SpeedMetrics.METER_PER_SECOND);
-        } else if (sp.getString(getString(R.string.pref_speed_key), getString(R.string.pref_speed_meter_sec)).equals(getString(R.string.pref_speed_foot_sec))) {
+        // Получаем единицы измерения скорости ветра из памяти
+        String speed = sp.getString(getString(R.string.pref_speed_key), getString(R.string.pref_speed_meter_sec));
+        if (speed.equals(getString(R.string.pref_speed_foot_sec))) {
             PositionManager.getInstance().setSpeedMetric(AppUtils.SpeedMetrics.FOOT_PER_SECOND);
-        } else if (sp.getString(getString(R.string.pref_speed_key), getString(R.string.pref_speed_meter_sec)).equals(getString(R.string.pref_speed_km_hour))) {
+        } else if (speed.equals(getString(R.string.pref_speed_km_hour))) {
             PositionManager.getInstance().setSpeedMetric(AppUtils.SpeedMetrics.KM_PER_HOURS);
-        } else if (sp.getString(getString(R.string.pref_speed_key), getString(R.string.pref_speed_meter_sec)).equals(getString(R.string.pref_speed_mile_hour))) {
+        } else if (speed.equals(getString(R.string.pref_speed_mile_hour))) {
             PositionManager.getInstance().setSpeedMetric(AppUtils.SpeedMetrics.MILES_PER_HOURS);
         } else {
             PositionManager.getInstance().setSpeedMetric(AppUtils.SpeedMetrics.METER_PER_SECOND);
         }
 
-        PositionManager.getInstance().updateWeatherFromDB();
-        onRefresh();
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString(CURRENT_CITY_TAG, PositionManager.getInstance().getCurrentPositionName());
+        // Получаем единицы измерения давления из памяти
+        String pressure = sp.getString(getString(R.string.pref_pressure_key), getString(R.string.pref_pressure_hpa));
+        if (pressure.equals(getString(R.string.pref_pressure_mm_hg))) {
+            PositionManager.getInstance().setPressureMetric(AppUtils.PressureMetrics.MM_HG);
+        } else {
+            PositionManager.getInstance().setPressureMetric(AppUtils.PressureMetrics.HPA);
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putString(getString(R.string.shared_last_active_position_name),
-                PositionManager.getInstance().getCurrentPositionName());
-        editor.apply();
+        String currentPositionName = PositionManager.getInstance().getActivePositionCity();
+        sp.edit().putString(getString(R.string.last_active_position_name), currentPositionName).apply();
+
         PositionManager.getInstance().setMessageProvider(null);
         PositionManager.getInstance().setReceiver(null);
     }
@@ -433,7 +526,7 @@ public class WeatherActivity extends AppCompatActivity
                 .icon(GoogleMaterial.Icon.gmd_refresh)
                 .color(ContextCompat.getColor(this, R.color.current_weather_color));
 
-        syncBtn = (ImageView) item.getActionView().findViewById(R.id.refreshButton);
+        syncBtn = (ImageView) item.getActionView().findViewById(R.id.refresh_button);
         syncBtn.setImageDrawable(icon);
         syncBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -448,15 +541,11 @@ public class WeatherActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_item_refresh:
-                startAnimation();
+                syncBtn.startAnimation(animationRotateCenter);
                 onRefresh();
                 return true;
         }
         return false;
-    }
-
-    private void startAnimation() {
-        syncBtn.startAnimation(animationRotateCenter);
     }
 
     /**
@@ -465,7 +554,6 @@ public class WeatherActivity extends AppCompatActivity
     @Override
     public void updateInterface(WeatherStation.ResponseType responseType,
                                 Map<Calendar, Weather> forecast) {
-        toolbar.setTitle(PositionManager.getInstance().getCurrentPositionName().split(",")[0]);
         if (forecast == null || forecast.size() == 0) {
             Logger.println(TAG, "Weather is null!");
             return;
@@ -478,6 +566,7 @@ public class WeatherActivity extends AppCompatActivity
                 break;
             case HOURLY:
                 Logger.println(TAG, "Принят HOURLY прогноз");
+                hourlyForecastFragment.setTimeZone(PositionManager.getInstance().getActivePosition().getTimeZone());
                 hourlyForecastFragment.setDatasAndAnimate(forecast);
                 if (hourlyForecastFragment.isVisible()) {
                     updateWeatherChart(true);
@@ -501,39 +590,47 @@ public class WeatherActivity extends AppCompatActivity
         }, 1250);
     }
 
-    public void updateCurrentWeather(Calendar date, Weather wCurrent) {
-        if (wCurrent == null) {
+    @SuppressLint("DefaultLocale")
+    public void updateCurrentWeather(Calendar date, Weather weather) {
+        if (weather == null) {
             Log.i(TAG, "Weather is null!");
             return;
         }
-        toolbar.setTitle(PositionManager.getInstance().getCurrentPositionName().split(",")[0]);
-        temperature.setText(String.format("%.0f%s", wCurrent.getTemperature(),
-                PositionManager.getInstance().getTemperatureMetric().toStringValue()));
-        description.setText(String.format("%s",
-                wCurrent.getDescription().substring(0, 1).toUpperCase() + wCurrent.getDescription()
-                        .substring(1)));
-        Drawable weatherIcon = PositionManager.getInstance().getWeatherIcon(wCurrent.getPrecipitation()
-                .getIconIndex(AppUtils.isDayFromString(String.format(Locale.getDefault(), "%tR", date))), true);
-        currWeather.setImageDrawable(weatherIcon);
+        PositionManager pm = PositionManager.getInstance();
 
-        wind.setText(Html.fromHtml(
-                String.format("%s %.0f%s", wCurrent.getWindDirection().getDirectionString(),
-                        wCurrent.getWindPower(),
-                        PositionManager.getInstance().getSpeedMetric().toStringValue())));
+        setCityInToolbar(pm.getActivePositionCity());
 
-        humidity.setText(String.format("%s%%", wCurrent.getHumidity()));
+        double temperature = weather.getTemperature();
+        String temperatureMetrics = pm.getTemperatureMetric().toStringValue();
+        temperatureView.setText(String.format("%.0f%s", temperature, temperatureMetrics));
+
+        String precipitation1 = weather.getDescription().substring(0, 1).toUpperCase();
+        String precipitation2 = weather.getDescription().substring(1);
+        precipitationView.setText(String.format("%s", precipitation1 + precipitation2));
+
+        boolean isDay = AppUtils.isDayFromString(String.format(Locale.getDefault(), "%tR", date));
+        Drawable weatherIcon = pm.getWeatherIcon(weather.getPrecipitation().getIconIndex(isDay), true);
+        currentWeatherView.setImageDrawable(weatherIcon);
+
+        String directionString = weather.getWindDirection().getDirectionString();
+        double windPower = weather.getWindPower();
+        String speedMetrics = PositionManager.getInstance().getSpeedMetric().toStringValue();
+        windView.setText(Html.fromHtml(String.format("%s %.0f%s", directionString, windPower, speedMetrics)));
+
+        humidityView.setText(String.format("%s%%", weather.getHumidity()));
+
+        int pressure = weather.getIntPressure();
+        String pressureMetrics = pm.getPressureMetric().toStringValue();
+        pressureView.setText(String.format("%s %s", pressure, pressureMetrics));
     }
 
-    /**
-     * Обработчик нажатия объектов
-     */
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab:
                 switchDisplayMode();
                 break;
-            case R.id.temperature:
+            case R.id.temperature_text:
                 PositionManager.getInstance().changeTemperatureMetric();
                 PositionManager.getInstance().updateWeatherFromDB();
                 break;
@@ -541,23 +638,17 @@ public class WeatherActivity extends AppCompatActivity
     }
 
     private void switchDisplayMode() {
-        final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         IconicsDrawable icon = new IconicsDrawable(this)
                 .color(ContextCompat.getColor(this, R.color.current_weather_color));
         if (dailyForecastFragment.isHidden()) {
             ft.show(dailyForecastFragment).hide(hourlyForecastFragment).commit();
             icon.icon(Octicons.Icon.oct_clock);
             updateWeatherChart(false);
-
-            boolean appbarVisible = chartLayout.getLayoutParams().height == 0;
-            dailyForecastFragment.scroll(appbarVisible);
         } else {
             ft.show(hourlyForecastFragment).hide(dailyForecastFragment).commit();
             icon.icon(Octicons.Icon.oct_calendar);
             updateWeatherChart(true);
-
-            boolean appbarVisible = chartLayout.getLayoutParams().height == 0;
-            hourlyForecastFragment.scroll(appbarVisible);
         }
         fab.setImageDrawable(icon);
     }
@@ -569,9 +660,9 @@ public class WeatherActivity extends AppCompatActivity
     public void onRefresh() {
         showProgress(true);
         if (!PositionManager.getInstance()
-                .positionIsPresent(PositionManager.getInstance().getCurrentPositionName())) {
+                .positionIsPresent(PositionManager.getInstance().getActivePositionCity())) {
             Logger.println(TAG, "There is nothing to refresh");
-            showMessageToUser(getString(R.string.msg_no_city), Snackbar.LENGTH_LONG);
+            showSnackbar(R.string.msg_no_city, Snackbar.LENGTH_LONG);
             showProgress(false);
             return;
         }
@@ -588,13 +679,13 @@ public class WeatherActivity extends AppCompatActivity
     }
 
     @Override
-    public void showMessageToUser(CharSequence string, int length) {
-        AppUtils.showSnackBar(this, findViewById(R.id.coordinatorLayout), string, length);
+    public void showSnackbar(int stringId, int length) {
+        showSnackbar(getString(stringId), length);
     }
 
     @Override
-    public void showMessageToUser(int stringId, int length) {
-        showMessageToUser(getString(stringId), length);
+    public void showSnackbar(CharSequence string, int length) {
+        AppUtils.showSnackBar(this, findViewById(R.id.coordinatorLayout), string, length);
     }
 
     @Override
@@ -605,9 +696,7 @@ public class WeatherActivity extends AppCompatActivity
     @Override
     public void showToast(CharSequence string) {
         Toast toast = AppUtils.showInfoMessage(this, string);
-        toast.getView()
-                .setBackgroundColor(
-                        ContextCompat.getColor(MyApplication.getAppContext(), R.color.background_toast));
+        toast.getView().setBackgroundColor(ContextCompat.getColor(this, R.color.background_toast));
         toast.setDuration(Toast.LENGTH_LONG);
         toast.show();
     }
@@ -622,4 +711,10 @@ public class WeatherActivity extends AppCompatActivity
         chart.updateForecast(forecast, isHourFragmentVisible);
     }
 
+    private void setCityInToolbar(String city) {
+        activeCity = city;
+        if (city != null) {
+            toolbar.setTitle(city.split(",")[0]);
+        }
+    }
 }

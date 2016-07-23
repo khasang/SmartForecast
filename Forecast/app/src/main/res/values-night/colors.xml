@@ -38,4 +38,6 @@
     <color name="material_drawer_primary_text">@color/text_primary</color>
     <color name="material_drawer_secondary_text">@color/text_primary</color>
     <color name="material_drawer_primary_icon">@color/material_drawer_primary_text</color>
+
+    <color name="divider">#FFFFFF</color>
 </resources>

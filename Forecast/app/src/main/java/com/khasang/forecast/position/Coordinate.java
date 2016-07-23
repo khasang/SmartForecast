@@ -3,7 +3,6 @@ package com.khasang.forecast.position;
 /**
  * Created by Veda on 24.11.15.
  */
-
 public class Coordinate implements Comparable<Coordinate> {
     private double latitude;
     private double longitude;
@@ -44,8 +43,13 @@ public class Coordinate implements Comparable<Coordinate> {
         return 1;
     }
 
-    @Override public String toString() {
-        return "Coordinate{latitude=" + latitude + ", longitude=" + longitude +"}";
+    @Override
+    public String toString() {
+        return "Coordinate{latitude=" + latitude + ", longitude=" + longitude + "}";
+    }
+
+    public String convertToTimezoneUrlParameterString() {
+        return String.valueOf(latitude) + "," + String.valueOf(longitude);
     }
 }
 

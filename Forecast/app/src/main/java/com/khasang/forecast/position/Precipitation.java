@@ -1,6 +1,6 @@
 package com.khasang.forecast.position;
 
-import com.khasang.forecast.AppUtils;
+import com.khasang.forecast.utils.AppUtils;
 
 /**
  * Created by Veda on 24.11.15.

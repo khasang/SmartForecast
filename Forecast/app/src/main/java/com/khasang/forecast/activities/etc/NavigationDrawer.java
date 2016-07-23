@@ -1,14 +1,12 @@
 package com.khasang.forecast.activities.etc;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
-import android.net.Uri;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import com.google.android.gms.appinvite.AppInviteInvitation;
+import com.khasang.forecast.BuildConfig;
 import com.khasang.forecast.R;
 import com.khasang.forecast.position.PositionManager;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
@@ -25,6 +23,7 @@ import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
+
 import java.util.List;
 
 /**
@@ -38,7 +37,7 @@ public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
     public static final int NAVIGATION_CITY_LIST = 1;
     public static final int NAVIGATION_FAVORITES = 2;
     public static final int NAVIGATION_SETTINGS = 3;
-    public static final int NAVIGATION_FEEDBACK = 4;
+    public static final int NAVIGATION_ABOUT = 4;
     public static final int NAVIGATION_INVITE = 5;
     public static final int NAVIGATION_APP_NAME = 6;
 
@@ -93,11 +92,16 @@ public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
             .withIcon(FontAwesome.Icon.faw_cog)
             .withIdentifier(NAVIGATION_SETTINGS);
 
-        SecondaryDrawerItem feedBack = new SecondaryDrawerItem().withName(R.string.drawer_item_feedback)
-            .withIcon(GoogleMaterial.Icon.gmd_feedback)
-            .withIdentifier(NAVIGATION_FEEDBACK);
+        SecondaryDrawerItem invite = new SecondaryDrawerItem().withName(R.string.drawer_item_invite)
+                .withIcon(GoogleMaterial.Icon.gmd_message)
+                .withIdentifier(NAVIGATION_INVITE);
 
-        PrimaryDrawerItem footer = new PrimaryDrawerItem().withName(R.string.app_name)
+        SecondaryDrawerItem about = new SecondaryDrawerItem().withName(R.string.drawer_item_about)
+            .withIcon(GoogleMaterial.Icon.gmd_group)
+            .withIdentifier(NAVIGATION_ABOUT);
+
+        String name = activity.getString(R.string.app_name) + " v" + BuildConfig.VERSION_NAME;
+        PrimaryDrawerItem footer = new PrimaryDrawerItem().withName(name)
             .withEnabled(false)
             .withIdentifier(NAVIGATION_APP_NAME);
 
@@ -107,7 +111,7 @@ public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
             .withSelectedItem(-1)
             .withActionBarDrawerToggle(true)
             .withAccountHeader(accountHeader)
-            .addDrawerItems(currentPlace, cityList, favorites, divider, settings, feedBack)
+            .addDrawerItems(currentPlace, cityList, favorites, divider, settings, invite, about)
             .addStickyDrawerItems(footer)
             .withOnDrawerItemClickListener(this)
             .build();
@@ -136,14 +140,15 @@ public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
                 favoritesExposed = false;
                 result.closeDrawer();
                 break;
+            case NAVIGATION_SETTINGS:
+            case NAVIGATION_ABOUT:
+                result.closeDrawer();
+                break;
             case NAVIGATION_FAVORITES:
                 favoritesExposed = !favoritesExposed;
                 updateFavorites();
                 break;
-            case NAVIGATION_SETTINGS:
-                break;
-            case NAVIGATION_FEEDBACK:
-                result.closeDrawer();
+            case NAVIGATION_INVITE:
                 break;
             case NAVIGATION_APP_NAME:
                 break;

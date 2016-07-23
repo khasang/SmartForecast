@@ -8,8 +8,24 @@ public class Position implements IPosition {
     private String name;
     private int cityID;
     private Coordinate coordinate;
+    private Integer timeZone = null;
 
     public Position() {
+    }
+
+    public boolean timeZoneIsDefined () {
+        return timeZone != null;
+    }
+
+    public int getTimeZone() {
+        if (timeZone == null) {
+            return 0;
+        }
+        return timeZone;
+    }
+
+    public void setTimeZone(Integer timeZone) {
+        this.timeZone = timeZone;
     }
 
     @Override
@@ -54,10 +70,7 @@ public class Position implements IPosition {
             return false;
         }
         Position position = (Position) o;
-        if (cityID == position.cityID) {
-            return true;
-        }
-        return false;
+        return cityID == position.cityID;
     }
 
     @Override
@@ -68,7 +81,8 @@ public class Position implements IPosition {
         return result;
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
         return "Position{name=" + name + ", cityID=" + cityID + ", coordinate=" + coordinate + "}";
     }
 }

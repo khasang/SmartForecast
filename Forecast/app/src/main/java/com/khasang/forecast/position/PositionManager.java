@@ -7,32 +7,36 @@ import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.net.ConnectivityManager;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.PreferenceManager;
 
-import com.khasang.forecast.AppUtils;
 import com.khasang.forecast.MyApplication;
-import com.khasang.forecast.PermissionChecker;
 import com.khasang.forecast.R;
+import com.khasang.forecast.api.GoogleMapsGeocoding;
+import com.khasang.forecast.api.GoogleMapsTimezone;
 import com.khasang.forecast.exceptions.AccessFineLocationNotGrantedException;
+import com.khasang.forecast.exceptions.EmptyCurrentAddressException;
 import com.khasang.forecast.exceptions.GpsIsDisabledException;
+import com.khasang.forecast.exceptions.NoAvailableAddressesException;
 import com.khasang.forecast.exceptions.NoAvailableLocationServiceException;
+import com.khasang.forecast.interfaces.ICoordinateReceiver;
+import com.khasang.forecast.interfaces.ILocationNameReceiver;
 import com.khasang.forecast.interfaces.IMessageProvider;
 import com.khasang.forecast.interfaces.IWeatherReceiver;
 import com.khasang.forecast.location.CurrentLocationManager;
-import com.khasang.forecast.exceptions.EmptyCurrentAddressException;
 import com.khasang.forecast.location.LocationParser;
-import com.khasang.forecast.exceptions.NoAvailableAddressesException;
 import com.khasang.forecast.sqlite.SQLiteProcessData;
 import com.khasang.forecast.stations.WeatherStation;
 import com.khasang.forecast.stations.WeatherStationFactory;
+import com.khasang.forecast.utils.AppUtils;
+import com.khasang.forecast.utils.PermissionChecker;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.weather_icons_typeface_library.WeatherIcons;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
@@ -44,8 +48,7 @@ import java.util.Set;
 /**
  * Created by Роман on 26.11.2015.
  */
-
-public class PositionManager {
+public class PositionManager implements ICoordinateReceiver, ILocationNameReceiver {
 
     AppUtils.TemperatureMetrics temperatureMetric;
     AppUtils.SpeedMetrics speedMetric;
@@ -53,7 +56,7 @@ public class PositionManager {
     private WeatherStation currStation;
     private volatile Position activePosition;            // Здесь лежит "активная" позиция (которая на данный момент активна на экране)
     private HashMap<WeatherStationFactory.ServiceType, WeatherStation> stations;
-    private volatile Position currentLocation; // Здесь лежит текущая по местоположению локация (там где находится пользователь)
+    private volatile Position currentPosition; // Здесь лежит текущая по местоположению локация (там где находится пользователь)
     private volatile HashMap<String, Position> positions;
     List<String> favouritesPositions;
     private volatile IWeatherReceiver receiver;
@@ -186,8 +189,8 @@ public class PositionManager {
 
     public void saveCurrPosition() {
         try {
-            dbManager.saveLastCurrentLocationName(currentLocation.getLocationName());
-            dbManager.saveLastPositionCoordinates(currentLocation.getCoordinate());
+            dbManager.saveLastCurrentLocationName(currentPosition.getLocationName());
+            dbManager.saveLastPositionCoordinates(currentPosition.getCoordinate());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -209,41 +212,49 @@ public class PositionManager {
     }
 
     private void initCurrentLocation() {
-        currentLocation = new Position();
-        currentLocation.setLocationName("Smart Forecast");
-        currentLocation.setCityID(0);
-        currentLocation.setCoordinate(null);
+        currentPosition = new Position();
+        currentPosition.setLocationName("Smart Forecast");
+        currentPosition.setCityID(0);
+        currentPosition.setCoordinate(null);
     }
 
     /**
      * Метод инициализации списка местоположений, вызывается из активити
      */
     private void initPositions() {
-        HashMap<String, Coordinate> pos = dbManager.loadTownList();
+        ArrayList<Position> pos = dbManager.loadTownListFull();
         initPositions(pos);
     }
 
     /**
      * Метод инициализации списка местоположений, которые добавлены в список городов
-     *
-     * @param favorites коллекция {@link List} типа {@link String}, содержащая названия городов
      */
-    private void initPositions(HashMap<String, Coordinate> favorites) {
+    private void initPositions(ArrayList<Position> pos) {
         PositionFactory positionFactory = new PositionFactory();
 
-        if (favorites.size() != 0) {
-            for (HashMap.Entry<String, Coordinate> entry : favorites.entrySet()) {
-                positionFactory.addFavouritePosition(entry.getKey(), entry.getValue());
+        if (pos.size() != 0) {
+            for (Position entry : pos) {
+                positionFactory.addFavouritePosition(entry);
             }
         }
         positions = positionFactory.getPositions();
+        for (Position p : positions.values()) {
+            if ((p.getCoordinate() == null) || (p.getCoordinate().getLatitude() == 0 && p.getCoordinate().getLongitude() == 0)) {
+                GoogleMapsGeocoding googleMapsGeocoding = new GoogleMapsGeocoding();
+                googleMapsGeocoding.requestCoordinates(p.getLocationName(), this, false);
+            }
+            if (!p.timeZoneIsDefined()) {
+                GoogleMapsTimezone googleMapsTimezone = new GoogleMapsTimezone();
+                googleMapsTimezone.requestCoordinates(p);
+            }
+        }
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MyApplication.getAppContext());
         boolean saveCurrentLocation = sp.getString(MyApplication.getAppContext().getString(R.string.pref_location_key), MyApplication.getAppContext().getString(R.string.pref_location_current)).equals(MyApplication.getAppContext().getString(R.string.pref_location_current));
-        String lastActivePositionName = sp.getString(MyApplication.getAppContext().getString(R.string.shared_last_active_position_name), "");
-        currentLocation.setLocationName(dbManager.loadСurrentTown());
-        currentLocation.setCoordinate(dbManager.loadLastPositionCoordinates());
+        String lastActivePositionName = sp.getString(MyApplication.getAppContext().getString(R.string.last_active_position_name), "");
+        currentPosition.setLocationName(dbManager.loadСurrentTown());
+        currentPosition.setCoordinate(dbManager.loadLastPositionCoordinates());
         if (saveCurrentLocation) {
-            activePosition = currentLocation;
+            activePosition = currentPosition;
             PermissionChecker permissionChecker = new PermissionChecker();
             boolean isLocationPermissionGranted = permissionChecker.isPermissionGranted(MyApplication.getAppContext(), PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION);
             if (!isLocationPermissionGranted) {
@@ -255,7 +266,7 @@ public class PositionManager {
             if (!lastActivePositionName.isEmpty() && positionInListPresent(lastActivePositionName)) {
                 activePosition = getPosition(lastActivePositionName);
             } else {
-                activePosition = currentLocation;
+                activePosition = currentPosition;
             }
         }
     }
@@ -277,11 +288,6 @@ public class PositionManager {
         positions = positionFactory.getPositions();
     }
 
-    public boolean isNetworkAvailable(final Context context) {
-        final ConnectivityManager connectivityManager = ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE));
-        return connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isConnected();
-    }
-
     /**
      * Метод, с помощью которого получаем список местоположений
      * Вызывается когда пользователь открывает диалог городов
@@ -292,16 +298,8 @@ public class PositionManager {
         return positions.keySet();
     }
 
-    /**
-     * Метод, с помощью которого получаем название рекущей локации
-     *
-     * @return возвращает {@link String}, содержащий названия города
-     */
-    public String getCurrentPositionName() {
-        if (activePosition == null) {
-            return "";
-        }
-        return activePosition.getLocationName();
+    public Position getActivePosition() {
+        return activePosition;
     }
 
     /**
@@ -327,15 +325,27 @@ public class PositionManager {
     }
 
     /**
+     * Метод, с помощью которого получаем название рекущей локации
+     *
+     * @return возвращает {@link String}, содержащий названия города
+     */
+    public String getActivePositionCity() {
+        if (activePosition == null) {
+            return "";
+        }
+        return activePosition.getLocationName();
+    }
+
+    /**
      * Метод, с помощью которого из списка городов выбираем другую локацию в качестве текущей
      *
-     * @param name объект типа {@link String}, содержащий название города
+     * @param city объект типа {@link String}, содержащий название города
      */
-    public void setCurrentPosition(String name) {
-        if (name.isEmpty()) {
-            activePosition = currentLocation;
-        } else if (positions.containsKey(name)) {
-            activePosition = positions.get(name);
+    public void setActivePosition(String city) {
+        if (city.isEmpty()) {
+            activePosition = currentPosition;
+        } else if (positions.containsKey(city)) {
+            activePosition = positions.get(city);
         } else {
             sendMessage(R.string.error_get_coordinates, Snackbar.LENGTH_LONG);
         }
@@ -351,7 +361,7 @@ public class PositionManager {
     }
 
     public boolean positionIsPresent(String name) {
-        if (currentLocation.getLocationName().equals(name)) {
+        if (currentPosition.getLocationName().equals(name)) {
             return true;
         } else {
             try {
@@ -397,7 +407,7 @@ public class PositionManager {
      */
     public Position getPosition(int cityID) {
         if (cityID == 0) {
-            return currentLocation;
+            return currentPosition;
         }
         for (Position pos : positions.values()) {
             if (pos.getCityID() == cityID) {
@@ -407,21 +417,25 @@ public class PositionManager {
         return null;
     }
 
-    public AppUtils.PressureMetrics getPressureMetric() {
-        return pressureMetric;
-    }
-
-    public AppUtils.PressureMetrics changePressureMetric() {
-        pressureMetric = pressureMetric.change();
-        return pressureMetric;
+    public AppUtils.SpeedMetrics getSpeedMetric() {
+        return speedMetric;
     }
 
     public void setSpeedMetric(AppUtils.SpeedMetrics sm) {
         speedMetric = sm;
     }
 
-    public AppUtils.SpeedMetrics getSpeedMetric() {
-        return speedMetric;
+    public AppUtils.PressureMetrics getPressureMetric() {
+        return pressureMetric;
+    }
+
+    public void setPressureMetric(AppUtils.PressureMetrics pm) {
+        pressureMetric = pm;
+    }
+
+    public AppUtils.PressureMetrics changePressureMetric() {
+        pressureMetric = pressureMetric.change();
+        return pressureMetric;
     }
 
     public AppUtils.TemperatureMetrics getTemperatureMetric() {
@@ -446,9 +460,9 @@ public class PositionManager {
             sendMessage(R.string.update_error_location_not_found, Snackbar.LENGTH_LONG);
             return;
         }
-        if (activePosition == currentLocation) {
+        if (activePosition == currentPosition) {
             updateCurrentLocationCoordinates();
-            if (currentLocation.getCoordinate() == null) {
+            if (currentPosition.getCoordinate() == null) {
                 updateWeatherFromDB();
                 return;
             }
@@ -465,11 +479,11 @@ public class PositionManager {
                 updateWeatherFromDB();
             }
             sendMessage(R.string.coordinates_error, Snackbar.LENGTH_LONG);
-        } else if (!isNetworkAvailable(MyApplication.getAppContext())) {
+        } else if (!AppUtils.isNetworkAvailable(MyApplication.getAppContext())) {
             if (!activePosition.getLocationName().isEmpty()) {
                 updateWeatherFromDB();
             }
-            sendMessage(R.string.update_error_net_not_availble, Snackbar.LENGTH_LONG);
+            sendMessage(R.string.update_error_net_not_available, Snackbar.LENGTH_LONG);
         } else {
             LinkedList<WeatherStation.ResponseType> requestQueue = new LinkedList<>();
             requestQueue.add(WeatherStation.ResponseType.CURRENT);
@@ -578,14 +592,14 @@ public class PositionManager {
     }
 
     public void onFailureResponse(LinkedList<WeatherStation.ResponseType> requestList, int cityID, WeatherStationFactory.ServiceType sType) {
-        if (!lastResponseIsFailure) {
+/*        if (!lastResponseIsFailure) {
             try {
                 messageProvider.showToast(MyApplication.getAppContext().getString(R.string.update_error_from) + sType.toString());
             } catch (NullPointerException e) {
                 e.printStackTrace();
             }
             lastResponseIsFailure = true;
-        }
+        }*/
         WeatherStation.ResponseType rType = requestList.pollFirst();
         if (rType == null) {
             return;
@@ -643,6 +657,30 @@ public class PositionManager {
         return forecast;
     }
 
+    @Override
+    public void updatePositionCoordinate(String city, Coordinate coordinate) {
+        Position position = getPosition(city);
+        if (position == null) {
+            return;
+        }
+        position.setCoordinate(coordinate);
+        dbManager.updatePositionCoordinates(position);
+    }
+
+    @Override
+    public void updateLocation(String city, Coordinate coordinate) {
+        currentPosition.setLocationName(city);
+        currentPosition.setCoordinate(coordinate);
+        if (activePosition == currentPosition) {
+            sendRequest();
+        }
+    }
+
+    public void updatePositionTimeZone(Position city, int timeZone) {
+        city.setTimeZone(timeZone);
+        dbManager.updateCityTimeZone(city);
+    }
+
     public void initLocationManager() {
         locationManager = new CurrentLocationManager();
         locationManager.giveGpsAccess(true);
@@ -679,21 +717,25 @@ public class PositionManager {
     }
 
     public Coordinate getCurrentLocationCoordinates() {
-        return currentLocation.getCoordinate();
+        return currentPosition.getCoordinate();
     }
 
     public String getCurrentLocationName() {
-        return currentLocation.getLocationName();
+        return currentPosition.getLocationName();
     }
 
     public void setCurrentLocationCoordinates(Location location) {
-        if (updateCurrentLocation(location) && activePosition == currentLocation) {
+        boolean coordinatesUpdated = updateCurrentLocation(location);
+        if (coordinatesUpdated && activePosition == currentPosition) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     sendRequest();
                 }
             }, 3000);
+        } else if (!coordinatesUpdated) {
+            GoogleMapsGeocoding googleMapsGeocoding = new GoogleMapsGeocoding();
+            googleMapsGeocoding.requestLocationName(location.getLatitude(), location.getLongitude(), this);
         }
     }
 
@@ -705,25 +747,21 @@ public class PositionManager {
         Geocoder geocoder = new Geocoder(MyApplication.getAppContext());
         try {
             List<Address> list = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 3);
-            currentLocation.setLocationName(new LocationParser(list).parseList().getAddressLine());
-            currentLocation.setCoordinate(new Coordinate(location.getLatitude(), location.getLongitude()));
-            return true;
-        } catch (IOException e) {
-            sendMessage(R.string.error_service_not_available, Snackbar.LENGTH_LONG);
+            currentPosition.setLocationName(new LocationParser(list).parseList().getAddressLine());
+            currentPosition.setCoordinate(new Coordinate(location.getLatitude(), location.getLongitude()));
+        } catch (IOException | IllegalArgumentException | EmptyCurrentAddressException | NoAvailableAddressesException | NullPointerException e) {
             e.printStackTrace();
-        } catch (IllegalArgumentException e) {
-            sendMessage(R.string.invalid_lang_long_used, Snackbar.LENGTH_LONG);
+            return false;
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (EmptyCurrentAddressException | NoAvailableAddressesException | NullPointerException e) {
-            sendMessage(R.string.no_address_found, Snackbar.LENGTH_LONG);
-            e.printStackTrace();
+            return false;
         }
-        return false;
+        return true;
     }
 
     private synchronized void sendMessage(CharSequence string, int length) {
         try {
-            messageProvider.showMessageToUser(string, length);
+            messageProvider.showSnackbar(string, length);
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
@@ -731,7 +769,7 @@ public class PositionManager {
 
     private synchronized void sendMessage(int stringId, int length) {
         try {
-            messageProvider.showMessageToUser(stringId, length);
+            messageProvider.showSnackbar(stringId, length);
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
@@ -765,7 +803,7 @@ public class PositionManager {
     }
 
     public Drawable getWeatherIcon(int iconNumber, boolean isCurrentWeatherIcon) {
-        Drawable icon = null;
+        Drawable icon;
         try {
             if (iconsSet[iconNumber] != null) {
                 icon = iconsSet[iconNumber];

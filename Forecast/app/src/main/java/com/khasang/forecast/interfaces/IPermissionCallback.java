@@ -1,6 +1,6 @@
 package com.khasang.forecast.interfaces;
 
-import com.khasang.forecast.PermissionChecker;
+import com.khasang.forecast.utils.PermissionChecker;
 
 /**
  * Created by roman on 09.03.16.

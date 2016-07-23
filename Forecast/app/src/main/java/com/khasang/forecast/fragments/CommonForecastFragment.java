@@ -60,19 +60,6 @@ public abstract class CommonForecastFragment extends Fragment {
         return forecasts;
     }
 
-    public void scroll(boolean appbarVisible) {
-        if (appbarVisible) {
-            layoutManager.scrollToPosition(1);
-        } else {
-            layoutManager.scrollToPosition(adapter.getItemCount() - 2);
-        }
-    }
-
-    public void scrollToCenter() {
-        int position = adapter.getItemCount() / 2;
-        layoutManager.scrollToPosition(position);
-    }
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
