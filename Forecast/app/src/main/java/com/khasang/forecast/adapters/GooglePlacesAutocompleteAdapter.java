@@ -9,8 +9,10 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
-import com.khasang.forecast.utils.PlaceProvider;
+import com.khasang.forecast.MyApplication;
+import com.khasang.forecast.api.PlaceProvider;
 import com.khasang.forecast.R;
+import com.khasang.forecast.utils.AppUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,16 +59,20 @@ public class GooglePlacesAutocompleteAdapter extends ArrayAdapter
     @Override
     public Filter getFilter() {
         return new Filter() {
-
+            FilterResults filterResults = new FilterResults();;
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
-                FilterResults filterResults = new FilterResults();
                 if (constraint != null) {
+                    if (constraint.length() <= 3) {
+                        filterResults.count = 0;
+                    }
                     char lastSym = constraint.charAt(constraint.length() - 1);
                     if ((constraint.length() % 2 == 0) || (lastSym == ' ') || (lastSym == '-')) {
-                        List<String> predictions = mPlaceProvider.autocomplete(constraint.toString(), MAX_RESULT);
-                        filterResults.values = predictions;
-                        filterResults.count = predictions.size();
+                        if (AppUtils.isNetworkAvailable(MyApplication.getAppContext())) {
+                            List<String> predictions = mPlaceProvider.autocomplete(constraint.toString(), MAX_RESULT);
+                            filterResults.values = predictions;
+                            filterResults.count = predictions.size();
+                        }
                     }
                 }
                 return filterResults;

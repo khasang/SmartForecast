@@ -22,6 +22,7 @@ import com.khasang.forecast.interfaces.IMessageProvider;
 import com.khasang.forecast.position.Coordinate;
 import com.khasang.forecast.position.Position;
 import com.khasang.forecast.position.PositionManager;
+import com.khasang.forecast.utils.AppUtils;
 
 /**
  * Класс предоставляет методы для работы с Google maps.
@@ -139,6 +140,9 @@ public class Maps implements OnMapReadyCallback {
     }
 
     public void setNewMarker (String city) {
+        if (!AppUtils.isNetworkAvailable(MyApplication.getAppContext())) {
+            return;
+        }
         CoordinateGetter coordinatedGetter = new CoordinateGetter();
         coordinatedGetter.execute(city);
     }
@@ -175,8 +179,10 @@ public class Maps implements OnMapReadyCallback {
                     setNewMarker(currentLatitude, currentLongitude, location);
                 } catch (EmptyCurrentAddressException | NullPointerException e) {
                     e.printStackTrace();
-                    LocationNameGetter locationNameGetter = new LocationNameGetter();
-                    locationNameGetter.execute(latLng);
+                    if (AppUtils.isNetworkAvailable(MyApplication.getAppContext())) {
+                        LocationNameGetter locationNameGetter = new LocationNameGetter();
+                        locationNameGetter.execute(latLng);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

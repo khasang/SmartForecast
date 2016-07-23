@@ -170,9 +170,13 @@ public class WeatherActivity extends BaseActivity
                 .add(R.id.fragment_container, dailyForecastFragment)
                 .hide(dailyForecastFragment)
                 .commit();
-
-        PositionManager.getInstance().updateWeatherFromDB();
         onRefresh();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        PositionManager.getInstance().updateWeatherFromDB();
     }
 
     private void initAppInvite() {
@@ -592,13 +596,13 @@ public class WeatherActivity extends BaseActivity
 
     @SuppressLint("DefaultLocale")
     public void updateCurrentWeather(Calendar date, Weather weather) {
+        PositionManager pm = PositionManager.getInstance();
+        setCityInToolbar(pm.getActivePositionCity());
+
         if (weather == null) {
             Log.i(TAG, "Weather is null!");
             return;
         }
-        PositionManager pm = PositionManager.getInstance();
-
-        setCityInToolbar(pm.getActivePositionCity());
 
         double temperature = weather.getTemperature();
         String temperatureMetrics = pm.getTemperatureMetric().toStringValue();
