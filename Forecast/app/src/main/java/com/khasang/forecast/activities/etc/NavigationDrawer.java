@@ -97,7 +97,7 @@ public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
                 .withIdentifier(NAVIGATION_INVITE);
 
         SecondaryDrawerItem about = new SecondaryDrawerItem().withName(R.string.drawer_item_about)
-            .withIcon(GoogleMaterial.Icon.gmd_group)
+            .withIcon(GoogleMaterial.Icon.gmd_info)
             .withIdentifier(NAVIGATION_ABOUT);
 
         String name = activity.getString(R.string.app_name) + " v" + BuildConfig.VERSION_NAME;
