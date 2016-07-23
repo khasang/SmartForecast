@@ -93,6 +93,7 @@
     <string name="changelog">Развитие проекта</string>
     <string name="team">Команда</string>
 
+    <!-- TODO TRANSLATE -->
     <string name="version_2_6">Версия 2.6</string>
     <string name="version_2_6_changelog">"- Добавлено несколько цветовых схем.
 - \"Ночной\" режим.
@@ -137,7 +138,17 @@
     <string name="dmitry_ryabushkin">Дмитрий Рябушкин</string>
     <string name="evgeny_rivkin">Евгений Ривкин</string>
 
-    <!-- TODO TRANSLATE -->
+    <string name="roman_novoselov_desc">PM, Architect, Developer</string>
+    <string name="alexandr_lihovidov_desc">Architect, Technical consultant</string>
+    <string name="timofey_korotkov_desc">UI designer, Developer</string>
+    <string name="alexandr_perfilev_desc">UI designer, Developer</string>
+    <string name="maxim_kulikov_desc">Product Owner, Developer</string>
+    <string name="erdeni_erdyneev_desc">UX Designer, Developer</string>
+    <string name="oleg_grigoriev_desc">Developer</string>
+    <string name="airat_hairulin_desc">Translator</string>
+    <string name="dmitry_ryabushkin_desc">Translator</string>
+    <string name="evgeny_rivkin_desc">Translator</string>
+
     <!-- App Invites -->
     <string name="invitation_title">Отправить приглашение</string>
     <string name="invitation_message">Поделись Smart Forecast с друзьями!</string>

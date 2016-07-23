@@ -41,6 +41,9 @@ public class GoogleMapsTimezone {
     }
 
     public void requestCoordinates(final Position position) {
+        if (!AppUtils.isNetworkAvailable(MyApplication.getAppContext())) {
+            return;
+        }
         try {
             final String URL = PLACE_API_BASE_URL
                     + "?key=" + API_KEY

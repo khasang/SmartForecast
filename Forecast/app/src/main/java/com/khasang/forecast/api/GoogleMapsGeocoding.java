@@ -37,6 +37,9 @@ public class GoogleMapsGeocoding {
     private final static String API = "Google Maps Geocoding API";
 
     public void requestCoordinates(final String input, final ICoordinateReceiver receiver, final boolean updateTimezone) {
+        if (!AppUtils.isNetworkAvailable(MyApplication.getAppContext())) {
+            return;
+        }
         try {
             final String URL = PLACE_API_BASE_URL + "?key="
                     + API_KEY + "&address="
@@ -90,6 +93,9 @@ public class GoogleMapsGeocoding {
     }
 
     public void requestLocationName(final double latitude, final double longitude, final ILocationNameReceiver receiver) {
+        if (!AppUtils.isNetworkAvailable(MyApplication.getAppContext())) {
+            return;
+        }
         try {
             final String systemLanguage = Locale.getDefault().getLanguage();
             final String locationCoordinate = String.valueOf(latitude) + "," + String.valueOf(longitude);
