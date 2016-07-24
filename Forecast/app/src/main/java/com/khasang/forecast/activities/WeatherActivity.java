@@ -176,7 +176,6 @@ public class WeatherActivity extends BaseActivity
     @Override
     protected void onStart() {
         super.onStart();
-        PositionManager.getInstance().updateWeatherFromDB();
     }
 
     private void initAppInvite() {
@@ -494,6 +493,7 @@ public class WeatherActivity extends BaseActivity
         } else {
             PositionManager.getInstance().setPressureMetric(AppUtils.PressureMetrics.HPA);
         }
+        PositionManager.getInstance().updateWeatherFromDB();
     }
 
     @Override

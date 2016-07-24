@@ -33,6 +33,13 @@ public class ChangelogFragment extends BaseFragment implements ChangelogAdapter.
         super.onCreate(savedInstanceState);
         changelogs = new ArrayList<>();
 
+        Image changelog_2_7_image = new Image("https://raw.githubusercontent.com/khasang/SmartForecast/gh-pages/img/services/version-2.7.png", 4268, 3840);
+        Changelog changelog_2_7 = new Changelog();
+        changelog_2_7.setVersionResId(R.string.version_2_7);
+        changelog_2_7.setDate(new GregorianCalendar(2016, 6, 25).getTime());
+        changelog_2_7.setImage(changelog_2_7_image);
+        changelog_2_7.setChangesResId(R.string.version_2_7_changelog);
+
         Image changelog_2_6_image = new Image("http://khasang.github.io/SmartForecast/img/services/version-2.6.png",
                 4268, 3840);
         Changelog changelog_2_6 = new Changelog();
@@ -73,6 +80,7 @@ public class ChangelogFragment extends BaseFragment implements ChangelogAdapter.
         changelog_1_0.setImage(changelog_1_0_image);
         changelog_1_0.setChangesResId(R.string.version_1_0_changelog);
 
+        changelogs.add(changelog_2_7);
         changelogs.add(changelog_2_6);
         changelogs.add(changelog_2_3);
         changelogs.add(changelog_2_1);

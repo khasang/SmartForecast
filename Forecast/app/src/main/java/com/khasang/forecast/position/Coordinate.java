@@ -1,5 +1,7 @@
 package com.khasang.forecast.position;
 
+import android.support.design.widget.CoordinatorLayout;
+
 /**
  * Created by Veda on 24.11.15.
  */
@@ -50,6 +52,29 @@ public class Coordinate implements Comparable<Coordinate> {
 
     public String convertToTimezoneUrlParameterString() {
         return String.valueOf(latitude) + "," + String.valueOf(longitude);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Coordinate that = (Coordinate) o;
+
+        if (Double.compare(that.latitude, latitude) != 0) return false;
+        return Double.compare(that.longitude, longitude) == 0;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        temp = Double.doubleToLongBits(latitude);
+        result = (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(longitude);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
     }
 }
 

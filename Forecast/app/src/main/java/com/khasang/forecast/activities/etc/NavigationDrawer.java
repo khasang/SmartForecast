@@ -88,15 +88,15 @@ public class NavigationDrawer implements Drawer.OnDrawerItemClickListener {
             .withIcon(MaterialDesignIconic.Icon.gmi_star)
             .withIdentifier(NAVIGATION_FAVORITES);
 
-        SecondaryDrawerItem settings = new SecondaryDrawerItem().withName(R.string.drawer_item_settings)
+        PrimaryDrawerItem settings = new PrimaryDrawerItem().withName(R.string.drawer_item_settings)
             .withIcon(FontAwesome.Icon.faw_cog)
             .withIdentifier(NAVIGATION_SETTINGS);
 
-        SecondaryDrawerItem invite = new SecondaryDrawerItem().withName(R.string.drawer_item_invite)
+        PrimaryDrawerItem invite = new PrimaryDrawerItem().withName(R.string.drawer_item_invite)
                 .withIcon(GoogleMaterial.Icon.gmd_message)
                 .withIdentifier(NAVIGATION_INVITE);
 
-        SecondaryDrawerItem about = new SecondaryDrawerItem().withName(R.string.drawer_item_about)
+        PrimaryDrawerItem about = new PrimaryDrawerItem().withName(R.string.drawer_item_about)
             .withIcon(GoogleMaterial.Icon.gmd_info)
             .withIdentifier(NAVIGATION_ABOUT);
 
