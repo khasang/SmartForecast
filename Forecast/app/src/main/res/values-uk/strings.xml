@@ -6,10 +6,10 @@
     <string name="measure_temperature_celsius">°C</string>
     <string name="measure_temperature_fahrenheit">°F</string>
     <string name="measure_temperature_kelvin">" K"</string>
-    <string name="wind_measure_m_s"><![CDATA[<sup><small>м</small></sup>/<small>c</small>]]></string>
-    <string name="wind_measure_km_h"><![CDATA[<sup><small>км</small></sup>/<small>ч</small>]]></string>
-    <string name="wind_measure_mph"><![CDATA[<sup><small>миль</small></sup>/<small>ч</small>]]></string>
-    <string name="wind_measure_fps"><![CDATA[<sup><small>фут</small></sup>/<small>с</small>]]></string>
+    <string name="measure_speed_m_s"><![CDATA[<sup><small>м</small></sup>/<small>c</small>]]></string>
+    <string name="measure_speed_km_h"><![CDATA[<sup><small>км</small></sup>/<small>ч</small>]]></string>
+    <string name="measure_speed_mph"><![CDATA[<sup><small>миль</small></sup>/<small>ч</small>]]></string>
+    <string name="measure_speed_fps"><![CDATA[<sup><small>фут</small></sup>/<small>с</small>]]></string>
     <string name="measure_pressure_hpa">гПа</string>
     <string name="measure_pressure_mmHg">мм рт.ст.</string>
 
@@ -28,8 +28,8 @@
     <string name="change_location">Змінити локацію</string>
     <string name="city_exist">Місто вже присутнє у списку.</string>
     <string name="update_error_location_not_found">Місто відсутнє у списку локацій.</string>
-    <string name="update_error_net_not_availble">Помилка оновлення! Мережа недоступна.</string>
-    <string name="update_error_from">"Помилка оновлення погоди зі станції"</string>
+    <string name="update_error_net_not_available">Помилка оновлення! Мережа недоступна.</string>
+    <string name="update_error_from">"Помилка оновлення погоди зі станції "</string>
     <string name="coordinates_not_found">Координати розташування %1$s не виявлені.\n Локація не додана</string>
     <string name="msg_add_city">Для продовження роботи необхідно додати місто.</string>
     <string name="msg_choose_city">Для продовження роботи необхідно вибрати місто.</string>
@@ -61,6 +61,8 @@
     <string name="drawer_item_city_list">Список міст</string>
     <string name="drawer_item_favorites">Вибране</string>
     <string name="drawer_item_settings">Налаштування</string>
+    <string name="drawer_item_about">О приложении</string>
+    <string name="drawer_item_invite">Пригласить друзей</string>
 
     <string name="error_service_not_available">Координати Вашого поточного місцезнаходження не виявлені.</string>
     <string name="error_geo_service_not_available">Координати розташування не виявлені.</string>
@@ -76,7 +78,8 @@
     <string name="info_message_about_request_permission_fine_location">До Додатку необхідні права для визначення поточного місцезнаходження</string>
     <string name="button_permission_granted">Дозволити</string>
     <string name="button_permission_not_granted">Відмовити</string>
-    <string name="welcome_def_str">"Привіт "</string>
+
+    <string name="welcome_string_default">"Привіт "</string>
     <string name="welcome_string_hello">"Радий вас бачити "</string>
     <string name="welcome_string_morning">"Доброго ранку "</string>
     <string name="welcome_string_day">"Доброго дня "</string>
@@ -91,8 +94,6 @@
     <string name="team">Команда</string>
 
     <string name="location_manager">Служба определения местоположения</string>
-    <string name="drawer_item_about">О приложении</string>
-    <string name="drawer_item_invite">Пригласить друзей</string>
 
     <string name="version_2_7">Версия 2.7</string>
     <string name="version_2_7_changelog">"- Переработан интерфейс программы.
