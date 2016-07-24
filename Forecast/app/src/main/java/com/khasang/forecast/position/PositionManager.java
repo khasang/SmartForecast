@@ -347,7 +347,9 @@ public class PositionManager implements ICoordinateReceiver, ILocationNameReceiv
         } else if (positions.containsKey(city)) {
             activePosition = positions.get(city);
         } else {
-            sendMessage(R.string.error_get_coordinates, Snackbar.LENGTH_LONG);
+            if (activePosition.getCoordinate() == null || activePosition.getCoordinate().equals(new Coordinate(0, 0))) {
+                sendMessage(R.string.error_get_coordinates, Snackbar.LENGTH_LONG);
+            }
         }
     }
 

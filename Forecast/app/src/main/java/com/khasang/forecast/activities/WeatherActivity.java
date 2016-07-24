@@ -453,7 +453,6 @@ public class WeatherActivity extends BaseActivity
         super.onResume();
         PositionManager.getInstance().setReceiver(this);
         PositionManager.getInstance().setMessageProvider(this);
-        PositionManager.getInstance().updateWeatherFromDB();
 
         boolean isLocationPermissionGranted =
                 new PermissionChecker().isPermissionGranted(this, PERMISSION_REQUEST_FINE_LOCATION);
@@ -494,6 +493,7 @@ public class WeatherActivity extends BaseActivity
         } else {
             PositionManager.getInstance().setPressureMetric(AppUtils.PressureMetrics.HPA);
         }
+        PositionManager.getInstance().updateWeatherFromDB();
     }
 
     @Override
