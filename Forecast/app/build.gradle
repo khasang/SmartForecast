@@ -19,7 +19,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 23
         versionCode 11
-        versionName "2.6.3"
+        versionName "2.7"
         generatedDensities = []
     }
     aaptOptions {
