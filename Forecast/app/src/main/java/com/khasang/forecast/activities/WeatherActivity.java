@@ -176,7 +176,6 @@ public class WeatherActivity extends BaseActivity
     @Override
     protected void onStart() {
         super.onStart();
-        PositionManager.getInstance().updateWeatherFromDB();
     }
 
     private void initAppInvite() {
@@ -454,6 +453,7 @@ public class WeatherActivity extends BaseActivity
         super.onResume();
         PositionManager.getInstance().setReceiver(this);
         PositionManager.getInstance().setMessageProvider(this);
+        PositionManager.getInstance().updateWeatherFromDB();
 
         boolean isLocationPermissionGranted =
                 new PermissionChecker().isPermissionGranted(this, PERMISSION_REQUEST_FINE_LOCATION);
