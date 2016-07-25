@@ -1,14 +1,14 @@
 <resources>
-    <string name="title_activity_city_picker">Список городов</string>
-    <string name="title_activity_settings">Настройки</string>
-    <string name="title_activity_about">О приложении</string>
+    <string name="title_activity_city_picker">Перелік міст</string>
+    <string name="title_activity_settings">Налаштування</string>
+    <string name="title_activity_about">Про програму</string>
 
     <string name="measure_temperature_celsius">°C</string>
     <string name="measure_temperature_fahrenheit">°F</string>
     <string name="measure_temperature_kelvin">" K"</string>
     <string name="measure_speed_m_s"><![CDATA[<sup><small>м</small></sup>/<small>c</small>]]></string>
-    <string name="measure_speed_km_h"><![CDATA[<sup><small>км</small></sup>/<small>ч</small>]]></string>
-    <string name="measure_speed_mph"><![CDATA[<sup><small>миль</small></sup>/<small>ч</small>]]></string>
+    <string name="measure_speed_km_h"><![CDATA[<sup><small>км</small></sup>/<small>г</small>]]></string>
+    <string name="measure_speed_mph"><![CDATA[<sup><small>миль</small></sup>/<small>г</small>]]></string>
     <string name="measure_speed_fps"><![CDATA[<sup><small>фут</small></sup>/<small>с</small>]]></string>
     <string name="measure_pressure_hpa">гПа</string>
     <string name="measure_pressure_mmHg">мм рт.ст.</string>
@@ -18,7 +18,7 @@
     <string name="few_clouds">Невелика хмарність</string>
     <string name="scattered_clouds">Хмарно</string>
     <string name="broken_clouds">Хмарно з проясненнями</string>
-    <string name="shower_rain">Ливень</string>
+    <string name="shower_rain">Злива</string>
     <string name="rain">Дощ</string>
     <string name="thunderstorm">Гроза</string>
     <string name="snow">Сніг</string>
@@ -30,52 +30,52 @@
     <string name="update_error_location_not_found">Місто відсутнє у списку локацій.</string>
     <string name="update_error_net_not_available">Помилка оновлення! Мережа недоступна.</string>
     <string name="update_error_from">"Помилка оновлення погоди зі станції "</string>
-    <string name="coordinates_not_found">Координати розташування %1$s не виявлені.\n Локація не додана</string>
+    <string name="coordinates_not_found">Координати розташування %1$s не знайдені.\n Локація не додана</string>
     <string name="msg_add_city">Для продовження роботи необхідно додати місто.</string>
-    <string name="msg_choose_city">Для продовження роботи необхідно вибрати місто.</string>
+    <string name="msg_choose_city">Для продовження роботи необхідно обрати місто.</string>
     <string name="msg_no_city">Місто відсутнє у списку локацій.</string>
-    <string name="msg_clear_city_list">Ви дійсно хочете очистити список міст?</string>
+    <string name="msg_clear_city_list">Ви дійсно хочете очистити перелік міст?</string>
     <string name="btn_yes">Так</string>
     <string name="btn_no">Ні</string>
     <string name="title_choose_city">Введіть назву міста</string>
     <string name="btn_ok">OK</string>
     <string name="btn_clear">Очистити</string>
     <string name="btn_cancel">Відміна</string>
-    <string name="error_empty_location_name">Необхідно ввести назву місця розташування</string>
-    <string name="infoTV">Додайте місто, \n для відображення прогнозу погоди.</string>
+    <string name="error_empty_location_name">Необхідно ввести назву місцезнаходження</string>
+    <string name="infoTV">Додайте місто, \nдля відображення прогнозу погоди.</string>
     <string name="incorrect_city_error">Некоректна назва міста</string>
-    <string name="about_gps">Ваш GPS відключений, Ви хочете включити його?</string>
-    <string name="N">С</string>
-    <string name="NE">СВ</string>
-    <string name="E">В</string>
-    <string name="SE">ЮВ</string>
-    <string name="S">Ю</string>
-    <string name="SW">ЮЗ</string>
-    <string name="W">З</string>
-    <string name="NW">СЗ</string>
+    <string name="about_gps">Ваш GPS вимкнений, Ви хочете увімкнути його?</string>
+    <string name="N">Пн</string>
+    <string name="NE">ПнСх</string>
+    <string name="E">Сх</string>
+    <string name="SE">ПдСх</string>
+    <string name="S">Пд</string>
+    <string name="SW">ПдЗх</string>
+    <string name="W">Зх</string>
+    <string name="NW">ПнЗх</string>
 
     <string name="today">Сьогодні</string>
     <string name="tomorrow">Завтра</string>
 
     <string name="drawer_item_current_place">Поточне місце</string>
-    <string name="drawer_item_city_list">Список міст</string>
+    <string name="drawer_item_city_list">Перелік міст</string>
     <string name="drawer_item_favorites">Вибране</string>
     <string name="drawer_item_settings">Налаштування</string>
-    <string name="drawer_item_about">О приложении</string>
-    <string name="drawer_item_invite">Пригласить друзей</string>
+    <string name="drawer_item_about">Про программу</string>
+    <string name="drawer_item_invite">Запросити друзів</string>
 
-    <string name="error_service_not_available">Координати Вашого поточного місцезнаходження не виявлені.</string>
-    <string name="error_geo_service_not_available">Координати розташування не виявлені.</string>
-    <string name="invalid_lang_long_used">Помилка розпізнавання координат для розташування</string>
-    <string name="no_address_found">Адреса поточного місцезнаходження невиявлений</string>
+    <string name="error_service_not_available">Координати Вашого поточного місцезнаходження не знайдені.</string>
+    <string name="error_geo_service_not_available">Координати розташування не знайдені.</string>
+    <string name="invalid_lang_long_used">Помилка розпізнавання координат для місцезнаходження</string>
+    <string name="no_address_found">Адреса поточного місцезнаходження знайдена</string>
 
-    <string name="error_gps_permission">Отсутсвуют права на использование gps и ресурсы оператора связи</string>
-    <string name="clear_new_location_name">Очистить поле ввода</string>
-    <string name="coordinates_error">Не корректные координаты местоположения</string>
-    <string name="error_gps_disabled">В настройках приложения отключено получение координат от GPS</string>
+    <string name="error_gps_permission">Відсутні права на використання gps та ресурсів оператора зв'язку</string>
+    <string name="clear_new_location_name">Очистити поле вводу</string>
+    <string name="coordinates_error">Некоректні координати місцезнаходження</string>
+    <string name="error_gps_disabled">У налаштуваннях програми відключено отримання координат від GPS</string>
 
     <string name="error_location_services_are_not_active">Служби отримання координат не активні</string>
-    <string name="info_message_about_request_permission_fine_location">До Додатку необхідні права для визначення поточного місцезнаходження</string>
+    <string name="info_message_about_request_permission_fine_location">Програмі необхідні права для визначення поточного місцезнаходження</string>
     <string name="button_permission_granted">Дозволити</string>
     <string name="button_permission_not_granted">Відмовити</string>
 
@@ -84,67 +84,67 @@
     <string name="welcome_string_morning">"Доброго ранку "</string>
     <string name="welcome_string_day">"Доброго дня "</string>
     <string name="welcome_string_evening">"Добрий вечір "</string>
-    <string name="activate_geographical_service">Перевірте налаштування телефону і програми. Немає доступних сервісів для отримання географічних координат.\n\nВідкрити параметри телефону для активації сервісів визначення місця розташування?</string>
+    <string name="activate_geographical_service">Перевірте налаштування телефону та програми. Немає доступних сервісів для отримання географічних координат.\n\nВідкрити параметри телефону для активації сервісів визначення місцезнаходження?</string>
 
-    <string name="error_get_coordinates">Не можу визначити координати запитуваного розташування</string>
+    <string name="error_get_coordinates">Не можу визначити координати запитуваного місцезнаходження</string>
     <string name="forecast_unavailable">Прогноз погоди недоступний</string>
 
     <!-- TODO TRANSLATE -->
-    <string name="changelog">Развитие проекта</string>
+    <string name="changelog">Розвиток проекту</string>
     <string name="team">Команда</string>
 
-    <string name="location_manager">Служба определения местоположения</string>
+    <string name="location_manager">Служба визначення місцезнаходження</string>
 
-    <string name="version_2_7">Версия 2.7</string>
-    <string name="version_2_7_changelog">"- Переработан интерфейс программы.
-- Добавлено отображение атмосферного давления.
-- Расширено меню настроек.
-- Рекомендация приложения друзьям."
+    <string name="version_2_7">Версія 2.7</string>
+    <string name="version_2_7_changelog">"- Змінений інтерфейс програми.
+- Додано відображення атмосферного тиску.
+- Розширене меню налаштувань.
+- Рекомендація програми друзям."
     </string>
     
-    <string name="version_2_6">Версия 2.6</string>
-    <string name="version_2_6_changelog">"- Добавлено несколько цветовых схем.
-- \"Ночной\" режим.
-- Альтернативные наборы иконок.
-- График изменения температуры."
+    <string name="version_2_6">Версія 2.6</string>
+    <string name="version_2_6_changelog">"- Додано декілька кольорових схем.
+- \"Нічний\" режим.
+- Альтернативні набори іконок.
+- Графік зміни температури."
     </string>
 
-    <string name="version_2_3">Версия 2.3</string>
-    <string name="version_2_3_changelog">"- Новая заставка приложения.
-- Добавлено полноценное меню настроек.
-- Недавно добавленные населенные пункты теперь подсвечиваются в списке."
+    <string name="version_2_3">Версія 2.3</string>
+    <string name="version_2_3_changelog">"- Нова заставка програми.
+- Додано повноцінне меню налаштувань.
+- Нещодавно додані населені пункти тепер висвічуються у переліку."
     </string>
 
-    <string name="version_2_1">Версия 2.1</string>
-    <string name="version_2_1_changelog">"В приложение добавлена функциональность картографического сервиса Google Maps:
-- Добавление населенного пункта, используя \"тап\" по географической карте.
-- При вводе названия, над подходящими населенными пунктами появляются маркеры."
+    <string name="version_2_1">Версія 2.1</string>
+    <string name="version_2_1_changelog">"У програму додана функціональність картографічного сервісу Google Maps:
+- Додавання населеного пункту, використовуючи \"тап\" по географічній карті.
+- Коли ви вводите назву, над відповідними населеними пунктами з'являються маркери."
     </string>
 
-    <string name="version_2_0">Версия 2.0</string>
-    <string name="version_2_0_changelog">"- Полностью переработан дизайн приложения.
-- Отображение погодных условий для \"текущего\" местоположения пользователя.
-- Выбор едениц измерения вынесен в меню настроек.
-- Ведение списка \"избранных\" населенных пунктов."
+    <string name="version_2_0">Версія 2.0</string>
+    <string name="version_2_0_changelog">"- Повністю змінений дизайн програми.
+- Відображення погодних умов для \"поточного\" місцезнаходження користувача.
+- Вибір одиниць виміру винесений у меню налаштувань.
+- Ведення списку \"обраних\" населених пунктів."
     </string>
 
-    <string name="version_1_0">Версия 1.0</string>
-    <string name="version_1_0_changelog">"- Реализован минимальный интерфейс и базовая логика приложения.
-- Получение погодных данных от сервиса OpenWeatherMap.
-- Ведение списка городов, интеллектуальное добавление города по нескольким буквам.
-- Выбор единицы измерения температуры."
+    <string name="version_1_0">Версія 1.0</string>
+    <string name="version_1_0_changelog">"- Реалізовано мінімальний інтерфейс та базова логіка програми.
+- Отримання погодних даних від сервісу OpenWeatherMap.
+- Ведення списку міст, інтелектуальне додавання міста по декількох буквах.
+- Вибір одиниці виміру температури."
     </string>
 
-    <string name="roman_novoselov">Роман Новоселов</string>
-    <string name="alexandr_lihovidov">Александр Лиховидов</string>
+    <string name="roman_novoselov">Роман Новосьолов</string>
+    <string name="alexandr_lihovidov">Олександр Ліховідов</string>
     <string name="timofey_korotkov">Тимофей Коротков</string>
-    <string name="alexandr_perfilev">Александр Перфильев</string>
-    <string name="maxim_kulikov">Максим Куликов</string>
-    <string name="erdeni_erdyneev">Эрдэни Эрдынеев</string>
-    <string name="oleg_grigoriev">Олег Григорьев</string>
-    <string name="airat_hairulin">Айрат Хайруллин</string>
-    <string name="dmitry_ryabushkin">Дмитрий Рябушкин</string>
-    <string name="evgeny_rivkin">Евгений Ривкин</string>
+    <string name="alexandr_perfilev">Олександр Пєрфіл'єв</string>
+    <string name="maxim_kulikov">Максим Куліков</string>
+    <string name="erdeni_erdyneev">Ердені Ердінеєв</string>
+    <string name="oleg_grigoriev">Олег Григор'єв</string>
+    <string name="airat_hairulin">Айрат Хайруллін</string>
+    <string name="dmitry_ryabushkin">Дмитро Рябушкін</string>
+    <string name="evgeny_rivkin">Євген Ривкін</string>
 
     <string name="roman_novoselov_desc">PM, Architect, Developer</string>
     <string name="alexandr_lihovidov_desc">Architect, Technical consultant</string>
@@ -158,9 +158,9 @@
     <string name="evgeny_rivkin_desc">Translator</string>
 
     <!-- App Invites -->
-    <string name="invitation_title">Отправить приглашение</string>
-    <string name="invitation_message">Поделись Smart Forecast с друзьями!</string>
-    <string name="invitation_cta">Установить!</string>
+    <string name="invitation_title">Надіслати запрошення</string>
+    <string name="invitation_message">Поділися Smart Forecast с друзями!</string>
+    <string name="invitation_cta">Встановити!</string>
 
-    <string name="google_play_services_error">Ошибка сервиса Google Play</string>
+    <string name="google_play_services_error">Помилка сервісу Google Play</string>
 </resources>
