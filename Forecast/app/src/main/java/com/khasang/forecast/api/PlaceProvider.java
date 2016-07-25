@@ -31,7 +31,7 @@ public class PlaceProvider {
 
     public ArrayList<String> autocomplete(String input, int maxResult) {
         ArrayList<String> resultList;
-        String jsonData = "";
+        String status = "";
         try {
             String URL = PLACE_API_BASE_URL + "?key="
                     + API_KEY + "&input="
@@ -42,8 +42,13 @@ public class PlaceProvider {
                     .url(URL)
                     .build();
             Response response = client.newCall(request).execute();
-            jsonData = response.body().string();
+            String jsonData = response.body().string();
             JSONObject jsonObject = new JSONObject(jsonData);
+            status = jsonObject.getString("status");
+            if (!status.equals("OK")) {
+                String log = "GooglePlaceAPI: url <" + URL + ">; response status <" + status + ">";
+                throw new JSONException(log);
+            }
             JSONArray jsonArray = jsonObject.getJSONArray("predictions");
             int size = (maxResult <= jsonArray.length()) ? maxResult : jsonArray.length();
             resultList = new ArrayList<String>(jsonArray.length());
@@ -56,7 +61,7 @@ public class PlaceProvider {
             if (Fabric.isInitialized()) {
                 Crashlytics.logException(e);
                 Answers.getInstance().logCustom(new CustomEvent(AppUtils.ApiCustomEvent)
-                        .putCustomAttribute(API, jsonData));
+                        .putCustomAttribute(API, status));
             }
 
         }
