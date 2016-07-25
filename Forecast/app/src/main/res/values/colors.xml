@@ -50,4 +50,5 @@
 
     <color name="white">#FFFFFF</color>
     <color name="grey">#5D5D5D</color>
+    <color name="grey_21">#363636</color>
 </resources>

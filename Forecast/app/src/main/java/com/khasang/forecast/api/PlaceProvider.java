@@ -1,7 +1,11 @@
 package com.khasang.forecast.api;
 
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.R;
+import com.khasang.forecast.utils.AppUtils;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -14,6 +18,8 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
+import io.fabric.sdk.android.Fabric;
+
 /**
  * Created by xsobolx on 12.12.2015.
  */
@@ -21,9 +27,11 @@ public class PlaceProvider {
     private final static String TAG = PlaceProvider.class.getSimpleName();
     private final static String PLACE_API_BASE_URL = "https://maps.googleapis.com/maps/api/place/autocomplete/json";
     private final static String API_KEY = MyApplication.getAppContext().getString(R.string.place_provider_key);
+    private final static String API = "Google Maps Place API";
 
     public ArrayList<String> autocomplete(String input, int maxResult) {
         ArrayList<String> resultList;
+        String jsonData = "";
         try {
             String URL = PLACE_API_BASE_URL + "?key="
                     + API_KEY + "&input="
@@ -34,7 +42,7 @@ public class PlaceProvider {
                     .url(URL)
                     .build();
             Response response = client.newCall(request).execute();
-            String jsonData = response.body().string();
+            jsonData = response.body().string();
             JSONObject jsonObject = new JSONObject(jsonData);
             JSONArray jsonArray = jsonObject.getJSONArray("predictions");
             int size = (maxResult <= jsonArray.length()) ? maxResult : jsonArray.length();
@@ -45,6 +53,12 @@ public class PlaceProvider {
         } catch (JSONException | IOException e) {
             e.printStackTrace();
             resultList = null;
+            if (Fabric.isInitialized()) {
+                Crashlytics.logException(e);
+                Answers.getInstance().logCustom(new CustomEvent(AppUtils.ApiCustomEvent)
+                        .putCustomAttribute(API, jsonData));
+            }
+
         }
         return resultList;
     }
