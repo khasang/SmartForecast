@@ -5,6 +5,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.preference.PreferenceManager;
 
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.facebook.stetho.okhttp.StethoInterceptor;
 import com.khasang.forecast.MyApplication;
 import com.khasang.forecast.R;
@@ -39,6 +41,7 @@ import retrofit.Retrofit;
  */
 public class OpenWeatherMap extends WeatherStation {
 
+    private final static String API = "OpenWeaterMap API";
     /**
      * Тэг для дебаггинга.
      */
@@ -186,6 +189,8 @@ public class OpenWeatherMap extends WeatherStation {
                 } catch (NullPointerException e) {
                     if (Fabric.isInitialized()) {
                         Crashlytics.logException(e);
+                        Answers.getInstance().logCustom(new CustomEvent(AppUtils.ApiCustomEvent)
+                                .putCustomAttribute(API, "Ошибка ответа OpenWeatherMap-current"));
                     }
                     PositionManager.getInstance().onFailureResponse(requestQueue, cityID, getServiceType());
                 }
@@ -234,6 +239,8 @@ public class OpenWeatherMap extends WeatherStation {
                 } catch (NullPointerException e) {
                     if (Fabric.isInitialized()) {
                         Crashlytics.logException(e);
+                        Answers.getInstance().logCustom(new CustomEvent(AppUtils.ApiCustomEvent)
+                                .putCustomAttribute(API, "Ошибка ответа OpenWeatherMap-HOURLY"));
                     }
                     PositionManager.getInstance().onFailureResponse(requestList, cityID, getServiceType());
                 }
@@ -281,6 +288,8 @@ public class OpenWeatherMap extends WeatherStation {
                 } catch (NullPointerException e) {
                     if (Fabric.isInitialized()) {
                         Crashlytics.logException(e);
+                        Answers.getInstance().logCustom(new CustomEvent(AppUtils.ApiCustomEvent)
+                                .putCustomAttribute(API, "Ошибка ответа OpenWeatherMap-DAYLY"));
                     }
                     PositionManager.getInstance().onFailureResponse(requestList, cityID, getServiceType());
                 }

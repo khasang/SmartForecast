@@ -69,7 +69,7 @@
     <string name="invalid_lang_long_used">Помилка розпізнавання координат для місцезнаходження</string>
     <string name="no_address_found">Адреса поточного місцезнаходження не знайдена</string>
 
-    <string name="error_gps_permission">Відсутні права на використання gps та ресурсів оператора зв'язку</string>
+    <string name="error_gps_permission">Відсутні права на використання gps та ресурсів оператора зв\'язку</string>
     <string name="clear_new_location_name">Очистити поле вводу</string>
     <string name="coordinates_error">Некоректні координати місцезнаходження</string>
     <string name="error_gps_disabled">У налаштуваннях програми відключено отримання координат від GPS</string>
@@ -135,16 +135,16 @@
 - Вибір одиниці виміру температури."
     </string>
 
-    <string name="roman_novoselov">Роман Новосьолов</string>
-    <string name="alexandr_lihovidov">Олександр Ліховідов</string>
+    <string name="roman_novoselov">Роман Новоселов</string>
+    <string name="alexandr_lihovidov">Александр Лиховидов</string>
     <string name="timofey_korotkov">Тимофей Коротков</string>
-    <string name="alexandr_perfilev">Олександр Пєрфіл'єв</string>
-    <string name="maxim_kulikov">Максим Куліков</string>
-    <string name="erdeni_erdyneev">Ердені Ердінеєв</string>
-    <string name="oleg_grigoriev">Олег Григор'єв</string>
-    <string name="airat_hairulin">Айрат Хайруллін</string>
-    <string name="dmitry_ryabushkin">Дмитро Рябушкін</string>
-    <string name="evgeny_rivkin">Євген Ривкін</string>
+    <string name="alexandr_perfilev">Александр Перфильев</string>
+    <string name="maxim_kulikov">Максим Куликов</string>
+    <string name="erdeni_erdyneev">Эрдэни Эрдынеев</string>
+    <string name="oleg_grigoriev">Олег Григорьев</string>
+    <string name="airat_hairulin">Айрат Хайруллин</string>
+    <string name="dmitry_ryabushkin">Дмитрий Рябушкин</string>
+    <string name="evgeny_rivkin">Евгений Ривкин</string>
 
     <string name="roman_novoselov_desc">PM, Architect, Developer</string>
     <string name="alexandr_lihovidov_desc">Architect, Technical consultant</string>
