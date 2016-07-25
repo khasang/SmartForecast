@@ -67,7 +67,7 @@
     <string name="error_service_not_available">Координати Вашого поточного місцезнаходження не знайдені.</string>
     <string name="error_geo_service_not_available">Координати розташування не знайдені.</string>
     <string name="invalid_lang_long_used">Помилка розпізнавання координат для місцезнаходження</string>
-    <string name="no_address_found">Адреса поточного місцезнаходження знайдена</string>
+    <string name="no_address_found">Адреса поточного місцезнаходження не знайдена</string>
 
     <string name="error_gps_permission">Відсутні права на використання gps та ресурсів оператора зв'язку</string>
     <string name="clear_new_location_name">Очистити поле вводу</string>
