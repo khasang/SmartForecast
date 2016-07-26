@@ -33,7 +33,7 @@ public class TeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context context;
     private List<Developer> developers;
-    private int screenWidth;
+    private int wallpaperWidth;
     private int wallpaperHeight;
 
     private String[] wallpapers = {
@@ -63,8 +63,10 @@ public class TeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         Display display = wm.getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
-        screenWidth = size.x;
+        int screenWidth = size.x;
 
+        int margin = context.getResources().getDimensionPixelSize(R.dimen.card_developer_margin);
+        wallpaperWidth = screenWidth - 2 * margin;
         wallpaperHeight = context.getResources().getDimensionPixelSize(R.dimen.card_developer_main_height);
     }
 
@@ -97,11 +99,9 @@ public class TeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 .resize(iconParams.width, iconParams.height)
                 .into(holder.iconView);
 
-        int width = screenWidth; // пренебрегаем margin карточки, все равно картинка использует centerCrop
-        int height = wallpaperHeight;
         Picasso.with(context)
                 .load(wallpapers[position % wallpapers.length])
-                .resize(width, height)
+                .resize(wallpaperWidth, wallpaperHeight)
                 .centerCrop()
                 .into(holder.wallpaper, new Callback() {
                     @Override
@@ -158,7 +158,7 @@ public class TeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private CircleImageView iconView;
         private LinearLayout links;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             wallpaper = (ImageView) itemView.findViewById(R.id.wallpaper);
             nameView = (TextView) itemView.findViewById(R.id.name);
