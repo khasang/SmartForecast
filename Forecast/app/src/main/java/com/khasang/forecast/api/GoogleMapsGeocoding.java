@@ -52,7 +52,7 @@ public class GoogleMapsGeocoding {
             call.enqueue(new Callback() {
                 @Override
                 public void onFailure(Request request, IOException e) {
-                    AppUtils.showInfoMessage(MyApplication.getAppContext().getString(R.string.invalid_lang_long_used)).show();
+//                    AppUtils.showInfoMessage(MyApplication.getAppContext().getString(R.string.invalid_lang_long_used)).show();
                 }
 
                 @Override
@@ -78,7 +78,7 @@ public class GoogleMapsGeocoding {
                             googleMapsTimezone.requestCoordinates(input);
                         }
                     } catch (JSONException e) {
-                        AppUtils.showInfoMessage(MyApplication.getAppContext().getString(R.string.invalid_lang_long_used)).show();
+//                        AppUtils.showInfoMessage(MyApplication.getAppContext().getString(R.string.invalid_lang_long_used)).show();
                         if (Fabric.isInitialized()) {
                             Crashlytics.logException(e);
                             Answers.getInstance().logCustom(new CustomEvent(AppUtils.ApiCustomEvent)
@@ -88,7 +88,7 @@ public class GoogleMapsGeocoding {
                 }
             });
         } catch (UnsupportedEncodingException e) {
-            AppUtils.showInfoMessage(MyApplication.getAppContext().getString(R.string.invalid_lang_long_used)).show();
+//            AppUtils.showInfoMessage(MyApplication.getAppContext().getString(R.string.invalid_lang_long_used)).show();
         }
     }
 
@@ -113,7 +113,7 @@ public class GoogleMapsGeocoding {
             call.enqueue(new Callback() {
                 @Override
                 public void onFailure(Request request, IOException e) {
-                    AppUtils.showInfoMessage(MyApplication.getAppContext().getString(R.string.no_address_found)).show();
+//                    AppUtils.showInfoMessage(MyApplication.getAppContext().getString(R.string.no_address_found)).show();
                 }
 
                 @Override
@@ -130,7 +130,7 @@ public class GoogleMapsGeocoding {
                         }
                         receiver.updateLocation(jsonArray.getJSONObject(0).getString("formatted_address"), new Coordinate(latitude, longitude));
                     } catch (JSONException e) {
-                        AppUtils.showInfoMessage(MyApplication.getAppContext().getString(R.string.no_address_found)).show();
+//                        AppUtils.showInfoMessage(MyApplication.getAppContext().getString(R.string.no_address_found)).show();
                         if (Fabric.isInitialized()) {
                             Crashlytics.logException(e);
                             Answers.getInstance().logCustom(new CustomEvent(AppUtils.ApiCustomEvent)
