@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
+    android:layout_margin="@dimen/card_developer_margin"
     android:elevation="4dp"
     app:cardBackgroundColor="#FFFFFF"
     app:cardCornerRadius="4dp"
@@ -17,16 +18,17 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="@dimen/card_developer_main_height"
+            tools:background="@color/primary">
 
-            <com.khasang.forecast.view.AspectRatioImageView
+            <ImageView
                 android:id="@+id/wallpaper"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:aspect_ratio="1.78" />
+                android:layout_height="match_parent"
+                />
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/image"
+                android:id="@+id/icon"
                 android:layout_width="112dp"
                 android:layout_height="112dp"
                 android:layout_centerHorizontal="true"
@@ -34,31 +36,32 @@
                 android:layout_marginTop="16dp"
                 app:civ_border_color="#FFFFFF"
                 app:civ_border_width="4dp"
-                tools:src="@android:drawable/star_big_on" />
+                tools:src="@drawable/ic_person"/>
 
             <TextView
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/image"
+                android:layout_below="@id/icon"
                 android:layout_centerHorizontal="true"
                 android:fontFamily="sans-serif-medium"
-                android:textColor="#5D5D5D"
+                android:textColor="@android:color/white"
                 android:textSize="20sp"
-                tools:text="Developer 1" />
+                tools:text="Developer 1"/>
 
             <TextView
                 android:id="@+id/description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/name"
+                android:layout_below="@id/name"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="12dp"
                 android:layout_marginTop="12dp"
                 android:fontFamily="sans-serif-regular"
-                android:textColor="#5D5D5D"
+                android:textColor="@android:color/white"
                 android:textSize="16sp"
-                tools:text="Developer 1 description" />
+                tools:text="Developer 1 description"/>
+
         </RelativeLayout>
 
         <LinearLayout
@@ -68,16 +71,25 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/item_user_info_btn"
                 style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:text="Привет"
-                android:textColor="@color/accent" />
-        </LinearLayout>
+                android:textColor="@color/accent"
+                tools:text="Link 1"/>
 
+            <Button
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:textColor="@color/accent"
+                tools:text="Link 2"/>
+        </LinearLayout>
 
     </LinearLayout>
 </android.support.v7.widget.CardView>
