@@ -87,10 +87,10 @@
     <string name="error_get_coordinates">Kann nicht die Koordinaten der angeforderten Standort bestimmen</string>
     <string name="forecast_unavailable">Forecast unavailable</string>
 
-    <string name="title_activity_about">Über Anwendung</string>
-    <string name="changelog">Entwicklung des Projekts</string>
-    <string name="team">Team</string>
-    <string name="drawer_item_about">Über Anwendung</string>
+    <string name="title_activity_about">über die Anwendung</string>
+    <string name="changelog">die Entwicklung des Projekts</string>
+    <string name="team">die Mannschaft</string>
+    <string name="drawer_item_about">über die Anwendung</string>
 
     <string name="version_2_7">Version 2.7</string>
     <string name="version_2_7_changelog">"- Neu gestaltete Benutzeroberfläche.
