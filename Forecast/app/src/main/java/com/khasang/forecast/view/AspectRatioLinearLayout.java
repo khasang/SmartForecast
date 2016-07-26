@@ -3,22 +3,20 @@ package com.khasang.forecast.view;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.khasang.forecast.R;
 
-/**
- * Created by roman on 22.07.16.
- */
-public class AspectRatioImageView extends ImageView {
-    private static final float DEFAULT_ASPECT_RATIO = 1.73f;
-    private final float mAspectRatio;
+public class AspectRatioLinearLayout extends LinearLayout {
 
-    public AspectRatioImageView(Context context, AttributeSet attrs) {
+    private static final float DEFAULT_ASPECT_RATIO = 1.73f;
+    private final float aspectRatio;
+
+    public AspectRatioLinearLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.AspectRatioImageView);
-        mAspectRatio = typedArray.getFloat(R.styleable.AspectRatioImageView_aspect_ratio, DEFAULT_ASPECT_RATIO);
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.AspectRatioLinearLayout);
+        aspectRatio = typedArray.getFloat(R.styleable.AspectRatioLinearLayout_aspect_ratio, DEFAULT_ASPECT_RATIO);
         typedArray.recycle();
     }
 
@@ -30,7 +28,7 @@ public class AspectRatioImageView extends ImageView {
         int newHeight;
 
         newWidth = getMeasuredWidth();
-        newHeight = (int) (newWidth / mAspectRatio);
+        newHeight = (int) (newWidth / aspectRatio);
         setMeasuredDimension(newWidth, newHeight);
     }
 }

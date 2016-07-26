@@ -2,8 +2,11 @@ package com.khasang.forecast.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
@@ -18,9 +21,8 @@ import android.widget.TextView;
 import com.khasang.forecast.R;
 import com.khasang.forecast.models.Developer;
 import com.khasang.forecast.models.Link;
-import com.khasang.forecast.view.AspectRatioImageView;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.List;
 
@@ -75,9 +77,9 @@ public class TeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         holder.nameView.setText(developer.getNameResId());
         holder.descriptionView.setText(developer.getDescriptionResId());
+
         ViewGroup.LayoutParams imageLp = holder.imageView.getLayoutParams();
         String url = developer.getImage().getUrl();
-
         Picasso.with(context)
                 .load(url)
                 .placeholder(R.drawable.ic_person)
@@ -87,31 +89,33 @@ public class TeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         Picasso.with(context)
                 .load(wallpapers[position % wallpapers.length])
-                .fit()
-                .centerCrop()
-                .into(holder.wallpaper, new Callback() {
+                .into(new Target() {
                     @Override
-                    public void onSuccess() {
+                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                        holder.wallpaper.setBackground(new BitmapDrawable(context.getResources(), bitmap));
                         holder.nameView.setTextColor(ContextCompat.getColor(context, R.color.white));
                         holder.descriptionView.setTextColor(ContextCompat.getColor(context, R.color.white));
                     }
 
                     @Override
-                    public void onError() {
+                    public void onBitmapFailed(final Drawable errorDrawable) {
                         holder.nameView.setTextColor(ContextCompat.getColor(context, R.color.grey));
                         holder.descriptionView.setTextColor(ContextCompat.getColor(context, R.color.grey));
                     }
+
+                    @Override
+                    public void onPrepareLoad(final Drawable placeHolderDrawable) {
+                    }
                 });
 
-        List<Link> links = developer.getLinks();
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.weight = 1;
-        params.width = 0;
-        holder.links.removeAllViews();
         Typeface typeface = Typeface.create("sans-serif-regular", Typeface.BOLD);
         int buttonPadding = context.getResources().getDimensionPixelSize(R.dimen.social_button_padding);
-        for (final Link link : links) {
 
+        holder.links.removeAllViews();
+        List<Link> links = developer.getLinks();
+        for (final Link link : links) {
             Button socialButton;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 socialButton = new Button(context, null, 0, R.style.social_button_style);
@@ -139,15 +143,15 @@ public class TeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private class ViewHolder extends RecyclerView.ViewHolder {
 
+        private ViewGroup wallpaper;
         private TextView nameView;
         private TextView descriptionView;
         private CircleImageView imageView;
         private LinearLayout links;
-        private AspectRatioImageView wallpaper;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            wallpaper = (AspectRatioImageView) itemView.findViewById(R.id.wallpaper);
+            wallpaper = (ViewGroup) itemView.findViewById(R.id.wallpaper);
             nameView = (TextView) itemView.findViewById(R.id.name);
             descriptionView = (TextView) itemView.findViewById(R.id.description);
             imageView = (CircleImageView) itemView.findViewById(R.id.image);
