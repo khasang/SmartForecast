@@ -2,27 +2,28 @@ package com.khasang.forecast.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.khasang.forecast.R;
 import com.khasang.forecast.models.Developer;
 import com.khasang.forecast.models.Link;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import java.util.List;
 
@@ -32,6 +33,8 @@ public class TeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context context;
     private List<Developer> developers;
+    private int screenWidth;
+    private int wallpaperHeight;
 
     private String[] wallpapers = {
             "https://raw.githubusercontent.com/khasang/SmartForecast/main-develop/Auxiliary_files/Wallpapers/cloudy_day.jpg",
@@ -56,6 +59,13 @@ public class TeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public TeamAdapter(Context context, List<Developer> developers) {
         this.context = context;
         this.developers = developers;
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        screenWidth = size.x;
+
+        wallpaperHeight = context.getResources().getDimensionPixelSize(R.dimen.card_developer_main_height);
     }
 
     @Override
@@ -78,33 +88,32 @@ public class TeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         holder.nameView.setText(developer.getNameResId());
         holder.descriptionView.setText(developer.getDescriptionResId());
 
-        ViewGroup.LayoutParams imageLp = holder.imageView.getLayoutParams();
+        ViewGroup.LayoutParams iconParams = holder.iconView.getLayoutParams();
         String url = developer.getImage().getUrl();
         Picasso.with(context)
                 .load(url)
                 .placeholder(R.drawable.ic_person)
                 .error(R.drawable.ic_person)
-                .resize(imageLp.width, imageLp.height)
-                .into(holder.imageView);
+                .resize(iconParams.width, iconParams.height)
+                .into(holder.iconView);
 
+        int width = screenWidth; // пренебрегаем margin карточки, все равно картинка использует centerCrop
+        int height = wallpaperHeight;
         Picasso.with(context)
                 .load(wallpapers[position % wallpapers.length])
-                .into(new Target() {
+                .resize(width, height)
+                .centerCrop()
+                .into(holder.wallpaper, new Callback() {
                     @Override
-                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                        holder.wallpaper.setBackground(new BitmapDrawable(context.getResources(), bitmap));
+                    public void onSuccess() {
                         holder.nameView.setTextColor(ContextCompat.getColor(context, R.color.white));
                         holder.descriptionView.setTextColor(ContextCompat.getColor(context, R.color.white));
                     }
 
                     @Override
-                    public void onBitmapFailed(final Drawable errorDrawable) {
+                    public void onError() {
                         holder.nameView.setTextColor(ContextCompat.getColor(context, R.color.grey));
                         holder.descriptionView.setTextColor(ContextCompat.getColor(context, R.color.grey));
-                    }
-
-                    @Override
-                    public void onPrepareLoad(final Drawable placeHolderDrawable) {
                     }
                 });
 
@@ -143,18 +152,18 @@ public class TeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private class ViewHolder extends RecyclerView.ViewHolder {
 
-        private ViewGroup wallpaper;
+        private ImageView wallpaper;
         private TextView nameView;
         private TextView descriptionView;
-        private CircleImageView imageView;
+        private CircleImageView iconView;
         private LinearLayout links;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            wallpaper = (ViewGroup) itemView.findViewById(R.id.wallpaper);
+            wallpaper = (ImageView) itemView.findViewById(R.id.wallpaper);
             nameView = (TextView) itemView.findViewById(R.id.name);
             descriptionView = (TextView) itemView.findViewById(R.id.description);
-            imageView = (CircleImageView) itemView.findViewById(R.id.image);
+            iconView = (CircleImageView) itemView.findViewById(R.id.icon);
             links = (LinearLayout) itemView.findViewById(R.id.links);
         }
     }

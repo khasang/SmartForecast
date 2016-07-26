@@ -16,4 +16,6 @@
     <dimen name="chart_xaxis_size">8dp</dimen>
     <dimen name="chart_y_offset">2dp</dimen>
     <dimen name="chart_height">150dp</dimen>
+
+    <dimen name="card_developer_main_height">220dp</dimen>
 </resources>

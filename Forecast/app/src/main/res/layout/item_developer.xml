@@ -15,19 +15,22 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <com.khasang.forecast.view.AspectRatioLinearLayout
-            android:id="@+id/wallpaper"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center_horizontal"
-            app:aspect_ratio="1.78"
+            android:layout_height="@dimen/card_developer_main_height"
             tools:background="@color/primary">
 
+            <ImageView
+                android:id="@+id/wallpaper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/image"
-                android:layout_width="96dp"
-                android:layout_height="96dp"
+                android:id="@+id/icon"
+                android:layout_width="112dp"
+                android:layout_height="112dp"
+                android:layout_centerHorizontal="true"
                 android:layout_marginBottom="16dp"
                 android:layout_marginTop="16dp"
                 app:civ_border_color="#FFFFFF"
@@ -38,6 +41,8 @@
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/icon"
+                android:layout_centerHorizontal="true"
                 android:fontFamily="sans-serif-medium"
                 android:textColor="@android:color/white"
                 android:textSize="20sp"
@@ -47,6 +52,8 @@
                 android:id="@+id/description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/name"
+                android:layout_centerHorizontal="true"
                 android:layout_marginBottom="12dp"
                 android:layout_marginTop="12dp"
                 android:fontFamily="sans-serif-regular"
@@ -54,7 +61,7 @@
                 android:textSize="16sp"
                 tools:text="Developer 1 description"/>
 
-        </com.khasang.forecast.view.AspectRatioLinearLayout>
+        </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/links"
