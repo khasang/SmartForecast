@@ -105,6 +105,9 @@ public class SettingsActivity extends BaseActivity {
                     } else if (getString(R.string.pref_language_russian).equals(languageCode)) {
                         preference.setSummary(getString(R.string.pref_language_russian_label));
                         listPreference.setValue(getString(R.string.pref_language_russian));
+                    } else if (getString(R.string.pref_language_ukrainian).equals(languageCode)) {
+                        preference.setSummary(getString(R.string.pref_language_ukrainian_label));
+                        listPreference.setValue(getString(R.string.pref_language_ukrainian));
                     } else {
                         preference.setSummary(getString(R.string.pref_language_english_label));
                         listPreference.setValue(getString(R.string.pref_language_english));

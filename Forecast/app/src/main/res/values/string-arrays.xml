@@ -4,12 +4,14 @@
         <item>@string/pref_language_english</item>
         <item>@string/pref_language_deutsch</item>
         <item>@string/pref_language_russian</item>
+        <item>@string/pref_language_ukrainian</item>
     </string-array>
 
     <string-array name="pref_language_options">
         <item>@string/pref_language_english_label</item>
         <item>@string/pref_language_deutsch_label</item>
         <item>@string/pref_language_russian_label</item>
+        <item>@string/pref_language_ukrainian_label</item>
     </string-array>
 
     <string-array name="pref_temperature_values">
