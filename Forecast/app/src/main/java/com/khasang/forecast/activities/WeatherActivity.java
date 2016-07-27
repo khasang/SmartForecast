@@ -1,5 +1,6 @@
 package com.khasang.forecast.activities;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -88,6 +89,8 @@ public class WeatherActivity extends BaseActivity
                 .OnConnectionFailedListener {
 
     public static final String ACTIVE_CITY_TAG = "ACTIVE_CITY";
+    public static final int PERMISSION_LOCATION_REQUEST_CODE = 87;
+    public static final int PERMISSION_REQUEST_SETTINGS_CODE = 88;
     private static final String TAG = WeatherActivity.class.getSimpleName();
     private static final int REQUEST_INVITE = 0;
     private static final int CHOOSE_CITY = 1;
@@ -133,9 +136,6 @@ public class WeatherActivity extends BaseActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        PositionManager.getInstance(this, this);
-        PositionManager.getInstance().generateIconSet(this);
-
         setContentView(R.layout.activity_weather);
 
         int drawerHeaderArrayIndex = 0;
@@ -154,12 +154,14 @@ public class WeatherActivity extends BaseActivity
                 break;
         }
 
+//        checkPermissions();
+        PositionManager.getInstance(this, this);
+        PositionManager.getInstance().generateIconSet(this);
         setActivePosition();
         init();
         initNavigationDrawer(drawerHeaderArrayIndex);
         setAnimationForWidgets();
         startAnimations();
-        checkPermissions();
         initAppInvite();
 
         hourlyForecastFragment = new HourlyForecastFragment();
@@ -328,6 +330,12 @@ public class WeatherActivity extends BaseActivity
                 permissionDenied(PERMISSION_REQUEST_FINE_LOCATION);
             }
         }
+        if (requestCode == PERMISSION_LOCATION_REQUEST_CODE && grantResults.length == 2) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED
+                    && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                PositionManager.getInstance().updateWeather();
+            }
+        }
     }
 
     @Override
@@ -453,7 +461,6 @@ public class WeatherActivity extends BaseActivity
         super.onResume();
         PositionManager.getInstance().setReceiver(this);
         PositionManager.getInstance().setMessageProvider(this);
-
         boolean isLocationPermissionGranted =
                 new PermissionChecker().isPermissionGranted(this, PERMISSION_REQUEST_FINE_LOCATION);
         navigationDrawer.updateBadges(isLocationPermissionGranted);
@@ -493,7 +500,27 @@ public class WeatherActivity extends BaseActivity
         } else {
             PositionManager.getInstance().setPressureMetric(AppUtils.PressureMetrics.HPA);
         }
-        PositionManager.getInstance().updateWeatherFromDB();
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            PositionManager.getInstance().updateWeatherFromDB();
+        } else {
+            ActivityCompat.requestPermissions(this, new String[] {
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+            }, PERMISSION_LOCATION_REQUEST_CODE);
+            /*
+            Snackbar.make(findViewById(R.id.coordinatorLayout), "Для коректной работы необходимо дать требуемые разрешения", Snackbar.LENGTH_LONG)
+                    .setAction("Разрешить", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent appSettings = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package: " + getPackageName()));
+                            startActivityForResult(appSettings, PERMISSION_REQUEST_SETTINGS_CODE);
+                        }
+                    })
+                    .show();
+                    */
+        }
     }
 
     @Override
