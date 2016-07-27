@@ -56,12 +56,10 @@ public class SplashScreenActivity extends BaseActivity implements Animation.Anim
             defineNightMode(sp);
 
             boolean showWelcome = sp.getBoolean(getString(R.string.pref_welcome_key), true);
-            Log.d("TAG", "showWelcome: " + showWelcome);
             if (!showWelcome) {
                 startWeatherActivityWithoutTransition();
             } else {
                 showWelcomeString = sp.getBoolean(getString(R.string.pref_welcome_text_key), true);
-                Log.d("TAG", "showWelcomeString: " + showWelcomeString);
                 if (showWelcomeString) {
                     setWelcomeString();
                 }

@@ -20,6 +20,8 @@ android {
     buildTypes {
         debug {
             ext.enableCrashlytics = false
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-DEBUG"
         }
         release {
             ext.enableCrashlytics = true
