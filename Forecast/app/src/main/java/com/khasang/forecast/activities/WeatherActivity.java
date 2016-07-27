@@ -509,8 +509,8 @@ public class WeatherActivity extends BaseActivity
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     Manifest.permission.ACCESS_COARSE_LOCATION
             }, PERMISSION_LOCATION_REQUEST_CODE);
-            /*
-            Snackbar.make(findViewById(R.id.coordinatorLayout), "Для коректной работы необходимо дать требуемые разрешения", Snackbar.LENGTH_LONG)
+
+            Snackbar.make((CoordinatorLayout)findViewById(R.id.coordinatorLayout), "Для коректной работы необходимо дать требуемые разрешения", Snackbar.LENGTH_LONG)
                     .setAction("Разрешить", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -519,7 +519,7 @@ public class WeatherActivity extends BaseActivity
                         }
                     })
                     .show();
-                    */
+
         }
     }
 
