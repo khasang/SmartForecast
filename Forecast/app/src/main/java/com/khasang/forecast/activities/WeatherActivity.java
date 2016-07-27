@@ -95,6 +95,8 @@ public class WeatherActivity extends BaseActivity
     private static final int REQUEST_INVITE = 0;
     private static final int CHOOSE_CITY = 1;
 
+    @BindView(R.id.coordinatorLayout)
+    CoordinatorLayout coordinatorLayout;
     @BindView(R.id.temperature_text)
     TextView temperatureView;
     @BindView(R.id.precipitation)
@@ -173,11 +175,6 @@ public class WeatherActivity extends BaseActivity
                 .hide(dailyForecastFragment)
                 .commit();
         onRefresh();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
     }
 
     private void initAppInvite() {
@@ -319,7 +316,7 @@ public class WeatherActivity extends BaseActivity
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PERMISSION_REQUEST_FINE_LOCATION.VALUE) {
+        if (requestCode == PERMISSION_LOCATION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 PositionManager.getInstance().setReceiver(this);
                 PositionManager.getInstance().setMessageProvider(this);
@@ -328,12 +325,6 @@ public class WeatherActivity extends BaseActivity
                 permissionGranted(PERMISSION_REQUEST_FINE_LOCATION);
             } else {
                 permissionDenied(PERMISSION_REQUEST_FINE_LOCATION);
-            }
-        }
-        if (requestCode == PERMISSION_LOCATION_REQUEST_CODE && grantResults.length == 2) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED
-                    && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                PositionManager.getInstance().updateWeather();
             }
         }
     }
@@ -501,25 +492,28 @@ public class WeatherActivity extends BaseActivity
             PositionManager.getInstance().setPressureMetric(AppUtils.PressureMetrics.HPA);
         }
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager
+                .PERMISSION_GRANTED) {
             PositionManager.getInstance().updateWeatherFromDB();
         } else {
-            ActivityCompat.requestPermissions(this, new String[] {
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-            }, PERMISSION_LOCATION_REQUEST_CODE);
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.READ_CONTACTS)) {
 
-            Snackbar.make((CoordinatorLayout)findViewById(R.id.coordinatorLayout), "Для коректной работы необходимо дать требуемые разрешения", Snackbar.LENGTH_LONG)
-                    .setAction("Разрешить", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent appSettings = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package: " + getPackageName()));
-                            startActivityForResult(appSettings, PERMISSION_REQUEST_SETTINGS_CODE);
-                        }
-                    })
-                    .show();
-
+                Snackbar.make(coordinatorLayout, "Для коректной работы необходимо дать требуемые разрешения",
+                        Snackbar.LENGTH_LONG)
+                        .setAction("Разрешить", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent appSettings = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse
+                                        ("package: " + getPackageName()));
+                                startActivityForResult(appSettings, PERMISSION_REQUEST_SETTINGS_CODE);
+                            }
+                        })
+                        .show();
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        PERMISSION_LOCATION_REQUEST_CODE);
+            }
         }
     }
 
