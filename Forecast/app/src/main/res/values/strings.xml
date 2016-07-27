@@ -101,42 +101,42 @@
 
     <string name="version_2_7">Version 2.7</string>
     <string name="version_2_7_changelog">"- Redesigned program interface.
-        - Added display of atmospheric pressure.
-        - Expanded settings menu.
-        - Recommendation of the application for friends."
+- Added display of atmospheric pressure.
+- Expanded settings menu.
+- Recommendation of the application for friends."
     </string>
 
     <string name="version_2_6">Version 2.6</string>
     <string name="version_2_6_changelog">"- Added several color schemes.
-        - \"Night\" mode.
-        - Alternative sets of icons.
-        - Schedule of change of temperature."
+- \"Night\" mode.
+- Alternative sets of icons.
+- Schedule of change of temperature."
     </string>
 
     <string name="version_2_3">Version 2.3</string>
     <string name="version_2_3_changelog">"- New prompt of the application.
-        - Added a full setup menu.
-        - Newly added settlements now highlighted in the list."
+- Added a full setup menu.
+- Newly added settlements now highlighted in the list."
     </string>
 
     <string name="version_2_1">Version 2.1</string>
     <string name="version_2_1_changelog">"In the application added the functionality of Google Maps service:
-        - The addition of the settlement, using the \"tap\" on the map.
-        - When entering names, markers appear above the appropriate settlements."
+- The addition of the settlement, using the \"tap\" on the map.
+- When entering names, markers appear above the appropriate settlements."
     </string>
 
     <string name="version_2_0">Version 2.0</string>
     <string name="version_2_0_changelog">"- Completely redesigned app design.
-        - Displays weather conditions for the \"current\" user\'s location.
-        - The choice of units of measure is taken out in the menu of settings.
-        - Maintain a list of \"favorites\" settlements."
+- Displays weather conditions for the \"current\" user\'s location.
+- The choice of units of measure is taken out in the menu of settings.
+- Maintain a list of \"favorites\" settlements."
     </string>
 
     <string name="version_1_0">Version 1.0</string>
     <string name="version_1_0_changelog">"- The minimum interface and basic logic of the application is realized.
-        - Obtaining weather data from the OpenWeatherMap service.
-        - Maintain a list of cities, intelligent addition of the city by several letters.
-        - Selection of temperature units."
+- Obtaining weather data from the OpenWeatherMap service.
+- Maintain a list of cities, intelligent addition of the city by several letters.
+- Selection of temperature units."
     </string>
 
     <string name="roman_novoselov">Roman Novoselov</string>

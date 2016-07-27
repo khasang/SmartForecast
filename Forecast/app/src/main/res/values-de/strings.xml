@@ -94,65 +94,43 @@
 
     <string name="version_2_7">Version 2.7</string>
     <string name="version_2_7_changelog">"- Neu gestaltete Benutzeroberfläche.
-        - Hinzugefügt Anzeige von Atmosphärendruck.
-        - Menü von Einstellungen ist erweitert.
-        - Empfehlung der App an Ihre Freunde."
+- Hinzugefügt Anzeige von Atmosphärendruck.
+- Menü von Einstellungen ist erweitert.
+- Empfehlung der App an Ihre Freunde."
     </string>
 
     <string name="version_2_6">Version 2.6</string>
     <string name="version_2_6_changelog">"- Mehrere Farbschemata hinzugefügt.
-        - \"Night\" modus.
-        - Alternative Sätze von Icons.
-        - Der Zeitplan der Veränderung der Temperatur."
+- \"Night\" modus.
+- Alternative Sätze von Icons.
+- Der Zeitplan der Veränderung der Temperatur."
     </string>
 
     <string name="version_2_3">Version 2.3</string>
     <string name="version_2_3_changelog">"- Das neue Vorschaubild der Anlage.
-        - Eine vollständige Setup-Menü hinzugefügt.
-        - Vor kurzem hinzugefügte Siedlungen sind jetzt in der Liste markiert."
+- Eine vollständige Setup-Menü hinzugefügt.
+- Vor kurzem hinzugefügte Siedlungen sind jetzt in der Liste markiert."
     </string>
 
     <string name="version_2_1">Version 2.1</string>
     <string name="version_2_1_changelog">"Die Anwendung fügt die Funktionalität von Google Maps Kartenservice:
-        - Hinzufügen eines Ortes, mit \"Tippen\" auf einer geographischen Karte.
-        - Wenn Sie einen Namen eingeben, an geeigneten Orten erscheinen Markierungen."
+- Hinzufügen eines Ortes, mit \"Tippen\" auf einer geographischen Karte.
+- Wenn Sie einen Namen eingeben, an geeigneten Orten erscheinen Markierungen."
     </string>
 
     <string name="version_2_0">Version 2.0</string>
     <string name="version_2_0_changelog">"- Es ist das Design der Anlage vollständig verarbeitet.
-        - Anzeige von Wetterbedingungen für den \"aktuellen\" Standort des Nutzers.
-        - Die Auswahl der Einheiten zum Setup-Menü übergeben .
-        - Pflegen Sie eine Liste der \"auserwählte\" Siedlungen."
+- Anzeige von Wetterbedingungen für den \"aktuellen\" Standort des Nutzers.
+- Die Auswahl der Einheiten zum Setup-Menü übergeben .
+- Pflegen Sie eine Liste der \"auserwählte\" Siedlungen."
     </string>
 
     <string name="version_1_0">Version 1.0</string>
     <string name="version_1_0_changelog">"- Es ist das minimale Interface und die grundlegende Logik der Anlage realisiert.
-        - Das Erhalten der Wetterdaten vom Service OpenWeatherMap.
-        - Die Führung der Liste der Städte, die intellektuelle Ergänzung der Stadt nach einigen Buchstaben.
-        - Die Auswahl der Maßeinheit der Temperatur."
+- Das Erhalten der Wetterdaten vom Service OpenWeatherMap.
+- Die Führung der Liste der Städte, die intellektuelle Ergänzung der Stadt nach einigen Buchstaben.
+- Die Auswahl der Maßeinheit der Temperatur."
     </string>
-
-    <string name="roman_novoselov">Roman Novoselov</string>
-    <string name="alexandr_lihovidov">Alexandr Lihovidov</string>
-    <string name="timofey_korotkov">Timofey Korotkov</string>
-    <string name="alexandr_perfilev">Alexandr Perfilev</string>
-    <string name="maxim_kulikov">Maxim Kulikov</string>
-    <string name="erdeni_erdyneev">Erdeni Erdyneev</string>
-    <string name="oleg_grigoriev">Oleg Grigoriev</string>
-    <string name="airat_hairulin">Airat Hairulin</string>
-    <string name="dmitry_ryabushkin">Dmitry Ryabushkin</string>
-    <string name="evgeny_rivkin">Evgeny Rivkin</string>
-
-    <string name="roman_novoselov_desc">PM, Architect, Developer</string>
-    <string name="alexandr_lihovidov_desc">Architect, Technical consultant</string>
-    <string name="timofey_korotkov_desc">UI designer, Developer</string>
-    <string name="alexandr_perfilev_desc">UI designer, Developer</string>
-    <string name="maxim_kulikov_desc">Product Owner, Developer</string>
-    <string name="erdeni_erdyneev_desc">UX Designer, Developer</string>
-    <string name="oleg_grigoriev_desc">Developer</string>
-    <string name="airat_hairulin_desc">Translator</string>
-    <string name="dmitry_ryabushkin_desc">Translator</string>
-    <string name="evgeny_rivkin_desc">Translator</string>
 
     <!-- App Invites -->
     <string name="invitation_title">Die Einladung zur App senden</string>
