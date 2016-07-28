@@ -332,6 +332,14 @@ public class WeatherActivity extends BaseActivity
         PositionManager.getInstance().setMessageProvider(this);
         PositionManager.getInstance().setReceiver(this);
         switch (requestCode) {
+            case PERMISSION_REQUEST_SETTINGS_CODE:
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    navigationDrawer.updateBadges(true);
+                } else {
+                    navigationDrawer.updateBadges(false);
+                    showPermissionSnack();
+                }
+                break;
             case CHOOSE_CITY:
                 PositionManager pm = PositionManager.getInstance();
                 if (resultCode == RESULT_OK) {
@@ -421,8 +429,7 @@ public class WeatherActivity extends BaseActivity
         PositionManager.getInstance().setReceiver(this);
         PositionManager.getInstance().setMessageProvider(this);
         boolean isLocationPermissionGranted = Build.VERSION.SDK_INT < Build.VERSION_CODES.M ||
-                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager
-                        .PERMISSION_GRANTED;
+                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
         navigationDrawer.updateBadges(isLocationPermissionGranted);
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
@@ -461,36 +468,34 @@ public class WeatherActivity extends BaseActivity
             PositionManager.getInstance().setPressureMetric(AppUtils.PressureMetrics.HPA);
         }
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager
-                .PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             PositionManager.getInstance().updateWeatherFromDB();
         } else {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
-
-                int whiteColor = ContextCompat.getColor(this, R.color.white);
-
-                Snackbar snackbar = Snackbar.make(coordinatorLayout, "Для коректной работы необходимо дать требуемые " +
-                                "разрешения",
-                        Snackbar.LENGTH_LONG)
-                        .setActionTextColor(whiteColor)
-                        .setAction("Разрешить", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent appSettings = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse
-                                        ("package: " + getPackageName()));
-                                startActivityForResult(appSettings, PERMISSION_REQUEST_SETTINGS_CODE);
-                            }
-                        });
-
-                TextView tv = (TextView) snackbar.getView().findViewById(snackbar_text);
-                tv.setTextColor(whiteColor);
-
-                snackbar.show();
-            }
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    PERMISSION_LOCATION_REQUEST_CODE);
+            checkLocationPermission();
         }
+    }
+
+    void checkLocationPermission() {
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                PERMISSION_LOCATION_REQUEST_CODE);
+        showPermissionSnack();
+    }
+
+    void showPermissionSnack() {
+        Snackbar snackbar = Snackbar.make(coordinatorLayout, "Для коректной работы необходимо дать требуемые разрешения",
+                Snackbar.LENGTH_LONG)
+                .setActionTextColor(ContextCompat.getColor(this, R.color.accent))
+                .setAction("Разрешить", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent appSettings = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse
+                                ("package: " + getPackageName()));
+                        startActivityForResult(appSettings, PERMISSION_REQUEST_SETTINGS_CODE);
+                    }
+                });
+        TextView tv = (TextView) snackbar.getView().findViewById(snackbar_text);
+        tv.setTextColor(ContextCompat.getColor(this, R.color.white));
+        snackbar.show();
     }
 
     @Override
