@@ -318,6 +318,7 @@ public class WeatherActivity extends BaseActivity
                 navigationDrawer.updateBadges(true);
             } else {
                 navigationDrawer.updateBadges(false);
+                showProgress(false);
             }
         }
     }
@@ -476,9 +477,11 @@ public class WeatherActivity extends BaseActivity
     }
 
     void checkLocationPermission() {
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                PERMISSION_LOCATION_REQUEST_CODE);
+ //       if (!ActivityCompat.shouldShowRequestPermissionRationale(this,
+ //               Manifest.permission.ACCESS_FINE_LOCATION)) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_LOCATION_REQUEST_CODE);
         showPermissionSnack();
+ //   }
     }
 
     void showPermissionSnack() {
