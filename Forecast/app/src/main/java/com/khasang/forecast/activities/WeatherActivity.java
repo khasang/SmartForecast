@@ -73,6 +73,8 @@ import butterknife.BindView;
 import icepick.State;
 import io.fabric.sdk.android.Fabric;
 
+import static android.support.design.R.id.snackbar_text;
+
 /**
  * Данные которые необходимо отображать в WeatherActivity (для первого релиза):
  * город, температура, давление, влажность, ветер, временная метка.
@@ -419,7 +421,8 @@ public class WeatherActivity extends BaseActivity
         PositionManager.getInstance().setReceiver(this);
         PositionManager.getInstance().setMessageProvider(this);
         boolean isLocationPermissionGranted = Build.VERSION.SDK_INT < Build.VERSION_CODES.M ||
-                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager
+                        .PERMISSION_GRANTED;
         navigationDrawer.updateBadges(isLocationPermissionGranted);
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
@@ -462,20 +465,31 @@ public class WeatherActivity extends BaseActivity
                 .PERMISSION_GRANTED) {
             PositionManager.getInstance().updateWeatherFromDB();
         } else {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+                int whiteColor = ContextCompat.getColor(this, R.color.white);
+
+                Snackbar snackbar = Snackbar.make(coordinatorLayout, "Для коректной работы необходимо дать требуемые " +
+                                "разрешения",
+                        Snackbar.LENGTH_LONG)
+                        .setActionTextColor(whiteColor)
+                        .setAction("Разрешить", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent appSettings = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse
+                                        ("package: " + getPackageName()));
+                                startActivityForResult(appSettings, PERMISSION_REQUEST_SETTINGS_CODE);
+                            }
+                        });
+
+                TextView tv = (TextView) snackbar.getView().findViewById(snackbar_text);
+                tv.setTextColor(whiteColor);
+
+                snackbar.show();
+            }
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSION_LOCATION_REQUEST_CODE);
-            Snackbar.make(coordinatorLayout, "Для коректной работы необходимо дать требуемые разрешения",
-                    Snackbar.LENGTH_LONG)
-                    .setActionTextColor(ContextCompat.getColor(this,R.color.white))
-                    .setAction("Разрешить", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent appSettings = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse
-                                    ("package: " + getPackageName()));
-                            startActivityForResult(appSettings, PERMISSION_REQUEST_SETTINGS_CODE);
-                        }
-                    })
-                    .show();
         }
     }
 
@@ -672,7 +686,7 @@ public class WeatherActivity extends BaseActivity
 
     @Override
     public void showSnackbar(CharSequence string, int length) {
-        AppUtils.showSnackBar(this, findViewById(R.id.coordinatorLayout), string, length);
+        AppUtils.showSnackBar(this, coordinatorLayout, string, length);
     }
 
     @Override
