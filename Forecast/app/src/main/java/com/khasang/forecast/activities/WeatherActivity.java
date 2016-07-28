@@ -57,6 +57,7 @@ import com.khasang.forecast.fragments.HourlyForecastFragment;
 import com.khasang.forecast.interfaces.IMessageProvider;
 import com.khasang.forecast.interfaces.IPermissionCallback;
 import com.khasang.forecast.interfaces.IWeatherReceiver;
+import com.khasang.forecast.position.Position;
 import com.khasang.forecast.position.PositionManager;
 import com.khasang.forecast.position.Weather;
 import com.khasang.forecast.stations.WeatherStation;
@@ -320,6 +321,7 @@ public class WeatherActivity extends BaseActivity
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 PositionManager.getInstance().setReceiver(this);
                 PositionManager.getInstance().setMessageProvider(this);
+                PositionManager.getInstance().initLocationManager();
                 PositionManager.getInstance().updateWeatherFromDB();
                 PositionManager.getInstance().updateWeather();
                 permissionGranted(PERMISSION_REQUEST_FINE_LOCATION);
