@@ -163,4 +163,6 @@
     <string name="invitation_cta">Установить!</string>
 
     <string name="google_play_services_error">Ошибка сервиса Google Play</string>
+    <string name="weather_act_accept_txt">Разрешить</string>
+    <string name="weather_act_enable_permission_txt">Для коректной работы необходимо дать разрешение на определение местоположения</string>
 </resources>

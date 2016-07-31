@@ -141,4 +141,6 @@
     <string name="invitation_cta">Встановити!</string>
 
     <string name="google_play_services_error">Помилка сервісу Google Play</string>
+    <string name="weather_act_accept_txt">Дозволити</string>
+    <string name="weather_act_enable_permission_txt">Для коректної роботи необхідно дати дозвіл на визначення місцезнаходження</string>
 </resources>
