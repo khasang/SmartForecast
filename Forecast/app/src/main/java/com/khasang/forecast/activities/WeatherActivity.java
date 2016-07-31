@@ -152,6 +152,10 @@ public class WeatherActivity extends BaseActivity
                 break;
         }
 
+        if (!(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
+            checkLocationPermission();
+        }
+
         PositionManager.getInstance(this, this);
         PositionManager.getInstance().generateIconSet(this);
         setActivePosition();
@@ -468,20 +472,12 @@ public class WeatherActivity extends BaseActivity
         } else {
             PositionManager.getInstance().setPressureMetric(AppUtils.PressureMetrics.HPA);
         }
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            PositionManager.getInstance().updateWeatherFromDB();
-        } else {
-            checkLocationPermission();
-        }
+        PositionManager.getInstance().updateWeatherFromDB();
     }
 
     void checkLocationPermission() {
- //       if (!ActivityCompat.shouldShowRequestPermissionRationale(this,
- //               Manifest.permission.ACCESS_FINE_LOCATION)) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_LOCATION_REQUEST_CODE);
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_LOCATION_REQUEST_CODE);
         showPermissionSnack();
- //   }
     }
 
     void showPermissionSnack() {
@@ -491,9 +487,9 @@ public class WeatherActivity extends BaseActivity
                 .setAction("Разрешить", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent appSettings = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse
-                                ("package: " + getPackageName()));
-                        startActivityForResult(appSettings, PERMISSION_REQUEST_SETTINGS_CODE);
+                        Intent appSettingsIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                Uri.parse("package:" + getPackageName()));
+                        startActivityForResult(appSettingsIntent, PERMISSION_REQUEST_SETTINGS_CODE);
                     }
                 });
         TextView tv = (TextView) snackbar.getView().findViewById(snackbar_text);
