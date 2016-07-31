@@ -85,6 +85,7 @@ public class WeatherActivity extends BaseActivity
                 .OnConnectionFailedListener {
 
     public static final String ACTIVE_CITY_TAG = "ACTIVE_CITY";
+    public static final String CHECK_PERMISSION_TAG = "CHECK_PERMISSION";
     public static final int PERMISSION_LOCATION_REQUEST_CODE = 87;
     public static final int PERMISSION_REQUEST_SETTINGS_CODE = 88;
     private static final String TAG = WeatherActivity.class.getSimpleName();
@@ -152,8 +153,10 @@ public class WeatherActivity extends BaseActivity
                 break;
         }
 
-        if (!(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
-            checkLocationPermission();
+        if (getIntent().getBooleanExtra(CHECK_PERMISSION_TAG, true)) {
+            if (!(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
+                checkLocationPermission();
+            }
         }
 
         PositionManager.getInstance(this, this);
@@ -481,10 +484,10 @@ public class WeatherActivity extends BaseActivity
     }
 
     void showPermissionSnack() {
-        Snackbar snackbar = Snackbar.make(coordinatorLayout, "Для коректной работы необходимо дать требуемые разрешения",
+        Snackbar snackbar = Snackbar.make(coordinatorLayout, R.string.weather_act_enable_permission_txt,
                 Snackbar.LENGTH_LONG)
                 .setActionTextColor(ContextCompat.getColor(this, R.color.accent))
-                .setAction("Разрешить", new View.OnClickListener() {
+                .setAction(R.string.weather_act_accept_txt, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent appSettingsIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,

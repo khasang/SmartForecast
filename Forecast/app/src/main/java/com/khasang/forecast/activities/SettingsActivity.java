@@ -71,6 +71,7 @@ public class SettingsActivity extends BaseActivity {
             Intent intent = new Intent(this, WeatherActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra(WeatherActivity.ACTIVE_CITY_TAG, PositionManager.getInstance().getActivePositionCity());
+            intent.putExtra(WeatherActivity.CHECK_PERMISSION_TAG, false);
             startActivity(intent);
         }
         super.leaveActivity();
