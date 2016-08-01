@@ -1,5 +1,9 @@
 package com.khasang.forecast.activities;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -29,6 +33,8 @@ public class AboutActivity extends BaseActivity {
     ViewPager viewPager;
     @BindView(R.id.tabs)
     TabLayout tabLayout;
+
+    Dialog imageDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -81,6 +87,27 @@ public class AboutActivity extends BaseActivity {
         @Override
         public CharSequence getPageTitle(int position) {
             return fragmentsTitles.get(position);
+        }
+    }
+
+    public void showImageDialog() {
+        if(imageDialog == null) {
+            imageDialog = new Dialog(this);
+            imageDialog.setCancelable(false);
+            imageDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            imageDialog.show();
+            imageDialog.setContentView(R.layout.full_image);
+        } else {
+            imageDialog.show();
+            imageDialog.setContentView(R.layout.full_image);
+        }
+    }
+
+    public void hideImageDialog() {
+        if(imageDialog != null){
+            if (imageDialog.isShowing()) {
+                imageDialog.hide();
+            }
         }
     }
 }
