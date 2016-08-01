@@ -4,7 +4,9 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Display;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -21,24 +23,16 @@ public class FullImageActivity extends BaseActivity {
     public static final String URL = "url";
     public static final String IMAGE_WIDTH = "width";
     public static final String IMAGE_HEIGHT = "height";
+    private static final int MAX_DY_FOR_EXIT = 300;
 
-    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.image)
+    ImageView imageView;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_full_image);
-
-        setSupportActionBar(toolbar);
-        //noinspection ConstantConditions
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("");
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                leaveActivity();
-            }
-        });
 
         String url = getIntent().getStringExtra(URL);
         int imageWidth = getIntent().getIntExtra(IMAGE_WIDTH, 0);
@@ -67,7 +61,42 @@ public class FullImageActivity extends BaseActivity {
             imageViewWidth = imageViewHeight * imageWidth / imageHeight;
         }
 
-        ImageView imageView = (ImageView) findViewById(R.id.image);
+        imageView.setOnTouchListener(new View.OnTouchListener() {
+            float startY;
+            float dY;
+
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                switch (event.getAction()) {
+
+                    case MotionEvent.ACTION_DOWN:
+                        dY = view.getY() - event.getRawY();
+                        startY = view.getY();
+                        break;
+
+                    case MotionEvent.ACTION_MOVE:
+                        view.animate()
+                                .y(event.getRawY() + dY)
+                                .setDuration(0)
+                                .start();
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        if (Math.abs(startY - (event.getRawY() + dY)) > MAX_DY_FOR_EXIT) {
+                            leaveActivity();
+                        }
+                        view.animate()
+                                .y(startY)
+                                .setDuration(0)
+                                .start();
+                        break;
+                    default:
+                        return false;
+                }
+                return true;
+            }
+        });
+
+
         Picasso.with(this)
                 .load(url)
                 .resize(imageViewWidth, imageViewHeight)
@@ -76,6 +105,6 @@ public class FullImageActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        ActivityCompat.finishAfterTransition(this);
+        leaveActivity();
     }
 }

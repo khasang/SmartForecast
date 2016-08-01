@@ -29,7 +29,8 @@ public class SettingsActivity extends BaseActivity {
 
     private static boolean configurationChanged;
 
-    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     private static void setConfigurationChanged(boolean changed) {
         configurationChanged = changed;

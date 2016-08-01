@@ -79,16 +79,18 @@ public class CityPickerActivity extends BaseActivity implements View.OnClickList
     public final static String CITY_PICKER_TAG = "com.khasang.forecast.activities.CityPickerActivity";
     private final String TAG = this.getClass().getSimpleName();
 
-    @BindView(R.id.infoTV) TextView infoTV;
-    @BindView(R.id.recyclerView) RecyclerView recyclerView;
-    @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.fabBtn) volatile FloatingActionButton fabBtn;
-
+    @BindView(R.id.infoTV)
+    TextView infoTV;
+    @BindView(R.id.recyclerView)
+    RecyclerView recyclerView;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.fabBtn)
+    volatile FloatingActionButton fabBtn;
+    GoogleMapsGeocoding googleMapsGeocoding;
     private CityPickerAdapter cityPickerAdapter;
     private List<String> cityList;
-
     private DelayedAutoCompleteTextView chooseCity;
-    GoogleMapsGeocoding googleMapsGeocoding;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
