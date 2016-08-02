@@ -1,8 +1,9 @@
 package com.khasang.forecast.activities;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -11,11 +12,16 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.view.Display;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.ImageView;
 
 import com.khasang.forecast.R;
 import com.khasang.forecast.fragments.ChangelogFragment;
 import com.khasang.forecast.fragments.TeamFragment;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +32,8 @@ import butterknife.BindView;
  * Активити "О приложении"
  */
 public class AboutActivity extends BaseActivity {
+
+    private static final int MAX_DY_FOR_EXIT = 300;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -90,21 +98,105 @@ public class AboutActivity extends BaseActivity {
         }
     }
 
-    public void showImageDialog() {
-        if(imageDialog == null) {
-            imageDialog = new Dialog(this);
-            imageDialog.setCancelable(false);
-            imageDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            imageDialog.show();
-            imageDialog.setContentView(R.layout.full_image);
-        } else {
-            imageDialog.show();
-            imageDialog.setContentView(R.layout.full_image);
+    public void showImageDialog(String url, int imageWidth, int imageHeight) {
+        if (url == null || imageWidth == 0 || imageHeight == 0) {
+            return;
         }
+
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int screenWidth = size.x;
+        int screenHeight = size.y;
+
+        int imageViewWidth;
+        int imageViewHeight;
+        if (imageWidth > screenWidth) {
+            imageViewWidth = screenWidth;
+            imageViewHeight = imageViewWidth * imageHeight / imageWidth;
+        } else {
+            imageViewWidth = imageWidth;
+            imageViewHeight = imageViewWidth * imageHeight / imageWidth;
+        }
+        if (imageViewHeight > screenHeight) {
+            imageViewHeight = screenHeight;
+            imageViewWidth = imageViewHeight * imageWidth / imageHeight;
+        }
+
+        if (imageDialog == null) {
+            imageDialog = new Dialog(this, R.style.dialog_fullscreen_image);
+            imageDialog.setCancelable(true);
+            imageDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            imageDialog.setContentView(R.layout.full_image);
+            imageDialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,
+                    WindowManager.LayoutParams.MATCH_PARENT);
+            imageDialog.show();
+        } else {
+            imageDialog.setContentView(R.layout.full_image);
+            imageDialog.show();
+        }
+
+        final ImageView imageView = ((ImageView) imageDialog.findViewById(R.id.full_image_view));
+        imageView.setImageResource(android.R.color.transparent);
+        Picasso.with(this)
+                .load(url)
+                .resize(imageViewWidth, imageViewHeight)
+                .into(imageView);
+
+        imageView.setOnTouchListener(new View.OnTouchListener() {
+            float startY;
+            float dY;
+
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                switch (event.getAction()) {
+
+                    case MotionEvent.ACTION_DOWN:
+                        dY = view.getY() - event.getRawY();
+                        startY = view.getY();
+                        break;
+
+                    case MotionEvent.ACTION_MOVE:
+                        view.animate()
+                                .y(event.getRawY() + dY)
+                                .setDuration(0)
+                                .start();
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        if (Math.abs(startY - (event.getRawY() + dY)) > MAX_DY_FOR_EXIT) {
+                            imageView.setImageResource(android.R.color.transparent);
+                            hideImageDialog();
+                        }
+                        view.animate()
+                                .y(startY)
+                                .setDuration(0)
+                                .start();
+                        break;
+                    default:
+                        return false;
+                }
+                return true;
+            }
+        });
+
+        imageDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                imageView.setImageResource(android.R.color.transparent);
+            }
+        });
+
+        imageDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                imageView.setImageResource(android.R.color.transparent);
+            }
+        });
+
     }
 
     public void hideImageDialog() {
-        if(imageDialog != null){
+        if (imageDialog != null) {
             if (imageDialog.isShowing()) {
                 imageDialog.hide();
             }

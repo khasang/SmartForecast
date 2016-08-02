@@ -1,5 +1,6 @@
 <resources>
-    <style name="BaseAppTheme" parent="Theme.AppCompat.DayNight.DarkActionBar"/>
+
+    <style name="BaseAppTheme" parent="Theme.AppCompat.DayNight.DarkActionBar" />
 
     <style name="AppTheme" parent="BaseAppTheme">
         <item name="windowActionBar">false</item>
@@ -19,7 +20,7 @@
         <item name="popupTheme">@style/Theme.AppCompat.DayNight</item>
     </style>
 
-    <style name="AppTheme.Button" parent="AppTheme"/>
+    <style name="AppTheme.Button" parent="AppTheme" />
 
     <style name="GreenStyle">
         <item name="colorPrimary">@color/primary_green</item>
@@ -62,12 +63,14 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="social_button_style" parent="Widget.AppCompat.Button.Borderless">
+    <style name="social_button_style" parent="Widget.AppCompat.Button.Borderless" />
 
-    </style>
-
-    <style name="custom_dialog">
-        <item name="android:fullDark">@android:color/transparent</item>
+    <style name="dialog_fullscreen_image">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
     </style>
 
 </resources>

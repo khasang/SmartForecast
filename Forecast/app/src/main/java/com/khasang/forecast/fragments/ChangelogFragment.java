@@ -103,7 +103,7 @@ public class ChangelogFragment extends BaseFragment implements ChangelogAdapter.
 
     @Override
     public void onImageClicked(ImageView imageView, Image image) {
-        ((AboutActivity)getActivity()).showImageDialog();
+        ((AboutActivity)getActivity()).showImageDialog(image.getUrl(), image.getWidth(), image.getHeight());
         /*
         Intent intent = new Intent(getContext(), FullImageActivity.class);
         intent.putExtra(FullImageActivity.URL, image.getUrl());
