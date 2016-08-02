@@ -138,5 +138,6 @@
     <string name="invitation_cta">Die Installation!</string>
 
     <string name="google_play_services_error">Der Google Play Services Fehler</string>
-
+    <string name="weather_act_accept_txt">Erlauben</string>
+    <string name="weather_act_enable_permission_txt">Um korrekt zu funktionieren, müssen Sie die Berechtigung für die Positionierung gewähren</string>
 </resources>

@@ -169,7 +169,7 @@
     <string name="invitation_cta">Install!</string>
 
     <string name="google_play_services_error">Google Play Services Error</string>
-    <string name="weather_act_accept_txt">Разрешить</string>
-    <string name="weather_act_enable_permission_txt">Для коректной работы необходимо дать разрешение на определение местоположения</string>
+    <string name="weather_act_accept_txt">Allow</string>
+    <string name="weather_act_enable_permission_txt">For correct work you need to give permission for positioning</string>
 
 </resources>
