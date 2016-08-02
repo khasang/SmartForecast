@@ -33,8 +33,7 @@ public class TeamFragment extends BaseFragment {
                 ".io/SmartForecast/img/team/roman.png", 400, 400);
         Developer romanNovoselov = new Developer(R.string.roman_novoselov, romanNovoselovImage, R.string
                 .roman_novoselov_desc);
-        Link romanNovoselovLink1 = new Link("SOF", "http://ru.stackoverflow" +
-                ".com/users/31321/roman-novoselov?tab=profile");
+        Link romanNovoselovLink1 = new Link("WWW", "http://rnovoselov.xyz");
         Link romanNovoselovLink2 = new Link("GitHub", "https://github.com/RNOVOSELOV");
         Link romanNovoselovLink3 = new Link("LinkedIn", "https://www.linkedin.com/in/RNOVOSELOV");
         romanNovoselov.addLink(romanNovoselovLink1);
