@@ -247,7 +247,7 @@ public class WeatherActivity extends BaseActivity
         int maxChartHeight = (int) getResources().getDimension(R.dimen.chart_height);
         fabLayoutParams.setBehavior(new FabOnTopBehavior(chartLayout, maxChartHeight));
 
-        temperatureView.setOnClickListener(this);
+//        temperatureView.setOnClickListener(this);
 
         setSupportActionBar(toolbar);
     }
