@@ -135,6 +135,17 @@
 - Вибір одиниці виміру температури."
     </string>
 
+    <string name="roman_novoselov">Roman Novoselov</string>
+    <string name="alexandr_lihovidov">Alexandr Lihovidov</string>
+    <string name="timofey_korotkov">Timofey Korotkov</string>
+    <string name="alexandr_perfilev">Alexandr Perfilev</string>
+    <string name="maxim_kulikov">Maxim Kulikov</string>
+    <string name="erdeni_erdyneev">Erdeni Erdyneev</string>
+    <string name="oleg_grigoriev">Oleg Grigoriev</string>
+    <string name="airat_hairulin">Airat Hairulin</string>
+    <string name="dmitry_ryabushkin">Dmitry Ryabushkin</string>
+    <string name="evgeny_rivkin">Evgeny Rivkin</string>
+
     <!-- App Invites -->
     <string name="invitation_title">Надіслати запрошення</string>
     <string name="invitation_message">Поділися Smart Forecast с друзями!</string>
