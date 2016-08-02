@@ -1,12 +1,15 @@
 package com.khasang.forecast.position;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.os.Build;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -31,7 +34,6 @@ import com.khasang.forecast.sqlite.SQLiteProcessData;
 import com.khasang.forecast.stations.WeatherStation;
 import com.khasang.forecast.stations.WeatherStationFactory;
 import com.khasang.forecast.utils.AppUtils;
-import com.khasang.forecast.utils.PermissionChecker;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.weather_icons_typeface_library.WeatherIcons;
 
@@ -255,8 +257,8 @@ public class PositionManager implements ICoordinateReceiver, ILocationNameReceiv
         currentPosition.setCoordinate(dbManager.loadLastPositionCoordinates());
         if (saveCurrentLocation) {
             activePosition = currentPosition;
-            PermissionChecker permissionChecker = new PermissionChecker();
-            boolean isLocationPermissionGranted = permissionChecker.isPermissionGranted(MyApplication.getAppContext(), PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION);
+            boolean isLocationPermissionGranted = Build.VERSION.SDK_INT < Build.VERSION_CODES.M ||
+                    ContextCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
             if (!isLocationPermissionGranted) {
                 if (!lastActivePositionName.isEmpty() && positionInListPresent(lastActivePositionName)) {
                     activePosition = getPosition(lastActivePositionName);
@@ -710,10 +712,7 @@ public class PositionManager implements ICoordinateReceiver, ILocationNameReceiv
         } catch (GpsIsDisabledException e) {
             sendMessage(R.string.error_gps_disabled, Snackbar.LENGTH_LONG);
             e.printStackTrace();
-        } catch (AccessFineLocationNotGrantedException e) {
-            sendMessage(R.string.error_gps_permission, Snackbar.LENGTH_LONG);
-            e.printStackTrace();
-        } catch (NullPointerException e) {
+        } catch (AccessFineLocationNotGrantedException | NullPointerException e) {
             e.printStackTrace();
         }
     }

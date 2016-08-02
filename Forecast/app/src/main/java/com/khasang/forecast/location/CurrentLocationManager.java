@@ -49,7 +49,7 @@ public class CurrentLocationManager {
      * @return объект типа {@link Location}, указывающий на последнее обнаруженное каким либо провайдером местоположение
      */
     public Location getLastLocation() throws EmptyCurrentAddressException, AccessFineLocationNotGrantedException {
-        if (ActivityCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             throw new AccessFineLocationNotGrantedException();
         }
         Location recentLocation = null;
@@ -103,7 +103,7 @@ public class CurrentLocationManager {
     }
 
     public void updateCurrLocCoordinates() throws GpsIsDisabledException, NoAvailableLocationServiceException, AccessFineLocationNotGrantedException {
-        if (ActivityCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             throw new AccessFineLocationNotGrantedException();
         }
         if (!checkProviders()) {
@@ -118,7 +118,7 @@ public class CurrentLocationManager {
     }
 
     private void coordinatesUpdated(Location location) {
-        if (ActivityCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         locationManager.removeUpdates(locationListener);

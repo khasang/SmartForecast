@@ -1,8 +1,8 @@
 package com.khasang.forecast.activities;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -22,7 +22,6 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -54,14 +53,12 @@ import com.khasang.forecast.chart.WeatherChart;
 import com.khasang.forecast.fragments.DailyForecastFragment;
 import com.khasang.forecast.fragments.HourlyForecastFragment;
 import com.khasang.forecast.interfaces.IMessageProvider;
-import com.khasang.forecast.interfaces.IPermissionCallback;
 import com.khasang.forecast.interfaces.IWeatherReceiver;
 import com.khasang.forecast.position.PositionManager;
 import com.khasang.forecast.position.Weather;
 import com.khasang.forecast.stations.WeatherStation;
 import com.khasang.forecast.utils.AppUtils;
 import com.khasang.forecast.utils.Logger;
-import com.khasang.forecast.utils.PermissionChecker;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.iconics.context.IconicsContextWrapper;
@@ -76,7 +73,7 @@ import butterknife.BindView;
 import icepick.State;
 import io.fabric.sdk.android.Fabric;
 
-import static com.khasang.forecast.utils.PermissionChecker.RuntimePermissions.PERMISSION_REQUEST_FINE_LOCATION;
+import static android.support.design.R.id.snackbar_text;
 
 /**
  * Данные которые необходимо отображать в WeatherActivity (для первого релиза):
@@ -84,14 +81,19 @@ import static com.khasang.forecast.utils.PermissionChecker.RuntimePermissions.PE
  */
 public class WeatherActivity extends BaseActivity
         implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, IWeatherReceiver,
-        IPermissionCallback, IMessageProvider, NavigationDrawer.OnNavigationItemClickListener, GoogleApiClient
+        IMessageProvider, NavigationDrawer.OnNavigationItemClickListener, GoogleApiClient
                 .OnConnectionFailedListener {
 
     public static final String ACTIVE_CITY_TAG = "ACTIVE_CITY";
+    public static final String CHECK_PERMISSION_TAG = "CHECK_PERMISSION";
+    public static final int PERMISSION_LOCATION_REQUEST_CODE = 87;
+    public static final int PERMISSION_REQUEST_SETTINGS_CODE = 88;
     private static final String TAG = WeatherActivity.class.getSimpleName();
     private static final int REQUEST_INVITE = 0;
     private static final int CHOOSE_CITY = 1;
 
+    @BindView(R.id.coordinatorLayout)
+    CoordinatorLayout coordinatorLayout;
     @BindView(R.id.temperature_text)
     TextView temperatureView;
     @BindView(R.id.precipitation)
@@ -133,9 +135,6 @@ public class WeatherActivity extends BaseActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        PositionManager.getInstance(this, this);
-        PositionManager.getInstance().generateIconSet(this);
-
         setContentView(R.layout.activity_weather);
 
         int drawerHeaderArrayIndex = 0;
@@ -154,12 +153,19 @@ public class WeatherActivity extends BaseActivity
                 break;
         }
 
+        if (getIntent().getBooleanExtra(CHECK_PERMISSION_TAG, true)) {
+            if (!(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
+                checkLocationPermission();
+            }
+        }
+
+        PositionManager.getInstance(this, this);
+        PositionManager.getInstance().generateIconSet(this);
         setActivePosition();
         init();
         initNavigationDrawer(drawerHeaderArrayIndex);
         setAnimationForWidgets();
         startAnimations();
-        checkPermissions();
         initAppInvite();
 
         hourlyForecastFragment = new HourlyForecastFragment();
@@ -171,11 +177,6 @@ public class WeatherActivity extends BaseActivity
                 .hide(dailyForecastFragment)
                 .commit();
         onRefresh();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
     }
 
     private void initAppInvite() {
@@ -309,51 +310,24 @@ public class WeatherActivity extends BaseActivity
         fab.startAnimation(animationGrow);
     }
 
-    private void checkPermissions() {
-        new PermissionChecker().checkForPermissions(this, PERMISSION_REQUEST_FINE_LOCATION, this);
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PERMISSION_REQUEST_FINE_LOCATION.VALUE) {
+        if (requestCode == PERMISSION_LOCATION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                PositionManager.getInstance().setReceiver(this);
-                PositionManager.getInstance().setMessageProvider(this);
-                PositionManager.getInstance().updateWeatherFromDB();
-                PositionManager.getInstance().updateWeather();
-                permissionGranted(PERMISSION_REQUEST_FINE_LOCATION);
+                PositionManager positionManager = PositionManager.getInstance();
+                positionManager.setReceiver(this);
+                positionManager.setMessageProvider(this);
+                positionManager.initLocationManager();
+                positionManager.updateWeatherFromDB();
+                positionManager.updateWeather();
+                navigationDrawer.updateBadges(true);
             } else {
-                permissionDenied(PERMISSION_REQUEST_FINE_LOCATION);
+                navigationDrawer.updateBadges(false);
+                showProgress(false);
             }
         }
-    }
-
-    @Override
-    public void permissionGranted(PermissionChecker.RuntimePermissions permission) {
-        if (!PositionManager.getInstance().isSomeLocationProviderAvailable()) {
-            new AlertDialog.Builder(this)
-                    .setTitle(R.string.location_manager)
-                    .setMessage(R.string.activate_geographical_service)
-                    .setPositiveButton(R.string.btn_yes, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                        }
-                    })
-                    .setNegativeButton(R.string.btn_no, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    })
-                    .create().show();
-        }
-    }
-
-    @Override
-    public void permissionDenied(PermissionChecker.RuntimePermissions permission) {
     }
 
     /**
@@ -366,6 +340,14 @@ public class WeatherActivity extends BaseActivity
         PositionManager.getInstance().setMessageProvider(this);
         PositionManager.getInstance().setReceiver(this);
         switch (requestCode) {
+            case PERMISSION_REQUEST_SETTINGS_CODE:
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    navigationDrawer.updateBadges(true);
+                } else {
+                    navigationDrawer.updateBadges(false);
+                    showPermissionSnack();
+                }
+                break;
             case CHOOSE_CITY:
                 PositionManager pm = PositionManager.getInstance();
                 if (resultCode == RESULT_OK) {
@@ -433,6 +415,7 @@ public class WeatherActivity extends BaseActivity
     /**
      * Изменяет отображаемый город WeatherActivity
      */
+
     public void changeDisplayedCity(String newCity) {
         PositionManager.getInstance().setMessageProvider(this);
         PositionManager.getInstance().setReceiver(this);
@@ -453,9 +436,8 @@ public class WeatherActivity extends BaseActivity
         super.onResume();
         PositionManager.getInstance().setReceiver(this);
         PositionManager.getInstance().setMessageProvider(this);
-
-        boolean isLocationPermissionGranted =
-                new PermissionChecker().isPermissionGranted(this, PERMISSION_REQUEST_FINE_LOCATION);
+        boolean isLocationPermissionGranted = Build.VERSION.SDK_INT < Build.VERSION_CODES.M ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
         navigationDrawer.updateBadges(isLocationPermissionGranted);
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
@@ -494,6 +476,28 @@ public class WeatherActivity extends BaseActivity
             PositionManager.getInstance().setPressureMetric(AppUtils.PressureMetrics.HPA);
         }
         PositionManager.getInstance().updateWeatherFromDB();
+    }
+
+    void checkLocationPermission() {
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_LOCATION_REQUEST_CODE);
+        showPermissionSnack();
+    }
+
+    void showPermissionSnack() {
+        Snackbar snackbar = Snackbar.make(coordinatorLayout, R.string.weather_act_enable_permission_txt,
+                Snackbar.LENGTH_LONG)
+                .setActionTextColor(ContextCompat.getColor(this, R.color.accent))
+                .setAction(R.string.weather_act_accept_txt, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent appSettingsIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                Uri.parse("package:" + getPackageName()));
+                        startActivityForResult(appSettingsIntent, PERMISSION_REQUEST_SETTINGS_CODE);
+                    }
+                });
+        TextView tv = (TextView) snackbar.getView().findViewById(snackbar_text);
+        tv.setTextColor(ContextCompat.getColor(this, R.color.white));
+        snackbar.show();
     }
 
     @Override
@@ -689,7 +693,7 @@ public class WeatherActivity extends BaseActivity
 
     @Override
     public void showSnackbar(CharSequence string, int length) {
-        AppUtils.showSnackBar(this, findViewById(R.id.coordinatorLayout), string, length);
+        AppUtils.showSnackBar(this, coordinatorLayout, string, length);
     }
 
     @Override

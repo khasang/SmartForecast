@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "434626236828",
+    "firebase_url": "https://smart-forecast-94d01.firebaseio.com",
+    "project_id": "smart-forecast-94d01",
+    "storage_bucket": "smart-forecast-94d01.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:434626236828:android:b91ebfd602e12234",
+        "android_client_info": {
+          "package_name": "com.khasang.forecast.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "434626236828-rf5mlro1mureb86jrio4vlc4batsus6u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.khasang.forecast.debug",
+            "certificate_hash": "806139EB9C88A5053E7F8188A1475DC5E302733B"
+          }
+        },
+        {
+          "client_id": "434626236828-heq550t159sllthoukmk7c8ud3iaaf26.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvgsGUkEFSFXDPCesht3X7lOsg0YLyXMY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "434626236828-heq550t159sllthoukmk7c8ud3iaaf26.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

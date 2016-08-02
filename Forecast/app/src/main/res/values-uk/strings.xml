@@ -135,32 +135,12 @@
 - Вибір одиниці виміру температури."
     </string>
 
-    <string name="roman_novoselov">Роман Новоселов</string>
-    <string name="alexandr_lihovidov">Александр Лиховидов</string>
-    <string name="timofey_korotkov">Тимофей Коротков</string>
-    <string name="alexandr_perfilev">Александр Перфильев</string>
-    <string name="maxim_kulikov">Максим Куликов</string>
-    <string name="erdeni_erdyneev">Эрдэни Эрдынеев</string>
-    <string name="oleg_grigoriev">Олег Григорьев</string>
-    <string name="airat_hairulin">Айрат Хайруллин</string>
-    <string name="dmitry_ryabushkin">Дмитрий Рябушкин</string>
-    <string name="evgeny_rivkin">Евгений Ривкин</string>
-
-    <string name="roman_novoselov_desc">PM, Architect, Developer</string>
-    <string name="alexandr_lihovidov_desc">Architect, Technical consultant</string>
-    <string name="timofey_korotkov_desc">UI designer, Developer</string>
-    <string name="alexandr_perfilev_desc">UI designer, Developer</string>
-    <string name="maxim_kulikov_desc">Product Owner, Developer</string>
-    <string name="erdeni_erdyneev_desc">UX Designer, Developer</string>
-    <string name="oleg_grigoriev_desc">Developer</string>
-    <string name="airat_hairulin_desc">Translator</string>
-    <string name="dmitry_ryabushkin_desc">Translator</string>
-    <string name="evgeny_rivkin_desc">Translator</string>
-
     <!-- App Invites -->
     <string name="invitation_title">Надіслати запрошення</string>
     <string name="invitation_message">Поділися Smart Forecast с друзями!</string>
     <string name="invitation_cta">Встановити!</string>
 
     <string name="google_play_services_error">Помилка сервісу Google Play</string>
+    <string name="weather_act_accept_txt">Дозволити</string>
+    <string name="weather_act_enable_permission_txt">Для коректної роботи необхідно дати дозвіл на визначення місцезнаходження</string>
 </resources>

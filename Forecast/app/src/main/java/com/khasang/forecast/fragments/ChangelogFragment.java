@@ -1,16 +1,14 @@
 package com.khasang.forecast.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.khasang.forecast.R;
-import com.khasang.forecast.activities.FullImageActivity;
+import com.khasang.forecast.activities.AboutActivity;
 import com.khasang.forecast.adapters.ChangelogAdapter;
 import com.khasang.forecast.models.Changelog;
 import com.khasang.forecast.models.Image;
@@ -105,13 +103,6 @@ public class ChangelogFragment extends BaseFragment implements ChangelogAdapter.
 
     @Override
     public void onImageClicked(ImageView imageView, Image image) {
-        Intent intent = new Intent(getContext(), FullImageActivity.class);
-        intent.putExtra(FullImageActivity.URL, image.getUrl());
-        intent.putExtra(FullImageActivity.IMAGE_WIDTH, image.getWidth());
-        intent.putExtra(FullImageActivity.IMAGE_HEIGHT, image.getHeight());
-
-        ActivityOptionsCompat options = ActivityOptionsCompat
-                .makeSceneTransitionAnimation(getActivity(), imageView, getString(R.string.shared_image));
-        startActivity(intent, options.toBundle());
+        ((AboutActivity)getActivity()).showImageDialog(image.getUrl(), image.getWidth(), image.getHeight());
     }
 }

@@ -36,9 +36,12 @@ public class SplashScreenActivity extends BaseActivity implements Animation.Anim
 
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
-    @BindView(R.id.welcomeText) ShimmerTextView welcomeText;
-    @BindView(R.id.gifImageView) GifImageView gifImageView;
-    @BindView(R.id.root) View rootView;
+    @BindView(R.id.welcomeText)
+    ShimmerTextView welcomeText;
+    @BindView(R.id.gifImageView)
+    GifImageView gifImageView;
+    @BindView(R.id.root)
+    View rootView;
 
     private GifDrawable gifDrawable;
     private Shimmer shimmer;
@@ -56,12 +59,10 @@ public class SplashScreenActivity extends BaseActivity implements Animation.Anim
             defineNightMode(sp);
 
             boolean showWelcome = sp.getBoolean(getString(R.string.pref_welcome_key), true);
-            Log.d("TAG", "showWelcome: " + showWelcome);
             if (!showWelcome) {
                 startWeatherActivityWithoutTransition();
             } else {
                 showWelcomeString = sp.getBoolean(getString(R.string.pref_welcome_text_key), true);
-                Log.d("TAG", "showWelcomeString: " + showWelcomeString);
                 if (showWelcomeString) {
                     setWelcomeString();
                 }
@@ -179,7 +180,7 @@ public class SplashScreenActivity extends BaseActivity implements Animation.Anim
     /**
      * Создал отдельный метод, потому что на API 21+ анимация запуска WeatherActivity не работает, падает ошибка
      * java.lang.NullPointerException: Attempt to invoke virtual method 'void android.view.ViewRootImpl.setPausedForTransition(boolean)' on a null object reference
-     *
+     * <p>
      * Видимо view не успевают инициализоваться
      */
     private void startWeatherActivityWithoutTransition() {

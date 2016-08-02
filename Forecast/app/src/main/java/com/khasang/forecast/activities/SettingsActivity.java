@@ -29,7 +29,8 @@ public class SettingsActivity extends BaseActivity {
 
     private static boolean configurationChanged;
 
-    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     private static void setConfigurationChanged(boolean changed) {
         configurationChanged = changed;
@@ -71,6 +72,7 @@ public class SettingsActivity extends BaseActivity {
             Intent intent = new Intent(this, WeatherActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra(WeatherActivity.ACTIVE_CITY_TAG, PositionManager.getInstance().getActivePositionCity());
+            intent.putExtra(WeatherActivity.CHECK_PERMISSION_TAG, false);
             startActivity(intent);
         }
         super.leaveActivity();
